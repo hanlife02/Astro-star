@@ -4,20 +4,20 @@
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
-  --snow-ink: color-mix(in srgb, var(--fg) 24%, transparent);
+  --snow-ink: color-mix(in srgb, var(--fg) var(--snow-strength, 24%), transparent);
   background-image:
-    radial-gradient(circle at 6% 14%, var(--snow-ink) 0 1px, transparent 2px),
-    radial-gradient(circle at 18% 62%, var(--snow-ink) 0 1.4px, transparent 2.6px),
-    radial-gradient(circle at 27% 28%, var(--snow-ink) 0 1px, transparent 2px),
-    radial-gradient(circle at 33% 80%, var(--snow-ink) 0 1.8px, transparent 3px),
-    radial-gradient(circle at 41% 18%, var(--snow-ink) 0 1.2px, transparent 2.4px),
-    radial-gradient(circle at 49% 55%, var(--snow-ink) 0 1px, transparent 2px),
-    radial-gradient(circle at 57% 32%, var(--snow-ink) 0 1.6px, transparent 2.8px),
-    radial-gradient(circle at 63% 74%, var(--snow-ink) 0 1px, transparent 2px),
-    radial-gradient(circle at 71% 12%, var(--snow-ink) 0 2.2px, transparent 3.6px),
-    radial-gradient(circle at 78% 46%, var(--snow-ink) 0 1.2px, transparent 2.4px),
-    radial-gradient(circle at 86% 83%, var(--snow-ink) 0 1px, transparent 2px),
-    radial-gradient(circle at 92% 24%, var(--snow-ink) 0 1.7px, transparent 3px);
+    radial-gradient(circle at 6% 14%, var(--snow-ink) 0 1.3px, transparent 2.6px),
+    radial-gradient(circle at 18% 62%, var(--snow-ink) 0 1.8px, transparent 3.3px),
+    radial-gradient(circle at 27% 28%, var(--snow-ink) 0 1.3px, transparent 2.6px),
+    radial-gradient(circle at 33% 80%, var(--snow-ink) 0 2.3px, transparent 3.9px),
+    radial-gradient(circle at 41% 18%, var(--snow-ink) 0 1.5px, transparent 3.1px),
+    radial-gradient(circle at 49% 55%, var(--snow-ink) 0 1.3px, transparent 2.6px),
+    radial-gradient(circle at 57% 32%, var(--snow-ink) 0 2px, transparent 3.6px),
+    radial-gradient(circle at 63% 74%, var(--snow-ink) 0 1.3px, transparent 2.6px),
+    radial-gradient(circle at 71% 12%, var(--snow-ink) 0 2.8px, transparent 4.7px),
+    radial-gradient(circle at 78% 46%, var(--snow-ink) 0 1.5px, transparent 3.1px),
+    radial-gradient(circle at 86% 83%, var(--snow-ink) 0 1.3px, transparent 2.6px),
+    radial-gradient(circle at 92% 24%, var(--snow-ink) 0 2.2px, transparent 3.9px);
   background-size: 900px 650px;
   clip-path: circle(0% at var(--snow-reveal-at, 10% 10%));
   animation: snow-reveal 1800ms ease-out both, snow-drift 22s linear infinite;
@@ -26,11 +26,13 @@
 .snow-bg[data-mode="light"] {
   background-color: #ffffff;
   --fg: #7d7d7d;
+  --snow-strength: 36%;
 }
 
 .snow-bg[data-mode="dark"] {
   background-color: #000000;
   --fg: #ffffff;
+  --snow-strength: 24%;
 }
 
 @keyframes snow-reveal {

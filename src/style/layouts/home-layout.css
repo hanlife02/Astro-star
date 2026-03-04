@@ -55,6 +55,81 @@ body {
   justify-self: start;
 }
 
+.signature-stack {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+}
+
+.signature-collapse {
+  position: relative;
+  width: fit-content;
+}
+
+.signature-collapse-trigger {
+  width: 40px;
+  height: 32px;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--line-soft);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  list-style: none;
+  transition: color 0.2s ease;
+}
+
+.signature-collapse-trigger::-webkit-details-marker {
+  display: none;
+}
+
+.signature-collapse-trigger:hover {
+  color: var(--line);
+}
+
+.signature-collapse-trigger svg {
+  width: 20px;
+  height: 20px;
+}
+
+.signature-collapse-panel {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 3;
+  min-width: 180px;
+  padding: 0.4rem 0;
+}
+
+.signature-collapse[open] .signature-collapse-panel {
+  display: block;
+}
+
+.signature-collapse-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.signature-collapse-links a {
+  display: block;
+  padding: 0.35rem 0.8rem;
+  color: var(--line-soft);
+  text-decoration: none;
+  font-size: 0.9rem;
+  line-height: 1.3;
+}
+
+.signature-collapse-links a:hover,
+.signature-collapse-links a:focus-visible {
+  color: var(--line);
+}
+
 .nav-drawer {
   position: relative;
   width: fit-content;
@@ -123,9 +198,10 @@ body {
   gap: 0.2rem;
 }
 
-.theme-btn {
-  width: 32px;
-  height: 32px;
+.theme-btn,
+.search-btn {
+  width: 64px;
+  height: 64px;
   border: 0;
   background: transparent;
   color: var(--line-soft);
@@ -136,27 +212,18 @@ body {
   transition: color 0.2s ease, opacity 0.2s ease;
 }
 
-.theme-btn:hover {
+.theme-btn svg,                                                
+.search-btn svg {                                              
+  width: 36px;                                                 
+  height: 36px;                                                
+}
+
+.theme-btn:hover,
+.search-btn:hover {
   color: var(--line);
 }
 
 .theme-btn[aria-pressed="true"] {
-  color: var(--line);
-}
-
-.search-btn {
-  width: 32px;
-  height: 32px;
-  border: 0;
-  background: transparent;
-  color: var(--line-soft);
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.search-btn:hover {
   color: var(--line);
 }
 
@@ -212,6 +279,15 @@ body {
 @media (min-width: 900px) {
   .mobile-nav-drawer {
     display: none;
+  }
+
+  .signature-collapse[open] .signature-collapse-panel {
+    display: none;
+  }
+
+  .signature-collapse:hover .signature-collapse-panel,
+  .signature-collapse:focus-within .signature-collapse-panel {
+    display: block;
   }
 
   .home-main {

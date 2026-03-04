@@ -1,9 +1,11 @@
 ---
 import HomeBackground from "../components/background/HomeBackground.astro";
 import "../style/layouts/home-layout.css";
-import { Sun, Moon, Monitor, Search } from "lucide-static";
+import { Sun, Moon, Monitor, Search, AlignCenter } from "lucide-static";
+import { siteConfig } from "../config/site";
 
 const pageTitle = "Home Wireframe";
+const foldedNavItems = siteConfig.nav.filter((item) => item.href !== "/");
 ---
 
 <html lang="en">
@@ -27,7 +29,25 @@ const pageTitle = "Home Wireframe";
         </details>
 
         <div class="wire-box signature-area" aria-label="Signature area">
-          <slot name="signature" />
+          <div class="signature-stack">
+            <slot name="signature" />
+            <details class="signature-collapse" aria-label="Signature navigation toggle">
+              <summary class="signature-collapse-trigger" aria-label="Toggle signature navigation">
+                <Fragment set:html={AlignCenter} />
+              </summary>
+              <nav class="wire-box signature-collapse-panel" aria-label="Signature navigation area">
+                <ul class="signature-collapse-links">
+                  {
+                    foldedNavItems.map((item) => (
+                      <li>
+                        <a href={item.href}>{item.label}</a>
+                      </li>
+                    ))
+                  }
+                </ul>
+              </nav>
+            </details>
+          </div>
         </div>
 
         <div class="wire-box header-actions" aria-label="Actions area">
