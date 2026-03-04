@@ -1,0 +1,17 @@
+---
+import "../../style/components/background/home-background.css";
+
+interface Props {
+  revealAt?: string;
+  mode?: "light" | "dark";
+}
+
+const { revealAt = "12% 12%", mode = "light" } = Astro.props satisfies Props;
+---
+
+<div
+  class="snow-bg"
+  data-mode={mode}
+  aria-hidden="true"
+  style={`--snow-reveal-at:${revealAt};`}
+></div>

@@ -1,0 +1,20 @@
+.signature-wrap {
+  margin-top: 1rem;
+  width: 100%;
+}
+
+.signature-wrap svg {
+  display: block;
+  max-width: min(220px, 100%);
+  height: auto;
+}
+
+@media (min-width: 768px) {
+  .signature-wrap {
+    margin-top: 1.25rem;
+  }
+
+  .signature-wrap svg {
+    max-width: 280px;
+  }
+}

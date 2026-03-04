@@ -1,0 +1,11 @@
+.codetime-link {
+  display: inline-flex;
+  max-width: 100%;
+  line-height: 0;
+}
+
+.codetime-link img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}

@@ -1,0 +1,29 @@
+---
+import { siteConfig } from "../../config/site";
+import "../../style/components/home/signature.css";
+
+const { signature } = siteConfig;
+
+const normalizeSvgMarkup = (input: string) => {
+  let value = input.trim();
+
+  if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
+    value = value.slice(1, -1);
+  } else {
+    value = value.replace(/^['"]/, "").replace(/['"]$/, "");
+  }
+
+  return value.replace(/\\"/g, '"').replace(/\\'/g, "'");
+};
+
+const svgMarkup = normalizeSvgMarkup(signature.svgMarkup);
+const isValidSvg = svgMarkup.startsWith("<svg") && svgMarkup.includes("</svg>");
+---
+
+{
+  signature.enabled && isValidSvg && (
+    <div class="signature-wrap" role="img" aria-label={signature.ariaLabel}>
+      <Fragment set:html={svgMarkup} />
+    </div>
+  )
+}

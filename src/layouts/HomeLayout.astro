@@ -1,0 +1,144 @@
+---
+import HomeBackground from "../components/background/HomeBackground.astro";
+import "../style/layouts/home-layout.css";
+import { Sun, Moon, Monitor, Search } from "lucide-static";
+
+const pageTitle = "Home Wireframe";
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{pageTitle}</title>
+  </head>
+  <body>
+    <HomeBackground mode="light" />
+    <div class="home-shell">
+      <header class="home-header">
+        <details class="nav-drawer mobile-nav-drawer">
+          <summary class="hamburger" aria-label="Toggle navigation">
+          </summary>
+
+          <nav class="wire-box nav-panel" aria-label="Mobile navigation area">
+            <slot name="side-nav" />
+          </nav>
+        </details>
+
+        <div class="wire-box signature-area" aria-label="Signature area">
+          <slot name="signature" />
+        </div>
+
+        <div class="wire-box header-actions" aria-label="Actions area">
+          <div class="theme-switcher" role="group" aria-label="Theme switcher">
+            <button type="button" id="theme-toggle" class="theme-btn" aria-label="Theme switcher">
+              <span data-theme-icon="light"><Fragment set:html={Sun} /></span>
+              <span data-theme-icon="dark" hidden><Fragment set:html={Moon} /></span>
+              <span data-theme-icon="system" hidden><Fragment set:html={Monitor} /></span>
+            </button>
+          </div>
+          <button type="button" class="search-btn" aria-label="Search">
+            <Fragment set:html={Search} />
+          </button>
+        </div>
+      </header>
+
+      <main class="home-main">
+        <aside class="wire-box side-nav-area" aria-label="Side navigation area">
+          <slot name="side-nav" />
+        </aside>
+
+        <section class="wire-box profile-area" aria-label="Profile area">
+          <slot name="profile" />
+        </section>
+
+        <section class="wire-box latest-area" aria-label="Latest area">
+          <slot name="latest" />
+        </section>
+      </main>
+
+      <footer class="home-footer">
+        <div class="wire-box footer-info" aria-label="Footer info area">
+          <slot name="footer-info" />
+        </div>
+
+        <nav class="wire-box footer-icons" aria-label="Footer icon navigation">
+          <slot name="footer-icons" />
+        </nav>
+      </footer>
+    </div>
+    <script is:inline>
+      const STORAGE_KEY = "theme-preference";
+      const VALID_MODES = ["light", "dark", "system"];
+      const toggleButton = document.getElementById("theme-toggle");
+      const icons = {
+        light: toggleButton?.querySelector('[data-theme-icon="light"]'),
+        dark: toggleButton?.querySelector('[data-theme-icon="dark"]'),
+        system: toggleButton?.querySelector('[data-theme-icon="system"]'),
+      };
+      const snowBackground = document.querySelector(".snow-bg");
+      const media = window.matchMedia("(prefers-color-scheme: dark)");
+      let currentMode = "system";
+
+      const resolveMode = (mode) => (mode === "system" ? (media.matches ? "dark" : "light") : mode);
+
+      const nextMode = (mode) => {
+        const index = VALID_MODES.indexOf(mode);
+        return VALID_MODES[(index + 1) % VALID_MODES.length];
+      };
+
+      const syncToggle = (mode) => {
+        const next = nextMode(mode);
+
+        if (toggleButton instanceof HTMLButtonElement) {
+          toggleButton.setAttribute("aria-label", `Current theme: ${mode}. Click to switch to ${next}.`);
+        }
+
+        Object.entries(icons).forEach(([iconMode, iconNode]) => {
+          if (!(iconNode instanceof HTMLElement)) return;
+          iconNode.hidden = iconMode !== mode;
+        });
+      };
+
+      const getInitialMode = () => {
+        const stored = window.localStorage.getItem(STORAGE_KEY);
+        if (stored && VALID_MODES.includes(stored)) return stored;
+        return "system";
+      };
+
+      const applyTheme = (mode, save = true) => {
+        currentMode = mode;
+        const resolved = resolveMode(mode);
+
+        document.documentElement.dataset.themeMode = mode;
+        document.documentElement.dataset.theme = resolved;
+
+        if (snowBackground instanceof HTMLElement) {
+          snowBackground.dataset.mode = resolved;
+        }
+
+        syncToggle(mode);
+
+        if (save) {
+          window.localStorage.setItem(STORAGE_KEY, mode);
+        }
+      };
+
+      const initialMode = getInitialMode();
+      applyTheme(initialMode, false);
+
+      toggleButton?.addEventListener("click", () => {
+        applyTheme(nextMode(currentMode));
+      });
+
+      const handleSystemThemeChange = () => {
+        if (currentMode === "system") {
+          applyTheme("system", false);
+        }
+      };
+
+      media.addEventListener("change", handleSystemThemeChange);
+    </script>
+  </body>
+</html>

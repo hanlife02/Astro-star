@@ -1,0 +1,240 @@
+:root {
+  --line: #101010;
+  --line-soft: rgba(16, 16, 16, 0.64);
+  --golden: 1.61803398875;
+  --shell-max: min(92vw, 1800px);
+  --space: clamp(0.75rem, 1.4vw, 1.25rem);
+  --footer-height: clamp(54px, 7.8vh, 70px);
+  --main-mobile-h: clamp(320px, 43vh, 520px);
+  --main-desktop-h: clamp(430px, 58vh, 760px);
+}
+
+:root[data-theme="dark"] {
+  --line: #efefef;
+  --line-soft: rgba(239, 239, 239, 0.76);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: transparent;
+  color: var(--line);
+  font-family: "Segoe UI", "Noto Sans", sans-serif;
+}
+
+.home-shell {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  width: min(100%, var(--shell-max), calc(100dvh * var(--golden)));
+  margin-inline: auto;
+  padding: var(--space);
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: var(--space);
+}
+
+.home-header {
+  padding: clamp(0.55rem, 1vw, 0.85rem);
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  align-items: center;
+  column-gap: clamp(0.3rem, 0.8vw, 0.55rem);
+}
+
+.wire-box {
+  min-width: 0;
+}
+
+.signature-area {
+  width: min(100%, clamp(168px, 34vw, 380px));
+  min-height: clamp(44px, 7vh, 64px);
+  justify-self: start;
+}
+
+.nav-drawer {
+  position: relative;
+  width: fit-content;
+}
+
+.mobile-nav-drawer {
+  display: block;
+  justify-self: start;
+}
+
+.hamburger {
+  width: 44px;
+  height: 40px;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  list-style: none;
+  color: var(--line-soft);
+}
+
+.hamburger::-webkit-details-marker {
+  display: none;
+}
+
+.hamburger::before {
+  content: "";
+  width: 20px;
+  height: 2px;
+  background: currentColor;
+  box-shadow: 0 -6px 0 currentColor, 0 6px 0 currentColor;
+}
+
+.nav-panel {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  left: 0;
+  min-width: 180px;
+  padding: 0.25rem 0;
+  display: none;
+  z-index: 2;
+}
+
+.nav-drawer[open] .nav-panel {
+  display: block;
+}
+
+.header-actions {
+  grid-column: 3;
+  min-height: 40px;
+  min-width: 140px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: clamp(0.25rem, 0.8vw, 0.5rem);
+  justify-self: end;
+  margin-left: auto;
+}
+
+.theme-switcher {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.theme-btn {
+  width: 32px;
+  height: 32px;
+  border: 0;
+  background: transparent;
+  color: var(--line-soft);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+.theme-btn:hover {
+  color: var(--line);
+}
+
+.theme-btn[aria-pressed="true"] {
+  color: var(--line);
+}
+
+.search-btn {
+  width: 32px;
+  height: 32px;
+  border: 0;
+  background: transparent;
+  color: var(--line-soft);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-btn:hover {
+  color: var(--line);
+}
+
+.home-main {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space);
+  align-items: stretch;
+}
+
+.side-nav-area {
+  display: none;
+  min-height: var(--main-mobile-h);
+}
+
+.profile-area {
+  min-height: var(--main-mobile-h);
+}
+
+.latest-area {
+  min-height: var(--main-mobile-h);
+  grid-column: 1 / -1;
+}
+
+.home-footer {
+  padding: clamp(0.55rem, 1vw, 0.85rem);
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: var(--space);
+}
+
+.footer-info {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: var(--footer-height);
+  height: auto;
+  display: flex;
+  align-items: center;
+  overflow-wrap: anywhere;
+}
+
+.footer-icons {
+  flex: 0 0 auto;
+  min-height: var(--footer-height);
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: clamp(0.4rem, 0.7vw, 0.55rem);
+  margin-left: auto;
+}
+
+@media (min-width: 900px) {
+  .mobile-nav-drawer {
+    display: none;
+  }
+
+  .home-main {
+    grid-template-columns: minmax(68px, 0.16fr) minmax(260px, 0.9fr) minmax(360px, 1.2fr);
+  }
+
+  .side-nav-area {
+    display: block;
+    min-height: var(--main-desktop-h);
+  }
+
+  .profile-area,
+  .latest-area {
+    min-height: var(--main-desktop-h);
+  }
+
+  .latest-area {
+    grid-column: auto;
+  }
+}
+
+@media (min-width: 2400px) {
+  :root {
+    --shell-max: 93vw;
+  }
+}

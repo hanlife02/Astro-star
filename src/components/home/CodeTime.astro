@@ -1,0 +1,44 @@
+---
+import { siteConfig } from "../../config/site";
+import "../../style/components/home/codetime.css";
+
+const { codetime } = siteConfig;
+
+const badgeMatch = codetime.badgeMarkdown
+  .trim()
+  .match(/^\[!\[(.+?)\]\((.+?)\)\]\((.+?)\)$/);
+
+const isHttpUrl = (value: string) =>
+  value.startsWith("https://") || value.startsWith("http://");
+
+const badge =
+  badgeMatch &&
+  isHttpUrl(badgeMatch[2]) &&
+  isHttpUrl(badgeMatch[3])
+    ? {
+        alt: badgeMatch[1],
+        src: badgeMatch[2],
+        href: badgeMatch[3],
+      }
+    : null;
+---
+
+{
+  codetime.enabled && badge && (
+    <a
+      class="codetime-link"
+      href={badge.href}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={badge.alt}
+    >
+      <img
+        src={badge.src}
+        alt={badge.alt}
+        loading="lazy"
+        decoding="async"
+        referrerpolicy="no-referrer"
+      />
+    </a>
+  )
+}
