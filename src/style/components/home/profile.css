@@ -1,15 +1,29 @@
 .profile-card {
+  --profile-max-width: min(100%, 34rem);
+  --profile-padding: clamp(1rem, 2vw, 1.6rem);
+  --profile-gap: 0.75rem;
+  --profile-offset-x: 0px;
+  --profile-offset-y: 0px;
+  --avatar-size: clamp(200px, 36vw, 200px);
+  --name-size: clamp(3.6rem, 2.2vw, 3.6rem);
+  --one-word-size: 2rem;
+  --bio-size: 1.6rem;
+
+  width: var(--profile-max-width);
   height: 100%;
-  padding: 1rem;
+  padding: var(--profile-padding);
+  margin-inline: auto;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  gap: 0.75rem;
+  align-items: center;
+  justify-content: center;
+  gap: var(--profile-gap);
+  text-align: center;
+  transform: translate(var(--profile-offset-x), var(--profile-offset-y));
 }
 
 .profile-avatar {
-  width: clamp(64px, 18vw, 92px);
+  width: var(--avatar-size);
   aspect-ratio: 1;
   object-fit: cover;
   border: 1px solid var(--line-soft);
@@ -18,7 +32,7 @@
 
 .profile-name {
   margin: 0;
-  font-size: clamp(1.1rem, 2.2vw, 1.5rem);
+  font-size: var(--name-size);
   line-height: 1.2;
   color: var(--line);
 }
@@ -31,9 +45,9 @@
 }
 
 .profile-one-word {
-  font-size: 0.95rem;
+  font-size: var(--one-word-size);
 }
 
 .profile-bio {
-  font-size: 0.9rem;
+  font-size: var(--bio-size);
 }

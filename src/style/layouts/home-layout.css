@@ -31,8 +31,8 @@
 }
 
 :root {
-  --line: #101010;
-  --line-soft: rgba(16, 16, 16, 0.64);
+  --line: #111111;
+  --line-soft: rgba(17, 17, 17, 0.88);
   --golden: 1.61803398875;
   --shell-max: min(92vw, 1800px);
   --space: clamp(0.5rem, 1.2vw, 1.25rem);
@@ -40,11 +40,17 @@
   --footer-height: clamp(54px, 7.8vh, 70px);
   --main-mobile-h: clamp(320px, 43vh, 520px);
   --main-desktop-h: clamp(430px, 58vh, 760px);
+  --main-col-1-min: 120px;
+  --main-col-2-min: 280px;
+  --main-col-3-min: 360px;
+  --main-col-1-fr: 1fr;
+  --main-col-2-fr: 2fr;
+  --main-col-3-fr: 2.4fr;
 }
 
 :root[data-theme="dark"] {
-  --line: #efefef;
-  --line-soft: rgba(239, 239, 239, 0.76);
+  --line: #f5f5f5;
+  --line-soft: rgba(245, 245, 245, 0.9);
 }
 
 * {
@@ -293,6 +299,9 @@ body {
 
 .profile-area {
   min-height: var(--main-mobile-h);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .latest-area {
@@ -334,7 +343,10 @@ body {
   }
 
   .home-main {
-    grid-template-columns: minmax(68px, 0.16fr) minmax(260px, 0.9fr) minmax(360px, 1.2fr);
+    grid-template-columns:
+      minmax(var(--main-col-1-min), var(--main-col-1-fr))
+      minmax(var(--main-col-2-min), var(--main-col-2-fr))
+      minmax(var(--main-col-3-min), var(--main-col-3-fr));
   }
 
   .side-nav-area {
