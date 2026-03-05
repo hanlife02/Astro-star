@@ -1,106 +1,90 @@
 ---
+import BaseLayout from "./BaseLayout.astro";
 import HomeBackground from "../components/background/HomeBackground.astro";
+import Icon from "../components/ui/Icon.astro";
 import "../style/layouts/home-layout.css";
 import { Sun, Moon, Monitor, Search, AlignLeft } from "lucide-static";
 import { site } from "../config/site";
 
-const pathname = Astro.url.pathname.replace(/\/+$/, "") || "/";
-const pageName =
-  pathname === "/"
-    ? "Home"
-    : pathname
-        .split("/")
-        .filter(Boolean)
-        .map((segment) => segment.charAt(0).toUpperCase() + segment.slice(1))
-        .join(" / ");
-const pageTitle = `${pageName} - ${site.name}`;
 const foldedNavItems = site.nav;
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
-    <link rel="icon" type="image/svg+xml" href={site.iconSrc} />
-    <title>{pageTitle}</title>
-  </head>
-  <body>
-    <HomeBackground mode="light" />
-    <div class="home-shell">
-      <header class="home-header">
-        <details class="nav-drawer mobile-nav-drawer">
-          <summary class="hamburger" aria-label="Toggle navigation">
-          </summary>
+<BaseLayout>
+  <HomeBackground slot="background" mode="light" />
+  <div class="home-shell">
+    <header class="home-header">
+      <details class="nav-drawer mobile-nav-drawer">
+        <summary class="hamburger" aria-label="Toggle navigation">
+        </summary>
 
-          <nav class="wire-box nav-panel" aria-label="Mobile navigation area">
-            <slot name="side-nav" />
-          </nav>
-        </details>
+        <nav class="wire-box nav-panel" aria-label="Mobile navigation area">
+          <slot name="side-nav" />
+        </nav>
+      </details>
 
-        <div class="wire-box signature-area" aria-label="Signature area">
-          <div class="signature-stack">
-            <slot name="signature" />
-          </div>
+      <div class="wire-box signature-area" aria-label="Signature area">
+        <div class="signature-stack">
+          <slot name="signature" />
         </div>
+      </div>
 
-        <div class="wire-box header-actions" aria-label="Actions area">
-          <div class="theme-switcher" role="group" aria-label="Theme switcher">
-            <button type="button" id="theme-toggle" class="theme-btn" aria-label="Theme switcher">
-              <span data-theme-icon="light"><Fragment set:html={Sun} /></span>
-              <span data-theme-icon="dark" hidden><Fragment set:html={Moon} /></span>
-              <span data-theme-icon="system" hidden><Fragment set:html={Monitor} /></span>
-            </button>
-          </div>
-          <button type="button" class="search-btn" aria-label="Search">
-            <Fragment set:html={Search} />
+      <div class="wire-box header-actions" aria-label="Actions area">
+        <div class="theme-switcher" role="group" aria-label="Theme switcher">
+          <button type="button" id="theme-toggle" class="theme-btn" aria-label="Theme switcher">
+            <span data-theme-icon="light"><Icon svg={Sun} /></span>
+            <span data-theme-icon="dark" hidden><Icon svg={Moon} /></span>
+            <span data-theme-icon="system" hidden><Icon svg={Monitor} /></span>
           </button>
         </div>
-      </header>
+        <button type="button" class="search-btn" aria-label="Search">
+          <Icon svg={Search} />
+        </button>
+      </div>
+    </header>
 
-      <main class="home-main">
-        <aside class="wire-box side-nav-area" aria-label="Side navigation area">
-          <div class="side-nav-stack">
-            <details class="signature-collapse" aria-label="Signature navigation toggle">
-              <summary class="signature-collapse-trigger" aria-label="Toggle signature navigation">
-                <Fragment set:html={AlignLeft} />
-              </summary>
-              <nav class="wire-box signature-collapse-panel" aria-label="Signature navigation area">
-                <ul class="signature-collapse-links">
-                  {
-                    foldedNavItems.map((item) => (
-                      <li>
-                        <a href={item.href}>{item.label}</a>
-                      </li>
-                    ))
-                  }
-                </ul>
-              </nav>
-            </details>
-            <slot name="side-nav" />
-          </div>
-        </aside>
-
-        <section class="wire-box profile-area" aria-label="Profile area">
-          <slot name="profile" />
-        </section>
-
-        <section class="wire-box latest-area" aria-label="Latest area">
-          <slot name="latest" />
-        </section>
-      </main>
-
-      <footer class="home-footer">
-        <div class="wire-box footer-info" aria-label="Footer info area">
-          <slot name="footer-info" />
+    <main class="home-main">
+      <aside class="wire-box side-nav-area" aria-label="Side navigation area">
+        <div class="side-nav-stack">
+          <details class="signature-collapse" aria-label="Signature navigation toggle">
+            <summary class="signature-collapse-trigger" aria-label="Toggle signature navigation">
+              <Icon svg={AlignLeft} />
+            </summary>
+            <nav class="wire-box signature-collapse-panel" aria-label="Signature navigation area">
+              <ul class="signature-collapse-links">
+                {
+                  foldedNavItems.map((item) => (
+                    <li>
+                      <a href={item.href}>{item.label}</a>
+                    </li>
+                  ))
+                }
+              </ul>
+            </nav>
+          </details>
+          <slot name="side-nav" />
         </div>
+      </aside>
 
-        <nav class="wire-box footer-icons" aria-label="Footer icon navigation">
-          <slot name="footer-icons" />
-        </nav>
-      </footer>
-    </div>
-    <script is:inline>
+      <section class="wire-box profile-area" aria-label="Profile area">
+        <slot name="profile" />
+      </section>
+
+      <section class="wire-box latest-area" aria-label="Latest area">
+        <slot name="latest" />
+      </section>
+    </main>
+
+    <footer class="home-footer">
+      <div class="wire-box footer-info" aria-label="Footer info area">
+        <slot name="footer-info" />
+      </div>
+
+      <nav class="wire-box footer-icons" aria-label="Footer icon navigation">
+        <slot name="footer-icons" />
+      </nav>
+    </footer>
+  </div>
+  <script slot="body-end" is:inline>
       const STORAGE_KEY = "theme-preference";
       const VALID_MODES = ["light", "dark", "system"];
       const toggleButton = document.getElementById("theme-toggle");
@@ -211,6 +195,5 @@ const foldedNavItems = site.nav;
       };
 
       media.addEventListener("change", handleSystemThemeChange);
-    </script>
-  </body>
-</html>
+  </script>
+</BaseLayout>

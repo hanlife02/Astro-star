@@ -1,0 +1,35 @@
+---
+import { site } from "../config/site";
+
+interface Props {
+  title?: string;
+}
+
+const { title } = Astro.props as Props;
+const pathname = Astro.url.pathname.replace(/\/+$/, "") || "/";
+const pageName =
+  pathname === "/"
+    ? "Home"
+    : pathname
+        .split("/")
+        .filter(Boolean)
+        .map((segment) => segment.charAt(0).toUpperCase() + segment.slice(1))
+        .join(" / ");
+const pageTitle = title ?? `${pageName} - ${site.name}`;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="icon" type="image/svg+xml" href={site.iconSrc} />
+    <title>{pageTitle}</title>
+    <slot name="head" />
+  </head>
+  <body>
+    <slot name="background" />
+    <slot />
+    <slot name="body-end" />
+  </body>
+</html>

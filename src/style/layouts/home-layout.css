@@ -33,7 +33,7 @@
 :root {
   --line: #111111;
   --line-soft: rgba(17, 17, 17, 0.88);
-  --golden: 1.61803398875;
+  --layout-max-ratio: 1.44;
   --font-size-base: clamp(0.9375rem, 0.86rem + 0.35vw, 1.1rem);
   --shell-max: min(92vw, 112.5rem);
   --space: clamp(0.5rem, 1.2vw, 1.25rem);
@@ -82,7 +82,7 @@ body {
   position: relative;
   z-index: 1;
   min-height: 100vh;
-  width: min(100%, var(--shell-max), calc(100dvh * var(--golden)));
+  width: min(100%, var(--shell-max), calc(100dvh * var(--layout-max-ratio)));
   margin-inline: auto;
   padding: var(--space);
   display: grid;

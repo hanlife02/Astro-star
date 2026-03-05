@@ -1,0 +1,21 @@
+---
+interface Props {
+  svg: string;
+  label?: string;
+  decorative?: boolean;
+}
+
+const {
+  svg,
+  label,
+  decorative = true,
+} = Astro.props as Props;
+
+const a11yAttrs = decorative
+  ? ' aria-hidden="true" focusable="false"'
+  : ` role="img" aria-label="${label ?? ""}" focusable="false"`;
+
+const svgWithA11y = svg.replace("<svg", `<svg${a11yAttrs}`);
+---
+
+<Fragment set:html={svgWithA11y} />

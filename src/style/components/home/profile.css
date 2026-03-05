@@ -1,13 +1,13 @@
 .profile-card {
-  --profile-max-width: min(100%, 34rem);
+  --profile-max-width: min(100%, 32rem);
   --profile-padding: clamp(1rem, 2vw, 1.6rem);
   --profile-gap: clamp(0.55rem, 0.35rem + 0.4vw, 0.95rem);
   --profile-offset-x: 0rem;
-  --profile-offset-y: clamp(-2.9rem, -1.7rem - 1.35vw, -1.4rem);
-  --avatar-size: clamp(8.8rem, 7.3rem + 5.5vw, 14rem);
-  --name-size: clamp(2rem, 1.25rem + 2.5vw, 3.6rem);
-  --one-word-size: clamp(1.1rem, 0.95rem + 0.95vw, 1.95rem);
-  --bio-size: clamp(0.98rem, 0.9rem + 0.65vw, 1.55rem);
+  --profile-offset-y: clamp(-0.8rem, -0.8rem - 1.35vw, 0rem);
+  --avatar-size: clamp(3.2rem, 2.8rem + 4.5vw, 8rem);
+  --name-size: clamp(1.2rem, 1.0rem + 1.25vw, 4.8rem);
+  --one-word-size: clamp(0.8rem, 0.6rem + 0.95vw, 1.95rem);
+  --bio-size: clamp(0.5rem, 0.4rem + 0.95vw, 1.55rem);
 
   width: var(--profile-max-width);
   height: 100%;

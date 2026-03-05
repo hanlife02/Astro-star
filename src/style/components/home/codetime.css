@@ -6,6 +6,7 @@
 
 .codetime-link img {
   display: block;
+  width: clamp(6rem, 5.5rem + 5vw, 20rem);
   max-width: 100%;
   height: auto;
 }
