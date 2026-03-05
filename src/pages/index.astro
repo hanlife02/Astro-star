@@ -3,10 +3,53 @@ import HomeLayout from "../layouts/HomeLayout.astro";
 import CodeTime from "../components/home/CodeTime.astro";
 import GitHeatmap from "../components/home/githeatmap.astro";
 import Signature from "../components/home/signature.astro";
+import Icon from "../components/ui/Icon.astro";
+import BilibiliIcon from "../components/ui/icons/BilibiliIcon.astro";
+import NetEaseMusicIcon from "../components/ui/icons/NetEaseMusicIcon.astro";
+import { Github, Mail } from "lucide-static";
 import { site } from "../config/site";
 import "../style/components/home/profile.css";
 
 const { profile, owner } = site;
+const githubUsername = (profile.githubUsername || site.contact.githubUsername).trim();
+const bilibiliId = profile.bilibiliId.trim();
+const cloudMusicId = profile.cloudMusicId.trim();
+const emailAddress = (profile.email || site.contact.email).trim();
+
+const profileLinks = [
+  {
+    key: "github",
+    label: "GitHub",
+    href: githubUsername ? `https://github.com/${encodeURIComponent(githubUsername)}` : "",
+    icon: Github,
+    external: true,
+  },
+  {
+    key: "bilibili",
+    label: "Bilibili",
+    href: bilibiliId ? `https://space.bilibili.com/${encodeURIComponent(bilibiliId)}` : "",
+    icon: "",
+    external: true,
+  },
+  {
+    key: "cloud-music",
+    label: "NetEase Cloud Music",
+    href: cloudMusicId
+      ? `https://music.163.com/#/user/home?id=${encodeURIComponent(cloudMusicId)}`
+      : "",
+    icon: "",
+    external: true,
+  },
+  {
+    key: "email",
+    label: "Email",
+    href: emailAddress ? `mailto:${emailAddress}` : "",
+    icon: Mail,
+    external: false,
+  },
+]
+  .filter((item) => item.href)
+  .slice(0, 4);
 ---
 
 <HomeLayout>
@@ -20,6 +63,27 @@ const { profile, owner } = site;
       decoding="async"
     />
     <h2 class="profile-name">{owner.name}</h2>
+    {
+      profileLinks.length > 0 && (
+        <nav class="profile-links" aria-label="Profile quick links">
+          {
+            profileLinks.map((item) => (
+              <a
+                class="profile-link"
+                href={item.href}
+                target={item.external ? "_blank" : undefined}
+                rel={item.external ? "noreferrer" : undefined}
+                aria-label={item.label}
+              >
+                {item.key === "bilibili" ? <BilibiliIcon /> : null}
+                {item.key === "cloud-music" ? <NetEaseMusicIcon /> : null}
+                {item.key !== "bilibili" && item.key !== "cloud-music" ? <Icon svg={item.icon} /> : null}
+              </a>
+            ))
+          }
+        </nav>
+      )
+    }
     <p class="profile-one-word">{profile.bio}</p>
     <p class="profile-bio">{profile.intro}</p>
     <CodeTime />
