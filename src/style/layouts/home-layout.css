@@ -44,9 +44,9 @@
   --main-col-1-min: 7.5rem;
   --main-col-2-min: 17.5rem;
   --main-col-3-min: 22.5rem;
-  --main-col-1-fr: 1fr;
-  --main-col-2-fr: 2fr;
-  --main-col-3-fr: 4fr;
+  --main-col-1-fr: 0.5fr;
+  --main-col-2-fr: 2.5fr;
+  --main-col-3-fr: 3.5fr;
   --main-col-gap: 0.2rem;
   --nav-flyout-min: clamp(10.5rem, 18vw, 14rem);
   --menu-trigger-width: clamp(2.4rem, 2rem + 0.6vw, 3rem);
