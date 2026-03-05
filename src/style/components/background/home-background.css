@@ -6,19 +6,19 @@
   overflow: hidden;
   --snow-ink: color-mix(in srgb, var(--fg) var(--snow-strength, 24%), transparent);
   background-image:
-    radial-gradient(circle at 6% 14%, var(--snow-ink) 0 1.3px, transparent 2.6px),
-    radial-gradient(circle at 18% 62%, var(--snow-ink) 0 1.8px, transparent 3.3px),
-    radial-gradient(circle at 27% 28%, var(--snow-ink) 0 1.3px, transparent 2.6px),
-    radial-gradient(circle at 33% 80%, var(--snow-ink) 0 2.3px, transparent 3.9px),
-    radial-gradient(circle at 41% 18%, var(--snow-ink) 0 1.5px, transparent 3.1px),
-    radial-gradient(circle at 49% 55%, var(--snow-ink) 0 1.3px, transparent 2.6px),
-    radial-gradient(circle at 57% 32%, var(--snow-ink) 0 2px, transparent 3.6px),
-    radial-gradient(circle at 63% 74%, var(--snow-ink) 0 1.3px, transparent 2.6px),
-    radial-gradient(circle at 71% 12%, var(--snow-ink) 0 2.8px, transparent 4.7px),
-    radial-gradient(circle at 78% 46%, var(--snow-ink) 0 1.5px, transparent 3.1px),
-    radial-gradient(circle at 86% 83%, var(--snow-ink) 0 1.3px, transparent 2.6px),
-    radial-gradient(circle at 92% 24%, var(--snow-ink) 0 2.2px, transparent 3.9px);
-  background-size: 900px 650px;
+    radial-gradient(circle at 6% 14%, var(--snow-ink) 0 0.0813rem, transparent 0.1625rem),
+    radial-gradient(circle at 18% 62%, var(--snow-ink) 0 0.1125rem, transparent 0.2063rem),
+    radial-gradient(circle at 27% 28%, var(--snow-ink) 0 0.0813rem, transparent 0.1625rem),
+    radial-gradient(circle at 33% 80%, var(--snow-ink) 0 0.1438rem, transparent 0.2438rem),
+    radial-gradient(circle at 41% 18%, var(--snow-ink) 0 0.0938rem, transparent 0.1938rem),
+    radial-gradient(circle at 49% 55%, var(--snow-ink) 0 0.0813rem, transparent 0.1625rem),
+    radial-gradient(circle at 57% 32%, var(--snow-ink) 0 0.125rem, transparent 0.225rem),
+    radial-gradient(circle at 63% 74%, var(--snow-ink) 0 0.0813rem, transparent 0.1625rem),
+    radial-gradient(circle at 71% 12%, var(--snow-ink) 0 0.175rem, transparent 0.2938rem),
+    radial-gradient(circle at 78% 46%, var(--snow-ink) 0 0.0938rem, transparent 0.1938rem),
+    radial-gradient(circle at 86% 83%, var(--snow-ink) 0 0.0813rem, transparent 0.1625rem),
+    radial-gradient(circle at 92% 24%, var(--snow-ink) 0 0.1375rem, transparent 0.2438rem);
+  background-size: 56.25rem 40.625rem;
   animation: snow-drift 22s linear infinite;
 }
 
@@ -36,10 +36,10 @@
 
 @keyframes snow-drift {
   from {
-    background-position: 0 0, 10px 12px, -20px -30px;
+    background-position: 0 0, 0.625rem 0.75rem, -1.25rem -1.875rem;
   }
   to {
-    background-position: 120px 300px, 210px 520px, 80px 760px;
+    background-position: 7.5rem 18.75rem, 13.125rem 32.5rem, 5rem 47.5rem;
   }
 }
 

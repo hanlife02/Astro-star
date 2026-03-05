@@ -1,4 +1,5 @@
 .signature-wrap {
+  --signature-svg-max: clamp(5.2rem, 4.2rem + 3.4vw, 8.4rem);
   width: 100%;
   color: var(--line, #101010);
   text-decoration: none;
@@ -9,7 +10,7 @@
 
 .signature-wrap svg {
   display: block;
-  max-width: min(96px, 100%);
+  max-width: min(var(--signature-svg-max), 100%);
   height: auto;
 }
 
@@ -19,8 +20,8 @@
   stroke: currentColor !important;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 48rem) {
   .signature-wrap svg {
-    max-width: 128px;
+    max-width: min(clamp(6.2rem, 5.5rem + 2vw, 9rem), 100%);
   }
 }

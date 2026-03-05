@@ -34,19 +34,27 @@
   --line: #111111;
   --line-soft: rgba(17, 17, 17, 0.88);
   --golden: 1.61803398875;
-  --shell-max: min(92vw, 1800px);
+  --font-size-base: clamp(0.9375rem, 0.86rem + 0.35vw, 1.1rem);
+  --shell-max: min(92vw, 112.5rem);
   --space: clamp(0.5rem, 1.2vw, 1.25rem);
   --header-main-gap: clamp(2.75rem, 1.4vw, 1.25rem);
-  --footer-height: clamp(54px, 7.8vh, 70px);
-  --main-mobile-h: clamp(320px, 43vh, 520px);
-  --main-desktop-h: clamp(430px, 58vh, 760px);
-  --main-col-1-min: 120px;
-  --main-col-2-min: 280px;
-  --main-col-3-min: 360px;
+  --footer-height: clamp(3.25rem, 6vh, 4.5rem);
+  --main-mobile-h: clamp(20rem, 43vh, 32.5rem);
+  --main-desktop-h: clamp(26.875rem, 58vh, 47.5rem);
+  --main-col-1-min: 7.5rem;
+  --main-col-2-min: 17.5rem;
+  --main-col-3-min: 22.5rem;
   --main-col-1-fr: 1fr;
   --main-col-2-fr: 2fr;
   --main-col-3-fr: 4fr;
   --main-col-gap: 0.2rem;
+  --nav-flyout-min: clamp(10.5rem, 18vw, 14rem);
+  --menu-trigger-width: clamp(2.4rem, 2rem + 0.6vw, 3rem);
+  --menu-trigger-height: clamp(2rem, 1.7rem + 0.5vw, 2.5rem);
+  --menu-icon-size: clamp(1.3rem, 1rem + 0.6vw, 2rem);
+  --icon-btn-size: clamp(2.75rem, 2.3rem + 0.95vw, 3.75rem);
+  --icon-size: clamp(1.4rem, 1.15rem + 0.65vw, 2.25rem);
+  --signature-link-size: clamp(1rem, 0.9rem + 0.85vw, 1.45rem);
 }
 
 :root[data-theme="dark"] {
@@ -58,10 +66,15 @@
   box-sizing: border-box;
 }
 
+html {
+  font-size: var(--font-size-base);
+}
+
 body {
   margin: 0;
   background: transparent;
   color: var(--line);
+  line-height: 1.5;
   font-family: "Biotif", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
 }
 
@@ -93,8 +106,8 @@ body {
 }
 
 .signature-area {
-  width: min(100%, clamp(168px, 34vw, 380px));
-  min-height: clamp(44px, 7vh, 64px);
+  width: min(100%, clamp(10.5rem, 34vw, 23.75rem));
+  min-height: clamp(2.75rem, 7vh, 4rem);
   display: flex;
   align-items: flex-end;
   justify-self: start;
@@ -116,8 +129,8 @@ body {
 }
 
 .signature-collapse-trigger {
-  width: 48px;
-  height: 32px;
+  width: var(--menu-trigger-width);
+  height: var(--menu-trigger-height);
   border: 0;
   padding: 0;
   background: transparent;
@@ -139,8 +152,8 @@ body {
 }
 
 .signature-collapse-trigger svg {
-  width: 32px;
-  height: 32px;
+  width: var(--menu-icon-size);
+  height: var(--menu-icon-size);
 }
 
 .signature-collapse-panel {
@@ -149,7 +162,7 @@ body {
   top: 100%;
   left: 0;
   z-index: 3;
-  min-width: 180px;
+  min-width: var(--nav-flyout-min);
   padding: 0.4rem 0;
 }
 
@@ -168,7 +181,7 @@ body {
   padding: 1.2rem 0.8rem;
   color: var(--line-soft);
   text-decoration: none;
-  font-size: 1.8rem;
+  font-size: var(--signature-link-size);
   line-height: 1.3;
 }
 
@@ -188,8 +201,8 @@ body {
 }
 
 .hamburger {
-  width: 44px;
-  height: 40px;
+  width: var(--icon-btn-size);
+  height: var(--icon-btn-size);
   border: 0;
   padding: 0;
   background: transparent;
@@ -207,17 +220,19 @@ body {
 
 .hamburger::before {
   content: "";
-  width: 20px;
-  height: 2px;
+  width: clamp(1rem, 0.9rem + 0.45vw, 1.5rem);
+  height: clamp(0.1rem, 0.08rem + 0.08vw, 0.16rem);
   background: currentColor;
-  box-shadow: 0 -6px 0 currentColor, 0 6px 0 currentColor;
+  box-shadow:
+    0 clamp(-0.35rem, -0.28rem - 0.15vw, -0.55rem) 0 currentColor,
+    0 clamp(0.35rem, 0.28rem + 0.15vw, 0.55rem) 0 currentColor;
 }
 
 .nav-panel {
   position: absolute;
   top: calc(100% + 0.5rem);
   left: 0;
-  min-width: 180px;
+  min-width: var(--nav-flyout-min);
   padding: 0.25rem 0;
   display: none;
   z-index: 2;
@@ -229,8 +244,8 @@ body {
 
 .header-actions {
   grid-column: 3;
-  min-height: 40px;
-  min-width: 140px;
+  min-height: clamp(2.25rem, 1.9rem + 0.55vw, 2.85rem);
+  min-width: clamp(8rem, 7rem + 2.6vw, 11rem);
   display: inline-flex;
   align-items: flex-end;
   justify-content: flex-end;
@@ -249,8 +264,8 @@ body {
 
 .theme-btn,
 .search-btn {
-  width: 56px;
-  height: 56px;
+  width: var(--icon-btn-size);
+  height: var(--icon-btn-size);
   border: 0;
   background: transparent;
   color: var(--line-soft);
@@ -264,8 +279,8 @@ body {
 
 .theme-btn svg,                                                
 .search-btn svg {                                              
-  width: 36px;                                                 
-  height: 36px;                                                
+  width: var(--icon-size);                                                 
+  height: var(--icon-size);                                                
 }
 
 .theme-btn:hover,
@@ -338,7 +353,7 @@ body {
   margin-left: auto;
 }
 
-@media (min-width: 900px) {
+@media (min-width: 56.25rem) {
   .mobile-nav-drawer {
     display: none;
   }
@@ -365,8 +380,15 @@ body {
   }
 }
 
-@media (min-width: 2400px) {
+@media (min-width: 150rem) {
   :root {
-    --shell-max: 93vw;
+    --font-size-base: clamp(1rem, 0.9rem + 0.3vw, 1.28rem);
+    --shell-max: min(93vw, 137.5rem);
+  }
+}
+
+@media (min-width: 200rem) {
+  :root {
+    --font-size-base: clamp(1.0625rem, 0.92rem + 0.26vw, 1.4rem);
   }
 }
