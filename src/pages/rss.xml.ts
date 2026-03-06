@@ -1,13 +1,12 @@
 import type { APIRoute } from "astro";
 import rss from "@astrojs/rss";
 import { site as siteConfig } from "../config/site";
+import { getGitTimestamps } from "../utils/git-timestamps";
 
 interface ContentModule {
   frontmatter?: {
     title?: string;
     description?: string;
-    pubDate?: string | Date;
-    date?: string | Date;
   };
 }
 
@@ -29,14 +28,14 @@ const rssItems = Object.entries(contentModules)
     const frontmatter = (mod as ContentModule).frontmatter;
     const title = frontmatter?.title?.trim();
     const description = frontmatter?.description?.trim();
-    const rawDate = frontmatter?.pubDate ?? frontmatter?.date;
-    const pubDate = rawDate ? new Date(rawDate) : null;
     const slug = path.split("/").pop()?.replace(/\.(md|mdx)$/i, "");
     const section = path.includes("/note/")
       ? "note"
       : path.includes("/project/")
         ? "project"
         : "blog";
+    const { createdAt, updatedAt } = getGitTimestamps(new URL(path, import.meta.url));
+    const pubDate = createdAt ?? updatedAt;
 
     if (!title || !slug || !pubDate || Number.isNaN(pubDate.getTime())) {
       return null;

@@ -8,6 +8,7 @@ import BilibiliIcon from "../components/ui/icons/BilibiliIcon.astro";
 import NetEaseMusicIcon from "../components/ui/icons/NetEaseMusicIcon.astro";
 import { Github, Mail } from "lucide-static";
 import { site } from "../config/site";
+import { getGitTimestamps } from "../utils/git-timestamps";
 import "../style/components/home/profile.css";
 import "../style/components/home/footer-info.css";
 import "../style/components/home/latest-articles.css";
@@ -27,8 +28,6 @@ const latestSourceModules = {
 interface BlogModule {
   frontmatter?: {
     title?: string;
-    pubDate?: string | Date;
-    date?: string | Date;
   };
 }
 
@@ -36,6 +35,8 @@ interface LatestArticleItem {
   title: string;
   href: string;
   pubDateIso: string;
+  createdAtIso: string;
+  updatedAtIso: string;
   displayDate: string;
   year: string;
   timestamp: number;
@@ -50,20 +51,22 @@ const latestArticles = Object.entries(latestSourceModules)
   .map(([path, mod]) => {
     const frontmatter = (mod as BlogModule).frontmatter;
     const title = frontmatter?.title?.trim();
-    const rawDate = frontmatter?.pubDate ?? frontmatter?.date;
-    const parsedDate = rawDate ? new Date(rawDate) : null;
     const slug = path.split("/").pop()?.replace(/\.(md|mdx)$/i, "");
     const section = path.includes("/note/") ? "note" : "blog";
+    const { createdAt, updatedAt } = getGitTimestamps(new URL(path, import.meta.url));
+    const pubDate = createdAt ?? updatedAt;
 
-    if (!title || !slug || !parsedDate || Number.isNaN(parsedDate.getTime())) return null;
+    if (!title || !slug || !pubDate || Number.isNaN(pubDate.getTime())) return null;
 
     return {
       title,
       href: `/${section}/${slug}/`,
-      pubDateIso: parsedDate.toISOString(),
-      displayDate: `${parsedDate.toISOString().slice(5, 7)}.${parsedDate.toISOString().slice(8, 10)}`,
-      year: parsedDate.toISOString().slice(0, 4),
-      timestamp: parsedDate.getTime(),
+      pubDateIso: pubDate.toISOString(),
+      createdAtIso: createdAt?.toISOString() ?? pubDate.toISOString(),
+      updatedAtIso: updatedAt?.toISOString() ?? pubDate.toISOString(),
+      displayDate: `${pubDate.toISOString().slice(5, 7)}.${pubDate.toISOString().slice(8, 10)}`,
+      year: pubDate.toISOString().slice(0, 4),
+      timestamp: pubDate.getTime(),
     } as LatestArticleItem;
   })
   .filter((item): item is LatestArticleItem => item !== null)
