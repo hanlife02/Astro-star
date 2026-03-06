@@ -9,6 +9,7 @@ import "../../style/pages/content-page.css";
 interface ContentModule {
   default: any;
   frontmatter?: {
+    type?: string;
     title?: string;
     description?: string;
   };
@@ -65,6 +66,7 @@ if (!articleModule || !section || !slug) {
 const ArticleContent = articleModule.default;
 const title = articleModule.frontmatter?.title?.trim() || slug;
 const description = articleModule.frontmatter?.description?.trim() || "";
+const articleType = articleModule.frontmatter?.type?.trim() || "Uncategorized";
 const author = site.owner.name;
 const { createdAt, updatedAt } = getGitTimestamps(new URL(articlePath, import.meta.url));
 
@@ -142,6 +144,7 @@ const tocHeadings = extractTocHeadings(articleRawSource ?? "");
           description && <p class="article-content-description">{description}</p>
         }
         <div class="article-content-meta" aria-label="Article metadata">
+          <p class="article-content-meta-item"><span>Type</span><strong>{articleType}</strong></p>
           <p class="article-content-meta-item"><span>Author</span><strong>{author}</strong></p>
           <p class="article-content-meta-item"><span>Created</span><strong>{formatDateTime(createdAt)}</strong></p>
           <p class="article-content-meta-item"><span>Updated</span><strong>{formatDateTime(updatedAt)}</strong></p>

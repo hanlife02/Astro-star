@@ -1,0 +1,21 @@
+﻿---
+interface Props {
+  title: string;
+  href: string;
+  createdLabel: string;
+  description?: string;
+}
+
+const { title, href, createdLabel, description = "" } = Astro.props;
+---
+
+<article class="listing-card">
+  <a class="listing-card-link" href={href}>
+    <div class="listing-card-head">
+      <h3 class="listing-card-title">{title}</h3>
+      <span class="listing-card-arrow" aria-hidden="true">→</span>
+    </div>
+    <p class="listing-card-meta">{createdLabel}</p>
+    {description && <p class="listing-card-description">{description}</p>}
+  </a>
+</article>

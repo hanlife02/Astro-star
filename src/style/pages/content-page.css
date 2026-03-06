@@ -256,3 +256,170 @@
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
+.content-page--listing .content-page-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  min-width: 0;
+  overflow-x: hidden;
+}
+
+.listing-header {
+  margin: 0;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--line) 16%, transparent);
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.listing-header-section {
+  margin: 0;
+  color: color-mix(in srgb, var(--line) 52%, transparent);
+  font-size: 0.9rem;
+  letter-spacing: 0.16em;
+}
+
+.listing-header-title {
+  margin: 0;
+  font-size: clamp(2.3rem, 2rem + 1.5vw, 4.3rem);
+  line-height: 1.05;
+  color: transparent;
+  -webkit-text-stroke: 1px var(--line);
+  text-stroke: 1px var(--line);
+}
+
+.listing-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  min-width: 0;
+}
+
+.listing-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  min-width: 0;
+}
+
+.listing-group-title {
+  margin: 0;
+  color: var(--line);
+  font-size: clamp(1.25rem, 1.16rem + 0.45vw, 1.7rem);
+}
+
+.listing-group-items {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.95rem;
+  min-width: 0;
+}
+
+.listing-card {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 1rem clamp(1.6rem, 1.35rem + 1vw, 2.2rem) 1rem 1.05rem;
+  border: 1px solid color-mix(in srgb, var(--line) 12%, transparent);
+  border-radius: 1rem;
+  background: color-mix(in srgb, var(--line) 2.5%, transparent);
+  transition: border-color 0.22s ease, transform 0.22s ease, background 0.22s ease;
+}
+
+.listing-card:hover,
+.listing-card:focus-within {
+  border-color: color-mix(in srgb, #483D8B 36%, transparent);
+  background: color-mix(in srgb, #483D8B 4%, transparent);
+  transform: translateY(-0.08rem);
+}
+
+.listing-card-link {
+  position: relative;
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding-right: clamp(2.5rem, 2.15rem + 1.8vw, 4rem);
+  color: inherit;
+  text-decoration: none;
+}
+
+.listing-card-title {
+  margin: 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: var(--line);
+  font-size: clamp(1.02rem, 0.98rem + 0.2vw, 1.14rem);
+  line-height: 1.45;
+}
+
+.listing-card-meta {
+  margin: 0.28rem 0 0;
+  color: color-mix(in srgb, var(--line) 52%, transparent);
+  font-size: 0.88rem;
+}
+
+.listing-card-description {
+  margin: 0.4rem 0 0;
+  overflow: hidden;
+  color: color-mix(in srgb, var(--line) 76%, transparent);
+  line-height: 1.7;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.listing-card-head {
+  display: block;
+}
+
+.listing-card-arrow {
+  position: absolute;
+  top: 50%;
+  right: clamp(1.2rem, 0.95rem + 1.6vw, 2.3rem);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: color-mix(in srgb, var(--line) 40%, transparent);
+  font-size: clamp(1rem, 0.94rem + 0.24vw, 1.18rem);
+  line-height: 1;
+  pointer-events: none;
+  transform: translate3d(0, -50%, 0);
+  transition: color 0.22s ease, transform 0.22s ease;
+}
+
+.listing-card-link:hover .listing-card-title,
+.listing-card-link:focus-visible .listing-card-title,
+.listing-card-link:hover .listing-card-meta,
+.listing-card-link:focus-visible .listing-card-meta,
+.listing-card-link:hover .listing-card-description,
+.listing-card-link:focus-visible .listing-card-description,
+.listing-card-link:hover .listing-card-arrow,
+.listing-card-link:focus-visible .listing-card-arrow {
+  color: #483D8B;
+}
+
+.listing-card-link:hover .listing-card-arrow,
+.listing-card-link:focus-visible .listing-card-arrow {
+  transform: translate3d(0.26rem, -50%, 0);
+}
+
+@media (min-width: 56.25rem) {
+  .listing-card {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+    padding-right: clamp(2.1rem, 1.7rem + 1.1vw, 3.2rem);
+  }
+
+  .listing-card-link {
+    padding-right: clamp(3rem, 2.45rem + 1.6vw, 4.8rem);
+  }
+
+  .listing-card-arrow {
+    right: clamp(1.5rem, 1.15rem + 1vw, 2.6rem);
+  }
+}
