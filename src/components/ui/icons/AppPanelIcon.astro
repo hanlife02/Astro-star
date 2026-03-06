@@ -1,0 +1,138 @@
+---
+import Icon from "../Icon.astro";
+import ArcIcon from "./ArcIcon.astro";
+import BilibiliIcon from "./BilibiliIcon.astro";
+import CloudMusicIcon from "./CloudMusicIcon.astro";
+import GithubIcon from "./GithubIcon.astro";
+import Iterm2Icon from "./Iterm2Icon.astro";
+import MailIcon from "./MailIcon.astro";
+import NotionIcon from "./NotionIcon.astro";
+import RaycastIcon from "./RaycastIcon.astro";
+import RssIcon from "./RssIcon.astro";
+import StarIcon from "./StarIcon.astro";
+import TailscaleIcon from "./TailscaleIcon.astro";
+import ThunderbirdIcon from "./ThunderbirdIcon.astro";
+import VscodeIcon from "./VscodeIcon.astro";
+import ZoteroIcon from "./ZoteroIcon.astro";
+import {
+  Blocks,
+  BookOpen,
+  CodeXml,
+  Figma,
+  Github,
+  Hammer,
+  Mail,
+  PenTool,
+  Rocket,
+  Send,
+  Sparkles,
+  Wrench,
+} from "lucide-static";
+
+interface Props {
+  name?: string;
+  label?: string;
+}
+
+const { name = "", label } = Astro.props;
+const normalizedName = name.trim().toLowerCase();
+
+const customIconKey =
+  normalizedName === "arc"
+    ? "arc"
+    : normalizedName === "bilibili"
+      ? "bilibili"
+      : normalizedName === "cloudmusic" ||
+          normalizedName === "cloud-music" ||
+          normalizedName === "cloud music" ||
+          normalizedName === "netease" ||
+          normalizedName === "netease-music" ||
+          normalizedName === "netease music"
+        ? "cloud-music"
+        : normalizedName === "github" || normalizedName === "gh"
+          ? "github"
+          : normalizedName === "iterm2" || normalizedName === "iterm"
+            ? "iterm2"
+            : normalizedName === "mail" || normalizedName === "email" || normalizedName === "@"
+              ? "mail"
+              : normalizedName === "notion"
+                ? "notion"
+                : normalizedName === "raycast"
+                  ? "raycast"
+                  : normalizedName === "rss"
+                    ? "rss"
+                    : normalizedName === "star"
+                      ? "star"
+                      : normalizedName === "tailscale"
+                        ? "tailscale"
+                        : normalizedName === "thunderbird"
+                          ? "thunderbird"
+                          : normalizedName === "vscode" || normalizedName === "vs code" || normalizedName === "vs"
+                            ? "vscode"
+                            : normalizedName === "zotero"
+                              ? "zotero"
+                              : "";
+
+const lucideIconMap: Record<string, string> = {
+  as: Rocket,
+  astro: Rocket,
+  blocks: Blocks,
+  book: BookOpen,
+  code: CodeXml,
+  figma: Figma,
+  fg: Figma,
+  note: BookOpen,
+  notebook: BookOpen,
+  ob: Sparkles,
+  obsidian: Sparkles,
+  pen: PenTool,
+  project: Blocks,
+  send: Send,
+  sparkles: Sparkles,
+  tg: Send,
+  telegram: Send,
+  tool: Wrench,
+  tools: Wrench,
+  work: Hammer,
+  wrench: Wrench,
+};
+
+const lucideSvg = customIconKey ? "" : lucideIconMap[normalizedName] ?? "";
+const fallbackText = name.slice(0, 3).toUpperCase();
+---
+
+{
+  customIconKey === "arc" ? (
+    <ArcIcon />
+  ) : customIconKey === "bilibili" ? (
+    <BilibiliIcon />
+  ) : customIconKey === "cloud-music" ? (
+    <CloudMusicIcon />
+  ) : customIconKey === "github" ? (
+    <GithubIcon />
+  ) : customIconKey === "iterm2" ? (
+    <Iterm2Icon />
+  ) : customIconKey === "mail" ? (
+    <MailIcon />
+  ) : customIconKey === "notion" ? (
+    <NotionIcon />
+  ) : customIconKey === "raycast" ? (
+    <RaycastIcon />
+  ) : customIconKey === "rss" ? (
+    <RssIcon />
+  ) : customIconKey === "star" ? (
+    <StarIcon />
+  ) : customIconKey === "tailscale" ? (
+    <TailscaleIcon />
+  ) : customIconKey === "thunderbird" ? (
+    <ThunderbirdIcon />
+  ) : customIconKey === "vscode" ? (
+    <VscodeIcon />
+  ) : customIconKey === "zotero" ? (
+    <ZoteroIcon />
+  ) : lucideSvg ? (
+    <Icon svg={lucideSvg} label={label} decorative={!label} />
+  ) : (
+    <span>{fallbackText}</span>
+  )
+}
