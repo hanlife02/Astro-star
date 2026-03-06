@@ -258,7 +258,7 @@ body {
 
 .theme-switcher {
   display: inline-flex;
-  align-items: center;
+  align-items: flex-end;
   gap: 0rem;
 }
 
@@ -270,9 +270,10 @@ body {
   background: transparent;
   color: var(--line-soft);
   display: inline-flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: center;
-  padding-bottom: 0;
+  padding: 0;
+  line-height: 0;
   cursor: pointer;
   transition: color 0.2s ease, opacity 0.2s ease;
 }
@@ -280,7 +281,21 @@ body {
 .theme-btn svg,                                                
 .search-btn svg {                                              
   width: var(--icon-size);                                                 
-  height: var(--icon-size);                                                
+  height: var(--icon-size);
+  display: block;
+}
+
+.theme-btn [data-theme-icon]:not([hidden]) {
+  width: var(--icon-size);
+  height: var(--icon-size);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.theme-btn [data-theme-icon]:not([hidden]) svg {
+  width: 100%;
+  height: 100%;
 }
 
 .theme-btn:hover,
