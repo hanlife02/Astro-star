@@ -1,6 +1,6 @@
 .githeatmap-link {
   display: block;
-  width: min(100%, clamp(15rem, 13rem + 10vw, 22rem));
+  width: min(100%, clamp(17rem, 16rem + 20vw, 32rem));
   text-decoration: none;
   line-height: 0;
 }

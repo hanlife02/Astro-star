@@ -39,8 +39,8 @@
   --space: clamp(0.5rem, 1.2vw, 1.25rem);
   --header-main-gap: clamp(2.75rem, 1.4vw, 1.25rem);
   --footer-height: clamp(0.5rem, 1vh, 1rem);
-  --main-mobile-h: clamp(20rem, 43vh, 32.5rem);
-  --main-desktop-h: clamp(26.875rem, 58vh, 47.5rem);
+  --main-mobile-h: clamp(21rem, 46vh, 35rem);
+  --main-desktop-h: clamp(28.5rem, 62vh, 52rem);
   --main-col-1-min: 7.5rem;
   --main-col-2-min: 7.5rem;
   --main-col-3-min: 7.5rem;
@@ -456,4 +456,5 @@ body {
     --font-size-base: clamp(1.0625rem, 0.92rem + 0.26vw, 1.4rem);
   }
 }
+
 
