@@ -309,6 +309,17 @@ const shellStyle = [
           progress.style.height = `${markerHeight}px`;
           progress.style.left = `${markerLeft}px`;
           progress.style.transform = `translate3d(0, ${markerTop}px, 0)`;
+
+          const tocRect = toc.getBoundingClientRect();
+          const itemTopInToc = itemRect.top - tocRect.top + toc.scrollTop;
+          const centeredTocTop = itemTopInToc - (toc.clientHeight - itemRect.height) / 2;
+          const maxTocScrollTop = Math.max(0, toc.scrollHeight - toc.clientHeight);
+          const nextTocScrollTop = Math.min(Math.max(0, centeredTocTop), maxTocScrollTop);
+
+          toc.scrollTo({
+            top: nextTocScrollTop,
+            behavior: "smooth",
+          });
         };
 
         const queueContentTocUpdate = () => {
@@ -348,4 +359,5 @@ const shellStyle = [
       media.addEventListener("change", handleSystemThemeChange);
   </script>
 </BaseLayout>
+
 

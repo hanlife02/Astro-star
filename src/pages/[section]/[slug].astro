@@ -1,0 +1,180 @@
+---
+import HomeLayout from "../../layouts/HomeLayout.astro";
+import Signature from "../../components/home/signature.astro";
+import FooterMeta from "../../components/common/FooterMeta.astro";
+import { site } from "../../config/site";
+import { getGitTimestamps } from "../../utils/git-timestamps";
+import "../../style/pages/content-page.css";
+
+interface ContentModule {
+  default: any;
+  frontmatter?: {
+    title?: string;
+    description?: string;
+  };
+}
+
+const articleModules = import.meta.glob("../../content/{blog,note,project}/*.{md,mdx}", {
+  eager: true,
+});
+
+const articleRawModules = import.meta.glob("../../content/{blog,note,project}/*.{md,mdx}", {
+  eager: true,
+  query: "?raw",
+  import: "default",
+});
+
+export function getStaticPaths() {
+  const articlePaths = Object.keys(
+    import.meta.glob("../../content/{blog,note,project}/*.{md,mdx}", { eager: true }),
+  );
+
+  return articlePaths
+    .map((path) => {
+      const match = path.match(/^\.\.\/\.\.\/content\/(blog|note|project)\/([^/]+)\.(md|mdx)$/i);
+      if (!match) return null;
+
+      return {
+        params: {
+          section: match[1],
+          slug: match[2],
+        },
+        props: {
+          articlePath: path,
+        },
+      };
+    })
+    .filter((item): item is { params: { section: string; slug: string }; props: { articlePath: string } } => item !== null);
+}
+
+interface TocHeading {
+  depth: 1 | 2 | 3;
+  slug: string;
+  text: string;
+}
+
+const { section, slug } = Astro.params;
+const { articlePath } = Astro.props as { articlePath: string };
+const articleModule = articleModules[articlePath] as ContentModule | undefined;
+const articleRawSource = articleRawModules[articlePath] as string | undefined;
+
+if (!articleModule || !section || !slug) {
+  throw new Error("Missing article content module.");
+}
+
+const ArticleContent = articleModule.default;
+const title = articleModule.frontmatter?.title?.trim() || slug;
+const description = articleModule.frontmatter?.description?.trim() || "";
+const author = site.owner.name;
+const { createdAt, updatedAt } = getGitTimestamps(new URL(articlePath, import.meta.url));
+
+const formatDateTime = (value: Date | null) => {
+  if (!value || Number.isNaN(value.getTime())) return "Unknown";
+
+  return new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  }).format(value);
+};
+
+const countWords = (source: string) => {
+  const body = source
+    .replace(/^---[\s\S]*?---\s*/u, "")
+    .replace(/```[\s\S]*?```/g, " ")
+    .replace(/`[^`]*`/g, " ")
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, " ")
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/[>#*_~|-]/g, " ");
+
+  const words = body.match(/[\p{Letter}\p{Number}]+/gu);
+  return words?.length ?? 0;
+};
+
+function slugifyHeading(text: string) {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/[`*_~()[\]{}]/g, "")
+    .replace(/[^\p{Letter}\p{Number}\s-]/gu, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
+function extractTocHeadings(source: string) {
+  const body = source.replace(/^---[\s\S]*?---\s*/u, "");
+  const slugCounts = new Map<string, number>();
+
+  return Array.from(body.matchAll(/^(#{1,3})\s+(.+)$/gmu)).map((match) => {
+    const depth = match[1].length as 1 | 2 | 3;
+    const text = match[2].trim();
+    const baseSlug = slugifyHeading(text) || "section";
+    const currentCount = slugCounts.get(baseSlug) ?? 0;
+    slugCounts.set(baseSlug, currentCount + 1);
+
+    return {
+      depth,
+      slug: currentCount === 0 ? baseSlug : `${baseSlug}-${currentCount}`,
+      text,
+    } satisfies TocHeading;
+  });
+}
+
+const articleWordCount = countWords(articleRawSource ?? "");
+const tocHeadings = extractTocHeadings(articleRawSource ?? "");
+---
+
+<HomeLayout mainCol2Fr="4fr" mainCol3Fr="1.5fr">
+  <Signature slot="signature" />
+
+  <section slot="profile" class="content-page content-page--article" aria-label={`${section} article content`}>
+    <div class="content-page-body">
+      <header class="article-content-header">
+        <p class="article-content-section">{section.toUpperCase()}</p>
+        <h1 class="article-content-title">{title}</h1>
+        {
+          description && <p class="article-content-description">{description}</p>
+        }
+        <div class="article-content-meta" aria-label="Article metadata">
+          <p class="article-content-meta-item"><span>Author</span><strong>{author}</strong></p>
+          <p class="article-content-meta-item"><span>Created</span><strong>{formatDateTime(createdAt)}</strong></p>
+          <p class="article-content-meta-item"><span>Updated</span><strong>{formatDateTime(updatedAt)}</strong></p>
+          <p class="article-content-meta-item"><span>Words</span><strong>{articleWordCount.toLocaleString("en-US")}</strong></p>
+        </div>
+      </header>
+
+      <ArticleContent />
+    </div>
+  </section>
+
+  <aside slot="latest" class="content-toc" aria-label={`${section} table of contents`}>
+    {
+      tocHeadings.length > 0 ? (
+        <ol class="content-toc-list">
+          {tocHeadings.map((heading) => (
+            <li
+              class:list={[
+                "content-toc-item",
+                `content-toc-item--depth-${heading.depth}`,
+              ]}
+            >
+              <a class={`content-toc-link content-toc-link--depth-${heading.depth}`} href={`#${heading.slug}`}>
+                {heading.text}
+              </a>
+            </li>
+          ))}
+        </ol>
+      ) : (
+        <p class="content-toc-empty">No headings yet.</p>
+      )
+    }
+  </aside>
+
+  <FooterMeta slot="footer-info" />
+</HomeLayout>
