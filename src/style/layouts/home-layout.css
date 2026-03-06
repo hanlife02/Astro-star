@@ -91,7 +91,7 @@ body {
   margin-inline: auto;
   padding: var(--space);
   display: grid;
-  grid-template-rows: auto 1fr auto;
+  grid-template-rows: auto minmax(0, 1fr) auto;
   gap: var(--space);
   overflow: hidden;
 }
@@ -371,6 +371,7 @@ body {
   grid-template-columns: 1fr;
   gap: var(--main-col-gap);
   margin-top: calc(var(--header-main-gap) - var(--space));
+  min-height: 0;
   align-items: stretch;
 }
 
@@ -409,6 +410,8 @@ body {
 }
 
 .home-footer {
+  position: relative;
+  z-index: 2;
   padding: clamp(0.55rem, 1vw, 0.85rem);
   padding-top: clamp(0rem, 0vw, 1.05rem);
   border-top: 1px solid var(--line-soft);
@@ -491,19 +494,24 @@ body {
       minmax(var(--main-col-3-min), var(--main-col-3-fr));
   }
 
+  .home-main {
+    min-height: 0;
+    align-self: stretch;
+  }
+
   .side-nav-area {
     display: block;
     min-height: 0;
-    height: var(--main-desktop-h);
-    max-height: var(--main-desktop-h);
+    height: 100%;
+    max-height: none;
     overflow: hidden;
   }
 
   .profile-area,
   .latest-area {
     min-height: 0;
-    height: var(--main-desktop-h);
-    max-height: var(--main-desktop-h);
+    height: 100%;
+    max-height: none;
   }
 
   .latest-area {
