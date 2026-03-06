@@ -54,7 +54,15 @@ const shellStyle = [
           </summary>
 
           <nav class="wire-box nav-panel" aria-label="Mobile navigation area">
-            <slot name="side-nav" />
+            <ul class="signature-collapse-links">
+              {
+                foldedNavItems.map((item) => (
+                  <li>
+                    <a href={item.href}>{item.label}</a>
+                  </li>
+                ))
+              }
+            </ul>
           </nav>
         </details>
       </div>
