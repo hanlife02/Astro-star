@@ -43,13 +43,14 @@
   top: 50%;
   transform: translate(-50%, -50%);
   display: inline-block;
-  padding: 0.02rem 0.35rem;
-  font-size: clamp(0.74rem, 0.7rem + 0.2vw, 0.85rem);
+  padding: 0.02rem 0.15rem;
+  font-size: clamp(1.02rem, 0.94rem + 0.38vw, 1.2rem);
   line-height: 1.15;
-  font-weight: 600;
-  color: var(--line);
-  background: color-mix(in srgb, var(--line) 7%, transparent);
-  border-radius: 999px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: transparent;
+  -webkit-text-stroke: 0.8px var(--line);
+  text-stroke: 0.8px var(--line);
 }
 
 .latest-articles-item {
