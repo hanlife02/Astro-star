@@ -40,7 +40,7 @@
   --header-main-gap: clamp(2.75rem, 1.4vw, 1.25rem);
   --footer-height: clamp(0.5rem, 1vh, 1rem);
   --main-mobile-h: clamp(21rem, 46vh, 35rem);
-  --main-desktop-h: clamp(28.5rem, 62vh, 52rem);
+  --main-desktop-h: clamp(28.5rem, 78vh, 80rem);
   --main-col-1-min: 7.5rem;
   --main-col-2-min: 7.5rem;
   --main-col-3-min: 7.5rem;
