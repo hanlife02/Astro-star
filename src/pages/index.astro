@@ -19,7 +19,10 @@ const cloudMusicId = profile.cloudMusicId.trim();
 const emailAddress = (profile.email || site.contact.email).trim();
 const currentYear = new Date().getFullYear();
 const copyrightYears = `${owner.startYear}-${currentYear}`;
-const blogModules = import.meta.glob("../content/blog/*.{md,mdx}", { eager: true });
+const latestSourceModules = {
+  ...import.meta.glob("../content/blog/*.{md,mdx}", { eager: true }),
+  ...import.meta.glob("../content/note/*.{md,mdx}", { eager: true }),
+};
 
 interface BlogModule {
   frontmatter?: {
@@ -47,19 +50,20 @@ type LatestTimelineRow =
       isLastInYear: boolean;
     };
 
-const latestArticles = Object.entries(blogModules)
+const latestArticles = Object.entries(latestSourceModules)
   .map(([path, mod]) => {
     const frontmatter = (mod as BlogModule).frontmatter;
     const title = frontmatter?.title?.trim();
     const rawDate = frontmatter?.pubDate ?? frontmatter?.date;
     const parsedDate = rawDate ? new Date(rawDate) : null;
     const slug = path.split("/").pop()?.replace(/\.(md|mdx)$/i, "");
+    const section = path.includes("/note/") ? "note" : "blog";
 
     if (!title || !slug || !parsedDate || Number.isNaN(parsedDate.getTime())) return null;
 
     return {
       title,
-      href: `/blog/${slug}/`,
+      href: `/${section}/${slug}/`,
       pubDateIso: parsedDate.toISOString(),
       displayDate: `${parsedDate.toISOString().slice(5, 7)}.${parsedDate.toISOString().slice(8, 10)}`,
       year: parsedDate.toISOString().slice(0, 4),

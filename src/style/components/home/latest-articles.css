@@ -13,11 +13,13 @@
   gap: 0.75rem;
 }
 
-.latest-articles-title {
-  margin: 0;
-  font-size: clamp(1rem, 0.9rem + 0.55vw, 1.35rem);
-  line-height: 1.2;
-  color: var(--line);
+.latest-articles-title {                                            
+  margin: 0;                                                        
+  font-size: clamp(2rem, 1.8rem + 1vw, 4rem);                 
+  line-height: 1.2;                                                 
+  color: transparent;                                               
+  -webkit-text-stroke: 1px var(--line);                             
+  text-stroke: 1px var(--line);                                     
 }
 
 .latest-articles-list {
