@@ -1,0 +1,214 @@
+---
+import HomeLayout from "../layouts/HomeLayout.astro";
+import Signature from "../components/home/signature.astro";
+import { site } from "../config/site";
+
+interface ContentModule {
+  default: unknown;
+  frontmatter?: {
+    title?: string;
+  };
+}
+
+interface TocHeading {
+  depth: 2 | 3;
+  slug: string;
+  text: string;
+}
+
+const { owner } = site;
+const currentYear = new Date().getFullYear();
+const copyrightYears = `${owner.startYear}-${currentYear}`;
+
+const aboutModule = import.meta.glob("../content/about/about.mdx", { eager: true })[
+  "../content/about/about.mdx"
+] as ContentModule | undefined;
+
+const aboutRawSource = import.meta.glob("../content/about/about.mdx", {
+  eager: true,
+  query: "?raw",
+  import: "default",
+})["../content/about/about.mdx"] as string | undefined;
+
+if (!aboutModule) {
+  throw new Error("Missing src/content/about/about.mdx");
+}
+
+const AboutContent = aboutModule.default;
+const pageTitle = aboutModule.frontmatter?.title?.trim() || "About";
+
+function slugifyHeading(text: string) {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/[`*_~()[\]{}]/g, "")
+    .replace(/[^\p{Letter}\p{Number}\s-]/gu, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
+function extractTocHeadings(source: string) {
+  const body = source.replace(/^---[\s\S]*?---\s*/u, "");
+  const slugCounts = new Map<string, number>();
+
+  return Array.from(body.matchAll(/^(#{2,3})\s+(.+)$/gmu)).map((match) => {
+    const depth = match[1].length as 2 | 3;
+    const text = match[2].trim();
+    const baseSlug = slugifyHeading(text) || "section";
+    const currentCount = slugCounts.get(baseSlug) ?? 0;
+    slugCounts.set(baseSlug, currentCount + 1);
+
+    return {
+      depth,
+      slug: currentCount === 0 ? baseSlug : `${baseSlug}-${currentCount}`,
+      text,
+    } satisfies TocHeading;
+  });
+}
+
+const tocHeadings = extractTocHeadings(aboutRawSource ?? "");
+---
+
+<HomeLayout mainCol2Fr="3.2fr" mainCol3Fr="2fr">
+  <Signature slot="signature" />
+
+  <section slot="profile" class="content-page" aria-label="About content">
+    <div class="content-page-body">
+      <AboutContent />
+    </div>
+  </section>
+
+  <aside slot="latest" class="content-toc" aria-label="About table of contents">
+    <h2 class="content-toc-title">目录</h2>
+    {
+      tocHeadings.length > 0 ? (
+        <ol class="content-toc-list">
+          {
+            tocHeadings.map((heading) => (
+              <li class:list={["content-toc-item", heading.depth === 3 && "content-toc-item--nested"]}>
+                <a href={`#${heading.slug}`}>{heading.text}</a>
+              </li>
+            ))
+          }
+        </ol>
+      ) : (
+        <p class="content-toc-empty">当前内容还没有二级或三级标题。</p>
+      )
+    }
+  </aside>
+
+  <div slot="footer-info" class="footer-meta" aria-label="Site footer information">
+    <p class="footer-meta-line">
+      <a href="https://github.com/hanlife02/Astro-star" target="_blank" rel="noreferrer">
+        @{copyrightYears} Astro-star
+      </a>
+      <span aria-hidden="true">路</span>
+      <a href={site.beian.icp.href} target="_blank" rel="noreferrer">
+        {site.beian.icp.text}
+      </a>
+      <span aria-hidden="true">路</span>
+      <a href={site.beian.moe.href} target="_blank" rel="noreferrer">
+        {site.beian.moe.text}
+      </a>
+    </p>
+  </div>
+</HomeLayout>
+
+<style>
+  .content-page,
+  .content-toc,
+  .footer-meta {
+    width: 100%;
+  }
+
+  .content-toc-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .content-toc a {
+    color: var(--line);
+    text-decoration: none;
+  }
+
+  .content-page {
+    display: block;
+    align-self: stretch;
+  }
+
+  .content-page-body {
+    height: 100%;
+    padding: clamp(0.85rem, 1.8vw, 1.4rem);
+    overflow: auto;
+  }
+
+  .content-page-body :global(h1) {
+    margin: 0 0 1rem;
+    font-size: clamp(2rem, 1.8rem + 1vw, 3.5rem);
+    line-height: 1.1;
+  }
+
+  .content-page-body :global(h2),
+  .content-page-body :global(h3) {
+    color: var(--line);
+    scroll-margin-top: 1rem;
+  }
+
+  .content-page-body :global(p),
+  .content-page-body :global(li) {
+    color: var(--line);
+    line-height: 1.8;
+  }
+
+  .content-page-body :global(a) {
+    color: var(--line);
+  }
+
+  .content-toc {
+    height: 100%;
+    padding: clamp(0.85rem, 1.8vw, 1.4rem);
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    overflow: auto;
+  }
+
+  .content-toc-title {
+    margin: 0;
+    font-size: clamp(1.4rem, 1.2rem + 0.6vw, 2rem);
+    line-height: 1.1;
+  }
+
+  .content-toc-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+
+  .content-toc-item--nested {
+    padding-left: 1rem;
+  }
+
+  .content-toc-empty,
+  .footer-meta-line {
+    margin: 0;
+  }
+
+  .footer-meta-line {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+
+  .footer-meta-line a {
+    color: var(--line);
+    text-decoration: none;
+  }
+
+  .footer-meta-line a:hover,
+  .content-toc a:hover {
+    text-decoration: underline;
+  }
+</style>

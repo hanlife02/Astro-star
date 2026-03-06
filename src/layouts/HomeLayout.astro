@@ -7,12 +7,24 @@ import "../style/layouts/home-layout.css";
 import { Sun, Moon, Monitor, Search, AlignLeft } from "lucide-static";
 import { site } from "../config/site";
 
+interface Props {
+  mainCol2Fr?: string;
+  mainCol3Fr?: string;
+}
+
+const { mainCol2Fr, mainCol3Fr } = Astro.props as Props;
 const foldedNavItems = site.nav;
+const shellStyle = [
+  mainCol2Fr ? `--main-col-2-fr: ${mainCol2Fr}` : "",
+  mainCol3Fr ? `--main-col-3-fr: ${mainCol3Fr}` : "",
+]
+  .filter(Boolean)
+  .join("; ");
 ---
 
 <BaseLayout>
   <HomeBackground slot="background" mode="light" />
-  <div class="home-shell">
+  <div class="home-shell" style={shellStyle || undefined}>
     <header class="home-header">
       <details class="nav-drawer mobile-nav-drawer">
         <summary class="hamburger" aria-label="Toggle navigation">
