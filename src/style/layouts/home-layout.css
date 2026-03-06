@@ -1,4 +1,4 @@
-@font-face {
+﻿@font-face {
   font-family: "Biotif";
   src: url("/fonts/Biotif-Regular.ttf") format("truetype");
   font-weight: 400;
@@ -317,7 +317,10 @@ body {
 
 .side-nav-area {
   display: none;
-  min-height: var(--main-mobile-h);
+  min-height: 0;
+  height: var(--main-mobile-h);
+  max-height: var(--main-mobile-h);
+  overflow: hidden;
 }
 
 .side-nav-stack {
@@ -329,15 +332,21 @@ body {
 }
 
 .profile-area {
-  min-height: var(--main-mobile-h);
+  min-height: 0;
+  height: var(--main-mobile-h);
+  max-height: var(--main-mobile-h);
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  overflow: hidden;
 }
 
 .latest-area {
-  min-height: var(--main-mobile-h);
+  min-height: 0;
+  height: var(--main-mobile-h);
+  max-height: var(--main-mobile-h);
   grid-column: 1 / -1;
+  overflow: hidden;
 }
 
 .home-footer {
@@ -413,20 +422,25 @@ body {
 
   .side-nav-area {
     display: block;
-    min-height: var(--main-desktop-h);
+    min-height: 0;
+    height: var(--main-desktop-h);
+    max-height: var(--main-desktop-h);
+    overflow: hidden;
   }
 
   .profile-area,
   .latest-area {
-    min-height: var(--main-desktop-h);
+    min-height: 0;
+    height: var(--main-desktop-h);
+    max-height: var(--main-desktop-h);
   }
 
   .latest-area {
-    min-height: var(--main-desktop-h);
     grid-column: auto;
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
   }
 }
 
@@ -442,3 +456,4 @@ body {
     --font-size-base: clamp(1.0625rem, 0.92rem + 0.26vw, 1.4rem);
   }
 }
+

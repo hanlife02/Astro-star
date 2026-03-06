@@ -1,4 +1,4 @@
-.latest-articles {
+﻿.latest-articles {
   --latest-date-size: clamp(0.8rem, 0.68rem + 0.45vw, 1.25rem);
   --latest-title-size: clamp(0.8rem, 0.68rem + 0.45vw, 1.25rem);
   --latest-text-line-height: 1.3;
@@ -11,16 +11,18 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 0.9rem;
+  justify-content: flex-start;
+  gap: clamp(0.12rem, 0.04rem + 0.28vw, 0.4rem);
 }
 
 .latest-articles-panel {
-  flex: 1 1 0;
+  flex: 0 0 auto;
   min-height: 0;
-  padding: clamp(0.85rem, 1.8vw, 1.4rem);
+  padding: clamp(0.65rem, 1.1vw, 1rem);
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.55rem;
+  overflow: hidden;
 }
 
 .latest-articles-title {                                            
@@ -28,8 +30,7 @@
   font-size: clamp(2rem, 1.8rem + 1vw, 4rem);                 
   line-height: 1.2;                                                 
   color: transparent;                                               
-  -webkit-text-stroke: 1px var(--line);                             
-  text-stroke: 1px var(--line);                                     
+  -webkit-text-stroke: 1px var(--line);                                                         
 }
 
 .latest-articles-list {
@@ -43,7 +44,7 @@
 .latest-articles-groups {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.35rem;
 }
 
 .latest-articles-group {
@@ -63,7 +64,6 @@
   letter-spacing: 0.04em;
   color: transparent;
   -webkit-text-stroke: 0.9px var(--line);
-  text-stroke: 0.9px var(--line);
   white-space: nowrap;
   align-self: start;
 }
@@ -80,6 +80,7 @@
   display: flex;
   flex-wrap: nowrap;
   align-items: baseline;
+  justify-content: flex-start;
   gap: 0.18rem var(--latest-item-gap);
   min-width: 0;
 }
@@ -177,15 +178,16 @@
     --latest-group-gap: 1.85rem;
     --latest-line-col: 1.35rem;
     --latest-item-gap: 0.9rem;
-    gap: 0.9rem;
+    gap: clamp(0.18rem, 0.08rem + 0.22vw, 0.45rem);
   }
 
   .latest-articles-panel {
-    padding: clamp(1rem, 1.2vw, 1.6rem);
+    padding: clamp(0.75rem, 0.9vw, 1.1rem);
+    gap: 0.6rem;
   }
 
   .latest-articles-groups {
-    gap: 0.7rem;
+    gap: 0.45rem;
   }
 
   .latest-articles-group {
@@ -196,3 +198,4 @@
     padding: 0.6rem 0 0.6rem calc(var(--latest-line-col) + var(--latest-item-gap));
   }
 }
+

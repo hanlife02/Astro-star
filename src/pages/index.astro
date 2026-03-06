@@ -1,4 +1,4 @@
----
+﻿---
 import HomeLayout from "../layouts/HomeLayout.astro";
 import CodeTime from "../components/home/CodeTime.astro";
 import GitHeatmap from "../components/home/githeatmap.astro";
@@ -83,8 +83,8 @@ function buildLatestTimelineGroups(latestArticles: LatestArticleItem[]) {
   }, []);
 }
 
-const latestBlogArticles = buildLatestArticles(latestBlogSourceModules, "blog");
-const latestNoteArticles = buildLatestArticles(latestNoteSourceModules, "note");
+const latestBlogArticles = buildLatestArticles(latestBlogSourceModules, "blog").slice(0, 4);
+const latestNoteArticles = buildLatestArticles(latestNoteSourceModules, "note").slice(0, 4);
 const latestAnimationOrderMap = new Map(
   [...latestBlogArticles, ...latestNoteArticles].map((article, index) => [article.href, index]),
 );
@@ -173,17 +173,16 @@ const profileLinks = [
         <section
           class="latest-articles-panel"
           aria-label={block.title}
-          data-latest-container
           data-latest-key={block.key}
         >
           <h2 class="latest-articles-title">{block.title}</h2>
           {
             block.groups.length > 0 ? (
-              <div class="latest-articles-groups" aria-label={`${block.title} timeline`} data-latest-groups>
+              <div class="latest-articles-groups" aria-label={`${block.title} timeline`}>
                 {
                   block.groups.map((group) => (
-                    <section class="latest-articles-group" aria-label={`${group.year} articles`} data-latest-group>
-                      <h3 class="latest-articles-year-label" data-latest-year>{group.year}</h3>
+                    <section class="latest-articles-group" aria-label={`${group.year} articles`}>
+                      <h3 class="latest-articles-year-label">{group.year}</h3>
                       <ol class="latest-articles-list" aria-label={`${group.year} timeline`}>
                         {
                           group.articles.map((article, index) => (
@@ -193,7 +192,6 @@ const profileLinks = [
                                 index === 0 && "latest-articles-item--year-start",
                                 index === group.articles.length - 1 && "latest-articles-item--year-end",
                               ]}
-                              data-latest-item
                             >
                               <div
                                 class="latest-articles-item-content"
@@ -223,105 +221,21 @@ const profileLinks = [
     }
     <script is:inline>
       (() => {
-        const latestSections = Array.from(document.querySelectorAll("[data-latest-container]"));
-        if (latestSections.length === 0) return;
+        const latestRoot = document.querySelector(".latest-articles");
+        if (!(latestRoot instanceof HTMLElement)) return;
 
-        const updateGroupState = (group) => {
-          const items = Array.from(group.querySelectorAll("[data-latest-item]"));
-          items.forEach((item) => {
-            item.classList.remove("latest-articles-item--year-start", "latest-articles-item--year-end");
-          });
-
-          const visibleItems = items.filter((item) => !item.hidden);
-          group.hidden = visibleItems.length === 0;
-
-          if (visibleItems.length > 0) {
-            visibleItems[0].classList.add("latest-articles-item--year-start");
-            visibleItems[visibleItems.length - 1].classList.add("latest-articles-item--year-end");
-          }
-        };
-
-        const syncLatestArticles = (latestSection) => {
-          const groupsRoot = latestSection.querySelector("[data-latest-groups]");
-          if (!(groupsRoot instanceof HTMLElement)) return;
-
-          const sectionRect = latestSection.getBoundingClientRect();
-          const sectionStyle = window.getComputedStyle(latestSection);
-          const availableBottom =
-            sectionRect.top + latestSection.clientHeight - parseFloat(sectionStyle.paddingBottom || "0");
-          const groups = Array.from(groupsRoot.querySelectorAll("[data-latest-group]"));
-          let reachedLimit = false;
-
-          groups.forEach((group) => {
-            group.hidden = false;
-            const items = Array.from(group.querySelectorAll("[data-latest-item]"));
-
-            items.forEach((item) => {
-              item.hidden = false;
-            });
-          });
-
-          groups.forEach((group) => {
-            const items = Array.from(group.querySelectorAll("[data-latest-item]"));
-
-            items.forEach((item) => {
-              if (reachedLimit) {
-                item.hidden = true;
-                return;
-              }
-
-              const itemBottom = item.getBoundingClientRect().bottom;
-              if (itemBottom > availableBottom) {
-                item.hidden = true;
-                reachedLimit = true;
-              }
-            });
-
-            updateGroupState(group);
-          });
-        };
-
-        let frameId = 0;
-        const queueSync = () => {
-          cancelAnimationFrame(frameId);
-          frameId = requestAnimationFrame(() => {
-            latestSections.forEach((latestSection) => {
-              if (latestSection instanceof HTMLElement) {
-                syncLatestArticles(latestSection);
-              }
-            });
-          });
-        };
-
-        latestSections.forEach((latestSection) => {
-          if (!(latestSection instanceof HTMLElement)) return;
-
-          latestSection.setAttribute("data-latest-enhanced", "true");
-          requestAnimationFrame(() => {
-            latestSection.classList.add("latest-articles--entered");
-          });
+        latestRoot.setAttribute("data-latest-enhanced", "true");
+        requestAnimationFrame(() => {
+          latestRoot.classList.add("latest-articles--entered");
         });
-
-        queueSync();
-
-        if ("ResizeObserver" in window) {
-          const observer = new ResizeObserver(() => {
-            queueSync();
-          });
-
-          latestSections.forEach((latestSection) => {
-            if (latestSection instanceof HTMLElement) {
-              observer.observe(latestSection);
-            }
-          });
-        }
-
-        window.addEventListener("load", queueSync, { once: true });
       })();
     </script>
   </section>
   <FooterMeta slot="footer-info" />
 </HomeLayout>
+
+
+
 
 
 
