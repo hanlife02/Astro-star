@@ -1,4 +1,4 @@
----
+﻿---
 import BaseLayout from "./BaseLayout.astro";
 import HomeBackground from "../components/background/HomeBackground.astro";
 import Icon from "../components/ui/Icon.astro";
@@ -228,6 +228,94 @@ const shellStyle = [
         }
       };
 
+      const initContentToc = () => {
+        const toc = document.querySelector(".content-toc");
+        const tocList = toc?.querySelector(".content-toc-list");
+        const contentBody = document.querySelector(".content-page-body");
+        if (!(toc instanceof HTMLElement) || !(tocList instanceof HTMLElement) || !(contentBody instanceof HTMLElement)) return;
+
+        const links = Array.from(tocList.querySelectorAll(".content-toc-link"));
+        if (links.length === 0) return;
+
+        const headingEntries = links
+          .map((link) => {
+            if (!(link instanceof HTMLAnchorElement)) return null;
+            const targetId = link.getAttribute("href")?.replace(/^#/, "") ?? "";
+            if (!targetId) return null;
+            const heading = document.getElementById(targetId);
+            if (!(heading instanceof HTMLElement)) return null;
+            return { link, heading };
+          })
+          .filter((entry) => entry !== null);
+
+        if (headingEntries.length === 0) return;
+
+        let progress = tocList.querySelector(".content-toc-progress");
+        if (!(progress instanceof HTMLElement)) {
+          progress = document.createElement("span");
+          progress.className = "content-toc-progress";
+          progress.setAttribute("aria-hidden", "true");
+          tocList.prepend(progress);
+        }
+
+        toc.classList.add("has-progress");
+
+        let frameId = 0;
+        const getHeadingOffset = (heading) => {
+          const headingRect = heading.getBoundingClientRect();
+          const bodyRect = contentBody.getBoundingClientRect();
+          return headingRect.top - bodyRect.top + contentBody.scrollTop;
+        };
+
+        const updateContentToc = () => {
+          const threshold = contentBody.scrollTop + Math.min(contentBody.clientHeight * 0.22, 88);
+          let activeEntry = headingEntries[0];
+
+          headingEntries.forEach((entry) => {
+            if (getHeadingOffset(entry.heading) <= threshold) {
+              activeEntry = entry;
+            }
+          });
+
+          headingEntries.forEach((entry) => {
+            const isActive = entry === activeEntry;
+            entry.link.classList.toggle("is-active", isActive);
+            if (isActive) {
+              entry.link.setAttribute("aria-current", "location");
+            } else {
+              entry.link.removeAttribute("aria-current");
+            }
+          });
+
+          const activeItem = activeEntry.link.closest(".content-toc-item");
+          if (!(activeItem instanceof HTMLElement) || !(progress instanceof HTMLElement)) return;
+
+          const listRect = tocList.getBoundingClientRect();
+          const itemRect = activeItem.getBoundingClientRect();
+          const linkRect = activeEntry.link.getBoundingClientRect();
+          const markerHeight = Math.max(12, Math.min(18, Math.round(linkRect.height * 0.7)));
+          const markerTop = itemRect.top - listRect.top + (itemRect.height - markerHeight) / 2;
+          const markerLeft = Math.max(0, linkRect.left - listRect.left - 10);
+
+          progress.style.height = `${markerHeight}px`;
+          progress.style.left = `${markerLeft}px`;
+          progress.style.transform = `translate3d(0, ${markerTop}px, 0)`;
+        };
+
+        const queueContentTocUpdate = () => {
+          cancelAnimationFrame(frameId);
+          frameId = requestAnimationFrame(updateContentToc);
+        };
+
+        contentBody.addEventListener("scroll", queueContentTocUpdate, { passive: true });
+        window.addEventListener("resize", queueContentTocUpdate);
+        window.addEventListener("load", queueContentTocUpdate, { once: true });
+        queueContentTocUpdate();
+      };
+
+      initContentToc();
+
       media.addEventListener("change", handleSystemThemeChange);
   </script>
 </BaseLayout>
+
