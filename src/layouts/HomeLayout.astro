@@ -316,6 +316,27 @@ const shellStyle = [
           frameId = requestAnimationFrame(updateContentToc);
         };
 
+        headingEntries.forEach((entry) => {
+          entry.link.addEventListener("click", (event) => {
+            event.preventDefault();
+            const headingTop = getHeadingOffset(entry.heading);
+            const centeredTop = headingTop - (contentBody.clientHeight - entry.heading.offsetHeight) / 2;
+            const maxScrollTop = Math.max(0, contentBody.scrollHeight - contentBody.clientHeight);
+            const nextScrollTop = Math.min(Math.max(0, centeredTop), maxScrollTop);
+
+            contentBody.scrollTo({
+              top: nextScrollTop,
+              behavior: "smooth",
+            });
+
+            if (history.replaceState) {
+              history.replaceState(null, "", `#${entry.heading.id}`);
+            }
+
+            queueContentTocUpdate();
+          });
+        });
+
         contentBody.addEventListener("scroll", queueContentTocUpdate, { passive: true });
         window.addEventListener("resize", queueContentTocUpdate);
         window.addEventListener("load", queueContentTocUpdate, { once: true });
