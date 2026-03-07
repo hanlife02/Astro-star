@@ -14,10 +14,10 @@
 
 .friend-links-grid {
   --friend-links-gap: 0.9rem;
-  --friend-link-card-min: 12rem;
+  --friend-link-card-min: 15rem;
   --friend-link-card-max: 19rem;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--friend-link-card-min)), 1fr));
+  grid-template-columns: minmax(0, 1fr);
   grid-auto-rows: 1fr;
   gap: var(--friend-links-gap);
   width: 100%;
@@ -149,5 +149,12 @@
 
   .friend-links-grid {
     --friend-links-gap: 1rem;
+    grid-template-columns: repeat(2, minmax(min(100%, var(--friend-link-card-min)), 1fr));
+  }
+}
+
+@media (min-width: 72rem) {
+  .friend-links-grid {
+    grid-template-columns: repeat(3, minmax(min(100%, var(--friend-link-card-min)), 1fr));
   }
 }
