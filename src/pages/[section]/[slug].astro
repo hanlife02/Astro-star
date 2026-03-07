@@ -1,11 +1,17 @@
 ---
 import ArticleDetailPage from "../../components/content/ArticleDetailPage.astro";
 import { site } from "../../config/site";
+import { resolveContentDates } from "../../utils/content-dates";
+import { resolveContentSlug } from "../../utils/content-slug";
+import { resolveContentTitle } from "../../utils/content-title";
 import { getGitTimestamps } from "../../utils/git-timestamps";
 
 interface ContentModule {
   default: any;
   frontmatter?: {
+    createdAt?: string | Date;
+    updatedAt?: string | Date;
+    routeSlug?: string;
     type?: string;
     title?: string;
     description?: string;
@@ -23,19 +29,21 @@ const articleRawModules = import.meta.glob("../../content/{blog,note,project}/*.
 });
 
 export function getStaticPaths() {
-  const articlePaths = Object.keys(
+  const articleEntries = Object.entries(
     import.meta.glob("../../content/{blog,note,project}/*.{md,mdx}", { eager: true }),
-  );
+  ) as Array<[string, ContentModule]>;
 
-  return articlePaths
-    .map((path) => {
+  return articleEntries
+    .map(([path, mod]) => {
       const match = path.match(/^\.\.\/\.\.\/content\/(blog|note|project)\/([^/]+)\.(md|mdx)$/i);
       if (!match) return null;
+
+      const routeSlug = resolveContentSlug(path, mod.frontmatter?.routeSlug);
 
       return {
         params: {
           section: match[1],
-          slug: match[2],
+          slug: routeSlug,
         },
         props: {
           articlePath: path,
@@ -61,11 +69,15 @@ if (!articleModule || !section || !slug) {
 }
 
 const ArticleContent = articleModule.default;
-const title = articleModule.frontmatter?.title?.trim() || slug;
+const title = resolveContentTitle(articlePath, articleModule.frontmatter?.title);
 const description = articleModule.frontmatter?.description?.trim() || "";
 const articleType = articleModule.frontmatter?.type?.trim() || "Uncategorized";
 const author = site.owner.name;
-const { createdAt, updatedAt } = getGitTimestamps(new URL(articlePath, import.meta.url));
+const { createdAt: gitCreatedAt, updatedAt: gitUpdatedAt } = getGitTimestamps(new URL(articlePath, import.meta.url));
+const { createdAt, updatedAt } = resolveContentDates(articleModule.frontmatter, {
+  createdAt: gitCreatedAt,
+  updatedAt: gitUpdatedAt,
+});
 
 const formatDateTime = (value: Date | null) => {
   if (!value || Number.isNaN(value.getTime())) return "Unknown";

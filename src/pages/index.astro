@@ -2,6 +2,7 @@
 import HomePageContent from "../components/home/HomePageContent.astro";
 import { Github, Mail } from "lucide-static";
 import { site } from "../config/site";
+import { resolveContentTitle } from "../utils/content-title";
 import { getGitTimestamps } from "../utils/git-timestamps";
 
 const { profile, owner } = site;
@@ -38,12 +39,12 @@ function buildLatestArticles(sourceModules: Record<string, unknown>, section: "b
   return Object.entries(sourceModules)
   .map(([path, mod]) => {
     const frontmatter = (mod as BlogModule).frontmatter;
-    const title = frontmatter?.title?.trim();
+    const title = resolveContentTitle(path, frontmatter?.title);
     const slug = path.split("/").pop()?.replace(/\.(md|mdx)$/i, "");
     const { createdAt, updatedAt } = getGitTimestamps(new URL(path, import.meta.url));
     const pubDate = createdAt ?? updatedAt;
 
-    if (!title || !slug || !pubDate || Number.isNaN(pubDate.getTime())) return null;
+    if (!slug || !pubDate || Number.isNaN(pubDate.getTime())) return null;
 
     return {
       title,

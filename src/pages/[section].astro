@@ -1,5 +1,6 @@
 ---
 import SectionListingPage from "../components/content/SectionListingPage.astro";
+import { resolveContentTitle } from "../utils/content-title";
 import { getGitTimestamps } from "../utils/git-timestamps";
 
 interface ContentModule {
@@ -47,12 +48,12 @@ const listArticles = Object.entries(contentModules)
     if (!match || match[1] !== section) return null;
 
     const frontmatter = (mod as ContentModule).frontmatter;
-    const title = frontmatter?.title?.trim();
+    const title = resolveContentTitle(path, frontmatter?.title);
     const slug = match[2];
     const { createdAt, updatedAt } = getGitTimestamps(new URL(path, import.meta.url));
     const publishedAt = createdAt ?? updatedAt;
 
-    if (!title || !publishedAt || Number.isNaN(publishedAt.getTime())) return null;
+    if (!publishedAt || Number.isNaN(publishedAt.getTime())) return null;
 
     return {
       title,

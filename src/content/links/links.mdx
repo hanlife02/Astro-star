@@ -1,7 +1,40 @@
 import FriendLinksPanel from "../../components/links/FriendLinksPanel.astro";
+import LostLinksPanel from "../../components/links/LostLinksPanel.astro";
+
+export const lostLinks = [];
 
 # Links
 
 The order is random~
 
+## Friends
+
 <FriendLinksPanel />
+
+## Lost
+
+<LostLinksPanel items={lostLinks} />
+
+## Apply
+
+
+Before applying, make sure your site already lists my link. If your
+application is approved and you later remove my link, I will remove
+yours and add your site to a blacklist.
+
+If your site is unreachable for a long time, I may remove your link.
+You can apply again after your site is back online.
+
+Your site must not contain political sensitivity, illegal content, or
+anything that violates applicable laws.
+
+No excessive advertising, no malware, and no malicious scripts.
+
+If you republish articles, you must cite the original source.
+
+Your site must enable HTTPS globally.
+
+You must use your own independent domain. Public subdomains or free
+domains are not accepted (e.g. github.io, vercel.app, eu.org, js.cool, .tk, .ml, .cf).
+
+Commercial sites and non-personal sites are not accepted

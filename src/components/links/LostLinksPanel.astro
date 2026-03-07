@@ -1,0 +1,138 @@
+---
+interface LostLinkItem {
+  name: string;
+  description: string;
+  href: string;
+}
+
+interface Props {
+  items?: readonly LostLinkItem[];
+  title?: string;
+  emptyText?: string;
+}
+
+const {
+  items = [],
+  title = "Lost Links",
+  emptyText = "No lost links yet.",
+} = Astro.props as Props;
+---
+
+{
+  items.length > 0 || emptyText ? (
+    <details class="lost-links-panel">
+      <summary class="lost-links-summary">{title}</summary>
+
+      {
+        items.length > 0 ? (
+          <ul class="lost-links-list" aria-label={title}>
+            {items.map((item) => (
+              <li class="lost-links-item">
+                <a class="lost-links-link" href={item.href} target="_blank" rel="noreferrer">
+                  <span class="lost-links-name">{item.name}</span>
+                  <span class="lost-links-divider" aria-hidden="true">¡ª</span>
+                  <span class="lost-links-description">{item.description}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p class="lost-links-empty">{emptyText}</p>
+        )
+      }
+    </details>
+  ) : null
+}
+
+<style>
+  .lost-links-panel {
+    margin-top: 1.5rem;
+    border: 1px solid color-mix(in srgb, var(--line) 12%, transparent);
+    border-radius: 1rem;
+    background: color-mix(in srgb, var(--line) 2.5%, transparent);
+    overflow: hidden;
+  }
+
+  .lost-links-summary {
+    cursor: pointer;
+    list-style: none;
+    padding: 0.95rem 1rem;
+    color: var(--line);
+    font-size: 0.98rem;
+    font-weight: 600;
+    line-height: 1.35;
+  }
+
+  .lost-links-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .lost-links-list {
+    margin: 0;
+    padding: 0 1rem 1rem;
+    list-style: none;
+  }
+
+  .lost-links-item + .lost-links-item {
+    margin-top: 0.7rem;
+  }
+
+  .lost-links-link {
+    display: flex;
+    align-items: baseline;
+    gap: 0.4rem;
+    min-width: 0;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .lost-links-name {
+    flex: 0 0 auto;
+    color: var(--line);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .lost-links-divider {
+    flex: 0 0 auto;
+    color: color-mix(in srgb, var(--line) 50%, transparent);
+  }
+
+  .lost-links-description {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: color-mix(in srgb, var(--line) 72%, transparent);
+  }
+
+  .lost-links-empty {
+    margin: 0;
+    padding: 0 1rem 1rem;
+    color: color-mix(in srgb, var(--line) 68%, transparent);
+    font-size: 0.92rem;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 40rem) {
+    .lost-links-link {
+      display: block;
+    }
+
+    .lost-links-divider {
+      display: none;
+    }
+
+    .lost-links-name,
+    .lost-links-description {
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .lost-links-description {
+      margin-top: 0.15rem;
+    }
+  }
+</style>
