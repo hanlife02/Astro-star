@@ -133,8 +133,8 @@ const toAnchorId = (value: string) => value.toLowerCase().trim().replace(/\s+/g,
       groupedArticles.length > 0 ? (
         <ol class="content-toc-list">
           {groupedArticles.map((group) => (
-            <li class="content-toc-item content-toc-item--depth-1">
-              <a class="content-toc-link content-toc-link--depth-1" href={`#${toAnchorId(group.type)}`}>
+            <li class="content-toc-item content-toc-item--depth-2">
+              <a class="content-toc-link content-toc-link--depth-2" href={`#${toAnchorId(group.type)}`}>
                 {group.type}
               </a>
             </li>

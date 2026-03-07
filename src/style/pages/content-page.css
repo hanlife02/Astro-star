@@ -28,16 +28,24 @@
 .content-page-body h1 {
   margin: 0 0 1rem;
   font-size: clamp(2rem, 1.8rem + 1vw, 3.5rem);
+  font-weight: 500;
   line-height: 1.1;
   color: transparent;
-  -webkit-text-stroke: 1px var(--line);
-  text-stroke: 1px var(--line);
+  -webkit-text-stroke: 1.15px var(--line);
+  text-stroke: 1.15px var(--line);
 }
 
 .content-page-body h2,
 .content-page-body h3 {
   color: var(--line);
+  font-weight: 400;
   scroll-margin-top: 1rem;
+}
+
+.content-page-body h4,
+.content-page-body h5,
+.content-page-body h6 {
+  font-weight: 400;
 }
 
 .content-page-body p,
@@ -124,6 +132,7 @@
 .content-toc-title {
   margin: 0;
   font-size: clamp(1.4rem, 1.2rem + 0.6vw, 2rem);
+  font-weight: 400;
   line-height: 1.1;
 }
 
@@ -155,18 +164,18 @@
 
 .content-toc-link--depth-1 {
   font-size: clamp(1.1rem, 1rem + 0.35vw, 1.4rem);
-  font-weight: 700;
+  font-weight: 400;
 }
 
 .content-toc-link--depth-2 {
   font-size: clamp(0.96rem, 0.92rem + 0.2vw, 1.08rem);
-  font-weight: 600;
+  font-weight: 400;
   opacity: inherit;
 }
 
 .content-toc-link--depth-3 {
   font-size: clamp(0.88rem, 0.84rem + 0.16vw, 0.98rem);
-  font-weight: 500;
+  font-weight: 400;
   opacity: inherit;
 }
 
@@ -313,6 +322,7 @@
 .article-content-title {
   margin: 0;
   font-size: clamp(2.3rem, 2rem + 1.5vw, 4.3rem);
+  font-weight: 400;
   line-height: 1.05;
   color: transparent;
   -webkit-text-stroke: 1px var(--line);
@@ -383,6 +393,7 @@
 .listing-header-title {
   margin: 0;
   font-size: clamp(2.3rem, 2rem + 1.5vw, 4.3rem);
+  font-weight: 400;
   line-height: 1.05;
   color: transparent;
   -webkit-text-stroke: 1px var(--line);
@@ -407,6 +418,7 @@
   margin: 0;
   color: var(--line);
   font-size: clamp(1.25rem, 1.16rem + 0.45vw, 1.7rem);
+  font-weight: 400;
 }
 
 .listing-group-items {
