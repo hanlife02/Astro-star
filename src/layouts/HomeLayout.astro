@@ -390,10 +390,36 @@ const shellStyle = [
         if (toc instanceof HTMLElement) {
           toc.dataset.tocEntrance = "ready";
 
-          Array.from(toc.querySelectorAll(".content-toc-item")).forEach((item, index) => {
+          const tocItems = Array.from(toc.querySelectorAll(".content-toc-item"));
+          const lastTocItem = tocItems.at(-1);
+          let tocRefreshTriggered = false;
+
+          tocItems.forEach((item, index) => {
             if (!(item instanceof HTMLElement)) return;
             item.style.setProperty("--content-toc-enter-order", `${index}`);
           });
+
+          const triggerTocRefresh = () => {
+            if (tocRefreshTriggered) return;
+            tocRefreshTriggered = true;
+            document.dispatchEvent(new CustomEvent("content-toc:refresh"));
+          };
+
+          if (lastTocItem instanceof HTMLElement) {
+            lastTocItem.addEventListener(
+              "transitionend",
+              (event) => {
+                if (!(event.target instanceof HTMLElement) || event.target !== lastTocItem) return;
+                if (event.propertyName !== "transform" && event.propertyName !== "opacity") return;
+                triggerTocRefresh();
+              },
+              { once: true },
+            );
+          }
+
+          window.setTimeout(() => {
+            triggerTocRefresh();
+          }, 1400);
         }
 
         requestAnimationFrame(() => {
@@ -412,6 +438,8 @@ const shellStyle = [
         const tocList = toc?.querySelector(".content-toc-list");
         const contentBody = document.querySelector(".content-page-body");
         if (!(toc instanceof HTMLElement) || !(tocList instanceof HTMLElement) || !(contentBody instanceof HTMLElement)) return;
+
+        let tocEntranceSettled = toc.dataset.tocEntrance !== "ready";
 
         const links = Array.from(tocList.querySelectorAll(".content-toc-link"));
         if (links.length === 0) return;
@@ -453,6 +481,8 @@ const shellStyle = [
         }
 
         toc.classList.add("has-progress");
+        toc.classList.remove("has-progress-positioned");
+        toc.classList.remove("has-progress-animated");
 
         let frameId = 0;
         let isDraggingScrollbar = false;
@@ -498,6 +528,20 @@ const shellStyle = [
           return headingRect.top - bodyRect.top + contentBody.scrollTop;
         };
 
+        const getOffsetWithin = (element, ancestor) => {
+          let offsetTop = 0;
+          let offsetLeft = 0;
+          let current = element;
+
+          while (current instanceof HTMLElement && current !== ancestor) {
+            offsetTop += current.offsetTop;
+            offsetLeft += current.offsetLeft;
+            current = current.offsetParent;
+          }
+
+          return { top: offsetTop, left: offsetLeft };
+        };
+
         const getTocScrollContainer = () => {
           const tocListStyle = window.getComputedStyle(tocList);
           const overflowY = tocListStyle.overflowY || tocListStyle.overflow;
@@ -539,21 +583,27 @@ const shellStyle = [
             return;
           }
 
-          const listRect = tocList.getBoundingClientRect();
-          const itemRect = activeItem.getBoundingClientRect();
-          const linkRect = activeEntry.link.getBoundingClientRect();
-          const markerHeight = Math.max(12, Math.min(18, Math.round(linkRect.height * 0.7)));
-          const markerTop = itemRect.top - listRect.top + (itemRect.height - markerHeight) / 2;
-          const markerLeft = Math.max(0, linkRect.left - listRect.left - 10);
+          const itemOffset = getOffsetWithin(activeItem, tocList);
+          const linkOffset = getOffsetWithin(activeEntry.link, tocList);
+          const markerHeight = Math.max(12, Math.min(18, Math.round(activeEntry.link.offsetHeight * 0.7)));
+          const markerTop = itemOffset.top + (activeItem.offsetHeight - markerHeight) / 2;
+          const markerLeft = Math.max(0, linkOffset.left - 10);
 
           progress.style.height = `${markerHeight}px`;
           progress.style.left = `${markerLeft}px`;
           progress.style.transform = `translate3d(0, ${markerTop}px, 0)`;
 
+          if (!toc.classList.contains("has-progress-positioned")) {
+            toc.classList.add("has-progress-positioned");
+
+            requestAnimationFrame(() => {
+              toc.classList.add("has-progress-animated");
+            });
+          }
+
           const tocScrollContainer = getTocScrollContainer();
-          const tocRect = tocScrollContainer.getBoundingClientRect();
-          const itemTopInToc = itemRect.top - tocRect.top + tocScrollContainer.scrollTop;
-          const centeredTocTop = itemTopInToc - (tocScrollContainer.clientHeight - itemRect.height) / 2;
+          const itemTopInToc = activeItem.offsetTop;
+          const centeredTocTop = itemTopInToc - (tocScrollContainer.clientHeight - activeItem.offsetHeight) / 2;
           const maxTocScrollTop = Math.max(0, tocScrollContainer.scrollHeight - tocScrollContainer.clientHeight);
           const nextTocScrollTop = Math.min(Math.max(0, centeredTocTop), maxTocScrollTop);
 
@@ -568,6 +618,11 @@ const shellStyle = [
         const queueContentTocUpdate = () => {
           cancelAnimationFrame(frameId);
           frameId = requestAnimationFrame(updateContentToc);
+        };
+
+        const queueContentTocUpdateWhenReady = () => {
+          if (!tocEntranceSettled) return;
+          queueContentTocUpdate();
         };
 
         headingEntries.forEach((entry) => {
@@ -587,7 +642,7 @@ const shellStyle = [
               history.replaceState(null, "", `#${entry.heading.id}`);
             }
 
-            queueContentTocUpdate();
+            queueContentTocUpdateWhenReady();
           });
         });
 
@@ -597,7 +652,7 @@ const shellStyle = [
           if (target === scrollbarThumb) return;
           event.preventDefault();
           scrollFromScrollbarPointer(event.clientY);
-          queueContentTocUpdate();
+          queueContentTocUpdateWhenReady();
         });
 
         scrollbarThumb?.addEventListener("pointerdown", (event) => {
@@ -613,7 +668,7 @@ const shellStyle = [
           if (!isDraggingScrollbar) return;
           event.preventDefault();
           scrollFromScrollbarPointer(event.clientY);
-          queueContentTocUpdate();
+          queueContentTocUpdateWhenReady();
         });
 
         const stopScrollbarDrag = (event) => {
@@ -624,16 +679,23 @@ const shellStyle = [
           if (event instanceof PointerEvent && scrollbarThumb.hasPointerCapture(event.pointerId)) {
             scrollbarThumb.releasePointerCapture(event.pointerId);
           }
-          queueContentTocUpdate();
+          queueContentTocUpdateWhenReady();
         };
 
         scrollbarThumb?.addEventListener("pointerup", stopScrollbarDrag);
         scrollbarThumb?.addEventListener("pointercancel", stopScrollbarDrag);
 
-        contentBody.addEventListener("scroll", queueContentTocUpdate, { passive: true });
-        window.addEventListener("resize", queueContentTocUpdate);
-        window.addEventListener("load", queueContentTocUpdate, { once: true });
-        queueContentTocUpdate();
+        contentBody.addEventListener("scroll", queueContentTocUpdateWhenReady, { passive: true });
+        window.addEventListener("resize", queueContentTocUpdateWhenReady);
+        window.addEventListener("load", queueContentTocUpdateWhenReady, { once: true });
+        document.addEventListener("content-toc:refresh", () => {
+          tocEntranceSettled = true;
+          queueContentTocUpdate();
+        });
+
+        if (tocEntranceSettled) {
+          queueContentTocUpdate();
+        }
       };
 
       initMobileNavDrawer();

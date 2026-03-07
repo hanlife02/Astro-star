@@ -185,7 +185,6 @@
 
 .content-toc[data-toc-entrance="entered"] .content-toc-title,
 .content-toc[data-toc-entrance="entered"] .content-toc-empty,
-.content-toc[data-toc-entrance="entered"] .content-toc-progress,
 .content-toc[data-toc-entrance="entered"] .content-toc-scrollbar {
   opacity: 1;
   transform: translateX(0);
@@ -259,13 +258,20 @@
   border-radius: 999px;
   background: #483D8B;
   transform: translate3d(0, 0, 0);
-  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), left 0.28s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease;
+  transition: none;
   opacity: 0;
   pointer-events: none;
 }
 
-.content-toc.has-progress .content-toc-progress {
+.content-toc.has-progress-positioned .content-toc-progress {
   opacity: 1;
+}
+
+.content-toc.has-progress-animated .content-toc-progress {
+  transition:
+    transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+    left 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.2s ease;
 }
 .content-toc-scrollbar {
   position: absolute;
