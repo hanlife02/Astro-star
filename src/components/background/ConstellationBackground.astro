@@ -1,0 +1,269 @@
+---
+type Props = {
+  density?: number;
+  maxDistance?: number;
+  speed?: number;
+};
+
+const {
+  density = 1,
+  maxDistance = 140,
+  speed = 0.22,
+} = Astro.props satisfies Props;
+
+const canvasId = `constellation-${Math.random().toString(36).slice(2)}`;
+---
+
+<div class="constellation-bg" aria-hidden="true">
+  <canvas id={canvasId} class="constellation-bg__canvas"></canvas>
+</div>
+
+<script is:inline define:vars={{ canvasId, density, maxDistance, speed }}>
+  (() => {
+    const canvas = document.getElementById(canvasId);
+    if (!(canvas instanceof HTMLCanvasElement)) return;
+
+    const ctx = canvas.getContext("2d", { alpha: true });
+    if (!ctx) return;
+
+    const prefersReduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const dpr = () => Math.min(2, window.devicePixelRatio || 1);
+
+    const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
+    const hexToRgb = (value) => {
+      const v = value.trim();
+      if (!v) return null;
+      if (v.startsWith("rgb")) {
+        const m = v.match(/rgba?\(([^)]+)\)/);
+        if (!m) return null;
+        const parts = m[1].split(",").map((s) => Number.parseFloat(s.trim()));
+        if (parts.length < 3) return null;
+        return { r: parts[0], g: parts[1], b: parts[2] };
+      }
+      if (v[0] !== "#") return null;
+      const hex = v.slice(1);
+      if (hex.length === 3) {
+        const r = Number.parseInt(hex[0] + hex[0], 16);
+        const g = Number.parseInt(hex[1] + hex[1], 16);
+        const b = Number.parseInt(hex[2] + hex[2], 16);
+        return { r, g, b };
+      }
+      if (hex.length === 6) {
+        const r = Number.parseInt(hex.slice(0, 2), 16);
+        const g = Number.parseInt(hex.slice(2, 4), 16);
+        const b = Number.parseInt(hex.slice(4, 6), 16);
+        return { r, g, b };
+      }
+      return null;
+    };
+
+    const resolveInk = () => {
+      const root = getComputedStyle(document.documentElement);
+      const fg = hexToRgb(root.getPropertyValue("--fg")) ?? { r: 17, g: 17, b: 17 };
+      const muted = hexToRgb(root.getPropertyValue("--muted")) ?? fg;
+      return { fg, muted };
+    };
+
+    let ink = resolveInk();
+    const themeObserver = new MutationObserver(() => {
+      ink = resolveInk();
+    });
+    themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-theme"],
+    });
+
+    const state = {
+      w: 0,
+      h: 0,
+      particles: [],
+      raf: 0,
+      t: 0,
+      pointer: { x: -1, y: -1, active: false },
+    };
+
+    const resize = () => {
+      const rect = canvas.getBoundingClientRect();
+      const scale = dpr();
+      state.w = Math.max(1, Math.floor(rect.width));
+      state.h = Math.max(1, Math.floor(rect.height));
+      canvas.width = Math.floor(state.w * scale);
+      canvas.height = Math.floor(state.h * scale);
+      ctx.setTransform(scale, 0, 0, scale, 0, 0);
+
+      const baseCount = Math.floor((state.w * state.h) / 16000);
+      const count = clamp(Math.floor(baseCount * density), 40, 140);
+      while (state.particles.length < count) state.particles.push(makeParticle());
+      while (state.particles.length > count) state.particles.pop();
+    };
+
+    const makeParticle = () => {
+      const angle = Math.random() * Math.PI * 2;
+      const vel = (0.35 + Math.random() * 0.75) * speed;
+      return {
+        x: Math.random() * state.w,
+        y: Math.random() * state.h,
+        vx: Math.cos(angle) * vel,
+        vy: Math.sin(angle) * vel,
+        r: 0.9 + Math.random() * 1.4,
+        tw: Math.random() * Math.PI * 2,
+      };
+    };
+
+    const draw = () => {
+      state.t += 1;
+      ctx.clearRect(0, 0, state.w, state.h);
+
+      const maxD = maxDistance;
+      const maxD2 = maxD * maxD;
+      const { fg, muted } = ink;
+
+      for (const p of state.particles) {
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x < 0) {
+          p.x = 0;
+          p.vx *= -1;
+        } else if (p.x > state.w) {
+          p.x = state.w;
+          p.vx *= -1;
+        }
+
+        if (p.y < 0) {
+          p.y = 0;
+          p.vy *= -1;
+        } else if (p.y > state.h) {
+          p.y = state.h;
+          p.vy *= -1;
+        }
+      }
+
+      if (state.pointer.active) {
+        for (const p of state.particles) {
+          const dx = state.pointer.x - p.x;
+          const dy = state.pointer.y - p.y;
+          const d2 = dx * dx + dy * dy;
+          if (d2 > maxD2) continue;
+          const force = (1 - Math.sqrt(d2) / maxD) * 0.018;
+          p.vx += dx * force * 0.0009;
+          p.vy += dy * force * 0.0009;
+        }
+      }
+
+      ctx.lineWidth = 1;
+      for (let i = 0; i < state.particles.length; i++) {
+        const a = state.particles[i];
+        for (let j = i + 1; j < state.particles.length; j++) {
+          const b = state.particles[j];
+          const dx = a.x - b.x;
+          const dy = a.y - b.y;
+          const d2 = dx * dx + dy * dy;
+          if (d2 > maxD2) continue;
+          const d = Math.sqrt(d2);
+          const alpha = (1 - d / maxD) * 0.35;
+          ctx.strokeStyle = `rgba(${muted.r}, ${muted.g}, ${muted.b}, ${alpha})`;
+          ctx.beginPath();
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
+          ctx.stroke();
+        }
+      }
+
+      for (const p of state.particles) {
+        const tw = (Math.sin((state.t * 0.02) + p.tw) + 1) / 2;
+        const r = p.r * (0.75 + tw * 0.7);
+        const alpha = 0.22 + tw * 0.35;
+        ctx.fillStyle = `rgba(${fg.r}, ${fg.g}, ${fg.b}, ${alpha})`;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    };
+
+    const tick = () => {
+      draw();
+      state.raf = requestAnimationFrame(tick);
+    };
+
+    const start = () => {
+      resize();
+      if (prefersReduced) draw();
+      else tick();
+    };
+
+    const stop = () => {
+      cancelAnimationFrame(state.raf);
+      state.raf = 0;
+    };
+
+    const onMove = (event) => {
+      const rect = canvas.getBoundingClientRect();
+      state.pointer.x = event.clientX - rect.left;
+      state.pointer.y = event.clientY - rect.top;
+      state.pointer.active = true;
+    };
+
+    const onLeave = () => {
+      state.pointer.active = false;
+    };
+
+    const onVisibility = () => {
+      if (document.visibilityState === "hidden") stop();
+      else if (!prefersReduced && !state.raf) tick();
+    };
+
+    window.addEventListener("resize", resize, { passive: true });
+    window.addEventListener("visibilitychange", onVisibility);
+    window.addEventListener("pointermove", onMove, { passive: true });
+    window.addEventListener("pointerleave", onLeave, { passive: true });
+
+    document.addEventListener("astro:before-swap", () => {
+      stop();
+      themeObserver.disconnect();
+      window.removeEventListener("resize", resize);
+      window.removeEventListener("visibilitychange", onVisibility);
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerleave", onLeave);
+    });
+
+    start();
+  })();
+</script>
+
+<style>
+  :global(:root) {
+    --fg: #7d7d7d;
+    --muted: #7d7d7d;
+  }
+
+  .constellation-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-color: #ffffff;
+  }
+
+  .constellation-bg__canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    opacity: 0.9;
+  }
+
+  :global(:root[data-theme="dark"]) {
+    --fg: #ffffff;
+    --muted: #ffffff;
+  }
+
+  :global(:root[data-theme="dark"]) .constellation-bg {
+    background-color: #000000;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .constellation-bg__canvas {
+      opacity: 0.7;
+    }
+  }
+</style>

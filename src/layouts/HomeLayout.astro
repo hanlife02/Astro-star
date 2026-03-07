@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
 import HomeBackground from "../components/background/HomeBackground.astro";
+import ConstellationBackground from "../components/background/ConstellationBackground.astro";
 import Icon from "../components/ui/Icon.astro";
 import RssIcon from "../components/ui/icons/RssIcon.astro";
 import FloatingActionButton from "../components/ui/FloatingActionButton.astro";
@@ -14,6 +15,8 @@ interface Props {
 }
 
 const { mainCol2Fr, mainCol3Fr } = Astro.props as Props;
+const pathname = Astro.url.pathname.replace(/\/+$/, "") || "/";
+const isLinksPage = pathname === "/links";
 const foldedNavItems = site.nav;
 const githubUsername = (site.contact.githubUsername || site.profile.githubUsername).trim();
 const githubHref = githubUsername
@@ -28,7 +31,7 @@ const shellStyle = [
 ---
 
 <BaseLayout>
-  <HomeBackground slot="background" mode="light" />
+  {isLinksPage ? <ConstellationBackground slot="background" /> : <HomeBackground slot="background" mode="light" />}
   <div class="home-shell" style={shellStyle || undefined}>
     <header class="home-header">
       <div class="wire-box signature-area" aria-label="Signature area">
