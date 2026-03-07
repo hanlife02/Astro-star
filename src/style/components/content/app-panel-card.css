@@ -1,6 +1,6 @@
 .app-panel-card {
   margin: 0 0 1rem;
-  padding: clamp(0.95rem, 2vw, 1.35rem);
+  padding: clamp(0.5rem, 0.85rem, 1.35rem);
   border: 1px solid color-mix(in srgb, var(--line) 14%, transparent);
   border-radius: 1.15rem;
   background: transparent;
@@ -18,7 +18,7 @@
   align-items: center;
   gap: 0.9rem;
   min-width: 0;
-  padding: 0.85rem 0.95rem;
+  padding: 0 0.95rem;
   border: 1px solid transparent;
   border-radius: 0.95rem;
   background: transparent;
