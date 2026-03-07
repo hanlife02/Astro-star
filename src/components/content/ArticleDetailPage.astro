@@ -1,0 +1,88 @@
+---
+import HomeLayout from "../../layouts/HomeLayout.astro";
+import Signature from "../home/signature.astro";
+import FooterMeta from "../common/FooterMeta.astro";
+import "../../style/pages/content-page.css";
+
+interface TocHeading {
+  depth: 1 | 2 | 3;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  section: string;
+  title: string;
+  description?: string;
+  articleType: string;
+  author: string;
+  createdLabel: string;
+  updatedLabel: string;
+  articleWordCount: number;
+  tocHeadings: TocHeading[];
+  ArticleContent: any;
+}
+
+const {
+  section,
+  title,
+  description = "",
+  articleType,
+  author,
+  createdLabel,
+  updatedLabel,
+  articleWordCount,
+  tocHeadings,
+  ArticleContent,
+} = Astro.props as Props;
+---
+
+<HomeLayout mainCol2Fr="4fr" mainCol3Fr="1.5fr">
+  <Signature slot="signature" />
+
+  <section slot="profile" class="content-page content-page--article" aria-label={`${section} article content`}>
+    <div class="content-page-body">
+      <header class="article-content-header">
+        <p class="article-content-section">{section.toUpperCase()}</p>
+        <h1 class="article-content-title">{title}</h1>
+        {
+          description && <p class="article-content-description">{description}</p>
+        }
+        <div class="article-content-meta" aria-label="Article metadata">
+          <p class="article-content-meta-item"><span>Type</span><strong>{articleType}</strong></p>
+          <p class="article-content-meta-item"><span>Author</span><strong>{author}</strong></p>
+          <p class="article-content-meta-item"><span>Created</span><strong>{createdLabel}</strong></p>
+          <p class="article-content-meta-item"><span>Updated</span><strong>{updatedLabel}</strong></p>
+          <p class="article-content-meta-item"><span>Words</span><strong>{articleWordCount.toLocaleString("en-US")}</strong></p>
+        </div>
+      </header>
+
+      <ArticleContent />
+    </div>
+  </section>
+
+  <aside slot="latest" class="content-toc" aria-label={`${section} table of contents`}>
+    {
+      tocHeadings.length > 0 ? (
+        <ol class="content-toc-list">
+          {tocHeadings.map((heading) => (
+            <li
+              class:list={[
+                "content-toc-item",
+                `content-toc-item--depth-${heading.depth}`,
+              ]}
+            >
+              <a class={`content-toc-link content-toc-link--depth-${heading.depth}`} href={`#${heading.slug}`}>
+                {heading.text}
+              </a>
+            </li>
+          ))}
+        </ol>
+      ) : (
+        <p class="content-toc-empty">No headings yet.</p>
+      )
+    }
+  </aside>
+
+  <FooterMeta slot="footer-info" />
+</HomeLayout>

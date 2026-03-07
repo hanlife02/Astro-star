@@ -1,0 +1,24 @@
+---
+import HomeBackground from "../background/HomeBackground.astro";
+import ConstellationBackground from "../background/ConstellationBackground.astro";
+import CodeRainBackground from "../background/CodeRainBackground.astro";
+import { site } from "../../config/site";
+
+interface Props {
+  pathname: string;
+}
+
+const { pathname } = Astro.props as Props;
+const isAboutPage = pathname === "/about";
+const isLinksPage = pathname === "/links";
+---
+
+{
+  isAboutPage ? (
+    <CodeRainBackground slot="background" keywords={site.profile.codeRainKeywords} />
+  ) : isLinksPage ? (
+    <ConstellationBackground slot="background" />
+  ) : (
+    <HomeBackground slot="background" mode="light" />
+  )
+}

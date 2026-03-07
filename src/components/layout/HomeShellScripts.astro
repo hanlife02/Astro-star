@@ -1,0 +1,577 @@
+---
+---
+
+<script is:inline>
+      const STORAGE_KEY = "theme-preference";
+      const VALID_MODES = ["light", "dark", "system"];
+      const toggleButton = document.getElementById("theme-toggle");
+      const icons = {
+        light: toggleButton?.querySelector('[data-theme-icon="light"]'),
+        dark: toggleButton?.querySelector('[data-theme-icon="dark"]'),
+        system: toggleButton?.querySelector('[data-theme-icon="system"]'),
+      };
+      const signatureCollapse = document.querySelector(".signature-collapse");
+      const signatureCollapseTrigger = signatureCollapse?.querySelector(".signature-collapse-trigger");
+      const mobileNavDrawer = document.querySelector(".mobile-nav-drawer");
+      const desktopNavMedia = window.matchMedia("(min-width: 56.25rem)");
+      const snowBackground = document.querySelector(".snow-bg");
+      const media = window.matchMedia("(prefers-color-scheme: dark)");
+      let currentMode = "system";
+      let signatureCollapseCloseTimer = 0;
+
+      const resolveMode = (mode) => (mode === "system" ? (media.matches ? "dark" : "light") : mode);
+
+      const nextMode = (mode) => {
+        const index = VALID_MODES.indexOf(mode);
+        return VALID_MODES[(index + 1) % VALID_MODES.length];
+      };
+
+      const syncToggle = (mode) => {
+        const next = nextMode(mode);
+
+        if (toggleButton instanceof HTMLButtonElement) {
+          toggleButton.setAttribute("aria-label", `Current theme: ${mode}. Click to switch to ${next}.`);
+        }
+
+        Object.entries(icons).forEach(([iconMode, iconNode]) => {
+          if (!(iconNode instanceof HTMLElement)) return;
+          iconNode.hidden = iconMode !== mode;
+        });
+      };
+
+      const getInitialMode = () => {
+        const stored = window.localStorage.getItem(STORAGE_KEY);
+        if (stored && VALID_MODES.includes(stored)) return stored;
+        return "system";
+      };
+
+      const applyTheme = (mode, save = true) => {
+        currentMode = mode;
+        const resolved = resolveMode(mode);
+
+        document.documentElement.dataset.themeMode = mode;
+        document.documentElement.dataset.theme = resolved;
+
+        if (snowBackground instanceof HTMLElement) {
+          snowBackground.dataset.mode = resolved;
+        }
+
+        syncToggle(mode);
+
+        if (save) {
+          window.localStorage.setItem(STORAGE_KEY, mode);
+        }
+      };
+
+      const initialMode = getInitialMode();
+      applyTheme(initialMode, false);
+
+      const syncDesktopSignatureCollapse = () => {
+        if (!(signatureCollapse instanceof HTMLDetailsElement)) return;
+        window.clearTimeout(signatureCollapseCloseTimer);
+        delete signatureCollapse.dataset.panelState;
+        if (desktopNavMedia.matches && signatureCollapse.open) {
+          signatureCollapse.open = false;
+        }
+      };
+
+      const openDesktopSignatureCollapse = () => {
+        if (!(signatureCollapse instanceof HTMLDetailsElement) || !desktopNavMedia.matches) return;
+        window.clearTimeout(signatureCollapseCloseTimer);
+        signatureCollapse.open = true;
+        signatureCollapse.dataset.panelState = "open";
+      };
+
+      const closeDesktopSignatureCollapse = () => {
+        if (!(signatureCollapse instanceof HTMLDetailsElement) || !desktopNavMedia.matches) return;
+        window.clearTimeout(signatureCollapseCloseTimer);
+        signatureCollapse.dataset.panelState = "closing";
+        signatureCollapseCloseTimer = window.setTimeout(() => {
+          signatureCollapse.open = false;
+          delete signatureCollapse.dataset.panelState;
+        }, 280);
+      };
+
+      syncDesktopSignatureCollapse();
+      desktopNavMedia.addEventListener("change", syncDesktopSignatureCollapse);
+
+      signatureCollapseTrigger?.addEventListener("click", (event) => {
+        if (!desktopNavMedia.matches) return;
+        event.preventDefault();
+      });
+
+      signatureCollapse?.addEventListener("mouseenter", () => {
+        openDesktopSignatureCollapse();
+      });
+
+      signatureCollapse?.addEventListener("mouseleave", () => {
+        closeDesktopSignatureCollapse();
+      });
+
+      signatureCollapse?.addEventListener("focusin", () => {
+        openDesktopSignatureCollapse();
+      });
+
+      signatureCollapse?.addEventListener("focusout", (event) => {
+        if (!(signatureCollapse instanceof HTMLDetailsElement) || !desktopNavMedia.matches) return;
+        const relatedTarget = event.relatedTarget;
+        if (relatedTarget instanceof Node && signatureCollapse.contains(relatedTarget)) return;
+        closeDesktopSignatureCollapse();
+      });
+
+      toggleButton?.addEventListener("click", () => {
+        applyTheme(nextMode(currentMode));
+      });
+
+      const handleSystemThemeChange = () => {
+        if (currentMode === "system") {
+          applyTheme("system", false);
+        }
+      };
+
+      const initMobileNavDrawer = () => {
+        if (!(mobileNavDrawer instanceof HTMLDetailsElement)) return;
+
+        const mobileNavMedia = window.matchMedia("(min-width: 56.25rem)");
+
+        const closeMobileNavDrawer = () => {
+          if (mobileNavMedia.matches) return;
+          mobileNavDrawer.open = false;
+        };
+
+        document.addEventListener("click", (event) => {
+          if (mobileNavMedia.matches || !mobileNavDrawer.open) return;
+          const target = event.target;
+          if (!(target instanceof Node)) return;
+          if (mobileNavDrawer.contains(target)) return;
+          closeMobileNavDrawer();
+        });
+
+        document.addEventListener("keydown", (event) => {
+          if (event.key !== "Escape") return;
+          closeMobileNavDrawer();
+        });
+
+        mobileNavMedia.addEventListener("change", () => {
+          if (mobileNavMedia.matches) {
+            mobileNavDrawer.open = false;
+          }
+        });
+      };
+
+      const initMobileTocDrawer = () => {
+        const shell = document.querySelector(".home-shell");
+        const latestArea = document.querySelector(".latest-area");
+        const toc = latestArea?.querySelector(":scope > .content-toc");
+        const fabStack = document.querySelector(".floating-action-stack");
+        const tocButton = document.getElementById("toc-fab");
+        const tocMedia = window.matchMedia("(min-width: 56.25rem)");
+
+        if (!(shell instanceof HTMLElement) || !(latestArea instanceof HTMLElement) || !(toc instanceof HTMLElement) || !(tocButton instanceof HTMLButtonElement)) {
+          if (tocButton instanceof HTMLElement) {
+            tocButton.hidden = true;
+          }
+          if (fabStack instanceof HTMLElement) {
+            fabStack.hidden = true;
+          }
+          return;
+        }
+
+        shell.classList.add("home-shell--has-mobile-toc");
+
+        const syncContentTocLayout = () => {
+          requestAnimationFrame(() => {
+            window.dispatchEvent(new Event("resize"));
+          });
+        };
+
+        const syncMobileTocState = () => {
+          const isDesktop = tocMedia.matches;
+          if (isDesktop) {
+            shell.classList.remove("is-mobile-toc-open");
+          }
+
+          tocButton.hidden = isDesktop;
+          if (fabStack instanceof HTMLElement) {
+            fabStack.hidden = isDesktop;
+          }
+          tocButton.setAttribute("aria-expanded", String(shell.classList.contains("is-mobile-toc-open")));
+          syncContentTocLayout();
+        };
+
+        const closeMobileToc = () => {
+          shell.classList.remove("is-mobile-toc-open");
+          syncMobileTocState();
+        };
+
+        tocButton.addEventListener("click", () => {
+          if (tocMedia.matches) return;
+          shell.classList.toggle("is-mobile-toc-open");
+          syncMobileTocState();
+        });
+
+        toc.addEventListener("click", (event) => {
+          const target = event.target;
+          if (!(target instanceof Element)) return;
+          if (!target.closest("a")) return;
+          if (tocMedia.matches) return;
+          closeMobileToc();
+        });
+
+        document.addEventListener("click", (event) => {
+          if (tocMedia.matches || !shell.classList.contains("is-mobile-toc-open")) return;
+          const target = event.target;
+          if (!(target instanceof Node)) return;
+          if (latestArea.contains(target)) return;
+          if (fabStack instanceof HTMLElement && fabStack.contains(target)) return;
+          closeMobileToc();
+        });
+
+        document.addEventListener("keydown", (event) => {
+          if (event.key !== "Escape") return;
+          closeMobileToc();
+        });
+
+        tocMedia.addEventListener("change", syncMobileTocState);
+        syncMobileTocState();
+      };
+
+      const runContentPageEntrance = () => {
+        const contentPage = document.querySelector(".content-page");
+        const toc = document.querySelector(".content-toc");
+
+        if (!(contentPage instanceof HTMLElement)) return;
+
+        contentPage.dataset.pageEntrance = "ready";
+
+        if (toc instanceof HTMLElement) {
+          toc.dataset.tocEntrance = "ready";
+
+          const tocItems = Array.from(toc.querySelectorAll(".content-toc-item"));
+          const lastTocItem = tocItems.at(-1);
+          let tocRefreshTriggered = false;
+
+          tocItems.forEach((item, index) => {
+            if (!(item instanceof HTMLElement)) return;
+            item.style.setProperty("--content-toc-enter-order", `${index}`);
+          });
+
+          const triggerTocRefresh = () => {
+            if (tocRefreshTriggered) return;
+            tocRefreshTriggered = true;
+            document.dispatchEvent(new CustomEvent("content-toc:refresh"));
+          };
+
+          if (lastTocItem instanceof HTMLElement) {
+            lastTocItem.addEventListener(
+              "transitionend",
+              (event) => {
+                if (!(event.target instanceof HTMLElement) || event.target !== lastTocItem) return;
+                if (event.propertyName !== "transform" && event.propertyName !== "opacity") return;
+                triggerTocRefresh();
+              },
+              { once: true },
+            );
+          }
+
+          window.setTimeout(() => {
+            triggerTocRefresh();
+          }, 1400);
+        }
+
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            contentPage.dataset.pageEntrance = "entered";
+
+            if (toc instanceof HTMLElement) {
+              toc.dataset.tocEntrance = "entered";
+            }
+          });
+        });
+      };
+
+      const initContentToc = () => {
+        const toc = document.querySelector(".content-toc");
+        const tocList = toc?.querySelector(".content-toc-list");
+        const contentBody = document.querySelector(".content-page-body");
+        if (!(toc instanceof HTMLElement) || !(tocList instanceof HTMLElement) || !(contentBody instanceof HTMLElement)) return;
+
+        let tocEntranceSettled = toc.dataset.tocEntrance !== "ready";
+
+        const links = Array.from(tocList.querySelectorAll(".content-toc-link"));
+        if (links.length === 0) return;
+
+        const headingEntries = links
+          .map((link) => {
+            if (!(link instanceof HTMLAnchorElement)) return null;
+            const targetId = link.getAttribute("href")?.replace(/^#/, "") ?? "";
+            if (!targetId) return null;
+            const heading = document.getElementById(targetId);
+            if (!(heading instanceof HTMLElement)) return null;
+            return { link, heading };
+          })
+          .filter((entry) => entry !== null);
+
+        if (headingEntries.length === 0) return;
+
+        let progress = tocList.querySelector(".content-toc-progress");
+        if (!(progress instanceof HTMLElement)) {
+          progress = document.createElement("span");
+          progress.className = "content-toc-progress";
+          progress.setAttribute("aria-hidden", "true");
+          tocList.prepend(progress);
+        }
+
+        let scrollbar = toc.querySelector(".content-toc-scrollbar");
+        if (!(scrollbar instanceof HTMLElement)) {
+          scrollbar = document.createElement("div");
+          scrollbar.className = "content-toc-scrollbar";
+          scrollbar.setAttribute("aria-hidden", "true");
+          toc.append(scrollbar);
+        }
+
+        let scrollbarThumb = scrollbar.querySelector(".content-toc-scrollbar-thumb");
+        if (!(scrollbarThumb instanceof HTMLElement)) {
+          scrollbarThumb = document.createElement("span");
+          scrollbarThumb.className = "content-toc-scrollbar-thumb";
+          scrollbar.append(scrollbarThumb);
+        }
+
+        toc.classList.add("has-progress");
+        toc.classList.remove("has-progress-positioned");
+        toc.classList.remove("has-progress-animated");
+
+        let frameId = 0;
+        let isDraggingScrollbar = false;
+
+        const syncScrollbar = () => {
+          if (!(scrollbar instanceof HTMLElement) || !(scrollbarThumb instanceof HTMLElement)) return;
+
+          const maxScrollTop = Math.max(0, contentBody.scrollHeight - contentBody.clientHeight);
+          if (maxScrollTop <= 0) {
+            toc.classList.remove("has-scrollbar");
+            scrollbarThumb.style.height = "0px";
+            scrollbarThumb.style.transform = "translate3d(0, 0, 0)";
+            return;
+          }
+
+          toc.classList.add("has-scrollbar");
+          const trackHeight = scrollbar.clientHeight;
+          const thumbHeight = Math.max(34, Math.min(trackHeight, (contentBody.clientHeight / contentBody.scrollHeight) * trackHeight));
+          const maxThumbTop = Math.max(0, trackHeight - thumbHeight);
+          const ratio = maxScrollTop === 0 ? 0 : contentBody.scrollTop / maxScrollTop;
+          const thumbTop = ratio * maxThumbTop;
+
+          scrollbarThumb.style.height = `${thumbHeight}px`;
+          scrollbarThumb.style.transform = `translate3d(0, ${thumbTop}px, 0)`;
+        };
+
+        const scrollFromScrollbarPointer = (clientY) => {
+          if (!(scrollbar instanceof HTMLElement) || !(scrollbarThumb instanceof HTMLElement)) return;
+          const trackRect = scrollbar.getBoundingClientRect();
+          const thumbHeight = scrollbarThumb.offsetHeight;
+          const maxScrollTop = Math.max(0, contentBody.scrollHeight - contentBody.clientHeight);
+          const maxThumbTop = Math.max(0, trackRect.height - thumbHeight);
+          const rawThumbTop = clientY - trackRect.top - thumbHeight / 2;
+          const nextThumbTop = Math.min(Math.max(0, rawThumbTop), maxThumbTop);
+          const ratio = maxThumbTop === 0 ? 0 : nextThumbTop / maxThumbTop;
+          contentBody.scrollTop = ratio * maxScrollTop;
+          syncScrollbar();
+        };
+
+        const getHeadingOffset = (heading) => {
+          const headingRect = heading.getBoundingClientRect();
+          const bodyRect = contentBody.getBoundingClientRect();
+          return headingRect.top - bodyRect.top + contentBody.scrollTop;
+        };
+
+        const getOffsetWithin = (element, ancestor) => {
+          let offsetTop = 0;
+          let offsetLeft = 0;
+          let current = element;
+
+          while (current instanceof HTMLElement && current !== ancestor) {
+            offsetTop += current.offsetTop;
+            offsetLeft += current.offsetLeft;
+            current = current.offsetParent;
+          }
+
+          return { top: offsetTop, left: offsetLeft };
+        };
+
+        const getTocScrollContainer = () => {
+          const tocListStyle = window.getComputedStyle(tocList);
+          const overflowY = tocListStyle.overflowY || tocListStyle.overflow;
+          return overflowY === "auto" || overflowY === "scroll" ? tocList : toc;
+        };
+
+        const updateContentToc = () => {
+          const viewportTop = contentBody.scrollTop;
+          const viewportBottom = viewportTop + contentBody.clientHeight;
+          const visibleEntries = headingEntries.filter((entry) => {
+            const headingTop = getHeadingOffset(entry.heading);
+            const headingBottom = headingTop + entry.heading.offsetHeight;
+            return headingBottom > viewportTop && headingTop < viewportBottom;
+          });
+
+          let activeEntry = visibleEntries[visibleEntries.length - 1] ?? headingEntries[0];
+
+          if (!visibleEntries.length) {
+            headingEntries.forEach((entry) => {
+              if (getHeadingOffset(entry.heading) <= viewportTop) {
+                activeEntry = entry;
+              }
+            });
+          }
+
+          headingEntries.forEach((entry) => {
+            const isActive = entry === activeEntry;
+            entry.link.classList.toggle("is-active", isActive);
+            if (isActive) {
+              entry.link.setAttribute("aria-current", "location");
+            } else {
+              entry.link.removeAttribute("aria-current");
+            }
+          });
+
+          const activeItem = activeEntry.link.closest(".content-toc-item");
+          if (!(activeItem instanceof HTMLElement) || !(progress instanceof HTMLElement)) {
+            syncScrollbar();
+            return;
+          }
+
+          const itemOffset = getOffsetWithin(activeItem, tocList);
+          const linkOffset = getOffsetWithin(activeEntry.link, tocList);
+          const markerHeight = Math.max(12, Math.min(18, Math.round(activeEntry.link.offsetHeight * 0.7)));
+          const markerTop = itemOffset.top + (activeItem.offsetHeight - markerHeight) / 2;
+          const markerLeft = Math.max(0, linkOffset.left - 10);
+
+          progress.style.height = `${markerHeight}px`;
+          progress.style.left = `${markerLeft}px`;
+          progress.style.transform = `translate3d(0, ${markerTop}px, 0)`;
+
+          if (!toc.classList.contains("has-progress-positioned")) {
+            toc.classList.add("has-progress-positioned");
+
+            requestAnimationFrame(() => {
+              toc.classList.add("has-progress-animated");
+            });
+          }
+
+          const tocScrollContainer = getTocScrollContainer();
+          const itemTopInToc = activeItem.offsetTop;
+          const centeredTocTop = itemTopInToc - (tocScrollContainer.clientHeight - activeItem.offsetHeight) / 2;
+          const maxTocScrollTop = Math.max(0, tocScrollContainer.scrollHeight - tocScrollContainer.clientHeight);
+          const nextTocScrollTop = Math.min(Math.max(0, centeredTocTop), maxTocScrollTop);
+
+          tocScrollContainer.scrollTo({
+            top: nextTocScrollTop,
+            behavior: isDraggingScrollbar ? "auto" : "smooth",
+          });
+
+          syncScrollbar();
+        };
+
+        const queueContentTocUpdate = () => {
+          cancelAnimationFrame(frameId);
+          frameId = requestAnimationFrame(updateContentToc);
+        };
+
+        const queueContentTocUpdateWhenReady = () => {
+          if (!tocEntranceSettled) return;
+          queueContentTocUpdate();
+        };
+
+        headingEntries.forEach((entry) => {
+          entry.link.addEventListener("click", (event) => {
+            event.preventDefault();
+            const headingTop = getHeadingOffset(entry.heading);
+            const centeredTop = headingTop - (contentBody.clientHeight - entry.heading.offsetHeight) / 2;
+            const maxScrollTop = Math.max(0, contentBody.scrollHeight - contentBody.clientHeight);
+            const nextScrollTop = Math.min(Math.max(0, centeredTop), maxScrollTop);
+
+            contentBody.scrollTo({
+              top: nextScrollTop,
+              behavior: "smooth",
+            });
+
+            if (history.replaceState) {
+              history.replaceState(null, "", `#${entry.heading.id}`);
+            }
+
+            queueContentTocUpdateWhenReady();
+          });
+        });
+
+        scrollbar?.addEventListener("pointerdown", (event) => {
+          if (!(scrollbarThumb instanceof HTMLElement)) return;
+          const target = event.target;
+          if (target === scrollbarThumb) return;
+          event.preventDefault();
+          scrollFromScrollbarPointer(event.clientY);
+          queueContentTocUpdateWhenReady();
+        });
+
+        scrollbarThumb?.addEventListener("pointerdown", (event) => {
+          if (!(scrollbarThumb instanceof HTMLElement)) return;
+          event.preventDefault();
+          isDraggingScrollbar = true;
+          scrollbarThumb.classList.add("is-dragging");
+          scrollbarThumb.setPointerCapture(event.pointerId);
+          scrollFromScrollbarPointer(event.clientY);
+        });
+
+        scrollbarThumb?.addEventListener("pointermove", (event) => {
+          if (!isDraggingScrollbar) return;
+          event.preventDefault();
+          scrollFromScrollbarPointer(event.clientY);
+          queueContentTocUpdateWhenReady();
+        });
+
+        const stopScrollbarDrag = (event) => {
+          if (!(scrollbarThumb instanceof HTMLElement)) return;
+          if (!isDraggingScrollbar) return;
+          isDraggingScrollbar = false;
+          scrollbarThumb.classList.remove("is-dragging");
+          if (event instanceof PointerEvent && scrollbarThumb.hasPointerCapture(event.pointerId)) {
+            scrollbarThumb.releasePointerCapture(event.pointerId);
+          }
+          queueContentTocUpdateWhenReady();
+        };
+
+        scrollbarThumb?.addEventListener("pointerup", stopScrollbarDrag);
+        scrollbarThumb?.addEventListener("pointercancel", stopScrollbarDrag);
+
+        contentBody.addEventListener("scroll", queueContentTocUpdateWhenReady, { passive: true });
+        window.addEventListener("resize", queueContentTocUpdateWhenReady);
+        window.addEventListener("load", queueContentTocUpdateWhenReady, { once: true });
+        document.addEventListener("content-toc:refresh", () => {
+          tocEntranceSettled = true;
+          queueContentTocUpdate();
+        });
+
+        if (tocEntranceSettled) {
+          queueContentTocUpdate();
+        }
+      };
+
+      initMobileNavDrawer();
+      initContentToc();
+      initMobileTocDrawer();
+      runContentPageEntrance();
+
+      if (!window.__contentPageEntrancePageLoadBound) {
+        document.addEventListener("astro:page-load", () => {
+          if (typeof window.__runContentPageEntrance === "function") {
+            window.__runContentPageEntrance();
+          }
+        });
+
+        window.__contentPageEntrancePageLoadBound = true;
+      }
+
+      window.__runContentPageEntrance = runContentPageEntrance;
+
+      media.addEventListener("change", handleSystemThemeChange);
+</script>
+

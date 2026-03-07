@@ -1,10 +1,6 @@
 ---
-import HomeLayout from "../layouts/HomeLayout.astro";
-import Signature from "../components/home/signature.astro";
-import ArticleInfoCard from "../components/content/ArticleInfoCard.astro";
-import FooterMeta from "../components/common/FooterMeta.astro";
+import SectionListingPage from "../components/content/SectionListingPage.astro";
 import { getGitTimestamps } from "../utils/git-timestamps";
-import "../style/pages/content-page.css";
 
 interface ContentModule {
   frontmatter?: {
@@ -90,61 +86,6 @@ const groupedArticles = listArticles.reduce<Array<{ type: string; articles: List
 }, []);
 
 const pageLabel = sectionLabels[section as keyof typeof sectionLabels];
-const toAnchorId = (value: string) => value.toLowerCase().trim().replace(/\s+/g, "-");
 ---
 
-<HomeLayout mainCol2Fr="4fr" mainCol3Fr="1.5fr">
-  <Signature slot="signature" />
-
-  <section slot="profile" class="content-page content-page--listing" aria-label={`${pageLabel} listing content`}>
-    <div class="content-page-body">
-      <header class="listing-header">
-        <h1 class="listing-header-title">{pageLabel}</h1>
-      </header>
-
-      {
-        groupedArticles.length > 0 ? (
-          <div class="listing-groups">
-            {groupedArticles.map((group) => (
-              <section class="listing-group" aria-label={`${group.type} articles`}>
-                <h2 id={toAnchorId(group.type)} class="listing-group-title">{group.type}</h2>
-                <div class="listing-group-items">
-                  {group.articles.map((article) => (
-                    <ArticleInfoCard
-                      title={article.title}
-                      href={article.href}
-                      createdLabel={article.createdLabel}
-                      description={article.description}
-                    />
-                  ))}
-                </div>
-              </section>
-            ))}
-          </div>
-        ) : (
-          <p class="content-toc-empty">No content yet.</p>
-        )
-      }
-    </div>
-  </section>
-
-  <aside slot="latest" class="content-toc" aria-label={`${pageLabel} categories`}>
-    {
-      groupedArticles.length > 0 ? (
-        <ol class="content-toc-list">
-          {groupedArticles.map((group) => (
-            <li class="content-toc-item content-toc-item--depth-2">
-              <a class="content-toc-link content-toc-link--depth-2" href={`#${toAnchorId(group.type)}`}>
-                {group.type}
-              </a>
-            </li>
-          ))}
-        </ol>
-      ) : (
-        <p class="content-toc-empty">No categories yet.</p>
-      )
-    }
-  </aside>
-
-  <FooterMeta slot="footer-info" />
-</HomeLayout>
+<SectionListingPage pageLabel={pageLabel} groupedArticles={groupedArticles} />

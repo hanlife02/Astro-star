@@ -1,10 +1,7 @@
 ---
-import HomeLayout from "../../layouts/HomeLayout.astro";
-import Signature from "../../components/home/signature.astro";
-import FooterMeta from "../../components/common/FooterMeta.astro";
+import ArticleDetailPage from "../../components/content/ArticleDetailPage.astro";
 import { site } from "../../config/site";
 import { getGitTimestamps } from "../../utils/git-timestamps";
-import "../../style/pages/content-page.css";
 
 interface ContentModule {
   default: any;
@@ -132,52 +129,15 @@ const articleWordCount = countWords(articleRawSource ?? "");
 const tocHeadings = extractTocHeadings(articleRawSource ?? "");
 ---
 
-<HomeLayout mainCol2Fr="4fr" mainCol3Fr="1.5fr">
-  <Signature slot="signature" />
-
-  <section slot="profile" class="content-page content-page--article" aria-label={`${section} article content`}>
-    <div class="content-page-body">
-      <header class="article-content-header">
-        <p class="article-content-section">{section.toUpperCase()}</p>
-        <h1 class="article-content-title">{title}</h1>
-        {
-          description && <p class="article-content-description">{description}</p>
-        }
-        <div class="article-content-meta" aria-label="Article metadata">
-          <p class="article-content-meta-item"><span>Type</span><strong>{articleType}</strong></p>
-          <p class="article-content-meta-item"><span>Author</span><strong>{author}</strong></p>
-          <p class="article-content-meta-item"><span>Created</span><strong>{formatDateTime(createdAt)}</strong></p>
-          <p class="article-content-meta-item"><span>Updated</span><strong>{formatDateTime(updatedAt)}</strong></p>
-          <p class="article-content-meta-item"><span>Words</span><strong>{articleWordCount.toLocaleString("en-US")}</strong></p>
-        </div>
-      </header>
-
-      <ArticleContent />
-    </div>
-  </section>
-
-  <aside slot="latest" class="content-toc" aria-label={`${section} table of contents`}>
-    {
-      tocHeadings.length > 0 ? (
-        <ol class="content-toc-list">
-          {tocHeadings.map((heading) => (
-            <li
-              class:list={[
-                "content-toc-item",
-                `content-toc-item--depth-${heading.depth}`,
-              ]}
-            >
-              <a class={`content-toc-link content-toc-link--depth-${heading.depth}`} href={`#${heading.slug}`}>
-                {heading.text}
-              </a>
-            </li>
-          ))}
-        </ol>
-      ) : (
-        <p class="content-toc-empty">No headings yet.</p>
-      )
-    }
-  </aside>
-
-  <FooterMeta slot="footer-info" />
-</HomeLayout>
+<ArticleDetailPage
+  section={section}
+  title={title}
+  description={description}
+  articleType={articleType}
+  author={author}
+  createdLabel={formatDateTime(createdAt)}
+  updatedLabel={formatDateTime(updatedAt)}
+  articleWordCount={articleWordCount}
+  tocHeadings={tocHeadings}
+  ArticleContent={ArticleContent}
+/>

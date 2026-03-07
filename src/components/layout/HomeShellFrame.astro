@@ -1,0 +1,131 @@
+---
+import Icon from "../../components/ui/Icon.astro";
+import RssIcon from "../../components/ui/icons/RssIcon.astro";
+import FloatingActionButton from "../../components/ui/FloatingActionButton.astro";
+import { AlignLeft, Github, Monitor, Moon, Search, Sun, TableOfContents } from "lucide-static";
+
+interface NavItem {
+  label: string;
+  href: string;
+}
+
+interface Props {
+  foldedNavItems: readonly NavItem[];
+  githubHref?: string;
+  shellStyle?: string;
+}
+
+const {
+  foldedNavItems,
+  githubHref = "",
+  shellStyle = "",
+} = Astro.props as Props;
+---
+
+<div class="home-shell" style={shellStyle || undefined}>
+  <header class="home-header">
+    <div class="wire-box signature-area" aria-label="Signature area">
+      <div class="signature-stack">
+        <slot name="signature" />
+      </div>
+    </div>
+
+    <div class="wire-box header-actions" aria-label="Actions area">
+      <div class="theme-switcher" role="group" aria-label="Theme switcher">
+        <button type="button" id="theme-toggle" class="theme-btn" aria-label="Theme switcher">
+          <span data-theme-icon="light"><Icon svg={Sun} /></span>
+          <span data-theme-icon="dark" hidden><Icon svg={Moon} /></span>
+          <span data-theme-icon="system" hidden><Icon svg={Monitor} /></span>
+        </button>
+      </div>
+      <button type="button" class="search-btn" aria-label="Search">
+        <Icon svg={Search} />
+      </button>
+      <details class="nav-drawer mobile-nav-drawer">
+        <summary class="hamburger" aria-label="Toggle navigation">
+          <Icon svg={AlignLeft} />
+        </summary>
+
+        <nav class="wire-box nav-panel" aria-label="Mobile navigation area">
+          <ul class="signature-collapse-links">
+            {
+              foldedNavItems.map((item) => (
+                <li>
+                  <a href={item.href}>{item.label}</a>
+                </li>
+              ))
+            }
+          </ul>
+        </nav>
+      </details>
+    </div>
+  </header>
+
+  <main class="home-main">
+    <aside class="wire-box side-nav-area" aria-label="Side navigation area">
+      <div class="side-nav-stack">
+        <details class="signature-collapse" aria-label="Signature navigation toggle">
+          <summary class="signature-collapse-trigger" aria-label="Toggle signature navigation">
+            <Icon svg={AlignLeft} />
+          </summary>
+          <nav class="wire-box signature-collapse-panel" aria-label="Signature navigation area">
+            <ul class="signature-collapse-links">
+              {
+                foldedNavItems.map((item) => (
+                  <li>
+                    <a href={item.href}>{item.label}</a>
+                  </li>
+                ))
+              }
+            </ul>
+          </nav>
+        </details>
+        <slot name="side-nav" />
+      </div>
+    </aside>
+
+    <section class="wire-box profile-area" aria-label="Profile area">
+      <slot name="profile" />
+    </section>
+
+    <section class="wire-box latest-area" aria-label="Latest area">
+      <slot name="latest" />
+    </section>
+  </main>
+
+  <div class="floating-action-stack" aria-label="Page controls" hidden>
+    <FloatingActionButton
+      id="toc-fab"
+      label="Toggle table of contents"
+      iconSvg={TableOfContents}
+      className="floating-action-button--toc"
+    />
+  </div>
+
+  <footer class="home-footer">
+    <div class="wire-box footer-info" aria-label="Footer info area">
+      <slot name="footer-info" />
+    </div>
+
+    <nav class="wire-box footer-icons" aria-label="Footer icon navigation">
+      <a class="footer-rss-btn" href="/rss.xml" aria-label="Subscribe via RSS" title="RSS Feed">
+        <RssIcon />
+      </a>
+      {
+        githubHref && (
+          <a
+            class="footer-rss-btn"
+            href={githubHref}
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Visit GitHub profile"
+            title="GitHub"
+          >
+            <Icon svg={Github} />
+          </a>
+        )
+      }
+      <slot name="footer-icons" />
+    </nav>
+  </footer>
+</div>
