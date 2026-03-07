@@ -160,6 +160,7 @@ const shellStyle = [
       const snowBackground = document.querySelector(".snow-bg");
       const media = window.matchMedia("(prefers-color-scheme: dark)");
       let currentMode = "system";
+      let signatureCollapseCloseTimer = 0;
 
       const resolveMode = (mode) => (mode === "system" ? (media.matches ? "dark" : "light") : mode);
 
@@ -210,9 +211,28 @@ const shellStyle = [
 
       const syncDesktopSignatureCollapse = () => {
         if (!(signatureCollapse instanceof HTMLDetailsElement)) return;
+        window.clearTimeout(signatureCollapseCloseTimer);
+        delete signatureCollapse.dataset.panelState;
         if (desktopNavMedia.matches && signatureCollapse.open) {
           signatureCollapse.open = false;
         }
+      };
+
+      const openDesktopSignatureCollapse = () => {
+        if (!(signatureCollapse instanceof HTMLDetailsElement) || !desktopNavMedia.matches) return;
+        window.clearTimeout(signatureCollapseCloseTimer);
+        signatureCollapse.open = true;
+        signatureCollapse.dataset.panelState = "open";
+      };
+
+      const closeDesktopSignatureCollapse = () => {
+        if (!(signatureCollapse instanceof HTMLDetailsElement) || !desktopNavMedia.matches) return;
+        window.clearTimeout(signatureCollapseCloseTimer);
+        signatureCollapse.dataset.panelState = "closing";
+        signatureCollapseCloseTimer = window.setTimeout(() => {
+          signatureCollapse.open = false;
+          delete signatureCollapse.dataset.panelState;
+        }, 280);
       };
 
       syncDesktopSignatureCollapse();
@@ -224,25 +244,22 @@ const shellStyle = [
       });
 
       signatureCollapse?.addEventListener("mouseenter", () => {
-        if (!(signatureCollapse instanceof HTMLDetailsElement) || !desktopNavMedia.matches) return;
-        signatureCollapse.open = true;
+        openDesktopSignatureCollapse();
       });
 
       signatureCollapse?.addEventListener("mouseleave", () => {
-        if (!(signatureCollapse instanceof HTMLDetailsElement) || !desktopNavMedia.matches) return;
-        signatureCollapse.open = false;
+        closeDesktopSignatureCollapse();
       });
 
       signatureCollapse?.addEventListener("focusin", () => {
-        if (!(signatureCollapse instanceof HTMLDetailsElement) || !desktopNavMedia.matches) return;
-        signatureCollapse.open = true;
+        openDesktopSignatureCollapse();
       });
 
       signatureCollapse?.addEventListener("focusout", (event) => {
         if (!(signatureCollapse instanceof HTMLDetailsElement) || !desktopNavMedia.matches) return;
         const relatedTarget = event.relatedTarget;
         if (relatedTarget instanceof Node && signatureCollapse.contains(relatedTarget)) return;
-        signatureCollapse.open = false;
+        closeDesktopSignatureCollapse();
       });
 
       toggleButton?.addEventListener("click", () => {

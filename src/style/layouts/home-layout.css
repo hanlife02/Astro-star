@@ -163,17 +163,45 @@ body {
 }
 
 .signature-collapse-panel {
-  display: none;
+  display: block;
   position: absolute;
   top: 100%;
   left: 0;
   z-index: 3;
   min-width: var(--nav-flyout-min);
   padding: 0.4rem 0;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translate3d(-0.7rem, 0, 0);
+  transform-origin: top left;
+  clip-path: inset(0 100% 0 0 round 0.2rem);
+  transition:
+    opacity 0.24s ease,
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    clip-path 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0s linear 0.3s;
 }
 
-.signature-collapse[open] .signature-collapse-panel {
-  display: block;
+.signature-collapse[data-panel-state="open"] .signature-collapse-panel {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translate3d(0, 0, 0);
+  clip-path: inset(0 0 0 0 round 0.2rem);
+  transition:
+    opacity 0.24s ease,
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    clip-path 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0s linear 0s;
+}
+
+.signature-collapse[data-panel-state="closing"] .signature-collapse-panel {
+  opacity: 0;
+  visibility: visible;
+  pointer-events: none;
+  transform: translate3d(-0.55rem, 0, 0);
+  clip-path: inset(0 100% 0 0 round 0.2rem);
 }
 
 .signature-collapse-links {
@@ -245,8 +273,17 @@ body {
   left: 0;
   min-width: var(--nav-flyout-min);
   padding: 0.25rem 0;
-  display: none;
+  display: block;
   z-index: 2;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-0.35rem);
+  transform-origin: top right;
+  transition:
+    opacity 0.22s ease,
+    transform 0.26s cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0s linear 0.26s;
 }
 
 .mobile-nav-drawer .nav-panel {
@@ -298,7 +335,14 @@ body {
 }
 
 .nav-drawer[open] .nav-panel {
-  display: block;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+  transition:
+    opacity 0.22s ease,
+    transform 0.26s cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0s linear 0s;
 }
 
 .header-actions {
