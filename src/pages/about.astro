@@ -78,20 +78,23 @@ const tocHeadings = extractTocHeadings(aboutRawSource ?? "");
   <aside slot="latest" class="content-toc" aria-label="About table of contents">
     {
       tocHeadings.length > 0 ? (
-        <ol class="content-toc-list">
-          {tocHeadings.map((heading) => (
-            <li
-              class:list={[
-                "content-toc-item",
-                `content-toc-item--depth-${heading.depth}`,
-              ]}
-            >
-              <a class={`content-toc-link content-toc-link--depth-${heading.depth}`} href={`#${heading.slug}`}>
-                {heading.text}
-              </a>
-            </li>
-          ))}
-        </ol>
+        <>
+          <p class="content-toc-title">Contents</p>
+          <ol class="content-toc-list">
+            {tocHeadings.map((heading) => (
+              <li
+                class:list={[
+                  "content-toc-item",
+                  `content-toc-item--depth-${heading.depth}`,
+                ]}
+              >
+                <a class={`content-toc-link content-toc-link--depth-${heading.depth}`} href={`#${heading.slug}`}>
+                  {heading.text}
+                </a>
+              </li>
+            ))}
+          </ol>
+        </>
       ) : (
         <p class="content-toc-empty">No headings yet.</p>
       )

@@ -261,6 +261,12 @@ const shellStyle = [
 
         shell.classList.add("home-shell--has-mobile-toc");
 
+        const syncContentTocLayout = () => {
+          requestAnimationFrame(() => {
+            window.dispatchEvent(new Event("resize"));
+          });
+        };
+
         const syncMobileTocState = () => {
           const isDesktop = tocMedia.matches;
           if (isDesktop) {
@@ -272,6 +278,7 @@ const shellStyle = [
             fabStack.hidden = isDesktop;
           }
           tocButton.setAttribute("aria-expanded", String(shell.classList.contains("is-mobile-toc-open")));
+          syncContentTocLayout();
         };
 
         const closeMobileToc = () => {
@@ -392,6 +399,12 @@ const shellStyle = [
           return headingRect.top - bodyRect.top + contentBody.scrollTop;
         };
 
+        const getTocScrollContainer = () => {
+          const tocListStyle = window.getComputedStyle(tocList);
+          const overflowY = tocListStyle.overflowY || tocListStyle.overflow;
+          return overflowY === "auto" || overflowY === "scroll" ? tocList : toc;
+        };
+
         const updateContentToc = () => {
           const viewportTop = contentBody.scrollTop;
           const viewportBottom = viewportTop + contentBody.clientHeight;
@@ -438,13 +451,14 @@ const shellStyle = [
           progress.style.left = `${markerLeft}px`;
           progress.style.transform = `translate3d(0, ${markerTop}px, 0)`;
 
-          const tocRect = toc.getBoundingClientRect();
-          const itemTopInToc = itemRect.top - tocRect.top + toc.scrollTop;
-          const centeredTocTop = itemTopInToc - (toc.clientHeight - itemRect.height) / 2;
-          const maxTocScrollTop = Math.max(0, toc.scrollHeight - toc.clientHeight);
+          const tocScrollContainer = getTocScrollContainer();
+          const tocRect = tocScrollContainer.getBoundingClientRect();
+          const itemTopInToc = itemRect.top - tocRect.top + tocScrollContainer.scrollTop;
+          const centeredTocTop = itemTopInToc - (tocScrollContainer.clientHeight - itemRect.height) / 2;
+          const maxTocScrollTop = Math.max(0, tocScrollContainer.scrollHeight - tocScrollContainer.clientHeight);
           const nextTocScrollTop = Math.min(Math.max(0, centeredTocTop), maxTocScrollTop);
 
-          toc.scrollTo({
+          tocScrollContainer.scrollTo({
             top: nextTocScrollTop,
             behavior: isDraggingScrollbar ? "auto" : "smooth",
           });
