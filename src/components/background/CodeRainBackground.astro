@@ -1,0 +1,85 @@
+---
+type Props = {
+  keywords: readonly string[];
+  count?: number;
+};
+
+const { keywords, count = 60 } = Astro.props;
+
+const pick = <T,>(arr: readonly T[]) =>
+  arr[Math.floor(Math.random() * arr.length)];
+const rand = (min: number, max: number) => Math.random() * (max - min) + min;
+
+const drops = Array.from({ length: count }, () => {
+  const duration = rand(14, 34);
+  return {
+    text: pick(keywords),
+    left: rand(0, 100),
+    size: rand(12, 22),
+    duration,
+    delay: -rand(0, duration),
+    opacity: rand(0.03, 0.08),
+    bright: Math.random() < 0.08,
+  };
+});
+---
+
+<div class="coderain" aria-hidden="true">
+  {
+    drops.map((d) => (
+      <span
+        class={`coderain__drop ${d.bright ? "is-bright" : ""}`}
+        style={`left:${d.left}%; font-size:${d.size}px; --dur:${d.duration}s; --delay:${d.delay}s; --alpha:${d.opacity};`}
+      >
+        {d.text}
+      </span>
+    ))
+  }
+</div>
+
+<style>
+  .coderain {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+    --rain: rgba(0, 0, 0, 1);
+    background-color: #ffffff;
+  }
+
+  :global(html[data-theme="dark"]) .coderain,
+  :global(:root[data-theme="dark"]) .coderain {
+    --rain: rgba(255, 255, 255, 1);
+    background-color: #000000;
+  }
+
+  .coderain__drop {
+    position: absolute;
+    top: -20%;
+    color: var(--rain);
+    opacity: var(--alpha);
+    font-family: var(--mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace);
+    white-space: nowrap;
+    animation: rain var(--dur) linear infinite;
+    animation-delay: var(--delay);
+    will-change: transform;
+  }
+
+  .coderain__drop.is-bright {
+    opacity: 0.14;
+  }
+
+  @keyframes rain {
+    to {
+      transform: translateY(125vh);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .coderain__drop {
+      animation: none;
+      display: none;
+    }
+  }
+</style>
