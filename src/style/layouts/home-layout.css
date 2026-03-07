@@ -413,32 +413,34 @@ body {
   position: relative;
   z-index: 2;
   padding: clamp(0.55rem, 1vw, 0.85rem);
-  padding-top: clamp(0rem, 0vw, 1.05rem);
+  padding-top: clamp(0.55rem, 1.5vw, 1.85rem);
   border-top: 1px solid var(--line-soft);
   display: flex;
-  align-items: flex-end;
-  flex-wrap: nowrap;
-  gap: var(--space);
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0rem;
 }
 
 .footer-info {
-  flex: 1 1 auto;
+  flex: 1 1 100%;
   min-width: 0;
   min-height: var(--footer-height);
   height: auto;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
+  justify-content: center;
   overflow-wrap: anywhere;
 }
 
 .footer-icons {
-  flex: 0 0 auto;
+  flex: 0 1 100%;
   min-height: var(--footer-height);
   display: inline-flex;
-  align-items: flex-end;
-  justify-content: flex-end;
+  align-items: center;
+  justify-content: center;
   gap: clamp(0.4rem, 0.7vw, 0.55rem);
-  margin-left: auto;
+  margin-left: 0;
 }
 
 .footer-rss-btn {
@@ -471,6 +473,26 @@ body {
 }
 
 @media (min-width: 56.25rem) {
+  .home-footer {
+    align-items: flex-end;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    padding-top: clamp(0rem, 0vw, 1.05rem);
+  }
+
+  .footer-info {
+    flex: 1 1 auto;
+    align-items: flex-end;
+    justify-content: flex-start;
+  }
+
+  .footer-icons {
+    flex: 0 0 auto;
+    align-items: flex-end;
+    justify-content: flex-end;
+    margin-left: auto;
+  }
+
   .home-header {
     grid-template-columns: auto auto 1fr;
   }

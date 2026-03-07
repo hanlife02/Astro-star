@@ -14,16 +14,18 @@ const copyrightYears = `${site.owner.startYear}-${currentYear}`;
 
 <div class="footer-meta" aria-label="Site footer information">
   <p class="footer-meta-line">
-    <a href={repoHref} target="_blank" rel="noreferrer">
+    <a class="footer-meta-link footer-meta-link--copyright" href={repoHref} target="_blank" rel="noreferrer">
       @{copyrightYears} Astro-star
     </a>
-    <span aria-hidden="true">{separator}</span>
-    <a href={site.beian.icp.href} target="_blank" rel="noreferrer">
-      {site.beian.icp.text}
-    </a>
-    <span aria-hidden="true">{separator}</span>
-    <a href={site.beian.moe.href} target="_blank" rel="noreferrer">
-      {site.beian.moe.text}
-    </a>
+    <span class="footer-meta-separator footer-meta-separator--primary" aria-hidden="true">{separator}</span>
+    <span class="footer-meta-group">
+      <a class="footer-meta-link" href={site.beian.icp.href} target="_blank" rel="noreferrer">
+        {site.beian.icp.text}
+      </a>
+      <span class="footer-meta-separator" aria-hidden="true">{separator}</span>
+      <a class="footer-meta-link" href={site.beian.moe.href} target="_blank" rel="noreferrer">
+        {site.beian.moe.text}
+      </a>
+    </span>
   </p>
 </div>
