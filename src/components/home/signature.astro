@@ -16,14 +16,58 @@ const normalizeSvgMarkup = (input: string) => {
   return value.replace(/\\"/g, '"').replace(/\\'/g, "'");
 };
 
+const appendClassAttribute = (markup: string, tagName: string, className: string) => markup.replace(
+  new RegExp(`<${tagName}\\b([^>]*)>`, "i"),
+  (match, rawAttrs: string) => {
+    if (/\bclass\s*=\s*(["']).*?\1/i.test(rawAttrs)) {
+      return match.replace(/\bclass\s*=\s*(["'])(.*?)\1/i, (_classMatch, quote: string, value: string) => `class=${quote}${value} ${className}${quote}`);
+    }
+
+    return `<${tagName}${rawAttrs} class="${className}">`;
+  },
+);
+
+const decoratePathElements = (markup: string, className: string) => markup.replace(
+  /<path\b([^>]*?)(\/?)>/gi,
+  (match, rawAttrs: string, selfClosing: string) => {
+    let attrs = rawAttrs;
+
+    if (/\bclass\s*=\s*(["']).*?\1/i.test(attrs)) {
+      attrs = attrs.replace(/\bclass\s*=\s*(["'])(.*?)\1/i, (_classMatch, quote: string, value: string) => `class=${quote}${value} ${className}${quote}`);
+    } else {
+      attrs += ` class="${className}"`;
+    }
+
+    if (!/\bpathLength\s*=\s*(["']).*?\1/i.test(attrs)) {
+      attrs += ' pathLength="1"';
+    }
+
+    return `<path${attrs}${selfClosing || ""}>`;
+  },
+);
+
 const svgMarkup = normalizeSvgMarkup(signatureSvg);
 const isValidSvg = svgMarkup.startsWith("<svg") && svgMarkup.includes("</svg>");
+const inkMarkup = isValidSvg ? appendClassAttribute(svgMarkup, "svg", "signature-svg signature-svg--ink") : "";
+const traceMarkup = isValidSvg
+  ? decoratePathElements(
+      appendClassAttribute(svgMarkup, "svg", "signature-svg signature-svg--trace"),
+      "signature-trace-path",
+    )
+  : "";
 ---
 
 {
   isValidSvg && (
     <a class="signature-wrap" href="/" aria-label="Back to home">
-      <Fragment set:html={svgMarkup} />
+      <span class="signature-mark" aria-hidden="true">
+        <span class="signature-layer signature-layer--ink">
+          <Fragment set:html={inkMarkup} />
+        </span>
+        <span class="signature-layer signature-layer--trace">
+          <Fragment set:html={traceMarkup} />
+        </span>
+      </span>
     </a>
   )
 }

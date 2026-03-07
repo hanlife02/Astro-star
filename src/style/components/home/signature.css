@@ -1,5 +1,6 @@
 .signature-wrap {
   --signature-svg-max: clamp(5.2rem, 4.2rem + 3.4vw, 8.4rem);
+  --signature-cycle-duration: 6.8s;
   width: 100%;
   color: var(--line, #101010);
   text-decoration: none;
@@ -8,20 +9,109 @@
   align-items: flex-end;
 }
 
+.signature-mark {
+  position: relative;
+  display: inline-grid;
+  align-items: end;
+  width: min(var(--signature-svg-max), 100%);
+}
+
+.signature-layer {
+  grid-area: 1 / 1;
+}
+
 .signature-wrap svg {
   display: block;
-  max-width: min(var(--signature-svg-max), 100%);
+  width: 100%;
   height: auto;
 }
 
-.signature-wrap svg,
-.signature-wrap svg * {
+.signature-layer--ink {
+  opacity: 0;
+  animation: signature-ink var(--signature-cycle-duration) ease-in-out infinite;
+}
+
+.signature-layer--ink svg,
+.signature-layer--ink svg * {
   fill: currentColor !important;
   stroke: currentColor !important;
 }
 
+.signature-layer--trace .signature-svg,
+.signature-layer--trace .signature-svg * {
+  fill: transparent !important;
+}
+
+.signature-layer--trace .signature-trace-path {
+  stroke: currentColor !important;
+  stroke-width: 1.15px !important;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  opacity: 0;
+  animation: signature-trace var(--signature-cycle-duration) cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+@keyframes signature-trace {
+  0%,
+  10% {
+    opacity: 0;
+    stroke-dashoffset: 1;
+  }
+
+  16% {
+    opacity: 1;
+    stroke-dashoffset: 1;
+  }
+
+  62% {
+    opacity: 1;
+    stroke-dashoffset: 0;
+  }
+
+  82% {
+    opacity: 1;
+    stroke-dashoffset: 0;
+  }
+
+  92%,
+  100% {
+    opacity: 0;
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes signature-ink {
+  0%,
+  58% {
+    opacity: 0;
+  }
+
+  66%,
+  84% {
+    opacity: 1;
+  }
+
+  94%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .signature-layer--ink {
+    opacity: 1;
+    animation: none;
+  }
+
+  .signature-layer--trace {
+    display: none;
+  }
+}
+
 @media (min-width: 48rem) {
-  .signature-wrap svg {
-    max-width: min(clamp(6.2rem, 5.5rem + 2vw, 9rem), 100%);
+  .signature-wrap {
+    --signature-svg-max: min(clamp(6.2rem, 5.5rem + 2vw, 9rem), 100%);
   }
 }
