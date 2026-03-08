@@ -68,7 +68,20 @@
 }
 
 .content-page-body a {
-  color: var(--line);
+  color: color-mix(in srgb, var(--accent) 82%, var(--line) 18%);
+  text-decoration-line: underline;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.16em;
+  text-decoration-color: color-mix(in srgb, var(--accent) 38%, transparent);
+  transition:
+    color 0.2s ease,
+    text-decoration-color 0.2s ease;
+}
+
+.content-page-body a:hover,
+.content-page-body a:focus-visible {
+  color: color-mix(in srgb, var(--accent) 92%, var(--line) 8%);
+  text-decoration-color: currentColor;
 }
 
 .content-page-body h1,
@@ -256,23 +269,29 @@
   line-height: 1.35;
   color: color-mix(in srgb, var(--line) 58%, transparent);
   opacity: 0.72;
-  transform-origin: left center;
-  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease, letter-spacing 0.2s ease, color 0.2s ease;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.18em;
+  transition:
+    opacity 0.2s ease,
+    text-decoration-color 0.2s ease,
+    color 0.2s ease;
 }
 
 .content-toc-link.is-active {
   color: var(--line);
-  transform: scale(1.08);
   opacity: 1;
+  text-decoration-color: color-mix(in srgb, var(--accent) 48%, transparent);
 }
 
 .content-toc-link--depth-1.is-active {
-  transform: scale(1.06);
+  text-decoration-color: color-mix(in srgb, var(--accent) 58%, transparent);
 }
 
 .content-toc-link--depth-2.is-active,
 .content-toc-link--depth-3.is-active {
-  letter-spacing: 0.01em;
+  text-decoration-color: color-mix(in srgb, var(--accent) 42%, transparent);
 }
 
 
@@ -281,9 +300,8 @@
 .content-toc-link:hover,
 .content-toc-link:focus-visible {
   color: var(--line);
-  text-decoration: none;
-  transform: scale(1.05);
   opacity: 1;
+  text-decoration-color: color-mix(in srgb, var(--line) 28%, transparent);
 }
 
 

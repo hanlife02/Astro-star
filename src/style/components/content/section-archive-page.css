@@ -44,15 +44,15 @@
   overflow-wrap: anywhere;
 }
 
-.archive-item-link {
+.content-page-body .archive-item-link {
   min-width: 0;
   color: var(--line);
   text-decoration: none;
   line-height: 1.6;
 }
 
-.archive-item-link:hover,
-.archive-item-link:focus-visible {
+.content-page-body .archive-item-link:hover,
+.content-page-body .archive-item-link:focus-visible {
   color: var(--accent);
   text-decoration: underline;
 }

@@ -745,6 +745,8 @@
 
 ### 2. 正文链接识别度偏弱
 
+状态：`[~] 已提交修复，待复核`
+
 - `src/style/pages/content-page.css:70`
 
 问题：
@@ -776,6 +778,8 @@
 - 对主流内容站来说，这种表达适合点缀，不适合高频标题体系
 
 ### 5. TOC 当前项与悬停态通过缩放强调，容易造成文字抖动感
+
+状态：`[~] 已提交修复，待复核`
 
 - `src/style/pages/content-page.css:345`
 - `src/style/pages/content-page.css:363`
