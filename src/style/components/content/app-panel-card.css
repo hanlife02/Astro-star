@@ -1,4 +1,4 @@
-.app-panel-card {
+﻿.app-panel-card {
   margin: 0 0 1rem;
   padding: clamp(0.5rem, 0.85rem, 1.35rem);
   border: 1px solid var(--border-soft);
@@ -154,5 +154,3 @@
   }
 }
 
-@media (min-width: 72rem) {
-}
