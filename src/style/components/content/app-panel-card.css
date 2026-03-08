@@ -1,8 +1,8 @@
 .app-panel-card {
   margin: 0 0 1rem;
   padding: clamp(0.5rem, 0.85rem, 1.35rem);
-  border: 1px solid color-mix(in srgb, var(--line) 14%, transparent);
-  border-radius: 1.15rem;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
   background: transparent;
 }
 
@@ -35,8 +35,8 @@
   align-items: center;
   align-self: stretch;
   padding: 0.2rem 0.8rem;
-  border-color: color-mix(in srgb, var(--line) 14%, transparent);
-  border-radius: 1rem;
+  border-color: var(--border-soft);
+  border-radius: var(--radius-md);
   background: color-mix(in srgb, var(--line) 2.5%, transparent);
   min-height: 5rem;
 }
@@ -94,14 +94,14 @@
 .app-panel-item:focus-within,
 .app-panel-item--link:hover,
 .app-panel-item--link:focus-visible {
-  border-color: color-mix(in srgb, #483D8B 34%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 34%, transparent);
   background: transparent;
   transform: translateY(-0.08rem);
 }
 
 .app-panel-item--link:hover .app-panel-item-name,
 .app-panel-item--link:focus-visible .app-panel-item-name {
-  color: #483D8B;
+  color: var(--accent);
 }
 
 .app-panel-item-icon {
@@ -156,4 +156,3 @@
 
 @media (min-width: 72rem) {
 }
-

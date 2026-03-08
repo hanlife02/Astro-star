@@ -13,7 +13,7 @@
 .archive-year-heading {
   margin: 0;
   padding-bottom: 0.55rem;
-  border-bottom: 1px solid color-mix(in srgb, var(--line) 14%, transparent);
+  border-bottom: 1px solid var(--border-soft);
   color: var(--line);
   font-size: clamp(1.05rem, 1rem + 0.3vw, 1.25rem);
   font-weight: 600;
@@ -37,10 +37,11 @@
 }
 
 .archive-item-date {
-  color: color-mix(in srgb, var(--line) 68%, transparent);
+  color: var(--text-muted);
   font-size: 0.85rem;
   line-height: 1.5;
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .archive-item-link {
@@ -52,7 +53,7 @@
 
 .archive-item-link:hover,
 .archive-item-link:focus-visible {
-  color: #483D8B;
+  color: var(--accent);
   text-decoration: underline;
 }
 
@@ -60,5 +61,12 @@
   .archive-list-item {
     grid-template-columns: minmax(0, 1fr);
     gap: 0.15rem;
+  }
+}
+
+@media (min-width: 40.001rem) {
+  .archive-item-date {
+    white-space: nowrap;
+    overflow-wrap: normal;
   }
 }

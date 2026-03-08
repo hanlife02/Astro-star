@@ -33,6 +33,10 @@
 :root {
   --line: #111111;
   --line-soft: rgba(17, 17, 17, 0.88);
+  --accent: #483D8B;
+  --border-soft: color-mix(in srgb, var(--line) 14%, transparent);
+  --text-muted: color-mix(in srgb, var(--line) 68%, transparent);
+  --radius-md: 1rem;
   --layout-max-ratio: 1.44;
   --font-size-base: clamp(0.9375rem, 1.35vw, 1.8rem);
   --shell-max: min(92vw, 112.5rem);

@@ -9,6 +9,7 @@ import BilibiliIcon from "../ui/icons/BilibiliIcon.astro";
 import NetEaseMusicIcon from "../ui/icons/NetEaseMusicIcon.astro";
 import "../../style/components/home/profile.css";
 import "../../style/components/home/latest-articles.css";
+import "../../style/components/home/home-page-content.css";
 import "../../style/pages/home-page-entrance.css";
 
 interface ProfileData {
@@ -302,20 +303,3 @@ const {
   </section>
   <FooterMeta slot="footer-info" />
 </HomeLayout>
-
-<style is:global>
-  .home-profile-sequence:not([data-home-entrance-enabled="true"]) .home-enter-item,
-  .home-profile-sequence:not([data-home-entrance-enabled="true"]) .home-type-target,
-  .home-profile-sequence:not([data-home-entrance-enabled="true"]) .home-profile-metric,
-  .home-profile-sequence:not([data-home-entrance-enabled="true"]) .home-letter,
-  .home-latest-sequence:not([data-home-entrance-enabled="true"]) .latest-articles-title,
-  .home-latest-sequence:not([data-home-entrance-enabled="true"]) .latest-articles-year-label,
-  .home-latest-sequence:not([data-home-entrance-enabled="true"]) .latest-articles-item-content,
-  .home-latest-sequence:not([data-home-entrance-enabled="true"]) .latest-articles-item::before,
-  .home-latest-sequence:not([data-home-entrance-enabled="true"]) .latest-articles-item::after {
-    opacity: 1;
-    transform: none;
-    filter: none;
-    transition: none;
-  }
-</style>

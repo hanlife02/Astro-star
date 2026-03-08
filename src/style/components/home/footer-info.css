@@ -44,7 +44,7 @@
 
 .footer-meta-link:hover,
 .footer-meta-link:focus-visible {
-  color: #483D8B;
+  color: var(--accent);
   text-decoration: none;
   transform: scale(1.04);
   z-index: 1;

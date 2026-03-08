@@ -23,7 +23,7 @@
 
 .listing-view-all-link:hover,
 .listing-view-all-link:focus-visible {
-  color: #483D8B;
+  color: var(--accent);
 }
 
 .listing-groups > .content-toc-list {

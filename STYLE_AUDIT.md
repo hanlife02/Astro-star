@@ -318,6 +318,8 @@
 
 ### 8. Archive 页样式组织方式不一致
 
+状态：`[x] 已处理（已复核）`
+
 - `src/components/content/SectionArchivePage.astro:81`
 
 问题：
@@ -327,6 +329,8 @@
 - 后续维护时，样式入口不统一，查找成本更高
 
 ### 9. Archive 列表日期列有潜在窄屏约束问题
+
+状态：`[x] 已处理（已复核）`
 
 - `src/components/content/SectionArchivePage.astro:115`
 - `src/components/content/SectionArchivePage.astro:124`
@@ -338,6 +342,8 @@
 - 结构弹性一般
 
 ### 10. 存在疑似未使用的文章页样式文件
+
+状态：`[x] 已处理（已复核）`
 
 - `src/style/pages/article-page.css:1`
 

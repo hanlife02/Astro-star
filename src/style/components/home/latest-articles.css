@@ -162,7 +162,7 @@
 
 .latest-articles-link:hover,
 .latest-articles-link:focus-visible {
-  color: #483D8B;
+  color: var(--accent);
   text-decoration: none;
   transform: scale(1.03);
 }

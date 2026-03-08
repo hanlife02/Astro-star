@@ -436,8 +436,8 @@
 
 .listing-card:hover,
 .listing-card:focus-within {
-  border-color: color-mix(in srgb, #483D8B 36%, transparent);
-  background: color-mix(in srgb, #483D8B 4%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 36%, transparent);
+  background: color-mix(in srgb, var(--accent) 4%, transparent);
   transform: translateY(-0.08rem);
 }
 
@@ -506,7 +506,7 @@
 .listing-card-link:focus-visible .listing-card-description,
 .listing-card-link:hover .listing-card-arrow,
 .listing-card-link:focus-visible .listing-card-arrow {
-  color: #483D8B;
+  color: var(--accent);
 }
 
 .listing-card-link:hover .listing-card-arrow,

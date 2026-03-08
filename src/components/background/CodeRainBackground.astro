@@ -1,4 +1,6 @@
 ---
+import "../../style/components/background/code-rain-background.css";
+
 type Props = {
   keywords: readonly string[];
   count?: number;
@@ -36,50 +38,3 @@ const drops = Array.from({ length: count }, () => {
     ))
   }
 </div>
-
-<style>
-  .coderain {
-    position: fixed;
-    inset: 0;
-    overflow: hidden;
-    pointer-events: none;
-    z-index: 0;
-    --rain: rgba(0, 0, 0, 1);
-    background-color: #ffffff;
-  }
-
-  :global(html[data-theme="dark"]) .coderain,
-  :global(:root[data-theme="dark"]) .coderain {
-    --rain: rgba(255, 255, 255, 1);
-    background-color: #000000;
-  }
-
-  .coderain__drop {
-    position: absolute;
-    top: -20%;
-    color: var(--rain);
-    opacity: var(--alpha);
-    font-family: var(--mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace);
-    white-space: nowrap;
-    animation: rain var(--dur) linear infinite;
-    animation-delay: var(--delay);
-    will-change: transform;
-  }
-
-  .coderain__drop.is-bright {
-    opacity: 0.14;
-  }
-
-  @keyframes rain {
-    to {
-      transform: translateY(125vh);
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .coderain__drop {
-      animation: none;
-      display: none;
-    }
-  }
-</style>

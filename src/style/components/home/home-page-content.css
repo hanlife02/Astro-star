@@ -1,0 +1,14 @@
+.home-profile-sequence:not([data-home-entrance-enabled="true"]) .home-enter-item,
+.home-profile-sequence:not([data-home-entrance-enabled="true"]) .home-type-target,
+.home-profile-sequence:not([data-home-entrance-enabled="true"]) .home-profile-metric,
+.home-profile-sequence:not([data-home-entrance-enabled="true"]) .home-letter,
+.home-latest-sequence:not([data-home-entrance-enabled="true"]) .latest-articles-title,
+.home-latest-sequence:not([data-home-entrance-enabled="true"]) .latest-articles-year-label,
+.home-latest-sequence:not([data-home-entrance-enabled="true"]) .latest-articles-item-content,
+.home-latest-sequence:not([data-home-entrance-enabled="true"]) .latest-articles-item::before,
+.home-latest-sequence:not([data-home-entrance-enabled="true"]) .latest-articles-item::after {
+  opacity: 1;
+  transform: none;
+  filter: none;
+  transition: none;
+}
