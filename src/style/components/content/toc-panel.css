@@ -184,7 +184,7 @@
   }
 }
 
-@media (max-width: 56.249rem) {
+@media not all and (min-width: 56.25rem) {
   .home-shell--has-mobile-toc .latest-area {
     display: none;
   }
@@ -234,10 +234,11 @@
   }
 }
 
-@media (max-width: 56.249rem) {
+@media not all and (min-width: 56.25rem) {
   :root[data-theme="dark"] .home-shell--has-mobile-toc.is-mobile-toc-open .latest-area {
     border-color: rgba(255, 255, 255, 0.12);
     background: rgba(16, 18, 24, 0.96);
     box-shadow: 0 1.1rem 2.5rem rgba(0, 0, 0, 0.38);
   }
 }
+

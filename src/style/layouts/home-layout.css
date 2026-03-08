@@ -1,4 +1,4 @@
-.home-shell {
+﻿.home-shell {
   position: relative;
   z-index: 1;
   height: auto;
@@ -589,7 +589,7 @@
 :root[data-theme="dark"] .mobile-nav-drawer .signature-collapse-links a {
   color: rgba(245, 245, 245, 0.96);
 }
-@media (max-width: 56.249rem) {
+@media not all and (min-width: 56.25rem) {
   html,
   body {
     height: auto;
@@ -613,3 +613,4 @@
     overflow: visible;
   }
 }
+
