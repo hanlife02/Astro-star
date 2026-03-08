@@ -6,7 +6,7 @@
   overflow-x: hidden;
 }
 
-.listing-header {
+:is(.listing-header, .collection-page-header) {
   margin: 0;
   padding-bottom: 1rem;
   border-bottom: 1px solid color-mix(in srgb, var(--line) 16%, transparent);
@@ -15,14 +15,14 @@
   gap: 0.7rem;
 }
 
-.listing-header-section {
+:is(.listing-header-section, .collection-page-section) {
   margin: 0;
   color: color-mix(in srgb, var(--line) 52%, transparent);
   font-size: 0.9rem;
   letter-spacing: 0.16em;
 }
 
-.listing-header-title {
+:is(.listing-header-title, .collection-page-title) {
   margin: 0;
   font-size: clamp(2.3rem, 2rem + 1.5vw, 4.3rem);
   font-weight: 400;
@@ -32,35 +32,35 @@
   text-stroke: 1px var(--line);
 }
 
-.listing-groups {
+:is(.listing-groups, .collection-page-groups) {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
   min-width: 0;
 }
 
-.listing-group {
+:is(.listing-group, .collection-page-group) {
   display: flex;
   flex-direction: column;
   gap: 0.9rem;
   min-width: 0;
 }
 
-.listing-group-title {
+:is(.listing-group-title, .collection-page-group-title) {
   margin: 0;
   color: var(--line);
   font-size: clamp(1.25rem, 1.16rem + 0.45vw, 1.7rem);
   font-weight: 400;
 }
 
-.listing-group-items {
+:is(.listing-group-items, .collection-page-group-items) {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 0.78rem;
   min-width: 0;
 }
 
-.listing-card {
+:is(.listing-card, .collection-page-card) {
   width: 100%;
   max-width: 100%;
   min-width: 0;
@@ -72,14 +72,14 @@
   transition: border-color 0.22s ease, transform 0.22s ease, background 0.22s ease;
 }
 
-.listing-card:hover,
-.listing-card:focus-within {
+:is(.listing-card, .collection-page-card):hover,
+:is(.listing-card, .collection-page-card):focus-within {
   border-color: color-mix(in srgb, var(--accent) 36%, transparent);
   background: color-mix(in srgb, var(--accent) 4%, transparent);
   transform: translateY(-0.08rem);
 }
 
-.listing-card-link {
+:is(.listing-card-link, .collection-page-card-link) {
   position: relative;
   display: block;
   width: 100%;
@@ -91,7 +91,7 @@
   text-decoration: none;
 }
 
-.listing-card-title {
+:is(.listing-card-title, .collection-page-card-title) {
   margin: 0;
   min-width: 0;
   overflow-wrap: anywhere;
@@ -100,14 +100,14 @@
   line-height: 1.34;
 }
 
-.listing-card-meta {
+:is(.listing-card-meta, .collection-page-card-meta) {
   margin: 0.16rem 0 0;
   color: color-mix(in srgb, var(--line) 52%, transparent);
   font-size: 0.88rem;
   line-height: 1.35;
 }
 
-.listing-card-description {
+:is(.listing-card-description, .collection-page-card-description) {
   margin: 0.24rem 0 0;
   color: color-mix(in srgb, var(--line) 76%, transparent);
   line-height: 1.5;
@@ -117,11 +117,11 @@
   -webkit-line-clamp: 2;
 }
 
-.listing-card-head {
+:is(.listing-card-head, .collection-page-card-head) {
   display: block;
 }
 
-.listing-card-arrow {
+:is(.listing-card-arrow, .collection-page-card-arrow) {
   position: absolute;
   top: 50%;
   right: clamp(0.34rem, 0.26rem + 0.62vw, 0.92rem);
@@ -136,24 +136,24 @@
   transition: color 0.22s ease, transform 0.22s ease;
 }
 
-.listing-card-link:hover .listing-card-title,
-.listing-card-link:focus-visible .listing-card-title,
-.listing-card-link:hover .listing-card-meta,
-.listing-card-link:focus-visible .listing-card-meta,
-.listing-card-link:hover .listing-card-description,
-.listing-card-link:focus-visible .listing-card-description,
-.listing-card-link:hover .listing-card-arrow,
-.listing-card-link:focus-visible .listing-card-arrow {
+:is(.listing-card-link, .collection-page-card-link):hover :is(.listing-card-title, .collection-page-card-title),
+:is(.listing-card-link, .collection-page-card-link):focus-visible :is(.listing-card-title, .collection-page-card-title),
+:is(.listing-card-link, .collection-page-card-link):hover :is(.listing-card-meta, .collection-page-card-meta),
+:is(.listing-card-link, .collection-page-card-link):focus-visible :is(.listing-card-meta, .collection-page-card-meta),
+:is(.listing-card-link, .collection-page-card-link):hover :is(.listing-card-description, .collection-page-card-description),
+:is(.listing-card-link, .collection-page-card-link):focus-visible :is(.listing-card-description, .collection-page-card-description),
+:is(.listing-card-link, .collection-page-card-link):hover :is(.listing-card-arrow, .collection-page-card-arrow),
+:is(.listing-card-link, .collection-page-card-link):focus-visible :is(.listing-card-arrow, .collection-page-card-arrow) {
   color: var(--accent);
 }
 
-.listing-card-link:hover .listing-card-arrow,
-.listing-card-link:focus-visible .listing-card-arrow {
+:is(.listing-card-link, .collection-page-card-link):hover :is(.listing-card-arrow, .collection-page-card-arrow),
+:is(.listing-card-link, .collection-page-card-link):focus-visible :is(.listing-card-arrow, .collection-page-card-arrow) {
   transform: translate3d(0.26rem, -50%, 0);
 }
 
 @media (min-width: 56.25rem) {
-  .listing-card {
+  :is(.listing-card, .collection-page-card) {
     width: 100%;
     max-width: 100%;
     min-width: 0;
@@ -161,11 +161,11 @@
     padding-right: clamp(2.1rem, 1.7rem + 1.1vw, 3.2rem);
   }
 
-  .listing-card-link {
+  :is(.listing-card-link, .collection-page-card-link) {
     padding-right: clamp(3rem, 2.45rem + 1.6vw, 4.8rem);
   }
 
-  .listing-card-arrow {
+  :is(.listing-card-arrow, .collection-page-card-arrow) {
     right: clamp(0.52rem, 0.44rem + 0.48vw, 1.08rem);
   }
 }
