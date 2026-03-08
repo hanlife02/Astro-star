@@ -92,7 +92,7 @@ body {
   position: relative;
   z-index: 1;
   height: auto;
-  min-height: 0;
+  min-height: 100dvh;
   width: min(100%, var(--shell-max));
   margin-inline: auto;
   padding: var(--space);
@@ -417,7 +417,7 @@ body {
 }
 
 .home-main {
-  flex: 0 0 auto;
+  flex: 1 0 auto;
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--main-col-gap);

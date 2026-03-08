@@ -21,6 +21,7 @@ body {
 .content-shell {
   position: relative;
   z-index: 1;
+  min-height: 100dvh;
   width: min(100%, 72rem);
   margin-inline: auto;
   padding: clamp(0.9rem, 3.5vw, 1.5rem);
@@ -69,6 +70,7 @@ body {
 }
 
 .content-shell-body {
+  flex: 1 0 auto;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 1rem;
