@@ -152,6 +152,10 @@
 }
 
 .mobile-nav-drawer {
+  --mobile-nav-link-gap: 0.1rem;
+  --mobile-nav-link-padding: 0.6rem 0.72rem;
+  --mobile-nav-link-radius: 0.65rem;
+
   display: inline-flex;
   align-items: center;
 }
@@ -228,7 +232,7 @@
 .mobile-nav-drawer .signature-collapse-links {
   display: flex;
   flex-direction: column;
-  gap: 0.1rem;
+  gap: var(--mobile-nav-link-gap);
 }
 
 .mobile-nav-drawer .signature-collapse-links li {
@@ -238,8 +242,8 @@
 .mobile-nav-drawer .signature-collapse-links a {
   display: block;
   width: 100%;
-  padding: 0.6rem 0.72rem;
-  border-radius: 0.65rem;
+  padding: var(--mobile-nav-link-padding);
+  border-radius: var(--mobile-nav-link-radius);
   color: var(--line);
   font-size: 0.92rem;
   line-height: 1.3;
