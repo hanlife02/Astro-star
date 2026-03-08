@@ -1,7 +1,5 @@
 ---
-import HomeLayout from "../../layouts/HomeLayout.astro";
-import Signature from "../home/signature.astro";
-import FooterMeta from "../common/FooterMeta.astro";
+import ContentShell from "../layout/ContentShell.astro";
 import "../../style/pages/content-page.css";
 import "../../style/components/content/section-archive-page.css";
 
@@ -25,11 +23,12 @@ interface Props {
 const { pageLabel, yearGroups } = Astro.props as Props;
 ---
 
-<HomeLayout mainCol2Fr="4fr" mainCol3Fr="1.5fr" variant="default">
-  <Signature slot="signature" />
-
-  <section slot="profile" class="content-page content-page--listing" aria-label={`${pageLabel} archive content`}>
-    <div class="content-page-body">
+<ContentShell
+  variant="default"
+  contentClass="content-page content-page--listing"
+  contentAriaLabel={`${pageLabel} archive content`}
+  tocAriaLabel={`${pageLabel} archive navigation`}
+>
       <header class="listing-header">
         <h1 class="listing-header-title">{pageLabel}</h1>
       </header>
@@ -55,10 +54,8 @@ const { pageLabel, yearGroups } = Astro.props as Props;
           <p class="content-toc-empty">No content yet.</p>
         )
       }
-    </div>
-  </section>
 
-  <aside slot="latest" class="content-toc" aria-label={`${pageLabel} archive navigation`}>
+  <Fragment slot="toc">
     {
       yearGroups.length > 0 ? (
         <ol class="content-toc-list">
@@ -74,7 +71,5 @@ const { pageLabel, yearGroups } = Astro.props as Props;
         <p class="content-toc-empty">No archive yet.</p>
       )
     }
-  </aside>
-
-  <FooterMeta slot="footer-info" />
-</HomeLayout>
+  </Fragment>
+</ContentShell>

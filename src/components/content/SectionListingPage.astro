@@ -1,7 +1,5 @@
 ---
-import HomeLayout from "../../layouts/HomeLayout.astro";
-import Signature from "../home/signature.astro";
-import FooterMeta from "../common/FooterMeta.astro";
+import ContentShell from "../layout/ContentShell.astro";
 import "../../style/pages/content-page.css";
 import "../../style/components/content/section-listing-page.css";
 
@@ -24,11 +22,13 @@ const { categories, pageLabel, viewAllHref, viewAllLabel } = Astro.props as Prop
 const toAnchorId = (value: string) => value.toLowerCase().trim().replace(/\s+/g, "-");
 ---
 
-<HomeLayout mainCol2Fr="4fr" mainCol3Fr="1.5fr" variant="default">
-  <Signature slot="signature" />
-
-  <section slot="profile" class="content-page content-page--listing" aria-label={`${pageLabel} listing content`}>
-    <div class="content-page-body">
+<ContentShell
+  variant="default"
+  contentClass="content-page content-page--listing"
+  tocClass="content-toc content-toc--listing"
+  contentAriaLabel={`${pageLabel} listing content`}
+  tocAriaLabel={`${pageLabel} categories`}
+>
       <header class="listing-header">
         <div class="listing-header-bar">
           <h1 class="listing-header-title listing-header-title--compact">{pageLabel}</h1>
@@ -56,10 +56,8 @@ const toAnchorId = (value: string) => value.toLowerCase().trim().replace(/\s+/g,
           <p class="content-toc-empty">No content yet.</p>
         )
       }
-    </div>
-  </section>
 
-  <aside slot="latest" class="content-toc content-toc--listing" aria-label={`${pageLabel} categories`}>
+  <Fragment slot="toc">
     {
       categories.length > 0 ? (
         <ol class="content-toc-list">
@@ -75,9 +73,7 @@ const toAnchorId = (value: string) => value.toLowerCase().trim().replace(/\s+/g,
         <p class="content-toc-empty">No categories yet.</p>
       )
     }
-  </aside>
-
-  <FooterMeta slot="footer-info" />
-</HomeLayout>
+  </Fragment>
+</ContentShell>
 
 

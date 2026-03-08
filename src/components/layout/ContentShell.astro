@@ -1,0 +1,48 @@
+---
+import FooterMeta from "../common/FooterMeta.astro";
+import Signature from "../home/signature.astro";
+import HomeLayout from "../../layouts/HomeLayout.astro";
+
+interface Props {
+  mainCol2Fr?: string;
+  mainCol3Fr?: string;
+  variant?: "default" | "article";
+  background?: "home" | "code-rain" | "constellation";
+  contentClass?: string;
+  tocClass?: string;
+  contentAriaLabel: string;
+  tocAriaLabel: string;
+}
+
+const {
+  mainCol2Fr = "4fr",
+  mainCol3Fr = "1.5fr",
+  variant = "default",
+  background,
+  contentClass = "content-page",
+  tocClass = "content-toc",
+  contentAriaLabel,
+  tocAriaLabel,
+} = Astro.props as Props;
+---
+
+<HomeLayout
+  mainCol2Fr={mainCol2Fr}
+  mainCol3Fr={mainCol3Fr}
+  variant={variant}
+  background={background}
+>
+  <Signature slot="signature" />
+
+  <section slot="profile" class={contentClass} aria-label={contentAriaLabel}>
+    <div class="content-page-body">
+      <slot />
+    </div>
+  </section>
+
+  <aside slot="latest" class={tocClass} aria-label={tocAriaLabel}>
+    <slot name="toc" />
+  </aside>
+
+  <FooterMeta slot="footer-info" />
+</HomeLayout>

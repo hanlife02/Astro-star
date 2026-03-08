@@ -1,7 +1,5 @@
 ﻿---
-import HomeLayout from "../layouts/HomeLayout.astro";
-import Signature from "../components/home/signature.astro";
-import FooterMeta from "../components/common/FooterMeta.astro";
+import ContentShell from "../components/layout/ContentShell.astro";
 import { extractTocHeadings, type TocHeading } from "../utils/toc";
 import "../style/pages/content-page.css";
 
@@ -31,16 +29,15 @@ const LinksContent = linksModule.default;
 const tocHeadings = extractTocHeadings(linksRawSource ?? "");
 ---
 
-<HomeLayout mainCol2Fr="4fr" mainCol3Fr="1.5fr" variant="default" background="constellation">
-  <Signature slot="signature" />
+<ContentShell
+  background="constellation"
+  contentClass="content-page content-page--links"
+  contentAriaLabel="Links content"
+  tocAriaLabel="Links table of contents"
+>
+  <LinksContent />
 
-  <section slot="profile" class="content-page content-page--links" aria-label="Links content">
-    <div class="content-page-body">
-      <LinksContent />
-    </div>
-  </section>
-
-  <aside slot="latest" class="content-toc" aria-label="Links table of contents">
+  <Fragment slot="toc">
     {
       tocHeadings.length > 0 ? (
         <ol class="content-toc-list">
@@ -61,8 +58,6 @@ const tocHeadings = extractTocHeadings(linksRawSource ?? "");
         <p class="content-toc-empty">No headings yet.</p>
       )
     }
-  </aside>
-
-  <FooterMeta slot="footer-info" />
-</HomeLayout>
+  </Fragment>
+</ContentShell>
 

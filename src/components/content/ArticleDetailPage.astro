@@ -1,7 +1,5 @@
 ---
-import HomeLayout from "../../layouts/HomeLayout.astro";
-import Signature from "../home/signature.astro";
-import FooterMeta from "../common/FooterMeta.astro";
+import ContentShell from "../layout/ContentShell.astro";
 import "../../style/pages/content-page.css";
 
 interface TocHeading {
@@ -41,11 +39,12 @@ const {
 } = Astro.props as Props;
 ---
 
-<HomeLayout mainCol2Fr="4fr" mainCol3Fr="1.5fr" variant="article">
-  <Signature slot="signature" />
-
-  <section slot="profile" class="content-page content-page--article" aria-label={`${section} article content`}>
-    <div class="content-page-body">
+<ContentShell
+  variant="article"
+  contentClass="content-page content-page--article"
+  contentAriaLabel={`${section} article content`}
+  tocAriaLabel={`${section} table of contents`}
+>
       <header class="article-content-header">
         <p class="article-content-section">{section.toUpperCase()}</p>
         <h1 class="article-content-title">{title}</h1>
@@ -74,8 +73,7 @@ const {
       </header>
 
       <ArticleContent />
-    </div>
-  </section>
+
 
   <script is:inline type="module">
     const pageviewElement = document.querySelector(".waline-pageview-count[data-server-url]");
@@ -92,7 +90,7 @@ const {
     }
   </script>
 
-  <aside slot="latest" class="content-toc" aria-label={`${section} table of contents`}>
+  <Fragment slot="toc">
     {
       tocHeadings.length > 0 ? (
         <ol class="content-toc-list">
@@ -113,7 +111,5 @@ const {
         <p class="content-toc-empty">No headings yet.</p>
       )
     }
-  </aside>
-
-  <FooterMeta slot="footer-info" />
-</HomeLayout>
+  </Fragment>
+</ContentShell>
