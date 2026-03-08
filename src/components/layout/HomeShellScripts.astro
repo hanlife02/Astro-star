@@ -2,6 +2,7 @@
 ---
 
 <script>
+      import { initHomeShellContentPageEntrance } from "../../scripts/home-shell-content-page-entrance";
       import { initHomeShellContentToc } from "../../scripts/home-shell-content-toc";
       import { initHomeShellTheme } from "../../scripts/home-shell-theme";
       import { initHomeShellDesktopSignatureNav } from "../../scripts/home-shell-desktop-signature-nav";
@@ -9,78 +10,9 @@
       import { initHomeShellMobileToc } from "../../scripts/home-shell-mobile-toc";
 
       initHomeShellTheme();
-
-      const runContentPageEntrance = () => {
-        const contentPage = document.querySelector(".content-page");
-        const toc = document.querySelector(".content-toc");
-
-        if (!(contentPage instanceof HTMLElement)) return;
-
-        contentPage.dataset.contentEntranceEnabled = "true";
-        contentPage.dataset.pageEntrance = "ready";
-
-        if (toc instanceof HTMLElement) {
-          toc.dataset.contentEntranceEnabled = "true";
-          toc.dataset.tocEntrance = "ready";
-
-          const tocItems = Array.from(toc.querySelectorAll(".content-toc-item"));
-          const lastTocItem = tocItems.at(-1);
-          let tocRefreshTriggered = false;
-
-          tocItems.forEach((item, index) => {
-            if (!(item instanceof HTMLElement)) return;
-            item.style.setProperty("--content-toc-enter-order", `${index}`);
-          });
-
-          const triggerTocRefresh = () => {
-            if (tocRefreshTriggered) return;
-            tocRefreshTriggered = true;
-            document.dispatchEvent(new CustomEvent("content-toc:refresh"));
-          };
-
-          if (lastTocItem instanceof HTMLElement) {
-            lastTocItem.addEventListener(
-              "transitionend",
-              (event) => {
-                if (!(event.target instanceof HTMLElement) || event.target !== lastTocItem) return;
-                if (event.propertyName !== "transform" && event.propertyName !== "opacity") return;
-                triggerTocRefresh();
-              },
-              { once: true },
-            );
-          }
-
-          window.setTimeout(() => {
-            triggerTocRefresh();
-          }, 1400);
-        }
-
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            contentPage.dataset.pageEntrance = "entered";
-
-            if (toc instanceof HTMLElement) {
-              toc.dataset.tocEntrance = "entered";
-            }
-          });
-        });
-      };
-
       initHomeShellDesktopSignatureNav();
       initHomeShellMobileNav();
       initHomeShellContentToc();
       initHomeShellMobileToc();
-      runContentPageEntrance();
-
-      if (!window.__contentPageEntrancePageLoadBound) {
-        document.addEventListener("astro:page-load", () => {
-          if (typeof window.__runContentPageEntrance === "function") {
-            window.__runContentPageEntrance();
-          }
-        });
-
-        window.__contentPageEntrancePageLoadBound = true;
-      }
-
-      window.__runContentPageEntrance = runContentPageEntrance;
+      initHomeShellContentPageEntrance();
 </script>
