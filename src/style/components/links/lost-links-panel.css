@@ -68,7 +68,7 @@
   line-height: 1.6;
 }
 
-@media (max-width: 40rem) {
+@media not all and (min-width: 40.001rem) {
   .lost-links-link {
     display: block;
   }

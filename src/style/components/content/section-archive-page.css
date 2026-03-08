@@ -57,7 +57,7 @@
   text-decoration: underline;
 }
 
-@media (max-width: 40rem) {
+@media not all and (min-width: 40.001rem) {
   :is(.archive-list-item, .collection-archive-item) {
     grid-template-columns: minmax(0, 1fr);
     gap: 0.15rem;
