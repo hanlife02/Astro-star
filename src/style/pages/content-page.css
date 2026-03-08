@@ -40,15 +40,15 @@
 
 @media (min-width: 56.25rem) {
   .home-shell--article .content-page--article {
-    height: 100%;
+    height: auto;
     min-height: 0;
   }
 
   .home-shell--article .content-page--article .content-page-body {
-    height: 100%;
+    height: auto;
     min-height: 0;
     overflow-x: hidden;
-    overflow-y: auto;
+    overflow-y: visible;
   }
 }
 
