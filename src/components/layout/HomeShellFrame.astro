@@ -44,7 +44,7 @@ const {
           <span data-theme-icon="system" hidden><Icon svg={Monitor} /></span>
         </button>
       </div>
-      <button type="button" class="search-btn" aria-label="Search" aria-haspopup="dialog" aria-controls="home-shell-search-panel" data-home-shell-search-trigger>
+      <button type="button" class="search-btn" aria-label="Search" data-home-shell-search-trigger>
         <Icon svg={Search} />
       </button>
       <details class="nav-drawer mobile-nav-drawer" data-home-shell-mobile-nav>
@@ -67,40 +67,6 @@ const {
     </div>
   </header>
 
-  <div class="search-shell" hidden data-home-shell-search-root>
-    <div class="search-shell-backdrop" data-home-shell-search-dismiss></div>
-    <section
-      id="home-shell-search-panel"
-      class="wire-box search-panel"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="home-shell-search-title"
-    >
-      <div class="search-panel-header">
-        <h2 id="home-shell-search-title" class="search-panel-title">Search</h2>
-        <button type="button" class="search-panel-close" aria-label="Close search" data-home-shell-search-dismiss>
-          <span aria-hidden="true">×</span>
-        </button>
-      </div>
-
-      <div class="search-panel-body">
-        <label class="search-panel-field">
-          <span class="search-panel-label">Keyword</span>
-          <input
-            type="search"
-            class="search-panel-input"
-            placeholder="Search posts, notes, projects..."
-            autocomplete="off"
-            data-home-shell-search-input
-          />
-        </label>
-
-        <div class="search-panel-placeholder" data-home-shell-search-results>
-          Search is not connected yet. This panel is reserved for future implementation.
-        </div>
-      </div>
-    </section>
-  </div>
   <main class="home-main">
     <aside class="wire-box side-nav-area" aria-label="Side navigation area">
       <div class="side-nav-stack">
