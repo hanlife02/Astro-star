@@ -1,4 +1,4 @@
-const CONTENT_TOC_REFRESH_EVENT = "content-toc:refresh";
+﻿const CONTENT_TOC_REFRESH_EVENT = "content-toc:refresh";
 
 type HomeShellEntranceWindow = Window & {
   __contentPageEntrancePageLoadBound?: boolean;
@@ -9,8 +9,8 @@ export function initHomeShellContentPageEntrance() {
   const browserWindow = window as HomeShellEntranceWindow;
 
   const runContentPageEntrance = () => {
-    const contentPage = document.querySelector(".content-page");
-    const toc = document.querySelector(".content-toc");
+    const contentPage = document.querySelector("[data-home-shell-content-page]");
+    const toc = document.querySelector("[data-home-shell-content-toc]");
 
     if (!(contentPage instanceof HTMLElement)) return;
 

@@ -1,5 +1,6 @@
-export function initHomeShellDesktopSignatureNav() {
-  const signatureCollapse = document.querySelector(".signature-collapse");
+﻿export function initHomeShellDesktopSignatureNav() {
+  const shell = document.querySelector("[data-home-shell-root]");
+  const signatureCollapse = shell?.querySelector("[data-home-shell-signature-nav]");
   if (!(signatureCollapse instanceof HTMLDetailsElement)) return;
 
   const signatureCollapseTrigger = signatureCollapse.querySelector(".signature-collapse-trigger");

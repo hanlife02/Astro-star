@@ -1,13 +1,14 @@
-type HeadingEntry = {
+﻿type HeadingEntry = {
   link: HTMLAnchorElement;
   heading: HTMLElement;
 };
 
 export function initHomeShellContentToc() {
-  const toc = document.querySelector(".content-toc");
+  const contentPage = document.querySelector("[data-home-shell-content-page]");
+  const toc = document.querySelector("[data-home-shell-content-toc]");
   const tocList = toc?.querySelector(".content-toc-list");
 
-  if (!(toc instanceof HTMLElement) || !(tocList instanceof HTMLElement)) return;
+  if (!(contentPage instanceof HTMLElement) || !(toc instanceof HTMLElement) || !(tocList instanceof HTMLElement)) return;
 
   let tocEntranceSettled = toc.dataset.tocEntrance !== "ready";
 
@@ -21,7 +22,7 @@ export function initHomeShellContentToc() {
       const targetId = link.getAttribute("href")?.replace(/^#/, "") ?? "";
       if (!targetId) return null;
 
-      const heading = document.getElementById(targetId);
+      const heading = contentPage.querySelector(`#${CSS.escape(targetId)}`);
       if (!(heading instanceof HTMLElement)) return null;
 
       return { link, heading };

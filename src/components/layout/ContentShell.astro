@@ -1,4 +1,4 @@
----
+﻿---
 import FooterMeta from "../common/FooterMeta.astro";
 import Signature from "../home/signature.astro";
 import HomeLayout from "../../layouts/HomeLayout.astro";
@@ -34,13 +34,13 @@ const {
 >
   <Signature slot="signature" />
 
-  <section slot="profile" class={contentClass} aria-label={contentAriaLabel}>
+  <section slot="profile" class={contentClass} aria-label={contentAriaLabel} data-home-shell-content-page>
     <div class="content-page-body">
       <slot />
     </div>
   </section>
 
-  <aside slot="latest" class={tocClass} aria-label={tocAriaLabel}>
+  <aside slot="latest" class={tocClass} aria-label={tocAriaLabel} data-home-shell-content-toc>
     <slot name="toc" />
   </aside>
 
