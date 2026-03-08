@@ -25,7 +25,7 @@
   }
 }
 
-@media (min-width: 72rem) {
+@media (min-width: 56.25rem) {
   .profile-card {
     --one-word-size: clamp(1.08rem, 0.84rem + 0.64vw, 1.55rem);
     --bio-size: clamp(1.04rem, 0.92rem + 0.52vw, 1.4rem);
