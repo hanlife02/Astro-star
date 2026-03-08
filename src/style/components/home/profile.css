@@ -4,8 +4,8 @@
   --profile-gap: clamp(0.55rem, 0.75vw, 0.95rem);
   --avatar-size: clamp(3.2rem, 7.3vw, 8rem);
   --name-size: clamp(1.2rem, 2.25vw, 4.8rem);
-  --one-word-size: clamp(0.8rem, 1.55vw, 1.95rem);
-  --bio-size: clamp(0.95rem, 1.2vw + 0.65rem, 1.55rem);
+  --one-word-size: 0.98rem;
+  --bio-size: 1rem;
 
   width: var(--profile-max-width);
   padding: var(--profile-padding);
@@ -16,6 +16,20 @@
   justify-content: flex-start;
   gap: var(--profile-gap);
   text-align: center;
+}
+
+@media (min-width: 48rem) {
+  .profile-card {
+    --one-word-size: clamp(1rem, 0.78rem + 0.72vw, 1.42rem);
+    --bio-size: clamp(1rem, 0.9rem + 0.56vw, 1.3rem);
+  }
+}
+
+@media (min-width: 72rem) {
+  .profile-card {
+    --one-word-size: clamp(1.08rem, 0.84rem + 0.64vw, 1.55rem);
+    --bio-size: clamp(1.04rem, 0.92rem + 0.52vw, 1.4rem);
+  }
 }
 
 .profile-avatar {

@@ -350,7 +350,7 @@
             return headingBottom > viewportTop && headingTop < viewportBottom;
           });
 
-          let activeEntry = visibleEntries[visibleEntries.length - 1] ?? headingEntries[0];
+          let activeEntry = visibleEntries[0] ?? headingEntries[0];
 
           if (!visibleEntries.length) {
             headingEntries.forEach((entry) => {

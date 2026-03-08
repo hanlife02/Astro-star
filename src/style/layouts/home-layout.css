@@ -73,7 +73,6 @@
 html {
   font-size: var(--font-size-base);
   overflow-x: hidden;
-  overflow-y: auto;
   overscroll-behavior-y: none;
 }
 
@@ -85,7 +84,6 @@ body {
   line-height: 1.5;
   font-family: "Biotif", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
   overflow-x: hidden;
-  overflow-y: auto;
 }
 
 .home-shell {
