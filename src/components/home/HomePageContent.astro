@@ -216,7 +216,7 @@ const {
           }
         };
 
-        const revealItems = async (elements, stagger = 110) => {
+        const revealItems = async (elements, stagger = 72) => {
           for (const element of elements) {
             if (element instanceof HTMLElement) {
               element.classList.add("is-visible");
@@ -224,7 +224,7 @@ const {
             await wait(stagger);
           }
 
-          await wait(240);
+          await wait(120);
         };
 
         const runHomeEntrance = () => {
@@ -259,24 +259,24 @@ const {
 
           const run = async () => {
             reset();
-            await wait(90);
+            await wait(40);
 
             if (profileRoot.dataset.homeEntranceRun !== runToken) return;
-            await revealItems(leadItems, 90);
+            await revealItems(leadItems, 64);
 
             for (const target of typeTargets) {
               if (profileRoot.dataset.homeEntranceRun !== runToken) return;
               await revealLetters(target);
-              await wait(120);
+              await wait(48);
             }
 
             if (profileRoot.dataset.homeEntranceRun !== runToken) return;
-            await revealItems(metrics, 140);
-            await wait(120);
+            await revealItems(metrics, 84);
+            await wait(56);
 
             if (profileRoot.dataset.homeEntranceRun !== runToken) return;
             latestRoot.classList.add("latest-articles--frame-visible");
-            await wait(360);
+            await wait(220);
 
             if (profileRoot.dataset.homeEntranceRun !== runToken) return;
             latestRoot.classList.add("latest-articles--entered");
