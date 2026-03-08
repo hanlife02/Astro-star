@@ -1,0 +1,111 @@
+﻿.content-page-body {
+  height: auto;
+  padding: clamp(0.85rem, 1.8vw, 1.4rem);
+  overflow: visible;
+}
+
+.content-page-body h1 {
+  margin: 0 0 1rem;
+  font-size: clamp(2rem, 1.8rem + 1vw, 3.5rem);
+  font-weight: 500;
+  line-height: 1.1;
+  color: transparent;
+  -webkit-text-stroke: 1.15px var(--line);
+  text-stroke: 1.15px var(--line);
+}
+
+.content-page-body h2,
+.content-page-body h3 {
+  color: var(--line);
+  font-weight: 400;
+  scroll-margin-top: 1rem;
+}
+
+.content-page-body h4,
+.content-page-body h5,
+.content-page-body h6 {
+  font-weight: 400;
+}
+
+.content-page-body p,
+.content-page-body li {
+  color: var(--line);
+  line-height: 1.8;
+}
+
+.content-page-body a {
+  color: color-mix(in srgb, var(--accent) 82%, var(--line) 18%);
+  text-decoration-line: underline;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.16em;
+  text-decoration-color: color-mix(in srgb, var(--accent) 38%, transparent);
+  transition:
+    color 0.2s ease,
+    text-decoration-color 0.2s ease;
+}
+
+.content-page-body a:hover,
+.content-page-body a:focus-visible {
+  color: color-mix(in srgb, var(--accent) 92%, var(--line) 8%);
+  text-decoration-color: currentColor;
+}
+
+.content-page-body h1,
+.content-page-body h2,
+.content-page-body h3,
+.content-page-body h4,
+.content-page-body h5,
+.content-page-body h6,
+.content-page-body p,
+.content-page-body ul,
+.content-page-body ol,
+.content-page-body blockquote,
+.content-page-body pre,
+.content-page-body table,
+.content-page-body hr,
+.content-page-body figure {
+  margin-top: 0;
+}
+
+.content-page-body h1 {
+  margin-bottom: 1rem;
+}
+
+.content-page-body h2 {
+  margin-bottom: 0.9rem;
+}
+
+.content-page-body h3,
+.content-page-body h4,
+.content-page-body h5,
+.content-page-body h6 {
+  margin-bottom: 0.8rem;
+}
+
+.content-page-body p,
+.content-page-body ul,
+.content-page-body ol,
+.content-page-body blockquote,
+.content-page-body pre,
+.content-page-body table,
+.content-page-body figure {
+  margin-bottom: 1rem;
+}
+
+.content-page-body hr {
+  margin-bottom: 1.15rem;
+}
+
+.content-page-body ul,
+.content-page-body ol {
+  padding-left: 1.4rem;
+}
+
+.content-page-body li {
+  margin-top: 0;
+  margin-bottom: 0.28rem;
+}
+
+.content-page-body li:last-child {
+  margin-bottom: 0;
+}
