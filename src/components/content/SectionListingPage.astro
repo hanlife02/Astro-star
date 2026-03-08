@@ -24,7 +24,7 @@ const { categories, pageLabel, viewAllHref, viewAllLabel } = Astro.props as Prop
 const toAnchorId = (value: string) => value.toLowerCase().trim().replace(/\s+/g, "-");
 ---
 
-<HomeLayout mainCol2Fr="4fr" mainCol3Fr="1.5fr">
+<HomeLayout mainCol2Fr="4fr" mainCol3Fr="1.5fr" variant="default">
   <Signature slot="signature" />
 
   <section slot="profile" class="content-page content-page--listing" aria-label={`${pageLabel} listing content`}>
