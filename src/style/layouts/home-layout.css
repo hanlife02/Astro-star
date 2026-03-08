@@ -281,7 +281,7 @@
 .theme-switcher {
   display: inline-flex;
   align-items: center;
-  gap: 0rem;
+  gap: 0;
 }
 
 .theme-btn,
@@ -300,9 +300,9 @@
   transition: color 0.2s ease, opacity 0.2s ease;
 }
 
-.theme-btn svg,                                                
-.search-btn svg {                                              
-  width: var(--icon-size);                                                 
+.theme-btn svg,
+.search-btn svg {
+  width: var(--icon-size);
   height: var(--icon-size);
   display: block;
 }
@@ -383,7 +383,7 @@
   align-items: center;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 0rem;
+  gap: 0;
 }
 
 .footer-info {

@@ -2,7 +2,7 @@
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
   border: 1px solid color-mix(in srgb, var(--line) 12%, transparent);
-  border-radius: 1rem;
+  border-radius: var(--radius-md);
   background: color-mix(in srgb, var(--line) 2.5%, transparent);
   overflow: hidden;
 }

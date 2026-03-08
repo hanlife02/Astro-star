@@ -1,4 +1,4 @@
-﻿.latest-articles {
+.latest-articles {
   --latest-date-size: clamp(0.8rem, 0.68rem + 0.45vw, 1.25rem);
   --latest-title-size: clamp(0.8rem, 0.68rem + 0.45vw, 1.25rem);
   --latest-text-line-height: 1.3;
@@ -23,12 +23,12 @@
   gap: 0.55rem;
 }
 
-.latest-articles-title {                                            
-  margin: 0;                                                        
-  font-size: clamp(2rem, 1.8rem + 1vw, 4rem);                 
-  line-height: 1.2;                                                 
-  color: transparent;                                               
-  -webkit-text-stroke: 1px var(--line);                                                         
+.latest-articles-title {
+  margin: 0;
+  font-size: clamp(2rem, 1.8rem + 1vw, 4rem);
+  line-height: 1.2;
+  color: transparent;
+  -webkit-text-stroke: 1px var(--line);
 }
 
 .latest-articles-list {

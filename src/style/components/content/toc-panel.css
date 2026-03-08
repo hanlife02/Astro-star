@@ -1,4 +1,4 @@
-﻿.content-toc {
+.content-toc {
   width: 100%;
   position: relative;
   height: auto;
@@ -199,7 +199,7 @@
     width: min(88vw, 19rem);
     max-height: min(65dvh, 28rem);
     border: 1px solid rgba(17, 17, 17, 0.1);
-    border-radius: 1rem;
+    border-radius: var(--radius-md);
     background: rgba(255, 255, 255, 0.96);
     box-shadow: 0 1rem 2.2rem rgba(17, 17, 17, 0.16);
     backdrop-filter: blur(16px);
