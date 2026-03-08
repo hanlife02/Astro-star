@@ -13,16 +13,18 @@ interface Props {
   foldedNavItems: readonly NavItem[];
   githubHref?: string;
   shellStyle?: string;
+  shellVariant?: "default" | "article";
 }
 
 const {
   foldedNavItems,
   githubHref = "",
   shellStyle = "",
+  shellVariant = "default",
 } = Astro.props as Props;
 ---
 
-<div class="home-shell" style={shellStyle || undefined}>
+<div class:list={["home-shell", shellVariant !== "default" && `home-shell--${shellVariant}`]} style={shellStyle || undefined}>
   <header class="home-header">
     <div class="wire-box signature-area" aria-label="Signature area">
       <div class="signature-stack">

@@ -13,6 +13,8 @@ interface Props {
 
 const { mainCol2Fr, mainCol3Fr } = Astro.props as Props;
 const pathname = Astro.url.pathname.replace(/\/+$/, "") || "/";
+const pathSegments = pathname.split("/").filter(Boolean);
+const shellVariant = pathSegments.length > 1 ? "article" : "default";
 const foldedNavItems = site.nav;
 const githubUsername = (site.contact.githubUsername || site.profile.githubUsername).trim();
 const githubHref = githubUsername
@@ -28,7 +30,12 @@ const shellStyle = [
 
 <BaseLayout>
   <HomeShellBackground slot="background" pathname={pathname} />
-  <HomeShellFrame foldedNavItems={foldedNavItems} githubHref={githubHref} shellStyle={shellStyle}>
+  <HomeShellFrame
+    foldedNavItems={foldedNavItems}
+    githubHref={githubHref}
+    shellStyle={shellStyle}
+    shellVariant={shellVariant}
+  >
     <slot name="signature" slot="signature" />
     <slot name="side-nav" slot="side-nav" />
     <slot name="profile" slot="profile" />

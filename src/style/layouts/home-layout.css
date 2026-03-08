@@ -527,6 +527,11 @@ body {
 }
 
 @media (min-width: 56.25rem) {
+  .home-shell--article {
+    height: 100dvh;
+    overflow: hidden;
+  }
+
   .home-footer {
     align-items: flex-end;
     flex-wrap: nowrap;
@@ -576,6 +581,10 @@ body {
     align-self: stretch;
   }
 
+  .home-shell--article .home-main {
+    overflow: hidden;
+  }
+
   .side-nav-area {
     display: block;
     position: sticky;
@@ -594,12 +603,23 @@ body {
     max-height: none;
   }
 
+  .home-shell--article .profile-area,
+  .home-shell--article .latest-area {
+    height: 100%;
+    max-height: 100%;
+    overflow: hidden;
+  }
+
   .latest-area {
     grid-column: auto;
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
     overflow: visible;
+  }
+
+  .home-shell--article .latest-area {
+    overflow: hidden;
   }
 }
 

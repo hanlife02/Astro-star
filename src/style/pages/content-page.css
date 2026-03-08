@@ -38,6 +38,20 @@
   overflow: visible;
 }
 
+@media (min-width: 56.25rem) {
+  .home-shell--article .content-page--article {
+    height: 100%;
+    min-height: 0;
+  }
+
+  .home-shell--article .content-page--article .content-page-body {
+    height: 100%;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+}
+
 .content-page-body h1 {
   margin: 0 0 1rem;
   font-size: clamp(2rem, 1.8rem + 1vw, 3.5rem);
