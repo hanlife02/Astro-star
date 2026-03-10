@@ -78,15 +78,22 @@ const formatDateTime = (value: Date | null) => {
 const countWords = (source: string) => {
   const body = source
     .replace(/^---[\s\S]*?---\s*/u, "")
-    .replace(/```[\s\S]*?```/g, " ")
-    .replace(/`[^`]*`/g, " ")
+    .replace(/^\s*(import|export)\s.+$/gmu, " ")
+    .replace(/```[^\n\r]*[\r]?\n/g, " ")
+    .replace(/```/g, " ")
+    .replace(/`([^`]*)`/g, "$1")
     .replace(/!\[[^\]]*\]\([^)]*\)/g, " ")
     .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
     .replace(/<[^>]+>/g, " ")
-    .replace(/[>#*_~|-]/g, " ");
+    .replace(/[>#*_~|-]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
 
-  const words = body.match(/[\p{Letter}\p{Number}]+/gu);
-  return words?.length ?? 0;
+  const cjkUnits = body.match(/[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/gu);
+  const nonCjkBody = body.replace(/[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/gu, " ");
+  const latinWords = nonCjkBody.match(/[\p{Letter}\p{Number}]+(?:[._'-][\p{Letter}\p{Number}]+)*/gu);
+
+  return (cjkUnits?.length ?? 0) + (latinWords?.length ?? 0);
 };
 
 const articleWordCount = countWords(articleRawSource ?? "");
