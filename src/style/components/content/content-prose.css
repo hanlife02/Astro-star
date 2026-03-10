@@ -1,4 +1,11 @@
-﻿.content-page-body {
+.content-page-body {
+  --content-image-max-width: min(100%, 24rem);
+  --content-image-max-height: min(56vh, 24rem);
+  --content-image-radius: clamp(0.75rem, 0.6rem + 0.5vw, 1rem);
+  --content-code-font-size: clamp(0.78rem, 0.76rem + 0.15vw, 0.9rem);
+  --content-code-line-height: 1.7;
+  --content-code-padding: clamp(0.8rem, 0.72rem + 0.45vw, 1rem);
+  --content-code-radius: clamp(0.85rem, 0.75rem + 0.45vw, 1.1rem);
   height: auto;
   padding: clamp(0.85rem, 1.8vw, 1.4rem);
   overflow: visible;
@@ -108,4 +115,80 @@
 
 .content-page-body li:last-child {
   margin-bottom: 0;
+}
+
+.content-page-body img {
+  max-width: 100%;
+  height: auto;
+}
+
+.content-page-body :is(
+    p > img:only-child,
+    p > a:only-child > img,
+    p > picture:only-child > img,
+    p > a:only-child > picture > img,
+    figure > img,
+    figure > a > img,
+    figure > picture > img,
+    figure > a > picture > img
+  ) {
+  display: block;
+  width: auto;
+  max-width: var(--content-image-max-width);
+  max-height: var(--content-image-max-height);
+  margin-inline: auto;
+  border-radius: var(--content-image-radius);
+  box-shadow: 0 1rem 2.4rem color-mix(in srgb, var(--line) 10%, transparent);
+  object-fit: contain;
+}
+
+.content-page-body :is(p > picture:only-child, figure > picture) {
+  display: block;
+  max-width: var(--content-image-max-width);
+  margin-inline: auto;
+}
+
+.content-page-body :is(p > picture:only-child, figure > picture) > img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  max-height: var(--content-image-max-height);
+  margin-inline: auto;
+  border-radius: var(--content-image-radius);
+  box-shadow: 0 1rem 2.4rem color-mix(in srgb, var(--line) 10%, transparent);
+  object-fit: contain;
+}
+
+.content-page-body pre {
+  max-width: 100%;
+  padding: var(--content-code-padding);
+  overflow-x: auto;
+  overflow-y: hidden;
+  border-radius: var(--content-code-radius);
+  font-size: var(--content-code-font-size);
+  line-height: var(--content-code-line-height);
+  box-shadow: 0 1rem 2rem color-mix(in srgb, var(--line) 10%, transparent);
+  -webkit-overflow-scrolling: touch;
+}
+
+.content-page-body pre code {
+  display: block;
+  min-width: max-content;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.content-page-body :not(pre) > code {
+  padding: 0.18rem 0.38rem;
+  border-radius: 0.42rem;
+  font-size: 0.92em;
+  background: color-mix(in srgb, var(--line) 8%, transparent);
+}
+
+@media (min-width: 56.25rem) {
+  .content-page-body {
+    --content-image-max-width: min(100%, 36rem);
+    --content-image-max-height: min(64vh, 32rem);
+    --content-code-font-size: clamp(0.82rem, 0.8rem + 0.12vw, 0.95rem);
+  }
 }
