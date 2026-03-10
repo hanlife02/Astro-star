@@ -5,6 +5,15 @@ interface Props {
   title?: string;
 }
 
+const THEME_COOKIE_KEY = "theme-preference";
+const RESOLVED_THEME_COOKIE_KEY = "theme-resolved";
+const VALID_THEME_MODES = ["light", "dark", "system"] as const;
+
+type ThemeMode = (typeof VALID_THEME_MODES)[number];
+
+const isThemeMode = (value: string | undefined): value is ThemeMode =>
+  VALID_THEME_MODES.includes(value as ThemeMode);
+
 const { title } = Astro.props as Props;
 const pathname = Astro.url.pathname.replace(/\/+$/, "") || "/";
 const routeRoot = pathname.split("/").filter(Boolean)[0] || "";
@@ -20,12 +29,32 @@ const pageName =
         .map((segment) => segment.charAt(0).toUpperCase() + segment.slice(1))
         .join(" / ");
 const pageTitle = title ?? `${pageName} - ${site.name}`;
+const themeModeCookie = Astro.cookies.get(THEME_COOKIE_KEY)?.value;
+const resolvedThemeCookie = Astro.cookies.get(RESOLVED_THEME_COOKIE_KEY)?.value;
+const initialThemeMode: ThemeMode = isThemeMode(themeModeCookie) ? themeModeCookie : "system";
+const initialTheme =
+  initialThemeMode === "light" || initialThemeMode === "dark"
+    ? initialThemeMode
+    : resolvedThemeCookie === "dark"
+      ? "dark"
+      : "light";
+const initialBackgroundColor = initialTheme === "dark" ? "#000000" : "#ffffff";
+const rootStyle = `color-scheme: ${initialTheme}; background-color: ${initialBackgroundColor};`;
+const initialDocumentBackgroundStyle = `html,body{background-color:${initialBackgroundColor};}`;
 ---
 
-<html lang={documentLang}>
+<html lang={documentLang} data-theme={initialTheme} data-theme-mode={initialThemeMode} style={rootStyle}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
+    <meta
+      name="color-scheme"
+      content={initialTheme === "dark" ? "dark light" : "light dark"}
+    />
+    <meta
+      name="theme-color"
+      content={initialTheme === "dark" ? "#000000" : "#ffffff"}
+    />
     <meta name="generator" content={Astro.generator} />
     <link rel="icon" type="image/svg+xml" href={site.iconSrc} />
     <link
@@ -35,15 +64,52 @@ const pageTitle = title ?? `${pageName} - ${site.name}`;
       href={new URL("/rss.xml", site.url).toString()}
     />
     <title>{pageTitle}</title>
+    <style is:inline set:html={initialDocumentBackgroundStyle}></style>
     <script is:inline>
       (function() {
-        var t = localStorage.getItem('theme-preference');
-        var m = t === 'light' || t === 'dark' ? t
-              : (t === 'system' || !t)
-              ? (matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light')
-              : 'light';
-        document.documentElement.dataset.theme = m;
-        document.documentElement.dataset.themeMode = t || 'system';
+        var root = document.documentElement;
+        var storageKey = 'theme-preference';
+        var resolvedCookieKey = 'theme-resolved';
+        var prefersDark = matchMedia('(prefers-color-scheme: dark)');
+        var readCookie = function(key) {
+          var match = document.cookie.match(new RegExp('(?:^|; )' + key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '=([^;]*)'));
+          return match ? decodeURIComponent(match[1]) : '';
+        };
+        var writeCookie = function(key, value) {
+          document.cookie = key + '=' + encodeURIComponent(value) + '; Max-Age=31536000; Path=/; SameSite=Lax';
+        };
+        var readStorage = function() {
+          try {
+            return localStorage.getItem(storageKey) || '';
+          } catch (error) {
+            return '';
+          }
+        };
+        var writeStorage = function(value) {
+          try {
+            localStorage.setItem(storageKey, value);
+          } catch (error) {}
+        };
+        var isValidMode = function(value) {
+          return value === 'light' || value === 'dark' || value === 'system';
+        };
+        var storedMode = readStorage();
+        var cookieMode = readCookie(storageKey);
+        var mode = isValidMode(storedMode)
+          ? storedMode
+          : isValidMode(cookieMode)
+            ? cookieMode
+            : isValidMode(root.dataset.themeMode)
+              ? root.dataset.themeMode
+              : 'system';
+        var resolved = mode === 'system' ? (prefersDark.matches ? 'dark' : 'light') : mode;
+        root.dataset.themeMode = mode;
+        root.dataset.theme = resolved;
+        root.style.colorScheme = resolved;
+        root.style.backgroundColor = resolved === 'dark' ? '#000000' : '#ffffff';
+        writeStorage(mode);
+        writeCookie(storageKey, mode);
+        writeCookie(resolvedCookieKey, resolved);
       })();
     </script>
     <slot name="head" />

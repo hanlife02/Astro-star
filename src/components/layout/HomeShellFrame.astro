@@ -12,6 +12,7 @@ interface NavItem {
 interface Props {
   foldedNavItems: readonly NavItem[];
   githubHref?: string;
+  initialThemeMode?: "light" | "dark" | "system";
   shellStyle?: string;
   shellVariant?: "default" | "article";
 }
@@ -19,6 +20,7 @@ interface Props {
 const {
   foldedNavItems,
   githubHref = "",
+  initialThemeMode = "system",
   shellStyle = "",
   shellVariant = "default",
 } = Astro.props as Props;
@@ -39,9 +41,9 @@ const {
     <div class="wire-box header-actions" aria-label="Actions area">
       <div class="theme-switcher" role="group" aria-label="Theme switcher">
         <button type="button" id="theme-toggle" class="theme-btn" aria-label="Theme switcher">
-          <span data-theme-icon="light"><Icon svg={Sun} /></span>
-          <span data-theme-icon="dark" hidden><Icon svg={Moon} /></span>
-          <span data-theme-icon="system" hidden><Icon svg={Monitor} /></span>
+          <span data-theme-icon="light" hidden={initialThemeMode !== "light"}><Icon svg={Sun} /></span>
+          <span data-theme-icon="dark" hidden={initialThemeMode !== "dark"}><Icon svg={Moon} /></span>
+          <span data-theme-icon="system" hidden={initialThemeMode !== "system"}><Icon svg={Monitor} /></span>
         </button>
       </div>
       <button type="button" class="search-btn" aria-label="Search">

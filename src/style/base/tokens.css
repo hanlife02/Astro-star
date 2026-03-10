@@ -74,12 +74,19 @@ html {
   overflow-x: clip;
   overflow-y: visible;
   overscroll-behavior-y: none;
+  background-color: #ffffff;
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  background-color: #000000;
+  color-scheme: dark;
 }
 
 body {
   margin: 0;
   min-height: 100dvh;
-  background: transparent;
+  background-color: inherit;
   color: var(--line);
   line-height: 1.5;
   font-family: "Biotif", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;

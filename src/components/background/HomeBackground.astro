@@ -6,12 +6,13 @@ interface Props {
   mode?: "light" | "dark";
 }
 
-const { revealAt = "12% 12%", mode = "light" } = Astro.props satisfies Props;
+const { revealAt = "12% 12%", mode } = Astro.props satisfies Props;
+const backgroundMode = mode === "dark" ? "dark" : undefined;
 ---
 
 <div
   class="snow-bg"
-  data-mode={mode}
+  data-mode={backgroundMode}
   aria-hidden="true"
   style={`--snow-reveal-at:${revealAt};`}
 ></div>
