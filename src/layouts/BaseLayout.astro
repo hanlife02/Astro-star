@@ -35,6 +35,17 @@ const pageTitle = title ?? `${pageName} - ${site.name}`;
       href={new URL("/rss.xml", site.url).toString()}
     />
     <title>{pageTitle}</title>
+    <script is:inline>
+      (function() {
+        var t = localStorage.getItem('theme-preference');
+        var m = t === 'light' || t === 'dark' ? t
+              : (t === 'system' || !t)
+              ? (matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light')
+              : 'light';
+        document.documentElement.dataset.theme = m;
+        document.documentElement.dataset.themeMode = t || 'system';
+      })();
+    </script>
     <slot name="head" />
   </head>
   <body>

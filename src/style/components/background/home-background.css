@@ -28,7 +28,8 @@
   --snow-strength: 36%;
 }
 
-.snow-bg[data-mode="dark"] {
+.snow-bg[data-mode="dark"],
+:root[data-theme="dark"] .snow-bg {
   background-color: #000000;
   --fg: #ffffff;
   --snow-strength: 24%;
