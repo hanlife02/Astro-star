@@ -34,8 +34,13 @@
 
 .profile-avatar {
   width: var(--avatar-size);
-  aspect-ratio: 1;
+  height: var(--avatar-size);
+  display: block;
+  flex: 0 0 auto;
+  aspect-ratio: 1 / 1;
   object-fit: cover;
+  object-position: center;
+  overflow: hidden;
   border: clamp(0.0625rem, 0.08vw, 0.1rem) solid var(--line-soft);
   border-radius: 50%;
 }
