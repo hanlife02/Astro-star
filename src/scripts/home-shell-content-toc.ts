@@ -1,7 +1,11 @@
-﻿type HeadingEntry = {
+type HeadingEntry = {
   link: HTMLAnchorElement;
   heading: HTMLElement;
 };
+
+const CONTENT_TOC_REFRESH_EVENT = "content-toc:refresh";
+const ACTIVE_HEADING_ROOT_MARGIN = "-18% 0px -55% 0px";
+const PAGE_EDGE_THRESHOLD = 4;
 
 export function initHomeShellContentToc() {
   const contentPage = document.querySelector("[data-home-shell-content-page]");
@@ -31,11 +35,9 @@ export function initHomeShellContentToc() {
 
   if (headingEntries.length === 0) return;
 
-  let frameId = 0;
-
-  const getHeadingOffset = (heading: HTMLElement) => {
-    return heading.getBoundingClientRect().top + window.scrollY;
-  };
+  const visibleHeadingIds = new Set<string>();
+  let activeEntry: HeadingEntry | null = null;
+  let lastScrollY = window.scrollY;
 
   const getTocScrollContainer = () => {
     const tocListStyle = window.getComputedStyle(tocList);
@@ -43,27 +45,31 @@ export function initHomeShellContentToc() {
     return overflowY === "auto" || overflowY === "scroll" ? tocList : toc;
   };
 
-  const updateContentToc = () => {
-    const viewportTop = window.scrollY;
-    const viewportBottom = viewportTop + window.innerHeight;
-    const visibleEntries = headingEntries.filter((entry) => {
-      const headingTop = getHeadingOffset(entry.heading);
-      const headingBottom = headingTop + entry.heading.offsetHeight;
-      return headingBottom > viewportTop && headingTop < viewportBottom;
+  const centerActiveLink = (entry: HeadingEntry, behavior: ScrollBehavior = "auto") => {
+    const activeItem = entry.link.closest(".content-toc-item");
+    if (!(activeItem instanceof HTMLElement)) return;
+
+    const tocScrollContainer = getTocScrollContainer();
+    const itemTopInToc = activeItem.offsetTop;
+    const centeredTocTop = itemTopInToc - (tocScrollContainer.clientHeight - activeItem.offsetHeight) / 2;
+    const maxTocScrollTop = Math.max(0, tocScrollContainer.scrollHeight - tocScrollContainer.clientHeight);
+    const nextTocScrollTop = Math.min(Math.max(0, centeredTocTop), maxTocScrollTop);
+
+    if (Math.abs(tocScrollContainer.scrollTop - nextTocScrollTop) < 1) return;
+
+    tocScrollContainer.scrollTo({
+      top: nextTocScrollTop,
+      behavior,
     });
+  };
 
-    let activeEntry = visibleEntries[0] ?? headingEntries[0];
+  const setActiveEntry = (nextEntry: HeadingEntry, behavior: ScrollBehavior = "auto") => {
+    if (activeEntry === nextEntry) return;
 
-    if (!visibleEntries.length) {
-      headingEntries.forEach((entry) => {
-        if (getHeadingOffset(entry.heading) <= viewportTop) {
-          activeEntry = entry;
-        }
-      });
-    }
+    activeEntry = nextEntry;
 
     headingEntries.forEach((entry) => {
-      const isActive = entry === activeEntry;
+      const isActive = entry === nextEntry;
       entry.link.classList.toggle("is-active", isActive);
 
       if (isActive) {
@@ -73,30 +79,75 @@ export function initHomeShellContentToc() {
       }
     });
 
-    const activeItem = activeEntry.link.closest(".content-toc-item");
-    if (!(activeItem instanceof HTMLElement)) return;
+    centerActiveLink(nextEntry, behavior);
+  };
 
-    const tocScrollContainer = getTocScrollContainer();
-    const itemTopInToc = activeItem.offsetTop;
-    const centeredTocTop = itemTopInToc - (tocScrollContainer.clientHeight - activeItem.offsetHeight) / 2;
-    const maxTocScrollTop = Math.max(0, tocScrollContainer.scrollHeight - tocScrollContainer.clientHeight);
-    const nextTocScrollTop = Math.min(Math.max(0, centeredTocTop), maxTocScrollTop);
+  const getVisibleIndices = () => {
+    return headingEntries.reduce<number[]>((indices, entry, index) => {
+      if (visibleHeadingIds.has(entry.heading.id)) {
+        indices.push(index);
+      }
 
-    tocScrollContainer.scrollTo({
-      top: nextTocScrollTop,
-      behavior: "smooth",
+      return indices;
+    }, []);
+  };
+
+  const syncActiveEntryFromVisibility = () => {
+    const scrollingDown = window.scrollY >= lastScrollY;
+    lastScrollY = window.scrollY;
+
+    const visibleIndices = getVisibleIndices();
+    if (visibleIndices.length > 0) {
+      const nextIndex = scrollingDown ? visibleIndices[visibleIndices.length - 1] : visibleIndices[0];
+      setActiveEntry(headingEntries[nextIndex]);
+      return;
+    }
+
+    if (window.scrollY <= PAGE_EDGE_THRESHOLD) {
+      setActiveEntry(headingEntries[0]);
+      return;
+    }
+
+    const pageBottom = window.scrollY + window.innerHeight;
+    const documentBottom = document.documentElement.scrollHeight;
+    if (pageBottom >= documentBottom - PAGE_EDGE_THRESHOLD) {
+      setActiveEntry(headingEntries[headingEntries.length - 1]);
+    }
+  };
+
+  const processObservedEntries = (entries: IntersectionObserverEntry[]) => {
+    entries.forEach((entry) => {
+      const target = entry.target;
+      if (!(target instanceof HTMLElement) || !target.id) return;
+
+      if (entry.isIntersecting) {
+        visibleHeadingIds.add(target.id);
+      } else {
+        visibleHeadingIds.delete(target.id);
+      }
     });
   };
 
-  const queueContentTocUpdate = () => {
-    cancelAnimationFrame(frameId);
-    frameId = requestAnimationFrame(updateContentToc);
-  };
+  const observer = new IntersectionObserver(
+    (entries) => {
+      processObservedEntries(entries);
 
-  const queueContentTocUpdateWhenReady = () => {
-    if (!tocEntranceSettled) return;
-    queueContentTocUpdate();
-  };
+      if (!tocEntranceSettled) return;
+      syncActiveEntryFromVisibility();
+    },
+    {
+      rootMargin: ACTIVE_HEADING_ROOT_MARGIN,
+      threshold: 0,
+    },
+  );
+
+  headingEntries.forEach((entry) => {
+    observer.observe(entry.heading);
+  });
+
+  const initialHash = decodeURIComponent(window.location.hash.replace(/^#/, ""));
+  const initialEntry = headingEntries.find((entry) => entry.heading.id === initialHash) ?? headingEntries[0];
+  setActiveEntry(initialEntry);
 
   headingEntries.forEach((entry) => {
     entry.link.addEventListener("click", (event) => {
@@ -110,19 +161,33 @@ export function initHomeShellContentToc() {
         history.replaceState(null, "", `#${entry.heading.id}`);
       }
 
-      queueContentTocUpdateWhenReady();
+      setActiveEntry(entry);
     });
   });
 
-  window.addEventListener("scroll", queueContentTocUpdateWhenReady, { passive: true });
-  window.addEventListener("resize", queueContentTocUpdateWhenReady);
-  window.addEventListener("load", queueContentTocUpdateWhenReady, { once: true });
-  document.addEventListener("content-toc:refresh", () => {
+  window.addEventListener("resize", () => {
+    if (!tocEntranceSettled || !activeEntry) return;
+    centerActiveLink(activeEntry);
+  });
+
+  window.addEventListener(
+    "load",
+    () => {
+      if (!tocEntranceSettled) return;
+      processObservedEntries(observer.takeRecords());
+      syncActiveEntryFromVisibility();
+    },
+    { once: true },
+  );
+
+  document.addEventListener(CONTENT_TOC_REFRESH_EVENT, () => {
     tocEntranceSettled = true;
-    queueContentTocUpdate();
+    processObservedEntries(observer.takeRecords());
+    syncActiveEntryFromVisibility();
   });
 
   if (tocEntranceSettled) {
-    queueContentTocUpdate();
+    processObservedEntries(observer.takeRecords());
+    syncActiveEntryFromVisibility();
   }
 }

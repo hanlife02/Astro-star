@@ -95,8 +95,8 @@ const {
         </nav>
       )
     }
-    <p class="profile-one-word home-type-target" data-type-speed="26">{profile.bio}</p>
-    <p class="profile-bio home-type-target" data-type-speed="11">{profile.intro}</p>
+    <p class="profile-one-word home-enter-item">{profile.bio}</p>
+    <p class="profile-bio home-enter-item">{profile.intro}</p>
     <div class="home-profile-metrics">
       <div class="home-enter-item home-profile-metric">
         <CodeTime />
@@ -164,71 +164,6 @@ const {
 
     <script is:inline>
       (() => {
-        const wait = (ms) => new Promise((resolve) => window.setTimeout(resolve, ms));
-
-        const prepareLetters = (element) => {
-          if (!(element instanceof HTMLElement)) return;
-
-          if (!element.dataset.fullText) {
-            element.dataset.fullText = element.textContent ?? "";
-          }
-
-          const fullText = element.dataset.fullText ?? "";
-          element.textContent = "";
-          element.classList.remove("is-visible");
-          element.setAttribute("aria-label", fullText);
-
-          const fragment = document.createDocumentFragment();
-
-          fullText.split(/(\s+)/).forEach((token) => {
-            if (!token) return;
-
-            if (/^\s+$/.test(token)) {
-              fragment.appendChild(document.createTextNode(token));
-              return;
-            }
-
-            const word = document.createElement("span");
-            word.className = "home-word";
-
-            Array.from(token).forEach((character) => {
-              const letter = document.createElement("span");
-              letter.className = "home-letter";
-              letter.textContent = character;
-              word.appendChild(letter);
-            });
-
-            fragment.appendChild(word);
-          });
-
-          element.appendChild(fragment);
-        };
-
-        const revealLetters = async (element) => {
-          if (!(element instanceof HTMLElement)) return;
-
-          const speed = Number.parseInt(element.dataset.typeSpeed ?? "28", 10);
-          const letters = Array.from(element.querySelectorAll(".home-letter"));
-          element.classList.add("is-visible");
-
-          for (const letter of letters) {
-            if (!(letter instanceof HTMLElement)) continue;
-            letter.classList.add("is-visible");
-            await wait(speed);
-          }
-        };
-
-        const revealItems = async (elements, stagger = 40) => {
-          for (const element of elements) {
-            if (element instanceof HTMLElement) {
-              element.classList.add("is-visible");
-            }
-            await wait(stagger);
-          }
-
-          await wait(56);
-        };
-
         const runHomeEntrance = () => {
           const profileRoot = document.querySelector(".home-profile-sequence");
           const latestRoot = document.querySelector(".home-latest-sequence");
@@ -240,52 +175,29 @@ const {
           const runToken = `${Date.now()}`;
           profileRoot.dataset.homeEntranceRun = runToken;
 
-          const leadItems = [
-            profileRoot.querySelector(".profile-avatar"),
-            profileRoot.querySelector(".profile-name"),
-            ...Array.from(profileRoot.querySelectorAll(".profile-link")),
-          ];
-          const metrics = Array.from(profileRoot.querySelectorAll(".home-profile-metric"));
-          const typeTargets = Array.from(profileRoot.querySelectorAll(".home-type-target"));
+          const profileItems = Array.from(profileRoot.querySelectorAll(".home-enter-item, .home-profile-metric"));
 
           const reset = () => {
-            [...leadItems, ...metrics].forEach((element) => {
+            profileItems.forEach((element) => {
               if (element instanceof HTMLElement) {
                 element.classList.remove("is-visible");
               }
             });
 
-            typeTargets.forEach(prepareLetters);
             latestRoot.classList.remove("latest-articles--frame-visible", "latest-articles--entered");
           };
 
-          const run = async () => {
-            reset();
-            await wait(16);
-
-            if (profileRoot.dataset.homeEntranceRun !== runToken) return;
-            await revealItems(leadItems, 36);
-
-            for (const target of typeTargets) {
-              if (profileRoot.dataset.homeEntranceRun !== runToken) return;
-              await revealLetters(target);
-              await wait(24);
-            }
-
-            if (profileRoot.dataset.homeEntranceRun !== runToken) return;
-            await revealItems(metrics, 44);
-            await wait(24);
-
-            if (profileRoot.dataset.homeEntranceRun !== runToken) return;
-            latestRoot.classList.add("latest-articles--frame-visible");
-            await wait(110);
-
-            if (profileRoot.dataset.homeEntranceRun !== runToken) return;
-            latestRoot.classList.add("latest-articles--entered");
-          };
-
+          reset();
           requestAnimationFrame(() => {
-            run();
+            if (profileRoot.dataset.homeEntranceRun !== runToken) return;
+
+            profileItems.forEach((element) => {
+              if (element instanceof HTMLElement) {
+                element.classList.add("is-visible");
+              }
+            });
+
+            latestRoot.classList.add("latest-articles--frame-visible", "latest-articles--entered");
           });
         };
 

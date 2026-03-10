@@ -135,8 +135,9 @@
   font-size: var(--latest-title-size);
   line-height: var(--latest-text-line-height);
   min-width: 0;
-  white-space: normal;
-  overflow-wrap: anywhere;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   transform-origin: left center;
   transition: color 0.22s ease, transform 0.22s ease;
 }
@@ -148,16 +149,12 @@
 
 .latest-articles[data-latest-enhanced="true"] .latest-articles-item-content {
   opacity: 0;
-  transform: translateX(1.4rem);
 }
 
 .latest-articles[data-latest-enhanced="true"].latest-articles--entered .latest-articles-item-content {
   opacity: 1;
-  transform: translateX(0);
-  transition:
-    opacity 0.42s ease,
-    transform 0.48s cubic-bezier(0.22, 1, 0.36, 1);
-  transition-delay: calc(0.12s + (var(--latest-enter-order, 0) * 0.06s));
+  transition: opacity 0.22s ease;
+  transition-delay: 0s;
 }
 
 .latest-articles-link:hover,
@@ -229,4 +226,3 @@
     max-width: 100%;
   }
 }
-
