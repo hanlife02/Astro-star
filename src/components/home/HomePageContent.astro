@@ -176,6 +176,11 @@ const {
           profileRoot.dataset.homeEntranceRun = runToken;
 
           const profileItems = Array.from(profileRoot.querySelectorAll(".home-enter-item, .home-profile-metric"));
+          profileItems.forEach((element, index) => {
+            if (element instanceof HTMLElement) {
+              element.style.setProperty("--home-enter-order", `${index}`);
+            }
+          });
 
           const reset = () => {
             profileItems.forEach((element) => {
@@ -189,15 +194,17 @@ const {
 
           reset();
           requestAnimationFrame(() => {
-            if (profileRoot.dataset.homeEntranceRun !== runToken) return;
+            requestAnimationFrame(() => {
+              if (profileRoot.dataset.homeEntranceRun !== runToken) return;
 
-            profileItems.forEach((element) => {
-              if (element instanceof HTMLElement) {
-                element.classList.add("is-visible");
-              }
+              profileItems.forEach((element) => {
+                if (element instanceof HTMLElement) {
+                  element.classList.add("is-visible");
+                }
+              });
+
+              latestRoot.classList.add("latest-articles--frame-visible", "latest-articles--entered");
             });
-
-            latestRoot.classList.add("latest-articles--frame-visible", "latest-articles--entered");
           });
         };
 

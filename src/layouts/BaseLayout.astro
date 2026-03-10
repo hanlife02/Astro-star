@@ -38,12 +38,9 @@ const initialTheme =
     : resolvedThemeCookie === "dark"
       ? "dark"
       : "light";
-const initialBackgroundColor = initialTheme === "dark" ? "#000000" : "#ffffff";
-const rootStyle = `color-scheme: ${initialTheme}; background-color: ${initialBackgroundColor};`;
-const initialDocumentBackgroundStyle = `html,body{background-color:${initialBackgroundColor};}`;
 ---
 
-<html lang={documentLang} data-theme={initialTheme} data-theme-mode={initialThemeMode} style={rootStyle}>
+<html lang={documentLang} data-theme={initialTheme} data-theme-mode={initialThemeMode}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
@@ -64,7 +61,6 @@ const initialDocumentBackgroundStyle = `html,body{background-color:${initialBack
       href={new URL("/rss.xml", site.url).toString()}
     />
     <title>{pageTitle}</title>
-    <style is:inline set:html={initialDocumentBackgroundStyle}></style>
     <script is:inline>
       (function() {
         var root = document.documentElement;

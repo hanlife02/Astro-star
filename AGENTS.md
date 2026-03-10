@@ -15,6 +15,7 @@
 4. **移动优先与响应式设计 (Mobile-First & Responsive)**:
    - 所有的布局和组件必须从一开始就考虑移动端和桌面端的良好显示。
    - 强制使用移动优先（Mobile-First）的 CSS 策略（例如优先写基础样式，再通过 `@media (min-width: ...)` 或 Tailwind 的 `md:`, `lg:` 扩展桌面端样式）。
+   - 所有的样式有关于style的都要放在style目录下的CSS文件里
 
 # Project Architecture (项目架构与路由)
 本项目固定包含以下 6 个核心顶级页面，你需要在构建导航栏（Navbar）和路由时严格遵循：
