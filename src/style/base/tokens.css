@@ -72,7 +72,8 @@
 html {
   font-size: var(--font-size-base);
   overflow-x: clip;
-  overflow-y: visible;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
   overscroll-behavior-y: none;
   background-color: #ffffff;
   color-scheme: light;
