@@ -485,7 +485,7 @@
 
   .home-main {
     grid-template-columns:
-      minmax(var(--main-col-1-min), var(--main-col-1-fr))
+      minmax(var(--main-col-1-min), var(--main-col-1-size))
       minmax(var(--main-col-2-min), var(--main-col-2-fr))
       minmax(var(--main-col-3-min), var(--main-col-3-fr));
   }

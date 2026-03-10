@@ -43,6 +43,7 @@
   --header-main-gap: clamp(1.25rem, 1.4vw, 2.75rem);
   --footer-height: clamp(0.5rem, 1vh, 1rem);
   --main-col-1-min: 7.5rem;
+  --main-col-1-size: clamp(7.5rem, 8.5vw, 10.5rem);
   --main-col-2-min: 7.5rem;
   --main-col-3-min: 7.5rem;
   --main-col-1-fr: 0.5fr;
