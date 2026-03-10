@@ -68,6 +68,27 @@ html:lang(zh-CN) .content-page--article {
   font-weight: 600;
 }
 
+.article-license {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid color-mix(in srgb, var(--line) 14%, transparent);
+}
+
+.article-license-text {
+  margin: 0;
+  color: color-mix(in srgb, var(--line) 66%, transparent);
+  font-size: clamp(0.82rem, 0.79rem + 0.12vw, 0.92rem);
+  line-height: 1.7;
+  font-family: "Iowan Old Style", "Palatino Linotype", "Songti SC", "Noto Serif SC", serif;
+  letter-spacing: 0.01em;
+}
+
+.article-license-link {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.14em;
+}
+
 @media (min-width: 56.25rem) {
   .article-content-meta {
     grid-template-columns: repeat(4, minmax(0, 1fr));
