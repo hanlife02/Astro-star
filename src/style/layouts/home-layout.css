@@ -536,6 +536,19 @@
   .home-shell--article .latest-area {
     overflow: visible;
   }
+
+  .latest-area:has(> [data-home-shell-content-toc]) {
+    position: sticky;
+    top: var(--layout-sticky-main-top);
+    align-self: start;
+    max-height: calc(100dvh - var(--layout-sticky-main-top) - var(--space));
+    z-index: 6;
+  }
+
+  .latest-area > [data-home-shell-content-toc] {
+    position: static;
+    top: auto;
+  }
 }
 
 

@@ -71,7 +71,8 @@
 
 html {
   font-size: var(--font-size-base);
-  overflow-x: hidden;
+  overflow-x: clip;
+  overflow-y: visible;
   overscroll-behavior-y: none;
 }
 
@@ -82,5 +83,6 @@ body {
   color: var(--line);
   line-height: 1.5;
   font-family: "Biotif", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
-  overflow-x: hidden;
+  overflow-x: clip;
+  overflow-y: visible;
 }
