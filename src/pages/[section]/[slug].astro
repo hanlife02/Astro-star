@@ -5,7 +5,7 @@ import { resolveContentDates } from "../../utils/content-dates";
 import { resolveContentSlug } from "../../utils/content-slug";
 import { resolveContentTitle } from "../../utils/content-title";
 import { getGitTimestamps } from "../../utils/git-timestamps";
-import { extractTocHeadings, type TocHeading } from "../../utils/toc";
+import { extractTocHeadings } from "../../utils/toc";
 
 interface ContentModule {
   default: any;
@@ -29,39 +29,24 @@ const articleRawModules = import.meta.glob("../../content/{blog,note,project}/**
   import: "default",
 });
 
-export function getStaticPaths() {
-  const articleEntries = Object.entries(
-    import.meta.glob("../../content/{blog,note,project}/**/*.{md,mdx}", { eager: true }),
-  ) as Array<[string, ContentModule]>;
-
-  return articleEntries
-    .map(([path, mod]) => {
-      const match = path.match(/^\.\.\/\.\.\/content\/(blog|note|project)\/.+\.(md|mdx)$/i);
-      if (!match) return null;
-
-      const routeSlug = resolveContentSlug(path, mod.frontmatter?.routeSlug);
-
-      return {
-        params: {
-          section: match[1],
-          slug: routeSlug,
-        },
-        props: {
-          articlePath: path,
-        },
-      };
-    })
-    .filter((item): item is { params: { section: string; slug: string }; props: { articlePath: string } } => item !== null);
-}
+const validSections = ["blog", "note", "project"] as const;
 
 const { section, slug } = Astro.params;
-const { articlePath } = Astro.props as { articlePath: string };
-const articleModule = articleModules[articlePath] as ContentModule | undefined;
-const articleRawSource = articleRawModules[articlePath] as string | undefined;
+const articleEntry = Object.entries(articleModules).find(([path, mod]) => {
+  const match = path.match(/^\.\.\/\.\.\/content\/(blog|note|project)\/.+\.(md|mdx)$/i);
+  if (!match || match[1] !== section) return false;
+  return resolveContentSlug(path, (mod as ContentModule).frontmatter?.routeSlug) === slug;
+});
 
-if (!articleModule || !section || !slug) {
-  throw new Error("Missing article content module.");
+if (!section || !slug || !validSections.includes(section as (typeof validSections)[number]) || !articleEntry) {
+  return new Response(null, {
+    status: 404,
+    statusText: "Not found",
+  });
 }
+
+const [articlePath, articleModule] = articleEntry as [string, ContentModule];
+const articleRawSource = articleRawModules[articlePath] as string | undefined;
 
 const ArticleContent = articleModule.default;
 const title = resolveContentTitle(articlePath, articleModule.frontmatter?.title);
