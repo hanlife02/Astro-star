@@ -596,7 +596,7 @@
 
   .home-shell {
     height: auto;
-    min-height: 0;
+    min-height: 100dvh;
     overflow: visible;
   }
 
@@ -611,4 +611,3 @@
     overflow: visible;
   }
 }
-
