@@ -21,13 +21,13 @@
 
 html:lang(zh-CN) .content-toc {
   --content-toc-title-size: clamp(19px, 18.2px + 0.34vw, 23px);
-  --content-toc-link-depth-1-size: clamp(14.8px, 14.4px + 0.14vw, 16.2px);
-  --content-toc-link-depth-2-size: clamp(13.2px, 12.95px + 0.12vw, 14.2px);
-  --content-toc-link-depth-3-size: clamp(12.6px, 12.35px + 0.1vw, 13.4px);
+  --content-toc-link-depth-1-size: clamp(15.4px, 14.9px + 0.18vw, 16.8px);
+  --content-toc-link-depth-2-size: clamp(13.8px, 13.45px + 0.14vw, 14.8px);
+  --content-toc-link-depth-3-size: clamp(13.1px, 12.8px + 0.12vw, 13.9px);
   --content-toc-link-depth-1-size-en: clamp(15.6px, 15.2px + 0.16vw, 16.8px);
   --content-toc-link-depth-2-size-en: clamp(14px, 13.7px + 0.12vw, 14.8px);
   --content-toc-link-depth-3-size-en: clamp(13.2px, 12.95px + 0.1vw, 14px);
-  --content-toc-mobile-title-size: clamp(14.6px, 14.35px + 0.12vw, 15.4px);
+  --content-toc-mobile-title-size: clamp(15px, 14.65px + 0.14vw, 15.8px);
 }
 
 .content-toc-list {

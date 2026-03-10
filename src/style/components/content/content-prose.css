@@ -89,7 +89,7 @@ html:lang(zh-CN) .content-page-body {
 }
 
 html:lang(zh-CN) .content-page--article .content-page-body {
-  --content-body-font-size: clamp(14px, 13.5px + 0.14vw, 15.2px);
+  --content-body-font-size: clamp(14.8px, 14.1px + 0.18vw, 16px);
   --content-body-line-height: 1.76;
 }
 
