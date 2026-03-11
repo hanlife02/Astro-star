@@ -1,0 +1,53 @@
+---
+import "../../style/components/content/comment-section.css";
+
+interface Props {
+  ariaLabel?: string;
+  listAriaLabel?: string;
+  formAriaLabel?: string;
+}
+
+const { ariaLabel, listAriaLabel, formAriaLabel } = Astro.props as Props;
+---
+
+<section class="comment-section" aria-label={ariaLabel}>
+  {Astro.slots.has("title") && (
+    <header class="comment-section__header">
+      <div class="comment-section__title">
+        <slot name="title" />
+      </div>
+      {Astro.slots.has("meta") && (
+        <div class="comment-section__meta">
+          <slot name="meta" />
+        </div>
+      )}
+    </header>
+  )}
+
+  {(Astro.slots.has("list") || Astro.slots.has("empty")) && (
+    <div class="comment-section__body" aria-label={listAriaLabel}>
+      {Astro.slots.has("list") && (
+        <div class="comment-section__list">
+          <slot name="list" />
+        </div>
+      )}
+      {Astro.slots.has("empty") && (
+        <div class="comment-section__empty">
+          <slot name="empty" />
+        </div>
+      )}
+    </div>
+  )}
+
+  {Astro.slots.has("form") && (
+    <div class="comment-section__form" aria-label={formAriaLabel}>
+      <slot name="form" />
+    </div>
+  )}
+
+  {Astro.slots.has("footer") && (
+    <footer class="comment-section__footer">
+      <slot name="footer" />
+    </footer>
+  )}
+</section>

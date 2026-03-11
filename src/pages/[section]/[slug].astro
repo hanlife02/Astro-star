@@ -1,5 +1,8 @@
 ---
 import ArticleDetailPage from "../../components/content/ArticleDetailPage.astro";
+import CommentSection from "../../components/content/CommentSection.astro";
+import Icon from "../../components/ui/Icon.astro";
+import { Heart, MessageCircleReply } from "lucide-static";
 import { site } from "../../config/site";
 import { resolveContentDates } from "../../utils/content-dates";
 import { resolveContentSlug } from "../../utils/content-slug";
@@ -55,6 +58,7 @@ const articleType = articleModule.frontmatter?.type?.trim() || "Uncategorized";
 const author = site.owner.name;
 const walineServerURL = import.meta.env.PUBLIC_WALINE_SERVER_URL?.trim() || "";
 const articleRoutePath = `/${section}/${slug}/`;
+const showComments = section === "blog" || section === "note";
 const { createdAt: gitCreatedAt, updatedAt: gitUpdatedAt } = getGitTimestamps(new URL(articlePath, import.meta.url));
 const { createdAt, updatedAt } = resolveContentDates(articleModule.frontmatter, {
   createdAt: gitCreatedAt,
@@ -98,6 +102,8 @@ const countWords = (source: string) => {
 
 const articleWordCount = countWords(articleRawSource ?? "");
 const tocHeadings = extractTocHeadings(articleRawSource ?? "");
+
+const commentCount = 0;
 ---
 
 <ArticleDetailPage
@@ -113,4 +119,64 @@ const tocHeadings = extractTocHeadings(articleRawSource ?? "");
   articleWordCount={articleWordCount}
   tocHeadings={tocHeadings}
   ArticleContent={ArticleContent}
-/>
+>
+  {showComments && (
+    <CommentSection
+      slot="comments"
+      ariaLabel="Comments"
+      listAriaLabel="Comment list"
+      formAriaLabel="Leave a comment"
+    >
+      <div slot="title">Comments</div>
+      <div slot="meta">
+        <span>{commentCount} Comments</span>
+        <span class="comment-section__meta-divider" aria-hidden="true"></span>
+        <button
+          class="comment-section__sort-toggle"
+          type="button"
+          aria-live="polite"
+          data-sort-state="newest"
+          aria-label="Toggle comment sorting"
+        >
+          <span class="comment-section__sort-placeholder" aria-hidden="true">Hottest</span>
+          <span class="comment-section__sort-face" data-sort-face="newest">Newest</span>
+          <span class="comment-section__sort-face" data-sort-face="hottest">Hottest</span>
+        </button>
+      </div>
+      <div slot="empty">No comments yet. Be the first to share a thought.</div>
+      <form slot="form" class="comment-form" autocomplete="off">
+        <div class="comment-form__field">
+          <label class="comment-form__label" for="comment-name">Name</label>
+          <input
+            class="comment-form__input"
+            id="comment-name"
+            name="name"
+            type="text"
+            placeholder="Your name"
+          />
+        </div>
+        <div class="comment-form__field">
+          <label class="comment-form__label" for="comment-message">Comment</label>
+          <textarea
+            class="comment-form__textarea"
+            id="comment-message"
+            name="message"
+            placeholder="Write your comment here..."
+          ></textarea>
+        </div>
+        <div class="comment-form__actions">
+          <button class="comment-form__submit" type="button">Post Comment</button>
+        </div>
+      </form>
+      <script is:inline slot="footer">
+        const sortToggle = document.querySelector('[data-sort-state]');
+        if (sortToggle instanceof HTMLButtonElement) {
+          sortToggle.addEventListener('click', () => {
+            sortToggle.dataset.sortState =
+              sortToggle.dataset.sortState === 'newest' ? 'hottest' : 'newest';
+          });
+        }
+      </script>
+    </CommentSection>
+  )}
+</ArticleDetailPage>
