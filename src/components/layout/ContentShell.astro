@@ -34,13 +34,27 @@ const {
 >
   <Signature slot="signature" />
 
-  <section slot="profile" class={contentClass} aria-label={contentAriaLabel} data-home-shell-content-page>
+  <section
+    slot="profile"
+    class={contentClass}
+    aria-label={contentAriaLabel}
+    data-home-shell-content-page
+    data-content-entrance-enabled="true"
+    data-page-entrance="ready"
+  >
     <div class="content-page-body">
       <slot />
     </div>
   </section>
 
-  <aside slot="latest" class={tocClass} aria-label={tocAriaLabel} data-home-shell-content-toc>
+  <aside
+    slot="latest"
+    class={tocClass}
+    aria-label={tocAriaLabel}
+    data-home-shell-content-toc
+    data-content-entrance-enabled="true"
+    data-toc-entrance="ready"
+  >
     <slot name="toc" />
   </aside>
 

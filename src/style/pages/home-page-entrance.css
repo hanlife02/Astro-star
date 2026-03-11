@@ -1,5 +1,5 @@
-.home-profile-sequence[data-home-entrance-enabled="true"] .home-enter-item,
-.home-profile-sequence[data-home-entrance-enabled="true"] .home-profile-metric {
+html[data-js="true"] .home-profile-sequence[data-home-entrance-enabled="true"] .home-enter-item,
+html[data-js="true"] .home-profile-sequence[data-home-entrance-enabled="true"] .home-profile-metric {
   opacity: 0;
   transform: translateY(0.9rem);
   transition:
@@ -8,8 +8,8 @@
   transition-delay: calc(var(--home-enter-order, 0) * 0.06s);
 }
 
-.home-profile-sequence[data-home-entrance-enabled="true"] .home-enter-item.is-visible,
-.home-profile-sequence[data-home-entrance-enabled="true"] .home-profile-metric.is-visible {
+html[data-js="true"] .home-profile-sequence[data-home-entrance-enabled="true"] .home-enter-item.is-visible,
+html[data-js="true"] .home-profile-sequence[data-home-entrance-enabled="true"] .home-profile-metric.is-visible {
   opacity: 1;
   transform: translateY(0);
 }
@@ -28,8 +28,8 @@
   justify-content: center;
 }
 
-.home-latest-sequence[data-home-entrance-enabled="true"] .latest-articles-title,
-.home-latest-sequence[data-home-entrance-enabled="true"] .latest-articles-year-label {
+html[data-js="true"] .home-latest-sequence[data-home-entrance-enabled="true"] .latest-articles-title,
+html[data-js="true"] .home-latest-sequence[data-home-entrance-enabled="true"] .latest-articles-year-label {
   opacity: 0;
   transform: translateY(0.8rem);
   transition:
@@ -37,33 +37,33 @@
     transform 0.54s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.home-latest-sequence[data-home-entrance-enabled="true"] .latest-articles-item::before,
-.home-latest-sequence[data-home-entrance-enabled="true"] .latest-articles-item::after {
+html[data-js="true"] .home-latest-sequence[data-home-entrance-enabled="true"] .latest-articles-item::before,
+html[data-js="true"] .home-latest-sequence[data-home-entrance-enabled="true"] .latest-articles-item::after {
   opacity: 0;
   transition: opacity 0.3s ease;
 }
 
-.home-latest-sequence[data-home-entrance-enabled="true"].latest-articles--frame-visible .latest-articles-title,
-.home-latest-sequence[data-home-entrance-enabled="true"].latest-articles--frame-visible .latest-articles-year-label {
+html[data-js="true"] .home-latest-sequence[data-home-entrance-enabled="true"].latest-articles--frame-visible .latest-articles-title,
+html[data-js="true"] .home-latest-sequence[data-home-entrance-enabled="true"].latest-articles--frame-visible .latest-articles-year-label {
   opacity: 1;
   transform: translateY(0);
 }
 
-.home-latest-sequence[data-home-entrance-enabled="true"].latest-articles--frame-visible .latest-articles-title {
+html[data-js="true"] .home-latest-sequence[data-home-entrance-enabled="true"].latest-articles--frame-visible .latest-articles-title {
   transition-delay: 0.08s;
 }
 
-.home-latest-sequence[data-home-entrance-enabled="true"].latest-articles--frame-visible .latest-articles-year-label {
+html[data-js="true"] .home-latest-sequence[data-home-entrance-enabled="true"].latest-articles--frame-visible .latest-articles-year-label {
   transition-delay: 0.14s;
 }
 
-.home-latest-sequence[data-home-entrance-enabled="true"].latest-articles--frame-visible .latest-articles-item::before,
-.home-latest-sequence[data-home-entrance-enabled="true"].latest-articles--frame-visible .latest-articles-item::after {
+html[data-js="true"] .home-latest-sequence[data-home-entrance-enabled="true"].latest-articles--frame-visible .latest-articles-item::before,
+html[data-js="true"] .home-latest-sequence[data-home-entrance-enabled="true"].latest-articles--frame-visible .latest-articles-item::after {
   opacity: 1;
   transition-delay: calc(0.12s + (var(--latest-enter-order, 0) * 0.045s));
 }
 
-.home-latest-sequence[data-home-entrance-enabled="true"] .latest-articles-item-content {
+html[data-js="true"] .home-latest-sequence[data-home-entrance-enabled="true"] .latest-articles-item-content {
   opacity: 0;
   transform: translateY(0.75rem);
   transition:
@@ -71,7 +71,7 @@
     transform 0.56s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.home-latest-sequence[data-home-entrance-enabled="true"].latest-articles--entered .latest-articles-item-content {
+html[data-js="true"] .home-latest-sequence[data-home-entrance-enabled="true"].latest-articles--entered .latest-articles-item-content {
   opacity: 1;
   transform: translateY(0);
   transition-delay: calc(0.16s + (var(--latest-enter-order, 0) * 0.05s));

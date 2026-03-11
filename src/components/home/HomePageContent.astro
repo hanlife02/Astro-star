@@ -63,7 +63,12 @@ const {
 
 <HomeLayout>
   <Signature slot="signature" />
-  <section slot="profile" class="profile-card home-profile-sequence" aria-label="Profile section">
+  <section
+    slot="profile"
+    class="profile-card home-profile-sequence"
+    aria-label="Profile section"
+    data-home-entrance-enabled="true"
+  >
     <img
       class="profile-avatar home-enter-item"
       src={profile.avatarSrc}
@@ -106,7 +111,13 @@ const {
       </div>
     </div>
   </section>
-  <section slot="latest" class="latest-articles home-latest-sequence" aria-label="Latest content section" data-latest-enhanced="true">
+  <section
+    slot="latest"
+    class="latest-articles home-latest-sequence"
+    aria-label="Latest content section"
+    data-latest-enhanced="true"
+    data-home-entrance-enabled="true"
+  >
     {
       [
         { key: "blogs", title: "Latest Blogs", groups: latestBlogTimelineGroups },
@@ -164,10 +175,23 @@ const {
 
     <script is:inline>
       (() => {
+        const getCurrentPageKey = () => `${window.location.pathname}${window.location.search}`;
+
         const runHomeEntrance = () => {
           const profileRoot = document.querySelector(".home-profile-sequence");
           const latestRoot = document.querySelector(".home-latest-sequence");
           if (!(profileRoot instanceof HTMLElement) || !(latestRoot instanceof HTMLElement)) return;
+
+          const currentPageKey = getCurrentPageKey();
+          const isSamePageReplay =
+            window.__homeEntranceLastPath === currentPageKey &&
+            profileRoot.dataset.homeEntranceCompleted === "true" &&
+            latestRoot.classList.contains("latest-articles--entered");
+
+          if (isSamePageReplay) return;
+
+          window.__homeEntranceLastPath = currentPageKey;
+          profileRoot.dataset.homeEntranceCompleted = "false";
 
           profileRoot.dataset.homeEntranceEnabled = "true";
           latestRoot.dataset.homeEntranceEnabled = "true";
@@ -204,6 +228,7 @@ const {
               });
 
               latestRoot.classList.add("latest-articles--frame-visible", "latest-articles--entered");
+              profileRoot.dataset.homeEntranceCompleted = "true";
             });
           });
         };

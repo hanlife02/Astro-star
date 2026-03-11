@@ -2,6 +2,7 @@
 
 type HomeShellEntranceWindow = Window & {
   __contentPageEntrancePageLoadBound?: boolean;
+  __contentPageEntranceLastPath?: string;
   __runContentPageEntrance?: () => void;
 };
 
@@ -13,6 +14,16 @@ export function initHomeShellContentPageEntrance() {
     const toc = document.querySelector("[data-home-shell-content-toc]");
 
     if (!(contentPage instanceof HTMLElement)) return;
+
+    const currentPath = `${window.location.pathname}${window.location.search}`;
+    const isSamePathReplay =
+      browserWindow.__contentPageEntranceLastPath === currentPath &&
+      contentPage.dataset.pageEntrance === "entered" &&
+      (!(toc instanceof HTMLElement) || toc.dataset.tocEntrance === "entered");
+
+    if (isSamePathReplay) return;
+
+    browserWindow.__contentPageEntranceLastPath = currentPath;
 
     contentPage.dataset.contentEntranceEnabled = "true";
     contentPage.dataset.pageEntrance = "ready";

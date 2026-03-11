@@ -51,6 +51,9 @@ const initialTheme =
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
+    <script is:inline>
+      document.documentElement.dataset.js = "true";
+    </script>
     <meta
       name="color-scheme"
       content={initialTheme === "dark" ? "dark light" : "light dark"}
@@ -60,6 +63,10 @@ const initialTheme =
       content={initialTheme === "dark" ? "#000000" : "#ffffff"}
     />
     <meta name="generator" content={Astro.generator} />
+    <link rel="preload" href="/fonts/Biotif-Regular.ttf" as="font" type="font/ttf" crossorigin />
+    <link rel="preload" href="/fonts/Biotif-Medium.ttf" as="font" type="font/ttf" crossorigin />
+    <link rel="preload" href="/fonts/Biotif-SemiBold.ttf" as="font" type="font/ttf" crossorigin />
+    <link rel="preload" href="/fonts/Biotif-Bold.ttf" as="font" type="font/ttf" crossorigin />
     <link rel="icon" type="image/svg+xml" href={site.iconSrc} />
     <link
       rel="alternate"
