@@ -94,18 +94,47 @@ const {
         </p>
       </footer>
 
+      <section
+        class="article-comments"
+        aria-label="Comments"
+        data-article-waline
+        data-waline-server-url={walineServerURL}
+        data-waline-path={articleRoutePath}
+      >
+        <header class="article-comments-header">
+          <h2 class="article-comments-title">Comments</h2>
+          <p class="article-comments-description">Discuss this article here.</p>
+        </header>
+        {
+          walineServerURL ? (
+            <div class="article-comments-thread" data-waline-thread></div>
+          ) : (
+            <p class="article-comments-empty">
+              Comments are unavailable until <code>PUBLIC_WALINE_SERVER_URL</code> is configured.
+            </p>
+          )
+        }
+      </section>
+
 
   <script is:inline type="module">
-    const pageviewElement = document.querySelector(".waline-pageview-count[data-server-url]");
-    const serverURL = pageviewElement?.getAttribute("data-server-url")?.trim();
-    const path = pageviewElement?.getAttribute("data-path")?.trim();
+    const walineRoot = document.querySelector("[data-article-waline]");
+    const walineThread = walineRoot?.querySelector("[data-waline-thread]");
+    const serverURL = walineRoot?.getAttribute("data-waline-server-url")?.trim();
+    const path = walineRoot?.getAttribute("data-waline-path")?.trim();
+    const lang = document.documentElement.lang === "zh-CN" ? "zh-CN" : "en";
 
-    if (serverURL && path) {
-      const { pageviewCount } = await import("https://unpkg.com/@waline/client@v3/dist/pageview.js");
+    if (!serverURL) {
+      console.warn("[Waline] PUBLIC_WALINE_SERVER_URL is not configured.");
+    } else if (walineThread instanceof HTMLElement && path) {
+      const { init } = await import("https://unpkg.com/@waline/client@v3/dist/waline.js");
 
-      pageviewCount({
+      init({
+        el: walineThread,
         serverURL,
         path,
+        lang,
+        pageview: true,
       });
     }
   </script>
