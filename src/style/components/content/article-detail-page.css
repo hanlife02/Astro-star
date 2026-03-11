@@ -69,6 +69,12 @@ html:lang(zh-CN) .content-page--article {
   font-weight: 600;
 }
 
+.article-content-meta-item .waline-pageview-count {
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+}
+
 .article-comments {
   margin-top: 2.4rem;
   padding-top: 1.25rem;
