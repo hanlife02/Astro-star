@@ -1,5 +1,6 @@
 ---
 import ArticleDetailPage from "../../components/content/ArticleDetailPage.astro";
+import { PUBLIC_WALINE_SERVER_URL } from "astro:env/client";
 import { site } from "../../config/site";
 import { resolveContentDates } from "../../utils/content-dates";
 import { resolveContentSlug } from "../../utils/content-slug";
@@ -53,7 +54,7 @@ const title = resolveContentTitle(articlePath, articleModule.frontmatter?.title)
 const description = articleModule.frontmatter?.description?.trim() || "";
 const articleType = articleModule.frontmatter?.type?.trim() || "Uncategorized";
 const author = site.owner.name;
-const walineServerURL = import.meta.env.PUBLIC_WALINE_SERVER_URL?.trim() || "";
+const walineServerURL = PUBLIC_WALINE_SERVER_URL?.trim() || "";
 const articleRoutePath = `/${section}/${slug}/`;
 const { createdAt: gitCreatedAt, updatedAt: gitUpdatedAt } = getGitTimestamps(new URL(articlePath, import.meta.url));
 const { createdAt, updatedAt } = resolveContentDates(articleModule.frontmatter, {

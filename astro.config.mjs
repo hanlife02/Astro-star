@@ -1,5 +1,5 @@
 // @ts-check
-import { defineConfig } from 'astro/config';
+import { defineConfig, envField } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import node from '@astrojs/node';
 import rehypeKatex from 'rehype-katex';
@@ -13,6 +13,15 @@ export default defineConfig({
   adapter: node({
     mode: 'standalone',
   }),
+  env: {
+    schema: {
+      PUBLIC_WALINE_SERVER_URL: envField.string({
+        context: 'client',
+        access: 'public',
+        optional: true,
+      }),
+    },
+  },
   integrations: [mdx()],
   markdown: {
     remarkPlugins: [remarkMath],
