@@ -23,6 +23,7 @@
     "@astrojs/node": "^9.4.3",
     "@astrojs/rss": "^4.0.14",
     "@astrojs/sitemap": "^3.6.0",
+    "@waline/client": "^3.13.0",
     "astro": "^5.16.6",
     "astro-auto-import": "^0.5.1",
     "astro-loader-bluesky-posts": "^1.2.3",

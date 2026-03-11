@@ -117,17 +117,25 @@ const {
       </section>
 
 
-  <script is:inline type="module">
-    const walineRoot = document.querySelector("[data-article-waline]");
-    const walineThread = walineRoot?.querySelector("[data-waline-thread]");
-    const serverURL = walineRoot?.getAttribute("data-waline-server-url")?.trim();
-    const path = walineRoot?.getAttribute("data-waline-path")?.trim();
-    const lang = document.documentElement.lang === "zh-CN" ? "zh-CN" : "en";
+  <script>
+    import { init } from "@waline/client";
 
-    if (!serverURL) {
-      console.warn("[Waline] PUBLIC_WALINE_SERVER_URL is not configured.");
-    } else if (walineThread instanceof HTMLElement && path) {
-      const { init } = await import("https://unpkg.com/@waline/client@v3/dist/waline.js");
+    const walineRoots = document.querySelectorAll("[data-article-waline]");
+
+    walineRoots.forEach((walineRoot) => {
+      const walineThread = walineRoot.querySelector("[data-waline-thread]");
+      const serverURL = walineRoot.getAttribute("data-waline-server-url")?.trim();
+      const path = walineRoot.getAttribute("data-waline-path")?.trim();
+      const lang = document.documentElement.lang === "zh-CN" ? "zh-CN" : "en";
+
+      if (!serverURL) {
+        console.warn("[Waline] PUBLIC_WALINE_SERVER_URL is not configured.");
+        return;
+      }
+
+      if (!(walineThread instanceof HTMLElement) || !path) {
+        return;
+      }
 
       init({
         el: walineThread,
@@ -136,6 +144,6 @@ const {
         lang,
         pageview: true,
       });
-    }
+    });
   </script>
 </DocumentPageShell>
