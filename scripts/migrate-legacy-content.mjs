@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-import { execFileSync } from "node:child_process";
 import {
   copyFileSync,
   existsSync,
@@ -11,22 +10,28 @@ import {
 } from "node:fs";
 import path from "node:path";
 import process from "node:process";
+import { deserialize } from "bson";
 
 const rootDir = process.cwd();
 const shouldWrite = process.argv.includes("--write");
-const migrateBlog = process.argv.includes("--blog") || !process.argv.includes("--note");
-const migrateNote = process.argv.includes("--note") || !process.argv.includes("--blog");
-const maxBuffer = 1024 * 1024 * 256;
+const hasExplicitTarget = ["--blog", "--note", "--project"].some((flag) => process.argv.includes(flag));
+const migrateBlog = process.argv.includes("--blog") || !hasExplicitTarget;
+const migrateNote = process.argv.includes("--note") || !hasExplicitTarget;
+const migrateProject = process.argv.includes("--project") || !hasExplicitTarget;
 
 const paths = {
   blogContent: path.join(rootDir, "src/content/blog"),
   noteContent: path.join(rootDir, "src/content/note"),
+  projectContent: path.join(rootDir, "src/content/project"),
   categories: path.join(rootDir, "data/mx-space/categories.bson"),
   topics: path.join(rootDir, "data/mx-space/topics.bson"),
   posts: path.join(rootDir, "data/mx-space/posts.bson"),
   notes: path.join(rootDir, "data/mx-space/notes.bson"),
+  projects: path.join(rootDir, "data/mx-space/projects.bson"),
   legacyFiles: path.join(rootDir, "data/backup_data/static/file"),
+  legacyIcons: path.join(rootDir, "data/backup_data/static/icon"),
   publicFiles: path.join(rootDir, "public/legacy/file"),
+  publicIcons: path.join(rootDir, "public/legacy/icon"),
 };
 
 const copiedAssets = new Set();
@@ -34,6 +39,7 @@ const claimedTargets = new Set();
 const summary = {
   blog: { created: 0, updated: 0, unchanged: 0 },
   note: { created: 0, updated: 0, unchanged: 0 },
+  project: { created: 0, updated: 0, unchanged: 0 },
   assetsCopied: 0,
   missingAssets: new Set(),
 };
@@ -60,23 +66,27 @@ function fail(message) {
   process.exit(1);
 }
 
-function runBsondump(filePath) {
-  try {
-    return execFileSync("bsondump", ["--quiet", filePath], {
-      encoding: "utf8",
-      maxBuffer,
-    });
-  } catch {
+function readBsonDocuments(filePath) {
+  if (!existsSync(filePath)) {
     fail(`Failed to read BSON file: ${path.relative(rootDir, filePath)}`);
   }
-}
 
-function readBsonDocuments(filePath) {
-  return runBsondump(filePath)
-    .split("\n")
-    .map((line) => line.trim())
-    .filter(Boolean)
-    .map((line) => JSON.parse(line));
+  const source = readFileSync(filePath);
+  const documents = [];
+  let offset = 0;
+
+  while (offset < source.length) {
+    const size = source.readInt32LE(offset);
+
+    if (size < 5 || offset + size > source.length) {
+      fail(`Invalid BSON stream: ${path.relative(rootDir, filePath)}`);
+    }
+
+    documents.push(deserialize(source.subarray(offset, offset + size)));
+    offset += size;
+  }
+
+  return documents;
 }
 
 function normalizeKey(value) {
@@ -153,6 +163,18 @@ function sanitizeFileName(value) {
   return sanitized || "untitled";
 }
 
+function slugifyValue(value) {
+  return String(value || "")
+    .normalize("NFKC")
+    .trim()
+    .toLowerCase()
+    .replace(/[`*_~()[\]{}]/g, "")
+    .replace(/[^\p{Letter}\p{Number}\s-]/gu, "-")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
 function createUniqueTargetPath(baseDir, stem, ext, suffix = "") {
   const safeStem = sanitizeFileName(stem);
   const suffixText = suffix ? `-${sanitizeFileName(suffix)}` : "";
@@ -175,6 +197,12 @@ function createUniqueTargetPath(baseDir, stem, ext, suffix = "") {
 }
 
 function unwrapObjectId(value) {
+  if (typeof value === "string") return value;
+
+  if (value && typeof value === "object" && "toHexString" in value && typeof value.toHexString === "function") {
+    return value.toHexString();
+  }
+
   return value && typeof value === "object" && "$oid" in value ? value.$oid : "";
 }
 
@@ -233,17 +261,20 @@ function ensureDir(filePath) {
   mkdirSync(path.dirname(filePath), { recursive: true });
 }
 
-function copyLegacyAsset(fileName) {
+function copyLegacyAsset(fileName, assetType = "file") {
   const normalizedFileName = String(fileName || "").replace(/[),.;:\]\u3001\uff0c]+$/gu, "");
-  if (!normalizedFileName || copiedAssets.has(normalizedFileName)) return;
+  const assetKey = `${assetType}:${normalizedFileName}`;
+  if (!normalizedFileName || copiedAssets.has(assetKey)) return;
 
-  copiedAssets.add(normalizedFileName);
+  copiedAssets.add(assetKey);
 
-  const sourcePath = path.join(paths.legacyFiles, normalizedFileName);
-  const targetPath = path.join(paths.publicFiles, normalizedFileName);
+  const sourceDir = assetType === "icon" ? paths.legacyIcons : paths.legacyFiles;
+  const targetDir = assetType === "icon" ? paths.publicIcons : paths.publicFiles;
+  const sourcePath = path.join(sourceDir, normalizedFileName);
+  const targetPath = path.join(targetDir, normalizedFileName);
 
   if (!existsSync(sourcePath)) {
-    summary.missingAssets.add(normalizedFileName);
+    summary.missingAssets.add(assetKey);
     return;
   }
 
@@ -256,19 +287,53 @@ function copyLegacyAsset(fileName) {
   summary.assetsCopied += 1;
 }
 
-function rewriteLegacyUrls(body) {
-  const withCopiedAssets = body.replace(
-    /https?:\/\/[^\s"'<>]+\/api\/v2\/objects\/file\/([A-Za-z0-9_-]+\.[A-Za-z0-9]+)/g,
-    (_, fileName) => {
+function rewriteLegacyObjectUrls(value) {
+  return String(value || "").replace(
+    /https?:\/\/[^\s"'<>]+\/api\/v2\/objects\/(file|icon)\/([A-Za-z0-9_-]+\.[A-Za-z0-9]+)/g,
+    (_, assetType, fileName) => {
       const normalizedFileName = String(fileName || "").trim();
-      copyLegacyAsset(normalizedFileName);
-      return `/legacy/file/${normalizedFileName}`;
+      copyLegacyAsset(normalizedFileName, assetType);
+      return `/legacy/${assetType}/${normalizedFileName}`;
     },
   );
+}
+
+function rewriteLegacyDocUrl(value) {
+  const rawValue = String(value || "").trim();
+  const oldPostPathMatch = rawValue.match(/^https?:\/\/[^/]+\/posts\/[^/]+\/([^/?#]+)\/?$/i);
+
+  if (oldPostPathMatch?.[1]) {
+    return `/blog/${oldPostPathMatch[1]}/`;
+  }
+
+  return rawValue;
+}
+
+function rewriteLegacyUrls(body) {
+  const withCopiedAssets = rewriteLegacyObjectUrls(body);
 
   return withCopiedAssets
-    .replace(/\(\s+(\/legacy\/file\/|https?:\/\/)/g, "($1")
+    .replace(/\(\s+(\/legacy\/(?:file|icon)\/|https?:\/\/)/g, "($1")
     .trimEnd() + "\n";
+}
+
+function sanitizeMdxBody(body) {
+  return String(body || "")
+    .replace(/^<!--[\s\S]*?-->\s*/u, "")
+    .trimStart();
+}
+
+function rewriteRelativeMarkdownImages(body) {
+  return String(body || "").replace(/!\[([^\]]*)\]\((<)?([^)\r\n]+)(>)?\)/g, (full, alt, _open, rawSrc) => {
+    const src = String(rawSrc || "").trim();
+
+    if (!src || /^(https?:\/\/|\/|data:)/i.test(src)) {
+      return full;
+    }
+
+    const fallbackLabel = String(alt || src).trim();
+    return `_${fallbackLabel}_`;
+  });
 }
 
 function buildFrontmatter(entry) {
@@ -279,16 +344,19 @@ function buildFrontmatter(entry) {
     `createdAt: ${yamlValue(entry.createdAt)}`,
   ];
 
-  if (entry.type) {
-    lines.push(`type: ${yamlValue(entry.type)}`);
-  }
-
-  if (entry.archiveSlug) {
-    lines.push(`archiveSlug: ${yamlValue(entry.archiveSlug)}`);
-  }
-
-  if (entry.description) {
-    lines.push(`description: ${yamlValue(entry.description)}`);
+  for (const field of [
+    "updatedAt",
+    "type",
+    "archiveSlug",
+    "description",
+    "projectUrl",
+    "docUrl",
+    "previewUrl",
+    "avatar",
+  ]) {
+    if (entry[field]) {
+      lines.push(`${field}: ${yamlValue(entry[field])}`);
+    }
   }
 
   lines.push(`legacySourceCollection: ${yamlValue(entry.legacySourceCollection)}`);
@@ -411,8 +479,81 @@ function migrateNotes() {
   }
 }
 
-if (!existsSync(paths.posts) || !existsSync(paths.notes)) {
-  fail("Legacy data not found under data/mx-space.");
+function buildProjectBody(doc) {
+  const body = rewriteRelativeMarkdownImages(
+    sanitizeMdxBody(rewriteLegacyUrls(String(doc.text || ""))),
+  );
+  const links = [
+    { label: "Repository", href: String(doc.projectUrl || "").trim() },
+    { label: "Documentation", href: rewriteLegacyDocUrl(doc.docUrl) },
+    { label: "Preview", href: String(doc.previewUrl || "").trim() },
+  ].filter((item) => item.href && !body.includes(item.href));
+
+  if (links.length === 0) {
+    return body;
+  }
+
+  const linkBlock = [
+    "## Links",
+    "",
+    ...links.map((item) => `- [${item.label}](${item.href})`),
+    "",
+  ].join("\n");
+
+  if (!body.trim()) {
+    return `${linkBlock}\n`;
+  }
+
+  return `${body.trimEnd()}\n\n${linkBlock}`;
+}
+
+function migrateProjects() {
+  const existingIndex = buildExistingIndex(paths.projectContent);
+  const documents = readBsonDocuments(paths.projects);
+
+  for (const doc of documents) {
+    const legacySourceId = unwrapObjectId(doc._id);
+    const title = String(doc.name || "").trim() || "Untitled Project";
+    const routeSlug = slugifyValue(title) || legacySourceId || "project";
+    const existingPath =
+      existingIndex.legacySourceIdToPath.get(legacySourceId) ||
+      findExistingPath(existingIndex, [title, routeSlug]);
+    const targetPath =
+      existingPath ||
+      createUniqueTargetPath(paths.projectContent, routeSlug, ".mdx");
+
+    const content = [
+      buildFrontmatter({
+        routeSlug,
+        title,
+        createdAt: formatLocalDate(doc.created),
+        type: "Project",
+        archiveSlug: "project",
+        description: String(doc.description || "").trim(),
+        projectUrl: String(doc.projectUrl || "").trim(),
+        docUrl: rewriteLegacyDocUrl(doc.docUrl),
+        previewUrl: String(doc.previewUrl || "").trim(),
+        avatar: rewriteLegacyObjectUrls(String(doc.avatar || "").trim()),
+        legacySourceCollection: "projects",
+        legacySourceId,
+      }),
+      buildProjectBody(doc),
+    ].join("");
+
+    writeEntry("project", targetPath, content);
+  }
+}
+
+if (migrateBlog && !existsSync(paths.posts)) {
+  fail("Legacy post data not found under data/mx-space.");
+}
+
+if (migrateNote && !existsSync(paths.notes)) {
+  fail("Legacy note data not found under data/mx-space.");
+}
+
+if (migrateProject && !existsSync(paths.projects)) {
+  fail("Legacy project data not found under data/mx-space.");
 }
 
 console.log(shouldWrite ? "Running migration in write mode." : "Running migration in dry-run mode.");
@@ -425,6 +566,10 @@ if (migrateNote) {
   migrateNotes();
 }
 
+if (migrateProject) {
+  migrateProjects();
+}
+
 console.log("");
 console.log("Summary");
 if (migrateBlog) {
@@ -435,6 +580,11 @@ if (migrateBlog) {
 if (migrateNote) {
   console.log(
     `note: ${summary.note.created} create, ${summary.note.updated} update, ${summary.note.unchanged} unchanged`,
+  );
+}
+if (migrateProject) {
+  console.log(
+    `project: ${summary.project.created} create, ${summary.project.updated} update, ${summary.project.unchanged} unchanged`,
   );
 }
 console.log(`assets: ${shouldWrite ? summary.assetsCopied : copiedAssets.size} referenced`);
