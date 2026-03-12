@@ -1,11 +1,11 @@
 .content-toc {
-  --content-toc-title-size: clamp(20px, 18.4px + 0.55vw, 28px);
-  --content-toc-link-depth-1-size: clamp(15px, 14.4px + 0.2vw, 17px);
-  --content-toc-link-depth-2-size: clamp(13.5px, 13.1px + 0.14vw, 14.5px);
-  --content-toc-link-depth-3-size: clamp(12.5px, 12.15px + 0.12vw, 13.5px);
-  --content-toc-link-depth-1-size-en: clamp(15.8px, 15.1px + 0.22vw, 18px);
-  --content-toc-link-depth-2-size-en: clamp(14.2px, 13.8px + 0.16vw, 15.2px);
-  --content-toc-link-depth-3-size-en: clamp(13.2px, 12.9px + 0.14vw, 14.2px);
+  --content-toc-title-size: clamp(20.5px, 18.6px + 0.68vw, 29.5px);
+  --content-toc-link-depth-1-size: clamp(15.5px, 14.7px + 0.28vw, 18.2px);
+  --content-toc-link-depth-2-size: clamp(14.1px, 13.5px + 0.2vw, 15.8px);
+  --content-toc-link-depth-3-size: clamp(13.1px, 12.7px + 0.16vw, 14.6px);
+  --content-toc-link-depth-1-size-en: clamp(16px, 15.2px + 0.28vw, 18.4px);
+  --content-toc-link-depth-2-size-en: clamp(14.4px, 13.9px + 0.2vw, 16px);
+  --content-toc-link-depth-3-size-en: clamp(13.5px, 13.1px + 0.16vw, 14.8px);
   --content-toc-mobile-title-size: clamp(15px, 14.5px + 0.2vw, 16.5px);
   width: 100%;
   position: relative;
@@ -20,13 +20,13 @@
 }
 
 html:lang(zh-CN) .content-toc {
-  --content-toc-title-size: clamp(19px, 18.2px + 0.34vw, 23px);
-  --content-toc-link-depth-1-size: clamp(15.4px, 14.9px + 0.18vw, 16.8px);
-  --content-toc-link-depth-2-size: clamp(13.8px, 13.45px + 0.14vw, 14.8px);
-  --content-toc-link-depth-3-size: clamp(13.1px, 12.8px + 0.12vw, 13.9px);
-  --content-toc-link-depth-1-size-en: clamp(15.6px, 15.2px + 0.16vw, 16.8px);
-  --content-toc-link-depth-2-size-en: clamp(14px, 13.7px + 0.12vw, 14.8px);
-  --content-toc-link-depth-3-size-en: clamp(13.2px, 12.95px + 0.1vw, 14px);
+  --content-toc-title-size: clamp(19.6px, 18.5px + 0.44vw, 24.8px);
+  --content-toc-link-depth-1-size: clamp(15.8px, 15.15px + 0.22vw, 17.6px);
+  --content-toc-link-depth-2-size: clamp(14.3px, 13.8px + 0.16vw, 15.5px);
+  --content-toc-link-depth-3-size: clamp(13.5px, 13.15px + 0.14vw, 14.5px);
+  --content-toc-link-depth-1-size-en: clamp(15.9px, 15.4px + 0.18vw, 17.4px);
+  --content-toc-link-depth-2-size-en: clamp(14.2px, 13.85px + 0.14vw, 15.2px);
+  --content-toc-link-depth-3-size-en: clamp(13.4px, 13.1px + 0.12vw, 14.4px);
   --content-toc-mobile-title-size: clamp(15px, 14.65px + 0.14vw, 15.8px);
 }
 
@@ -49,6 +49,13 @@ html:lang(zh-CN) .content-toc {
 
 @media (min-width: 56.25rem) {
   .content-toc {
+    --content-toc-title-size: clamp(21.8px, 18px + 0.82vw, 34px);
+    --content-toc-link-depth-1-size: clamp(15.9px, 14.2px + 0.9vw, 22.4px);
+    --content-toc-link-depth-2-size: clamp(15.2px, 13.8px + 0.78vw, 20.8px);
+    --content-toc-link-depth-3-size: clamp(14.4px, 13.3px + 0.58vw, 18.4px);
+    --content-toc-link-depth-1-size-en: clamp(16.1px, 14.4px + 0.92vw, 22.6px);
+    --content-toc-link-depth-2-size-en: clamp(15.3px, 13.95px + 0.8vw, 21px);
+    --content-toc-link-depth-3-size-en: clamp(14.5px, 13.45px + 0.58vw, 18.6px);
     position: sticky;
     top: var(--layout-sticky-main-top);
     max-height: calc(100dvh - var(--layout-sticky-main-top) - var(--space));
@@ -64,6 +71,18 @@ html:lang(zh-CN) .content-toc {
     overflow-x: hidden;
     overflow-y: auto;
     padding-right: 0.3rem;
+  }
+}
+
+@media (min-width: 56.25rem) {
+  html:lang(zh-CN) .content-toc {
+    --content-toc-title-size: clamp(21.2px, 17.8px + 0.74vw, 31px);
+    --content-toc-link-depth-1-size: clamp(15.8px, 14.35px + 0.82vw, 21.2px);
+    --content-toc-link-depth-2-size: clamp(15.1px, 13.95px + 0.68vw, 19.8px);
+    --content-toc-link-depth-3-size: clamp(14.3px, 13.35px + 0.5vw, 17.6px);
+    --content-toc-link-depth-1-size-en: clamp(16px, 14.5px + 0.82vw, 21.4px);
+    --content-toc-link-depth-2-size-en: clamp(15.2px, 14.05px + 0.68vw, 20px);
+    --content-toc-link-depth-3-size-en: clamp(14.4px, 13.45px + 0.5vw, 17.8px);
   }
 }
 
