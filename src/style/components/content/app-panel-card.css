@@ -90,6 +90,14 @@
   text-decoration: none;
 }
 
+.content-page-body .app-panel-item--link,
+.content-page-body .app-panel-item--link:hover,
+.content-page-body .app-panel-item--link:focus-visible,
+.content-page-body .app-panel-item--link .app-panel-item-name,
+.content-page-body .app-panel-item--link .app-panel-item-description {
+  text-decoration: none;
+}
+
 .app-panel-item:hover,
 .app-panel-item:focus-within,
 .app-panel-item--link:hover,
@@ -153,4 +161,3 @@
     --friend-links-gap: 1rem;
   }
 }
-
