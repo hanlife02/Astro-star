@@ -1,6 +1,6 @@
 import FriendLinksPanel from "../../components/links/FriendLinksPanel.astro";
 import LostLinksPanel from "../../components/links/LostLinksPanel.astro";
-import { lostLinks } from "../../config/links";
+import { friendLinks, lostLinks } from "../../config/links";
 
 # Links
 
@@ -8,7 +8,7 @@ The order is random~
 
 ## Friends
 
-<FriendLinksPanel />
+<FriendLinksPanel items={[...friendLinks].sort(() => Math.random() - 0.5)} />
 
 ## Lost
 
