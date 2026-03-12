@@ -1,36 +1,19 @@
-﻿---
+---
 import DocumentPageShell from "../components/layout/DocumentPageShell.astro";
 import WalineComments from "../components/content/WalineComments.astro";
+import AppPanelCard from "../components/ui/AppPanelCard.astro";
 import { PUBLIC_WALINE_SERVER_URL } from "astro:env/client";
-import { extractTocHeadings } from "../utils/toc";
+import { aboutPage } from "../config/about";
 import "../style/pages/content-page.css";
 import "../style/components/content/article-detail-page.css";
 
-interface ContentModule {
-  default: unknown;
-  frontmatter?: {
-    title?: string;
-  };
-}
-
-const aboutModule = import.meta.glob("../content/about/about.mdx", {
-  eager: true,
-})["../content/about/about.mdx"] as ContentModule | undefined;
-
-const aboutRawSource = import.meta.glob("../content/about/about.mdx", {
-  eager: true,
-  query: "?raw",
-  import: "default",
-})["../content/about/about.mdx"] as string | undefined;
-
-if (!aboutModule) {
-  throw new Error("Missing src/content/about/about.mdx");
-}
-
-const AboutContent = aboutModule.default;
-
-const tocHeadings = extractTocHeadings(aboutRawSource ?? "");
 const walineServerURL = PUBLIC_WALINE_SERVER_URL?.trim() || "";
+const tocItems = [
+  { href: "#intro", label: aboutPage.introTitle, depth: 2 as const },
+  { href: "#social", label: aboutPage.socialTitle, depth: 2 as const },
+  { href: "#tools", label: aboutPage.toolsTitle, depth: 2 as const },
+  { href: "#timeline", label: aboutPage.timelineTitle, depth: 2 as const },
+];
 ---
 
 <DocumentPageShell
@@ -38,12 +21,32 @@ const walineServerURL = PUBLIC_WALINE_SERVER_URL?.trim() || "";
   contentAriaLabel="About content"
   tocAriaLabel="About table of contents"
   tocTitle="Contents"
-  tocItems={tocHeadings.map((heading) => ({
-    href: `#${heading.slug}`,
-    label: heading.text,
-    depth: heading.depth,
-  }))}
+  tocItems={tocItems}
 >
-  <AboutContent />
+  <h1>{aboutPage.title}</h1>
+
+  <h2 id="intro">{aboutPage.introTitle}</h2>
+  {aboutPage.introParagraphs.map((paragraph) => <p>{paragraph}</p>)}
+
+  <h2 id="social">{aboutPage.socialTitle}</h2>
+  <AppPanelCard items={[...aboutPage.socialItems]} />
+
+  <h2 id="tools">{aboutPage.toolsTitle}</h2>
+  <AppPanelCard items={[...aboutPage.toolItems]} />
+
+  <h1>{aboutPage.blogTitle}</h1>
+  <h2 id="timeline">{aboutPage.timelineTitle}</h2>
+  {
+    aboutPage.timeline.map((year) => (
+      <>
+        <p>
+          <em>{year.label}</em>
+        </p>
+        {year.events.map((event) => <blockquote><p>{event}</p></blockquote>)}
+        {year.summary && <p>{year.summary}</p>}
+      </>
+    ))
+  }
+
   <WalineComments articleRoutePath="/about/" walineServerURL={walineServerURL} />
 </DocumentPageShell>
