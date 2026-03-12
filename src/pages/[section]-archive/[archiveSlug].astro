@@ -1,8 +1,8 @@
 ---
+import { getCollection } from "astro:content";
 import SectionArchivePage from "../../components/content/SectionArchivePage.astro";
 import { resolveContentDates } from "../../utils/content-dates";
 import {
-  getArchiveSlugFromPath,
   normalizeArchiveSlug,
   resolveContentSlug,
   slugifyCategoryLabel,
@@ -10,11 +10,14 @@ import {
 import { getGitTimestamps } from "../../utils/git-timestamps";
 import { resolveContentTitle } from "../../utils/content-title";
 
-interface ContentModule {
-  frontmatter?: {
+interface ContentEntryMeta {
+  filePath?: string;
+  id: string;
+  data: {
     archiveSlug?: string;
     createdAt?: string | Date;
-    routeSlug?: string;
+    routeSlug?: string | number;
+    title?: string;
     type?: string;
     updatedAt?: string | Date;
   };
@@ -34,30 +37,38 @@ const sectionBaseLabels = {
   project: "Project",
 } as const;
 
-export function getStaticPaths() {
-  const contentModules = import.meta.glob("../../content/{blog,note,project}/**/*.{md,mdx}", {
-    eager: true,
-  }) as Record<string, ContentModule>;
+type SectionKey = keyof typeof sectionBaseLabels;
 
-  const archiveEntries = Object.entries(contentModules)
-    .map(([path, mod]) => {
-      const match = path.match(/^\.\.\/\.\.\/content\/(blog|note|project)\/.+\.(md|mdx)$/i);
-      if (!match) return null;
+function getArchiveSlugFromEntryId(id: string) {
+  return normalizeArchiveSlug(id.split("/").slice(0, -1).at(-1));
+}
 
-      const label = mod.frontmatter?.type?.trim() || "Uncategorized";
-      const archiveSlug =
-        (match[1] === "blog" ? getArchiveSlugFromPath(path, match[1]) : "") ||
-        normalizeArchiveSlug(mod.frontmatter?.archiveSlug) ||
-        getArchiveSlugFromPath(path, match[1]) ||
-        slugifyCategoryLabel(label) ||
-        "uncategorized";
+function getArchiveSlugFromEntry(section: SectionKey, entry: ContentEntryMeta) {
+  const directoryArchiveSlug = getArchiveSlugFromEntryId(entry.id);
+  const label = entry.data.type?.trim() || directoryArchiveSlug || "Uncategorized";
 
-      return {
-        archiveSlug,
-        section: match[1],
-      };
-    })
-    .filter((item): item is { archiveSlug: string; section: string } => item !== null);
+  return (
+    (section === "blog" ? directoryArchiveSlug : "") ||
+    normalizeArchiveSlug(entry.data.archiveSlug) ||
+    directoryArchiveSlug ||
+    slugifyCategoryLabel(label) ||
+    "uncategorized"
+  );
+}
+
+export async function getStaticPaths() {
+  const archiveEntries = (
+    await Promise.all(
+      (Object.keys(sectionBaseLabels) as SectionKey[]).map(async (section) => {
+        const collectionEntries = (await getCollection(section)) as ContentEntryMeta[];
+
+        return collectionEntries.map((entry) => ({
+          archiveSlug: getArchiveSlugFromEntry(section, entry),
+          section,
+        }));
+      }),
+    )
+  ).flat();
 
   return Array.from(
     new Map(
@@ -77,29 +88,21 @@ if (!section || !(section in sectionBaseLabels) || !archiveSlug) {
   throw new Error("Unsupported archive section or archive slug.");
 }
 
-const contentModules = import.meta.glob("../../content/{blog,note,project}/**/*.{md,mdx}", {
-  eager: true,
-}) as Record<string, ContentModule>;
+const sectionKey = section as SectionKey;
+const collectionEntries = (await getCollection(sectionKey)) as ContentEntryMeta[];
 
-const articles = Object.entries(contentModules)
-  .map(([path, mod]) => {
-    const match = path.match(/^\.\.\/\.\.\/content\/(blog|note|project)\/.+\.(md|mdx)$/i);
-    if (!match || match[1] !== section) return null;
-
-    const label = mod.frontmatter?.type?.trim() || "Uncategorized";
-    const currentArchiveSlug =
-      (section === "blog" ? getArchiveSlugFromPath(path, section) : "") ||
-      normalizeArchiveSlug(mod.frontmatter?.archiveSlug) ||
-      getArchiveSlugFromPath(path, section) ||
-      slugifyCategoryLabel(label) ||
-      "uncategorized";
-
+const articles = collectionEntries
+  .map((entry) => {
+    const currentArchiveSlug = getArchiveSlugFromEntry(sectionKey, entry);
     if (currentArchiveSlug !== archiveSlug) return null;
 
-    const routeSlug = resolveContentSlug(path, mod.frontmatter?.routeSlug);
-    const title = resolveContentTitle(path);
-    const { createdAt: gitCreatedAt, updatedAt: gitUpdatedAt } = getGitTimestamps(new URL(path, import.meta.url));
-    const { createdAt, updatedAt } = resolveContentDates(mod.frontmatter, {
+    const routeSlug = resolveContentSlug(entry.id, entry.data.routeSlug);
+    const title = resolveContentTitle(entry.id, entry.data.title);
+    const entryFilePath = entry.filePath
+      ? new URL(`../../../${entry.filePath}`, import.meta.url)
+      : new URL(`../../content/${section}/${entry.id}.mdx`, import.meta.url);
+    const { createdAt: gitCreatedAt, updatedAt: gitUpdatedAt } = getGitTimestamps(entryFilePath);
+    const { createdAt, updatedAt } = resolveContentDates(entry.data, {
       createdAt: gitCreatedAt,
       updatedAt: gitUpdatedAt,
     });
@@ -134,7 +137,7 @@ const yearGroups = articles.reduce<Array<{ articles: ArchiveArticleItem[]; year:
   return groups;
 }, []);
 
-const sectionLabel = sectionBaseLabels[section as keyof typeof sectionBaseLabels];
+const sectionLabel = sectionBaseLabels[sectionKey];
 const pageLabel = `${sectionLabel} Archive`;
 ---
 
