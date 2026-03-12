@@ -1,3 +1,11 @@
+---
+title: "VSCode通过ssh扩展连接CLab云主机"
+routeSlug: "clab"
+createdAt: "2024-08-31 14:21:06"
+type: "折腾🐦"
+archiveSlug: "try"
+---
+
 # 写在前面
 
 最近一直在纠结要不要买云服务器然后转用Linux系统<br>

@@ -1,3 +1,11 @@
+---
+title: "一款客制的slidev主题模板"
+routeSlug: "slidev-theme-ethan"
+createdAt: "2025-06-01 22:35:20"
+type: "项目🕊️"
+archiveSlug: "project"
+---
+
 [slidev-ethan](https://github.com/hanlife02/slidev-customized-ethan)
 
 # 自用模板

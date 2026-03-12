@@ -1,5 +1,12 @@
 export function getContentTitleFromPath(path: string) {
-  return path.split("/").pop()?.replace(/\.(md|mdx)$/i, "")?.trim() || "Untitled";
+  return (
+    path
+      .split("/")
+      .pop()
+      ?.replace(/\.(md|mdx)$/i, "")
+      ?.replace(/__\d+$/i, "")
+      .trim() || "Untitled"
+  );
 }
 
 export function resolveContentTitle(path: string, title?: string) {

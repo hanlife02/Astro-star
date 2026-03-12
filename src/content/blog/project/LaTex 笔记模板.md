@@ -1,3 +1,11 @@
+---
+title: "LaTex 笔记模板"
+routeSlug: "notetemp"
+createdAt: "2024-09-16 16:54:29"
+type: "项目🕊️"
+archiveSlug: "project"
+---
+
 [模板github地址](https://github.com/hanlife02/LaTex_Template) 
 
 <br>

@@ -1,3 +1,11 @@
+---
+title: "Node.js和npm在Windows和macOS系统上的安装"
+routeSlug: "node-nvm"
+createdAt: "2025-06-05 19:53:46"
+type: "搭建🦤"
+archiveSlug: "build"
+---
+
 # Windows
 
 ### 壹 · 下载`node.js`的安装包

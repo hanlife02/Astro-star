@@ -1,3 +1,11 @@
+---
+title: "numpy和matplotlib的学习笔记"
+routeSlug: "lib"
+createdAt: "2024-08-22 21:15:43"
+type: "笔记🦢"
+archiveSlug: "note"
+---
+
 # 写在前面
 **嘎**~整理了一份在数据分析和绘图中常用的两个python库的用法<br>
 ![我就说好用，看个韩剧都能碰到](https://hanlife02.com/api/v2/objects/file/0scf42s18gwyxf13by.png)

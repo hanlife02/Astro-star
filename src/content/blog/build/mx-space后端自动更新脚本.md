@@ -1,3 +1,11 @@
+---
+title: "mx-space后端自动更新脚本"
+routeSlug: "crontab-implementation-mx-space-backend-auto-update"
+createdAt: "2025-03-30 18:49:08"
+type: "搭建🦤"
+archiveSlug: "build"
+---
+
 ``` bash
 #!/bin/bash
 # mx-auto-update.sh

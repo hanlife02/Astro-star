@@ -1,3 +1,11 @@
+---
+title: "clash配置小白教程(Linux系统)"
+routeSlug: "clash"
+createdAt: "2025-03-07 15:45:40"
+type: "折腾🐦"
+archiveSlug: "try"
+---
+
 # 前言
 
 前几日试着将自己云服务器部署的一个 ai 服务迁移到clab上，结果在部署的时候发现网速如下图，由于clab使用校园网，作者也不会其他的方式😭，只能尝试着在clab上用`clash`代理提高访问外网(主要是`github`)的速度。

@@ -1,3 +1,11 @@
+---
+title: "About PKU_Automatic_Appointment"
+routeSlug: "appointment"
+createdAt: "2024-08-18 11:52:03"
+type: "项目🕊️"
+archiveSlug: "project"
+---
+
 # PKU_Automatic_Appointment
 
 A script for automatic appointments for Peking University students.<br><br>

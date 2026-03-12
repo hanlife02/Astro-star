@@ -12,6 +12,7 @@
     "format:check": "prettier . --check"
   },
   "devDependencies": {
+    "bson": "^7.2.0",
     "prettier": "latest",
     "prettier-plugin-astro": "latest"
   },

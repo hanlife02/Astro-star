@@ -1,3 +1,11 @@
+---
+title: "Shiroi部署的大致流程和补充"
+routeSlug: "Shiroi"
+createdAt: "2024-07-21 20:19:56"
+type: "搭建🦤"
+archiveSlug: "build"
+---
+
 <br># 部署<br><br>
 ## 壹 · 准备工作 (不分先后顺序)<br><br>
 1. 已经部署完core并配置反代 （参考**https://mx-space.js.org/docs/core/docker**)<br><br>
