@@ -1,13 +1,7 @@
 ---
+import { getCollection } from "astro:content";
 import SectionListingPage from "../components/content/SectionListingPage.astro";
-import { getArchiveSlugFromPath } from "../utils/content-slug";
-
-interface ContentModule {
-  frontmatter?: {
-    archiveSlug?: string;
-    type?: string;
-  };
-}
+import { normalizeArchiveSlug as normalizeContentArchiveSlug } from "../utils/content-slug";
 
 interface SectionCategoryEntry {
   archiveSlug: string;
@@ -22,9 +16,20 @@ const sectionLabels = {
   project: "Project",
 } as const;
 
-function normalizeArchiveSlug(value?: string) {
-  const normalized = value?.trim().replace(/^\/+|\/+$/g, "") || "";
-  return normalized && !normalized.includes("/") ? normalized : "";
+function normalizeArchiveSlug(value?: unknown) {
+  return normalizeContentArchiveSlug(value);
+}
+
+function getArchiveSlugFromEntryId(id: string) {
+  return normalizeArchiveSlug(id.split("/").slice(0, -1).at(-1));
+}
+
+function getEntrySlug(id: string, routeSlug?: string | number) {
+  return normalizeArchiveSlug(routeSlug) || id.split("/").at(-1) || "untitled";
+}
+
+function getEntryLabel(id: string, title?: string) {
+  return title?.trim() || id.split("/").at(-1) || "Untitled";
 }
 
 function slugifyCategoryLabel(value: string) {
@@ -50,50 +55,61 @@ if (!section || !(section in sectionLabels)) {
   throw new Error("Unsupported section.");
 }
 
-const contentModules = import.meta.glob("../content/{blog,note,project}/**/*.{md,mdx}", {
-  eager: true,
-});
+const sectionKey = section as keyof typeof sectionLabels;
+const collectionEntries = await getCollection(sectionKey);
 
-const categories = Object.entries(contentModules)
-  .map(([path, mod]) => {
-    const match = path.match(/^\.\.\/content\/(blog|note|project)\/.+\.(md|mdx)$/i);
-    if (!match || match[1] !== section) return null;
+let categories: SectionCategoryEntry[] = [];
 
-    const frontmatter = (mod as ContentModule).frontmatter;
-    const directoryArchiveSlug = getArchiveSlugFromPath(path, section);
-    const label = frontmatter?.type?.trim() || directoryArchiveSlug || "Uncategorized";
-    const archiveSlug =
-      (section === "blog" ? directoryArchiveSlug : "") ||
-      normalizeArchiveSlug(frontmatter?.archiveSlug) ||
-      directoryArchiveSlug ||
-      slugifyCategoryLabel(label) ||
-      "uncategorized";
+if (sectionKey === "project") {
+  categories = collectionEntries
+    .map((entry) => {
+      const slug = getEntrySlug(entry.id, entry.data.routeSlug);
 
-    return {
-      archiveSlug,
-      label,
-    };
-  })
-  .filter((item): item is { archiveSlug: string; label: string } => item !== null)
-  .reduce<SectionCategoryEntry[]>((entries, item) => {
-    const existingEntry = entries.find((entry) => entry.archiveSlug === item.archiveSlug);
+      return {
+        archiveSlug: slug,
+        count: 1,
+        href: `/${section}/${slug}/`,
+        label: getEntryLabel(entry.id, entry.data.title),
+      };
+    })
+    .sort((a, b) => a.label.localeCompare(b.label, "en-US"));
+} else {
+  categories = collectionEntries
+    .map((entry) => {
+      const directoryArchiveSlug = getArchiveSlugFromEntryId(entry.id);
+      const label = entry.data.type?.trim() || directoryArchiveSlug || "Uncategorized";
+      const archiveSlug =
+        (sectionKey === "blog" ? directoryArchiveSlug : "") ||
+        normalizeArchiveSlug(entry.data.archiveSlug) ||
+        directoryArchiveSlug ||
+        slugifyCategoryLabel(label) ||
+        "uncategorized";
 
-    if (existingEntry) {
-      existingEntry.count += 1;
+      return {
+        archiveSlug,
+        label,
+      };
+    })
+    .reduce<SectionCategoryEntry[]>((entries, item) => {
+      const existingEntry = entries.find((entry) => entry.archiveSlug === item.archiveSlug);
+
+      if (existingEntry) {
+        existingEntry.count += 1;
+        return entries;
+      }
+
+      entries.push({
+        archiveSlug: item.archiveSlug,
+        count: 1,
+        href: `/${section}-archive/${item.archiveSlug}/`,
+        label: item.label,
+      });
       return entries;
-    }
+    }, [])
+    .sort((a, b) => a.label.localeCompare(b.label, "en-US"));
+}
 
-    entries.push({
-      archiveSlug: item.archiveSlug,
-      count: 1,
-      href: `/${section}-archive/${item.archiveSlug}/`,
-      label: item.label,
-    });
-    return entries;
-  }, [])
-  .sort((a, b) => a.label.localeCompare(b.label, "en-US"));
-
-const pageLabel = sectionLabels[section as keyof typeof sectionLabels];
+const pageLabel = sectionLabels[sectionKey];
 const viewAllHref = `/${section}-archive/`;
 const viewAllLabel = `View all ${pageLabel.toLowerCase()}s`;
 ---
@@ -101,6 +117,7 @@ const viewAllLabel = `View all ${pageLabel.toLowerCase()}s`;
 <SectionListingPage
   categories={categories}
   pageLabel={pageLabel}
+  showCounts={sectionKey !== "project"}
   viewAllHref={viewAllHref}
   viewAllLabel={viewAllLabel}
 />

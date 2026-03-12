@@ -13,11 +13,12 @@ interface SectionCategoryEntry {
 interface Props {
   categories: SectionCategoryEntry[];
   pageLabel: string;
+  showCounts?: boolean;
   viewAllHref: string;
   viewAllLabel: string;
 }
 
-const { categories, pageLabel, viewAllHref, viewAllLabel } = Astro.props as Props;
+const { categories, pageLabel, showCounts = true, viewAllHref, viewAllLabel } = Astro.props as Props;
 
 const toAnchorId = (value: string) => value.toLowerCase().trim().replace(/\s+/g, "-");
 ---
@@ -50,7 +51,8 @@ const toAnchorId = (value: string) => value.toLowerCase().trim().replace(/\s+/g,
               {categories.map((category) => (
                 <li id={toAnchorId(category.label)} class="content-toc-item content-toc-item--depth-2">
                   <a class="content-toc-link content-toc-link--depth-2" href={category.href}>
-                    {category.label} ({category.count})
+                    {category.label}
+                    {showCounts ? ` (${category.count})` : ""}
                   </a>
                 </li>
               ))}
