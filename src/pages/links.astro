@@ -1,7 +1,10 @@
 ﻿---
 import DocumentPageShell from "../components/layout/DocumentPageShell.astro";
-import { extractTocHeadings, type TocHeading } from "../utils/toc";
+import WalineComments from "../components/content/WalineComments.astro";
+import { PUBLIC_WALINE_SERVER_URL } from "astro:env/client";
+import { extractTocHeadings } from "../utils/toc";
 import "../style/pages/content-page.css";
+import "../style/components/content/article-detail-page.css";
 
 interface ContentModule {
   default: unknown;
@@ -27,6 +30,7 @@ if (!linksModule) {
 const LinksContent = linksModule.default;
 
 const tocHeadings = extractTocHeadings(linksRawSource ?? "");
+const walineServerURL = PUBLIC_WALINE_SERVER_URL?.trim() || "";
 ---
 
 <DocumentPageShell
@@ -41,5 +45,5 @@ const tocHeadings = extractTocHeadings(linksRawSource ?? "");
   }))}
 >
   <LinksContent />
+  <WalineComments articleRoutePath="/links/" walineServerURL={walineServerURL} />
 </DocumentPageShell>
-
