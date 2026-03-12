@@ -1,5 +1,5 @@
 import { defineCollection } from "astro:content";
-import { glob } from "astro/loaders";
+import { file, glob } from "astro/loaders";
 import { z } from "astro/zod";
 
 const baseContentSchema = z
@@ -19,9 +19,45 @@ const baseContentSchema = z
   })
   .passthrough();
 
+const projectSchema = z.object({
+  routeSlug: z.string().min(1),
+  title: z.string().min(1),
+  description: z.string().min(1),
+  createdAt: z.string().min(1),
+  type: z.literal("Project"),
+  archiveSlug: z.literal("project"),
+  projectUrl: z.string().min(1),
+  docUrl: z.string().min(1).optional(),
+  avatar: z.string().min(1),
+  legacySourceCollection: z.literal("projects"),
+  legacySourceId: z.string().min(1),
+});
+
+const commentSchema = z.object({
+  id: z.string().min(1),
+  refId: z.string().min(1),
+  refType: z.string().min(1),
+  routePath: z.string().min(1).nullable(),
+  author: z.string().min(1),
+  authorUrl: z.string().url().nullable(),
+  text: z.string(),
+  parentId: z.string().min(1).nullable(),
+  childrenIds: z.array(z.string()),
+  key: z.string().min(1).nullable(),
+  createdAt: z.string().datetime().nullable(),
+  location: z.string().min(1).nullable(),
+  isPinned: z.boolean(),
+  source: z.string().min(1).nullable(),
+});
+
 const about = defineCollection({
   loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/about" }),
   schema: baseContentSchema,
+});
+
+const comments = defineCollection({
+  loader: file("src/data/comments/legacy-comments.json"),
+  schema: commentSchema,
 });
 
 const blog = defineCollection({
@@ -41,11 +77,12 @@ const note = defineCollection({
 
 const project = defineCollection({
   loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/project" }),
-  schema: baseContentSchema,
+  schema: projectSchema,
 });
 
 export const collections = {
   about,
+  comments,
   blog,
   links,
   note,
