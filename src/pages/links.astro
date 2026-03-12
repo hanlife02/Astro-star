@@ -1,36 +1,20 @@
-﻿---
+---
 import DocumentPageShell from "../components/layout/DocumentPageShell.astro";
 import WalineComments from "../components/content/WalineComments.astro";
+import FriendLinksPanel from "../components/links/FriendLinksPanel.astro";
+import LostLinksPanel from "../components/links/LostLinksPanel.astro";
 import { PUBLIC_WALINE_SERVER_URL } from "astro:env/client";
-import { extractTocHeadings } from "../utils/toc";
+import { friendLinks, linksPage, lostLinks } from "../config/links";
 import "../style/pages/content-page.css";
 import "../style/components/content/article-detail-page.css";
 
-interface ContentModule {
-  default: unknown;
-  frontmatter?: {
-    title?: string;
-  };
-}
-
-const linksModule = import.meta.glob("../content/links/links.mdx", {
-  eager: true,
-})["../content/links/links.mdx"] as ContentModule | undefined;
-
-const linksRawSource = import.meta.glob("../content/links/links.mdx", {
-  eager: true,
-  query: "?raw",
-  import: "default",
-})["../content/links/links.mdx"] as string | undefined;
-
-if (!linksModule) {
-  throw new Error("Missing src/content/links/links.mdx");
-}
-
-const LinksContent = linksModule.default;
-
-const tocHeadings = extractTocHeadings(linksRawSource ?? "");
 const walineServerURL = PUBLIC_WALINE_SERVER_URL?.trim() || "";
+
+const tocItems = [
+  { href: "#friends", label: linksPage.friendsTitle, depth: 2 as const },
+  { href: "#lost", label: linksPage.lostTitle, depth: 2 as const },
+  { href: "#apply", label: linksPage.applyTitle, depth: 2 as const },
+];
 ---
 
 <DocumentPageShell
@@ -38,12 +22,19 @@ const walineServerURL = PUBLIC_WALINE_SERVER_URL?.trim() || "";
   contentClass="content-page content-page--links"
   contentAriaLabel="Links content"
   tocAriaLabel="Links table of contents"
-  tocItems={tocHeadings.map((heading) => ({
-    href: `#${heading.slug}`,
-    label: heading.text,
-    depth: heading.depth,
-  }))}
+  tocItems={tocItems}
 >
-  <LinksContent />
+  <h1>{linksPage.title}</h1>
+  <p>{linksPage.intro}</p>
+
+  <h2 id="friends">{linksPage.friendsTitle}</h2>
+  <FriendLinksPanel items={[...friendLinks].sort(() => Math.random() - 0.5)} />
+
+  <h2 id="lost">{linksPage.lostTitle}</h2>
+  <LostLinksPanel items={lostLinks} title={linksPage.lostTitle} />
+
+  <h2 id="apply">{linksPage.applyTitle}</h2>
+  {linksPage.applyRules.map((rule) => <p>{rule}</p>)}
+
   <WalineComments articleRoutePath="/links/" walineServerURL={walineServerURL} />
 </DocumentPageShell>
