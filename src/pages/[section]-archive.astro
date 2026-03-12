@@ -1,14 +1,18 @@
 ---
+import { getCollection } from "astro:content";
 import SectionArchivePage from "../components/content/SectionArchivePage.astro";
 import { resolveContentDates } from "../utils/content-dates";
 import { resolveContentSlug } from "../utils/content-slug";
 import { resolveContentTitle } from "../utils/content-title";
 import { getGitTimestamps } from "../utils/git-timestamps";
 
-interface ContentModule {
-  frontmatter?: {
+interface ContentEntryMeta {
+  filePath?: string;
+  id: string;
+  data: {
     createdAt?: string | Date;
-    routeSlug?: string;
+    routeSlug?: string | number;
+    title?: string;
     updatedAt?: string | Date;
   };
 }
@@ -39,19 +43,18 @@ if (!section || !(section in sectionLabels)) {
   throw new Error("Unsupported archive section.");
 }
 
-const contentModules = import.meta.glob("../content/{blog,note,project}/**/*.{md,mdx}", {
-  eager: true,
-}) as Record<string, ContentModule>;
+const sectionKey = section as keyof typeof sectionLabels;
+const collectionEntries = (await getCollection(sectionKey)) as ContentEntryMeta[];
 
-const articles = Object.entries(contentModules)
-  .map(([path, mod]) => {
-    const match = path.match(/^\.\.\/content\/(blog|note|project)\/.+\.(md|mdx)$/i);
-    if (!match || match[1] !== section) return null;
-
-    const routeSlug = resolveContentSlug(path, mod.frontmatter?.routeSlug);
-    const title = resolveContentTitle(path);
-    const { createdAt: gitCreatedAt, updatedAt: gitUpdatedAt } = getGitTimestamps(new URL(path, import.meta.url));
-    const { createdAt, updatedAt } = resolveContentDates(mod.frontmatter, {
+const articles = collectionEntries
+  .map((entry) => {
+    const routeSlug = resolveContentSlug(entry.id, entry.data.routeSlug);
+    const title = resolveContentTitle(entry.id, entry.data.title);
+    const entryFilePath = entry.filePath
+      ? new URL(`../../${entry.filePath}`, import.meta.url)
+      : new URL(`../content/${section}/${entry.id}.mdx`, import.meta.url);
+    const { createdAt: gitCreatedAt, updatedAt: gitUpdatedAt } = getGitTimestamps(entryFilePath);
+    const { createdAt, updatedAt } = resolveContentDates(entry.data, {
       createdAt: gitCreatedAt,
       updatedAt: gitUpdatedAt,
     });
@@ -86,7 +89,7 @@ const yearGroups = articles.reduce<Array<{ articles: ArchiveArticleItem[]; year:
   return groups;
 }, []);
 
-const pageLabel = sectionLabels[section as keyof typeof sectionLabels];
+const pageLabel = sectionLabels[sectionKey];
 ---
 
 <SectionArchivePage pageLabel={pageLabel} yearGroups={yearGroups} />
