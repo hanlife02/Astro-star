@@ -23,33 +23,34 @@ const contentModules = {
   ...import.meta.glob("../content/project/*.{md,mdx}", { eager: true }),
 };
 
-const rssItems = Object.entries(contentModules)
-  .map(([path, mod]) => {
-    const frontmatter = (mod as ContentModule).frontmatter;
-    const title = frontmatter?.title?.trim();
-    const description = frontmatter?.description?.trim();
-    const slug = path.split("/").pop()?.replace(/\.(md|mdx)$/i, "");
-    const section = path.includes("/note/")
-      ? "note"
-      : path.includes("/project/")
-        ? "project"
-        : "blog";
-    const { createdAt, updatedAt } = getGitTimestamps(new URL(path, import.meta.url));
-    const pubDate = createdAt ?? updatedAt;
+const rssItems: RssItem[] = [];
 
-    if (!title || !slug || !pubDate || Number.isNaN(pubDate.getTime())) {
-      return null;
-    }
+for (const [path, mod] of Object.entries(contentModules)) {
+  const frontmatter = (mod as ContentModule).frontmatter;
+  const title = frontmatter?.title?.trim();
+  const description = frontmatter?.description?.trim();
+  const slug = path.split("/").pop()?.replace(/\.(md|mdx)$/i, "");
+  const section = path.includes("/note/")
+    ? "note"
+    : path.includes("/project/")
+      ? "project"
+      : "blog";
+  const { createdAt, updatedAt } = getGitTimestamps(new URL(path, import.meta.url));
+  const pubDate = createdAt ?? updatedAt;
 
-    return {
-      title,
-      description,
-      pubDate,
-      link: `/${section}/${slug}/`,
-    } satisfies RssItem;
-  })
-  .filter((item): item is RssItem => item !== null)
-  .sort((a, b) => b.pubDate.getTime() - a.pubDate.getTime());
+  if (!title || !slug || !pubDate || Number.isNaN(pubDate.getTime())) {
+    continue;
+  }
+
+  rssItems.push({
+    title,
+    description,
+    pubDate,
+    link: `/${section}/${slug}/`,
+  });
+}
+
+rssItems.sort((a, b) => b.pubDate.getTime() - a.pubDate.getTime());
 
 export const GET: APIRoute = async ({ site }) => {
   return rss({
