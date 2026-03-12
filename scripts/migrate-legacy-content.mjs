@@ -38,6 +38,23 @@ const summary = {
   missingAssets: new Set(),
 };
 
+const noteTopicOverrides = new Map([
+  [
+    "669df490bc2b398e402a3d4c",
+    {
+      slug: "follow_heart",
+      name: "随心🎈",
+    },
+  ],
+  [
+    "6859a66e9abe7f61f5290e2c",
+    {
+      slug: "follow_heart",
+      name: "随心🎈",
+    },
+  ],
+]);
+
 function fail(message) {
   console.error(message);
   process.exit(1);
@@ -333,10 +350,11 @@ function migratePosts() {
     const category = categories.get(unwrapObjectId(doc.categoryId)) || { slug: "", name: "" };
     const title = String(doc.title || "").trim() || "Untitled";
     const routeSlug = String(doc.slug || "").trim() || sanitizeFileName(title);
+    const categoryDir = path.join(paths.blogContent, category.slug || "uncategorized");
     const targetPath =
       existingIndex.legacySourceIdToPath.get(unwrapObjectId(doc._id)) ||
       findExistingPath(existingIndex, [title, routeSlug]) ||
-      createUniqueTargetPath(paths.blogContent, routeSlug, ".mdx");
+      createUniqueTargetPath(categoryDir, routeSlug, ".mdx");
 
     const content = [
       buildFrontmatter({
@@ -344,7 +362,7 @@ function migratePosts() {
         title,
         createdAt: formatLocalDate(doc.created),
         type: category.name,
-        archiveSlug: category.slug,
+        archiveSlug: "",
         description: String(doc.summary || "").trim(),
         legacySourceCollection: "posts",
         legacySourceId: unwrapObjectId(doc._id),
@@ -362,15 +380,19 @@ function migrateNotes() {
   const documents = readBsonDocuments(paths.notes).filter((doc) => doc.isPublished);
 
   for (const doc of documents) {
-    const topic = topics.get(unwrapObjectId(doc.topicId)) || { slug: "misc", name: "" };
+    const legacySourceId = unwrapObjectId(doc._id);
+    const topic =
+      noteTopicOverrides.get(legacySourceId) ||
+      topics.get(unwrapObjectId(doc.topicId)) || { slug: "misc", name: "" };
     const title = String(doc.title || "").trim() || "Untitled";
     const routeSlug = unwrapNumber(doc.nid) ?? title;
+    const topicDir = path.join(paths.noteContent, topic.slug || "misc");
     const existingPath =
-      existingIndex.legacySourceIdToPath.get(unwrapObjectId(doc._id)) ||
+      existingIndex.legacySourceIdToPath.get(legacySourceId) ||
       findExistingPath(existingIndex, [title]);
     const targetPath =
       existingPath ||
-      createUniqueTargetPath(paths.noteContent, title, ".mdx", String(routeSlug));
+      createUniqueTargetPath(topicDir, title, ".mdx", String(routeSlug));
 
     const content = [
       buildFrontmatter({
@@ -378,9 +400,9 @@ function migrateNotes() {
         title,
         createdAt: formatLocalDate(doc.created),
         type: topic.name,
-        archiveSlug: path.dirname(targetPath) === paths.noteContent ? topic.slug : "",
+        archiveSlug: "",
         legacySourceCollection: "notes",
-        legacySourceId: unwrapObjectId(doc._id),
+        legacySourceId,
       }),
       rewriteLegacyUrls(String(doc.text || "")),
     ].join("");

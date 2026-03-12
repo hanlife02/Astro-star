@@ -46,6 +46,7 @@ export function getStaticPaths() {
 
       const label = mod.frontmatter?.type?.trim() || "Uncategorized";
       const archiveSlug =
+        (match[1] === "blog" ? getArchiveSlugFromPath(path, match[1]) : "") ||
         normalizeArchiveSlug(mod.frontmatter?.archiveSlug) ||
         getArchiveSlugFromPath(path, match[1]) ||
         slugifyCategoryLabel(label) ||
@@ -87,6 +88,7 @@ const articles = Object.entries(contentModules)
 
     const label = mod.frontmatter?.type?.trim() || "Uncategorized";
     const currentArchiveSlug =
+      (section === "blog" ? getArchiveSlugFromPath(path, section) : "") ||
       normalizeArchiveSlug(mod.frontmatter?.archiveSlug) ||
       getArchiveSlugFromPath(path, section) ||
       slugifyCategoryLabel(label) ||

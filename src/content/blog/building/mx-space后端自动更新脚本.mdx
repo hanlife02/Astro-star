@@ -1,0 +1,44 @@
+---
+routeSlug: "crontab-implementation-mx-space-backend-auto-update"
+title: "mx-space后端自动更新脚本"
+createdAt: "2025-03-30 18:49:08"
+type: "搭建🦤"
+legacySourceCollection: "posts"
+legacySourceId: "67e921a41668f89d563fb1eb"
+---
+``` bash
+#!/bin/bash
+# mx-auto-update.sh
+
+# 设置代理（可选）
+# export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 all_proxy=socks5://127.0.0.1:7890
+
+# 设置工作目录(修改为自己的core目录）
+cd ~/mx-space-new/core/ || exit
+
+# 拉取最新的镜像
+docker-compose pull
+
+# 检查是否有更新
+if docker-compose pull app | grep -q "up to date"; then
+  echo "All images are up to date."
+  echo "Current Version: $(docker inspect innei/mx-server:latest | grep 'org.opencontainers.image.version' | awk -F'"' '{print $4}')"
+  exit 0
+fi
+
+echo "Detected mx-server update"
+
+# 停止并删除旧的容器，然后启动新的容器
+docker-compose down
+docker-compose up -d
+
+# 打印更新时间和版本
+echo "Update time: $(date)"
+echo "New Version: $(docker inspect innei/mx-server:latest | grep 'org.opencontainers.image.version' | awk -F'"' '{print $4}')"
+
+# 清理旧的镜像
+docker image prune -f
+
+echo "Update completed and old images removed."
+```
+<br>
