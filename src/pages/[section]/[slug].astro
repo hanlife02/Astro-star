@@ -1,4 +1,5 @@
 ---
+import { getCollection, render } from "astro:content";
 import ArticleDetailPage from "../../components/content/ArticleDetailPage.astro";
 import { PUBLIC_WALINE_SERVER_URL } from "astro:env/client";
 import { site } from "../../config/site";
@@ -6,58 +7,43 @@ import { resolveContentDates } from "../../utils/content-dates";
 import { resolveContentSlug } from "../../utils/content-slug";
 import { resolveContentTitle } from "../../utils/content-title";
 import { getGitTimestamps } from "../../utils/git-timestamps";
-import { extractTocHeadings } from "../../utils/toc";
-
-interface ContentModule {
-  default: any;
-  frontmatter?: {
-    createdAt?: string | Date;
-    updatedAt?: string | Date;
-    routeSlug?: string;
-    type?: string;
-    title?: string;
-    description?: string;
-  };
-}
-
-const articleModules = import.meta.glob("../../content/{blog,note,project}/**/*.{md,mdx}", {
-  eager: true,
-});
-
-const articleRawModules = import.meta.glob("../../content/{blog,note,project}/**/*.{md,mdx}", {
-  eager: true,
-  query: "?raw",
-  import: "default",
-});
 
 const validSections = ["blog", "note", "project"] as const;
+type SectionKey = (typeof validSections)[number];
 
 const { section, slug } = Astro.params;
-const articleEntry = Object.entries(articleModules).find(([path, mod]) => {
-  const match = path.match(/^\.\.\/\.\.\/content\/(blog|note|project)\/.+\.(md|mdx)$/i);
-  if (!match || match[1] !== section) return false;
-  return resolveContentSlug(path, (mod as ContentModule).frontmatter?.routeSlug) === slug;
-});
 
-if (!section || !slug || !validSections.includes(section as (typeof validSections)[number]) || !articleEntry) {
+if (!section || !slug || !validSections.includes(section as SectionKey)) {
   return new Response(null, {
     status: 404,
     statusText: "Not found",
   });
 }
 
-const [articlePath, articleModule] = articleEntry as [string, ContentModule];
-const articleRawSource = articleRawModules[articlePath] as string | undefined;
+const sectionKey = section as SectionKey;
+const collectionEntries = await getCollection(sectionKey);
+const articleEntry = collectionEntries.find((entry) => resolveContentSlug(entry.id, entry.data.routeSlug) === slug);
 
-const ArticleContent = articleModule.default;
-const title = resolveContentTitle(articlePath, articleModule.frontmatter?.title);
-const description = articleModule.frontmatter?.description?.trim() || "";
-const articleType = articleModule.frontmatter?.type?.trim() || "Uncategorized";
+if (!articleEntry) {
+  return new Response(null, {
+    status: 404,
+    statusText: "Not found",
+  });
+}
+
+const { Content, headings } = await render(articleEntry);
+const articleSource = articleEntry.body ?? "";
+const title = resolveContentTitle(articleEntry.id, articleEntry.data.title);
+const description = articleEntry.data.description?.trim() || "";
+const articleType = articleEntry.data.type?.trim() || "Uncategorized";
 const author = site.owner.name;
 const walineServerURL = PUBLIC_WALINE_SERVER_URL?.trim() || "";
 const articleRoutePath = `/${section}/${slug}/`;
-const { createdAt: gitCreatedAt, updatedAt: gitUpdatedAt } = getGitTimestamps(new URL(articlePath, import.meta.url));
-const { createdAt, updatedAt } = resolveContentDates(articleModule.frontmatter, {
+const entryFilePath = articleEntry.filePath
+  ? new URL(`../../../${articleEntry.filePath}`, import.meta.url)
+  : new URL(`../../content/${section}/${articleEntry.id}.mdx`, import.meta.url);
+const { createdAt: gitCreatedAt, updatedAt: gitUpdatedAt } = getGitTimestamps(entryFilePath);
+const { createdAt, updatedAt } = resolveContentDates(articleEntry.data, {
   createdAt: gitCreatedAt,
   updatedAt: gitUpdatedAt,
 });
@@ -97,8 +83,14 @@ const countWords = (source: string) => {
   return (cjkUnits?.length ?? 0) + (latinWords?.length ?? 0);
 };
 
-const articleWordCount = countWords(articleRawSource ?? "");
-const tocHeadings = extractTocHeadings(articleRawSource ?? "");
+const articleWordCount = countWords(articleSource);
+const tocHeadings = headings
+  .filter((heading) => heading.depth >= 1 && heading.depth <= 3)
+  .map((heading) => ({
+    depth: heading.depth as 1 | 2 | 3,
+    slug: heading.slug,
+    text: heading.text,
+  }));
 ---
 
 <ArticleDetailPage
@@ -113,5 +105,5 @@ const tocHeadings = extractTocHeadings(articleRawSource ?? "");
   updatedLabel={formatDateTime(updatedAt)}
   articleWordCount={articleWordCount}
   tocHeadings={tocHeadings}
-  ArticleContent={ArticleContent}
+  ArticleContent={Content}
 />
