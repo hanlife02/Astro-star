@@ -1,4 +1,5 @@
 ---
+import { getCollection } from "astro:content";
 import HomePageContent from "../components/home/HomePageContent.astro";
 import { Github, Mail } from "lucide-static";
 import { site } from "../config/site";
@@ -12,17 +13,9 @@ const githubUsername = (profile.githubUsername || site.contact.githubUsername).t
 const bilibiliId = profile.bilibiliId.trim();
 const cloudMusicId = profile.cloudMusicId.trim();
 const emailAddress = (profile.email || site.contact.email).trim();
-const latestBlogSourceModules = import.meta.glob("../content/blog/**/*.{md,mdx}", { eager: true });
-const latestNoteSourceModules = import.meta.glob("../content/note/**/*.{md,mdx}", { eager: true });
 
-interface BlogModule {
-  frontmatter?: {
-    title?: string;
-    createdAt?: string | Date;
-    routeSlug?: string;
-    updatedAt?: string | Date;
-  };
-}
+const latestBlogEntries = await getCollection("blog");
+const latestNoteEntries = await getCollection("note");
 
 interface LatestArticleItem {
   title: string;
@@ -40,22 +33,28 @@ interface LatestTimelineGroup {
   articles: LatestArticleItem[];
 }
 
-function buildLatestArticles(sourceModules: Record<string, unknown>, section: "blog" | "note") {
-  return Object.entries(sourceModules)
-  .map(([path, mod]) => {
-    const frontmatter = (mod as BlogModule).frontmatter;
-    const title = resolveContentTitle(path, frontmatter?.title);
-    const slug = resolveContentSlug(path, frontmatter?.routeSlug);
-    const { createdAt: gitCreatedAt, updatedAt: gitUpdatedAt } = getGitTimestamps(new URL(path, import.meta.url));
-    const { createdAt, updatedAt } = resolveContentDates(frontmatter, {
+function buildLatestArticles(
+  entries: Awaited<typeof latestBlogEntries> | Awaited<typeof latestNoteEntries>,
+  section: "blog" | "note",
+) {
+  const articles: LatestArticleItem[] = [];
+
+  for (const entry of entries) {
+    const title = resolveContentTitle(entry.id, entry.data.title);
+    const slug = resolveContentSlug(entry.id, entry.data.routeSlug);
+    const entryFilePath = entry.filePath
+      ? new URL(`../../${entry.filePath}`, import.meta.url)
+      : new URL(`../content/${section}/${entry.id}.mdx`, import.meta.url);
+    const { createdAt: gitCreatedAt, updatedAt: gitUpdatedAt } = getGitTimestamps(entryFilePath);
+    const { createdAt, updatedAt } = resolveContentDates(entry.data, {
       createdAt: gitCreatedAt,
       updatedAt: gitUpdatedAt,
     });
     const pubDate = createdAt ?? updatedAt;
 
-    if (!slug || !pubDate || Number.isNaN(pubDate.getTime())) return null;
+    if (!slug || !pubDate || Number.isNaN(pubDate.getTime())) continue;
 
-    return {
+    articles.push({
       title,
       href: `/${section}/${slug}/`,
       pubDateIso: pubDate.toISOString(),
@@ -64,10 +63,10 @@ function buildLatestArticles(sourceModules: Record<string, unknown>, section: "b
       displayDate: `${pubDate.toISOString().slice(5, 7)}.${pubDate.toISOString().slice(8, 10)}`,
       year: pubDate.toISOString().slice(0, 4),
       timestamp: pubDate.getTime(),
-    } as LatestArticleItem;
-  })
-  .filter((item): item is LatestArticleItem => item !== null)
-  .sort((a, b) => b.timestamp - a.timestamp);
+    });
+  }
+
+  return articles.sort((a, b) => b.timestamp - a.timestamp);
 }
 
 function buildLatestTimelineGroups(latestArticles: LatestArticleItem[]) {
@@ -84,8 +83,8 @@ function buildLatestTimelineGroups(latestArticles: LatestArticleItem[]) {
   }, []);
 }
 
-const latestBlogArticles = buildLatestArticles(latestBlogSourceModules, "blog").slice(0, 4);
-const latestNoteArticles = buildLatestArticles(latestNoteSourceModules, "note").slice(0, 4);
+const latestBlogArticles = buildLatestArticles(latestBlogEntries, "blog").slice(0, 4);
+const latestNoteArticles = buildLatestArticles(latestNoteEntries, "note").slice(0, 4);
 const latestAnimationOrderMap = new Map(
   [...latestBlogArticles, ...latestNoteArticles].map((article, index) => [article.href, index]),
 );
