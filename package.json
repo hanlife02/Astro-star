@@ -8,6 +8,7 @@
     "preview": "astro preview",
     "check": "astro check",
     "astro": "astro",
+    "migrate:content": "node scripts/migrate-legacy-content.mjs",
     "format": "prettier . --write",
     "format:check": "prettier . --check"
   },
