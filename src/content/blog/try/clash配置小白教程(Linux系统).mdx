@@ -1,0 +1,203 @@
+---
+routeSlug: "clash"
+title: "clash配置小白教程(Linux系统)"
+createdAt: "2025-03-28 16:04:06"
+type: "折腾🐦"
+archiveSlug: "eihei"
+legacySourceCollection: "posts"
+legacySourceId: "67e540761acdff9805f92d9c"
+---
+
+# 前言
+
+前几日试着将自己云服务器部署的一个 ai 服务迁移到clab上，结果在部署的时候发现网速如下图，由于clab使用校园网，作者也不会其他的方式😭，只能尝试着在clab上用`clash`代理提高访问外网(主要是`github`)的速度。
+
+![好慢](https://hanlife02.com/api/v2/objects/file/uwdrm4b5kctasdplec.jpeg)
+
+# 壹 · 基础部署过程
+
+## 一、下载clash压缩包到服务器
+
+由于我们要在`github`里下载`clash`，所以我们要使用`clash`，由于要使用`clash`，所以我们要去`github`里下载`clash`（x）
+
+经尝试，在clab下载`clash`速度极慢（如果你运气好很快，那就直接下载！)，故采用本地下载，再推送到clab的方式。
+
+1. 首先，在你的clab家目录下创建`clash`目录
+
+```
+mkdir ~/clash
+```
+
+2. 接着，点击 [下载链接](https://github.com/DustinWin/proxy-tools/releases/download/Clash-Premium/clashpremium-release-linux-amd64.tar.gz) ，下载对应的压缩包
+
+3. 然后打开本地终端，cd到下载安装包的目录，**修改user和ip地址**并执行下面指令
+
+```
+scp clashpremium-release-linux-amd64.tar.gz user@clab的ip地址:/home/user/clash/
+```
+
+4. 之后打开clab并cd到clash目录，执行下面指令解压压缩包，并重命名为clash添加可执行权限。
+
+```
+tar -xzvf clashpremium-release-linux-amd64.tar.gz
+mv CrashCore clash
+chmod u+x clash
+```
+
+## 二、下载配置文件
+
+以WallessPKU为例，其他服务商的配置文件按照对应教程即可。
+
+1. 首先我们需要获得订阅地址，打开https://189854.xyz/verify 验证北大邮箱获得。
+
+![订阅地址](	https://hanlife02.com/api/v2/objects/file/4w1gxfylujteas2zig.jpg)
+
+2. 接着打开clab终端，cd到刚下载的二进制文件所在目录，下载配置文件，只需要修改订阅url并执行下面指令
+
+```
+cd /home/user/clash
+wget -O config.yaml "订阅url"
+```
+
+看到下图即为成功
+
+![配置文件下载](https://hanlife02.com/api/v2/objects/file/i3ieyplv6e8f9t8h8u.png)
+
+3. 接着我们首次启动clash,执行下面指令
+
+```
+./clash -d .
+```
+
+此时会自动下载` Country.mmdb`文件，如果网速过慢，可以根据报错给的下载URL手动下载，然后scp推送到`/home/user/clash`目录下，过程同下载`clash`（经测试连接北大网关后下载速度很快，一般不会报错）。
+
+出现下图时恭喜你成功！
+
+![成功](	https://hanlife02.com/api/v2/objects/file/ajzi7e92s4xgx13o6k.png)
+
+# 贰 · Dashboard部署（可选）
+
+为了更好的监控，作者部署了dashboard来可视化操作。
+
+两种访问方式，一种是ip+端口直接访问，一种是配置反向代理，用域名访问。
+
+作者更推荐后者，因为前者很容易被他人访问。
+
+![dashboard示意](https://hanlife02.com/api/v2/objects/file/mo6bxbld7ny23m8pio.jpeg)
+
+1. 首先，cd到clash目录编辑`config.yaml`文件
+
+```
+cd home/user/clash
+vim config.yaml
+```
+
+
+```
+allow-lan: true
+external-ui: yacd
+external-controller: 0.0.0.0:9090
+```
+
+添加`external-ui`为dashboard路径，本文使用yacd，无需更改。
+
+已有`external-controller`是访问地址（如果使用ip+端口在本地浏览器访问，无需修改；若配置反代通过域名访问，则建议改成`127.0.0.1:9090`，避免他人直接通过ip访问)
+
+**同时删除已有的`secret`变量**（实测不删登不进去）
+
+2. 部署dashboard
+
+```
+git clone https://gitclone.com/github.com/haishanh/yacd.git
+
+```
+
+然后执行下面指令切换分支
+
+```
+cd yacd
+git checkout gh-pages
+```
+
+部署完成，后续可配置反代通过域名访问或直接ip+端口9090访问
+
+![成功！](https://hanlife02.com/api/v2/objects/file/6n9ysmepc9fntnp88x.jpg)
+
+# 叁 · 配置开机自启（可选）
+
+1. 在clash目录下，将clash可执行文件拷贝到`/usr/local/bin`目录
+
+```
+sudo cp clash /usr/local/bin
+```
+
+2. 创建systemd服务配置文件 `sudo vim /etc/systemd/system/clash.service`:
+
+```
+[Unit]
+Description=Clash daemon, A rule-based proxy in Go.
+After=network.target
+
+[Service]
+Type=simple
+Restart=always
+ExecStart=/usr/local/bin/clash -d /home/user/clash 
+
+[Install]
+WantedBy=multi-user.target
+```
+
+将`ExecStart `这行后面 -d 后面的`/home/user/clash` 的`user`改成自己的用户名
+
+3. 使用systemctl
+
+执行命令，开机自启动
+
+```
+sudo systemctl enable clash
+sudo systemctl start clash
+```
+
+可以通过下面的指令检查是否成功
+
+```
+sudo systemctl status clash
+```
+![成功！](https://hanlife02.com/api/v2/objects/file/5umm4okpytv6i6vooc.png)
+
+# 肆 · 开启系统代理
+不要忘了开系统代理呀！执行下面指令临时开启
+
+```
+export http_proxy="http://127.0.0.1:7890"
+export https_proxy="http://127.0.0.1:7890"
+export all_proxy="socks5://127.0.0.1:7891"
+```
+这里的端口记得根据你的服务商提供的配置文件修改，例如作者使用的服务商是7891和7892
+端口也可以在dashboard的配置里查看获得
+
+如果想一直代理的话，添加到环境变量就行。
+
+```
+sudo vim /etc/environment
+```
+
+然后加入环境变量，同样不要忘记修改端口
+
+```
+http_proxy="http://127.0.0.1:7890"
+https_proxy="http://127.0.0.1:7890"
+all_proxy="socks5://127.0.0.1:7891"
+```
+
+重启服务
+
+```
+source /etc/environment
+```
+
+# 参考博文
+
+https://gaoyuhui.com/posts/clash-dashboard/
+
+https://blog.iswiftai.com/posts/clash-linux/#tun-%E6%A8%A1%E5%BC%8F

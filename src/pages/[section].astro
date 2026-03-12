@@ -63,8 +63,8 @@ const categories = Object.entries(contentModules)
     const directoryArchiveSlug = getArchiveSlugFromPath(path, section);
     const label = frontmatter?.type?.trim() || directoryArchiveSlug || "Uncategorized";
     const archiveSlug =
-      directoryArchiveSlug ||
       normalizeArchiveSlug(frontmatter?.archiveSlug) ||
+      directoryArchiveSlug ||
       slugifyCategoryLabel(label) ||
       "uncategorized";
 
