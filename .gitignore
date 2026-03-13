@@ -25,3 +25,6 @@ pnpm-debug.log*
 
 # Author's own old data
 /data/
+
+# claude
+.claude/
