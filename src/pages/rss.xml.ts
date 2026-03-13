@@ -1,14 +1,11 @@
 import type { APIRoute } from "astro";
 import rss from "@astrojs/rss";
+import { getCollection } from "astro:content";
 import { site as siteConfig } from "../config/site";
+import { resolveContentDates } from "../utils/content-dates";
+import { resolveContentSlug } from "../utils/content-slug";
+import { resolveContentTitle } from "../utils/content-title";
 import { getGitTimestamps } from "../utils/git-timestamps";
-
-interface ContentModule {
-  frontmatter?: {
-    title?: string;
-    description?: string;
-  };
-}
 
 interface RssItem {
   title: string;
@@ -17,40 +14,47 @@ interface RssItem {
   link: string;
 }
 
-const contentModules = {
-  ...import.meta.glob("../content/blog/*.{md,mdx}", { eager: true }),
-  ...import.meta.glob("../content/note/*.{md,mdx}", { eager: true }),
-  ...import.meta.glob("../content/project/*.{md,mdx}", { eager: true }),
-};
+function buildRssItems(
+  entries: { id: string; data: Record<string, any>; filePath?: string }[],
+  section: string,
+): RssItem[] {
+  const items: RssItem[] = [];
 
-const rssItems: RssItem[] = [];
+  for (const entry of entries) {
+    const title = resolveContentTitle(entry.id, entry.data.title);
+    const slug = resolveContentSlug(entry.id, entry.data.routeSlug);
+    const entryFilePath = entry.filePath
+      ? new URL(`../../${entry.filePath}`, import.meta.url)
+      : new URL(`../content/${section}/${entry.id}.mdx`, import.meta.url);
+    const { createdAt: gitCreatedAt, updatedAt: gitUpdatedAt } = getGitTimestamps(entryFilePath);
+    const { createdAt, updatedAt } = resolveContentDates(entry.data, {
+      createdAt: gitCreatedAt,
+      updatedAt: gitUpdatedAt,
+    });
+    const pubDate = createdAt ?? updatedAt;
 
-for (const [path, mod] of Object.entries(contentModules)) {
-  const frontmatter = (mod as ContentModule).frontmatter;
-  const title = frontmatter?.title?.trim();
-  const description = frontmatter?.description?.trim();
-  const slug = path.split("/").pop()?.replace(/\.(md|mdx)$/i, "");
-  const section = path.includes("/note/")
-    ? "note"
-    : path.includes("/project/")
-      ? "project"
-      : "blog";
-  const { createdAt, updatedAt } = getGitTimestamps(new URL(path, import.meta.url));
-  const pubDate = createdAt ?? updatedAt;
+    if (!slug || !pubDate || Number.isNaN(pubDate.getTime())) continue;
 
-  if (!title || !slug || !pubDate || Number.isNaN(pubDate.getTime())) {
-    continue;
+    items.push({
+      title,
+      description: entry.data.description?.trim(),
+      pubDate,
+      link: `/${section}/${slug}/`,
+    });
   }
 
-  rssItems.push({
-    title,
-    description,
-    pubDate,
-    link: `/${section}/${slug}/`,
-  });
+  return items;
 }
 
-rssItems.sort((a, b) => b.pubDate.getTime() - a.pubDate.getTime());
+const blogEntries = await getCollection("blog");
+const noteEntries = await getCollection("note");
+const projectEntries = await getCollection("project");
+
+const rssItems = [
+  ...buildRssItems(blogEntries, "blog"),
+  ...buildRssItems(noteEntries, "note"),
+  ...buildRssItems(projectEntries, "project"),
+].sort((a, b) => b.pubDate.getTime() - a.pubDate.getTime());
 
 export const GET: APIRoute = async ({ site }) => {
   return rss({

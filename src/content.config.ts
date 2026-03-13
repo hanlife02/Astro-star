@@ -50,11 +50,6 @@ const commentSchema = z.object({
   source: z.string().min(1).nullable(),
 });
 
-const about = defineCollection({
-  loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/about" }),
-  schema: baseContentSchema,
-});
-
 const comments = defineCollection({
   loader: file("src/data/comments/legacy-comments.json"),
   schema: commentSchema,
@@ -62,11 +57,6 @@ const comments = defineCollection({
 
 const blog = defineCollection({
   loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/blog" }),
-  schema: baseContentSchema,
-});
-
-const links = defineCollection({
-  loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/links" }),
   schema: baseContentSchema,
 });
 
@@ -81,10 +71,8 @@ const project = defineCollection({
 });
 
 export const collections = {
-  about,
   comments,
   blog,
-  links,
   note,
   project,
 };
