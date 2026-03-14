@@ -84,6 +84,7 @@ const countWords = (source: string) => {
 };
 
 const articleWordCount = countWords(articleSource);
+const canonicalUrl = new URL(articleRoutePath, site.url).toString();
 const tocHeadings = headings
   .filter((heading) => heading.depth >= 1 && heading.depth <= 3)
   .map((heading) => ({
@@ -106,4 +107,6 @@ const tocHeadings = headings
   articleWordCount={articleWordCount}
   tocHeadings={tocHeadings}
   ArticleContent={Content}
+  canonicalUrl={canonicalUrl}
+  siteName={site.name}
 />

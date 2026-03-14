@@ -12,7 +12,14 @@
     "format": "prettier . --write",
     "format:check": "prettier . --check"
   },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "better-sqlite3"
+    ]
+  },
   "devDependencies": {
+    "better-sqlite3": "^12.6.2",
+    "bson": "^7.2.0",
     "prettier": "latest",
     "prettier-plugin-astro": "latest"
   },

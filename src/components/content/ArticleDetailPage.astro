@@ -22,6 +22,8 @@ interface Props {
   articleWordCount: number;
   tocHeadings: TocHeading[];
   ArticleContent: any;
+  canonicalUrl?: string;
+  siteName?: string;
 }
 
 const {
@@ -37,6 +39,8 @@ const {
   articleWordCount,
   tocHeadings,
   ArticleContent,
+  canonicalUrl = "",
+  siteName = "",
 } = Astro.props as Props;
 ---
 
@@ -51,6 +55,19 @@ const {
     depth: heading.depth,
   }))}
 >
+      <Fragment slot="head">
+        {description && <meta name="description" content={description} />}
+        {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
+        <meta property="og:title" content={title} />
+        {description && <meta property="og:description" content={description} />}
+        <meta property="og:type" content="article" />
+        {canonicalUrl && <meta property="og:url" content={canonicalUrl} />}
+        {siteName && <meta property="og:site_name" content={siteName} />}
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content={title} />
+        {description && <meta name="twitter:description" content={description} />}
+        <meta name="article:author" content={author} />
+      </Fragment>
       <header class="article-content-header">
         <p class="article-content-section">{section.toUpperCase()}</p>
         <h1 class="article-content-title">{title}</h1>

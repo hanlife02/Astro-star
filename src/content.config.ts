@@ -1,5 +1,5 @@
 import { defineCollection } from "astro:content";
-import { file, glob } from "astro/loaders";
+import { glob } from "astro/loaders";
 import { z } from "astro/zod";
 
 const baseContentSchema = z
@@ -33,28 +33,6 @@ const projectSchema = z.object({
   legacySourceId: z.string().min(1),
 });
 
-const commentSchema = z.object({
-  id: z.string().min(1),
-  refId: z.string().min(1),
-  refType: z.string().min(1),
-  routePath: z.string().min(1).nullable(),
-  author: z.string().min(1),
-  authorUrl: z.string().url().nullable(),
-  text: z.string(),
-  parentId: z.string().min(1).nullable(),
-  childrenIds: z.array(z.string()),
-  key: z.string().min(1).nullable(),
-  createdAt: z.string().datetime().nullable(),
-  location: z.string().min(1).nullable(),
-  isPinned: z.boolean(),
-  source: z.string().min(1).nullable(),
-});
-
-const comments = defineCollection({
-  loader: file("src/data/comments/legacy-comments.json"),
-  schema: commentSchema,
-});
-
 const blog = defineCollection({
   loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/blog" }),
   schema: baseContentSchema,
@@ -71,7 +49,6 @@ const project = defineCollection({
 });
 
 export const collections = {
-  comments,
   blog,
   note,
   project,

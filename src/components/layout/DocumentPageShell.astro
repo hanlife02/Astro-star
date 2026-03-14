@@ -38,6 +38,7 @@ const {
   contentAriaLabel={contentAriaLabel}
   tocAriaLabel={tocAriaLabel}
 >
+  <slot name="head" slot="head" />
   <slot />
 
   <TocPanel slot="toc" title={tocTitle} emptyText={tocEmptyText} items={tocItems} />
