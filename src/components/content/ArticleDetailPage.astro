@@ -117,3 +117,13 @@ const {
         walineServerURL={walineServerURL}
       />
 </DocumentPageShell>
+
+<script>
+  import { pageviewCount } from "@waline/client/pageview";
+
+  const el = document.querySelector(".waline-pageview-count");
+  const serverURL = el?.getAttribute("data-server-url")?.trim();
+  if (el && serverURL) {
+    pageviewCount({ serverURL, update: true });
+  }
+</script>
