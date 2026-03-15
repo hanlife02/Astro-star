@@ -59,8 +59,6 @@ jobs:
       - name: Build
         if: steps.cache.outputs.cache-hit != 'true'
         run: pnpm build
-        env:
-          PUBLIC_WALINE_SERVER_URL: ${{ secrets.PUBLIC_WALINE_SERVER_URL }}
 
       # ── Deploy via rsync + SSH ──
       - name: Setup SSH
@@ -79,12 +77,20 @@ jobs:
             dist/ package.json pnpm-lock.yaml \
             ${{ env.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ env.DEPLOY_PATH }}/
 
+      - name: Deploy runtime env vars
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          echo "WALINE_SERVER_URL=${{ secrets.PUBLIC_WALINE_SERVER_URL }}" | \
+            ssh -i ~/.ssh/deploy_key -p ${{ env.SSH_PORT }} \
+              ${{ env.SSH_USER }}@${{ secrets.SSH_HOST }} \
+              "cat > ${{ env.DEPLOY_PATH }}/.env"
+
       - name: Install & restart on server
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
           ssh -i ~/.ssh/deploy_key -p ${{ env.SSH_PORT }} \
             ${{ env.SSH_USER }}@${{ secrets.SSH_HOST }} \
-            "source ~/.nvm/nvm.sh 2>/dev/null; source ~/.bashrc 2>/dev/null; cd ${{ env.DEPLOY_PATH }} && pnpm install --prod --frozen-lockfile && (pm2 restart ${{ env.PM2_APP_NAME }} 2>/dev/null || PORT=${{ env.APP_PORT }} pm2 start server/entry.mjs --name ${{ env.PM2_APP_NAME }}) && pm2 save"
+            "source ~/.nvm/nvm.sh 2>/dev/null; source ~/.bashrc 2>/dev/null; cd ${{ env.DEPLOY_PATH }} && pnpm install --prod --frozen-lockfile && set -a && source .env && set +a && (pm2 delete ${{ env.PM2_APP_NAME }} 2>/dev/null; PORT=${{ env.APP_PORT }} pm2 start server/entry.mjs --name ${{ env.PM2_APP_NAME }}) && pm2 save"
 
       - name: Cleanup SSH
         if: steps.cache.outputs.cache-hit != 'true'

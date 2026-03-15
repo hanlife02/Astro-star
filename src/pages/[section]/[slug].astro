@@ -1,7 +1,7 @@
 ---
 import { getCollection, render } from "astro:content";
 import ArticleDetailPage from "../../components/content/ArticleDetailPage.astro";
-import { PUBLIC_WALINE_SERVER_URL } from "astro:env/client";
+import { WALINE_SERVER_URL } from "astro:env/server";
 import { site } from "../../config/site";
 import { resolveContentDates } from "../../utils/content-dates";
 import { resolveContentSlug } from "../../utils/content-slug";
@@ -37,7 +37,7 @@ const title = resolveContentTitle(articleEntry.id, articleEntry.data.title);
 const description = articleEntry.data.description?.trim() || "";
 const articleType = articleEntry.data.type?.trim() || "Uncategorized";
 const author = site.owner.name;
-const walineServerURL = PUBLIC_WALINE_SERVER_URL?.trim() || "";
+const walineServerURL = WALINE_SERVER_URL?.trim() || "";
 const articleRoutePath = `/${section}/${slug}/`;
 const entryFilePath = articleEntry.filePath
   ? new URL(`../../../${articleEntry.filePath}`, import.meta.url)

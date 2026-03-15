@@ -2,12 +2,12 @@
 import DocumentPageShell from "../components/layout/DocumentPageShell.astro";
 import WalineComments from "../components/content/WalineComments.astro";
 import AppPanelCard from "../components/ui/AppPanelCard.astro";
-import { PUBLIC_WALINE_SERVER_URL } from "astro:env/client";
+import { WALINE_SERVER_URL } from "astro:env/server";
 import { aboutPage } from "../config/about";
 import "../style/pages/content-page.css";
 import "../style/components/content/article-detail-page.css";
 
-const walineServerURL = PUBLIC_WALINE_SERVER_URL?.trim() || "";
+const walineServerURL = WALINE_SERVER_URL?.trim() || "";
 const tocItems = [
   { href: "#intro", label: aboutPage.introTitle, depth: 2 as const },
   { href: "#social", label: aboutPage.socialTitle, depth: 2 as const },

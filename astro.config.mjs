@@ -15,9 +15,9 @@ export default defineConfig({
   }),
   env: {
     schema: {
-      PUBLIC_WALINE_SERVER_URL: envField.string({
-        context: 'client',
-        access: 'public',
+      WALINE_SERVER_URL: envField.string({
+        context: 'server',
+        access: 'secret',
         optional: true,
       }),
     },
