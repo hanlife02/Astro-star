@@ -15,7 +15,7 @@ try {
 module.exports = {
   apps: [
     {
-      name: process.env.PM2_APP_NAME || "Astro-star",
+      name: process.env.PM2_APP_NAME || "Blog",
       script: "server/entry.mjs",
       env: {
         PORT: process.env.PORT || env.PORT || 4321,
