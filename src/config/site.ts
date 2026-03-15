@@ -1,4 +1,4 @@
-export const site = {
+﻿export const site = {
   name: "Ethan",
   url: "https://hanlife02.com",
   iconSrc: "/site-icon.svg",
@@ -30,7 +30,7 @@ export const site = {
     avatarSrc: "/avatar.svg",
     bio: "Don't stay awake for too long.",
     intro:
-      "Hi, I'm Ethan, a third-year student at Peking University. I enjoy learning how to code during my leisure time, and I am very interested in the AI4S field.",
+      "Hi, I'm Ethan, a third-year student at Peking University. I enjoy learning how to code during my leisure time, and I am very interested in the AI4S field. ",
     githubUsername: "hanlife02",
     email: "ethan@hanlife02.com",
     codeRainKeywords: [
