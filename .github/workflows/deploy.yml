@@ -92,7 +92,7 @@ jobs:
         run: |
           ssh -i ~/.ssh/deploy_key -p ${{ env.SSH_PORT }} \
             ${{ env.SSH_USER }}@${{ secrets.SSH_HOST }} \
-            "source ~/.nvm/nvm.sh 2>/dev/null; source ~/.bashrc 2>/dev/null; cd ${{ env.DEPLOY_PATH }} && pnpm install --prod --frozen-lockfile && set -a && source .env && set +a && (pm2 delete ${{ env.PM2_APP_NAME }} 2>/dev/null; PORT=${{ env.APP_PORT }} pm2 start server/entry.mjs --name ${{ env.PM2_APP_NAME }}) && pm2 save"
+            "source ~/.nvm/nvm.sh 2>/dev/null; source ~/.bashrc 2>/dev/null; cd ${{ env.DEPLOY_PATH }} && pnpm install --prod --frozen-lockfile && (pm2 delete ${{ env.PM2_APP_NAME }} 2>/dev/null; PORT=${{ env.APP_PORT }} pm2 start server/entry.mjs --name ${{ env.PM2_APP_NAME }} --node-args='--env-file=.env') && pm2 save"
 
       - name: Cleanup SSH
         if: steps.cache.outputs.cache-hit != 'true'
