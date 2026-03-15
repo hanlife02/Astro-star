@@ -60,7 +60,7 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: pnpm build
         env:
-          PUBLIC_WALINE_SERVER_URL: ${{ vars.PUBLIC_WALINE_SERVER_URL }}
+          PUBLIC_WALINE_SERVER_URL: ${{ secrets.PUBLIC_WALINE_SERVER_URL }}
 
       # ── Deploy via rsync + SSH ──
       - name: Setup SSH
