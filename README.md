@@ -2,6 +2,8 @@
 
 基于 Astro SSR (`@astrojs/node` standalone) 的个人博客。
 
+**示例网站：** <https://hanlife02.com>
+
 ## 项目结构
 
 ```text
