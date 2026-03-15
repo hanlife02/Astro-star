@@ -39,10 +39,8 @@ const articleType = articleEntry.data.type?.trim() || "Uncategorized";
 const author = site.owner.name;
 const walineServerURL = WALINE_SERVER_URL?.trim() || "";
 const articleRoutePath = `/${section}/${slug}/`;
-const entryFilePath = articleEntry.filePath
-  ? new URL(`../../../${articleEntry.filePath}`, import.meta.url)
-  : new URL(`../../content/${section}/${articleEntry.id}.mdx`, import.meta.url);
-const { createdAt: gitCreatedAt, updatedAt: gitUpdatedAt } = getGitTimestamps(entryFilePath);
+const contentPath = articleEntry.filePath ?? `src/content/${section}/${articleEntry.id}.mdx`;
+const { createdAt: gitCreatedAt, updatedAt: gitUpdatedAt } = getGitTimestamps(contentPath);
 const { createdAt, updatedAt } = resolveContentDates(articleEntry.data, {
   createdAt: gitCreatedAt,
   updatedAt: gitUpdatedAt,
