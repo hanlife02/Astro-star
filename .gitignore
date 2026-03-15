@@ -23,8 +23,12 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 
-# Author's own old data
-/data/
+# Legacy source data (MX-Space BSON dump & Waline DB)
+src/data/mx-space/
+src/data/waline.sqlite
 
 # claude
 .claude/
+
+# old data
+src/data

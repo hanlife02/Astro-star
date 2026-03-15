@@ -86,9 +86,9 @@ function buildMdxRoutes(dir, section) {
 }
 
 // ── Parse BSON to get old-route → legacySourceId mapping ──────────────────
-const posts = parseBson("data/mx-space/posts.bson");
-const notes = parseBson("data/mx-space/notes.bson");
-const projects = parseBson("data/mx-space/projects.bson");
+const posts = parseBson("src/data/mx-space/posts.bson");
+const notes = parseBson("src/data/mx-space/notes.bson");
+const projects = parseBson("src/data/mx-space/projects.bson");
 
 // old route → MongoDB _id
 const oldRouteToId = new Map();
