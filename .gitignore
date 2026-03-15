@@ -32,3 +32,6 @@ src/gitlog/
 
 # claude
 .claude/
+
+# local development data (not tracked)
+src/data
