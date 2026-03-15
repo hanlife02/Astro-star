@@ -28,7 +28,7 @@ jobs:
       - name: Compute source hash
         id: hash
         run: |
-          HASH=${{ hashFiles('src/**', 'public/**', 'package.json', 'pnpm-lock.yaml', 'astro.config.mjs') }}
+          HASH=${{ hashFiles('src/**', 'public/**', 'package.json', 'pnpm-lock.yaml', 'astro.config.mjs', '.github/workflows/deploy.yml', 'ecosystem.config.cjs') }}
           echo "source_hash=$HASH" >> "$GITHUB_OUTPUT"
 
       - name: Check hash cache
@@ -78,7 +78,7 @@ jobs:
             --exclude='node_modules' \
             --exclude='.env' \
             -e "ssh -i ~/.ssh/deploy_key -p ${{ env.SSH_PORT }}" \
-            dist/ package.json pnpm-lock.yaml \
+            dist/ package.json pnpm-lock.yaml ecosystem.config.cjs \
             ${{ env.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ env.DEPLOY_PATH }}/
 
       - name: Deploy runtime env vars
@@ -94,7 +94,7 @@ jobs:
         run: |
           ssh -i ~/.ssh/deploy_key -p ${{ env.SSH_PORT }} \
             ${{ env.SSH_USER }}@${{ secrets.SSH_HOST }} \
-            "source ~/.nvm/nvm.sh 2>/dev/null; source ~/.bashrc 2>/dev/null; cd ${{ env.DEPLOY_PATH }} && pnpm install --prod --frozen-lockfile && (pm2 delete ${{ env.PM2_APP_NAME }} 2>/dev/null; PORT=${{ env.APP_PORT }} pm2 start server/entry.mjs --name ${{ env.PM2_APP_NAME }} --node-args='--env-file=.env') && pm2 save"
+            "source ~/.nvm/nvm.sh 2>/dev/null; source ~/.bashrc 2>/dev/null; cd ${{ env.DEPLOY_PATH }} && pnpm install --prod --frozen-lockfile && (pm2 delete ${{ env.PM2_APP_NAME }} 2>/dev/null; PM2_APP_NAME=${{ env.PM2_APP_NAME }} PORT=${{ env.APP_PORT }} pm2 start ecosystem.config.cjs) && pm2 save"
 
       - name: Cleanup SSH
         if: steps.cache.outputs.cache-hit != 'true'
