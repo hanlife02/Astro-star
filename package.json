@@ -5,6 +5,7 @@
   "packageManager": "pnpm@10.30.3",
   "scripts": {
     "dev": "astro dev",
+    "prebuild": "node --experimental-strip-types scripts/generate-git-timestamps.ts",
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
