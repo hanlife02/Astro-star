@@ -72,7 +72,9 @@ jobs:
       - name: Rsync to server
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
-          rsync -a --delete \
+          rsync -a --checksum --delete \
+            --exclude='node_modules' \
+            --exclude='.env' \
             -e "ssh -i ~/.ssh/deploy_key -p ${{ env.SSH_PORT }}" \
             dist/ package.json pnpm-lock.yaml \
             ${{ env.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ env.DEPLOY_PATH }}/
