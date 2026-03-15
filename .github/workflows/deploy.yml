@@ -11,8 +11,8 @@ concurrency:
 env:
   SSH_USER: ${{ secrets.SSH_USER || 'ubuntu' }}
   SSH_PORT: ${{ secrets.SSH_PORT || '22' }}
-  DEPLOY_PATH: ${{ vars.DEPLOY_PATH || '~/Astro-star' }}
-  PM2_APP_NAME: ${{ vars.PM2_APP_NAME || 'Astro-star' }}
+  DEPLOY_PATH: ${{ secrets.DEPLOY_PATH || '~/Astro-star' }}
+  PM2_APP_NAME: ${{ secrets.PM2_APP_NAME || 'Astro-star' }}
   APP_PORT: ${{ secrets.APP_PORT || '4321' }}
 
 jobs:
