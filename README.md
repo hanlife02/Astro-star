@@ -29,6 +29,61 @@
 | `/project` | 项目 |
 | `/links` | 友链 |
 
+## 快速开始（新用户）
+
+```bash
+# 1. fork仓库并clone到本地
+git clone https://github.com/[your github username]/Astro-star
+cd Astro-star
+pnpm install
+
+# 2. 修改自己的信息
+# 编辑 src/config 配置，添加 src/content 文章
+
+# 3. 启动开发服务器，在本地预览
+pnpm dev
+```
+
+## 配置管理
+
+项目通过 `user-config.json` 集中管理所有因人而异的配置，个人数据不进 git。
+
+### 提取配置（打包）
+
+```bash
+pnpm run config:extract
+```
+
+从当前项目中提取所有用户数据，生成：
+
+- `src/data/user-config.json` — 结构化配置（站点信息、About 页、Links 页、RSS 语言）
+- `src/data/user-config.example.json` — 同内容的模板副本（git 追踪，供新用户参考）
+- `src/data/user-content.tar.gz` — 内容文件打包（博客/笔记/项目 MDX + 头像 + 友链头像 + 文章图片）
+
+### 应用配置（复原）
+
+```bash
+pnpm run config:apply
+```
+
+读取打包数据，一键覆盖复原：
+
+- 重新生成 `src/config/site.ts`、`src/config/about.ts`、`src/config/links.ts`
+- 修补 `src/pages/rss.xml.ts` 中的 language 字段
+- 解压 `user-content.tar.gz` 恢复所有内容文件和图片
+- 自动调用 Prettier 格式化
+
+### 配置覆盖范围
+
+| 来源 | 内容 |
+|------|------|
+| `src/config/site.ts` | 站点名称、URL、头像、简介、社交账号、备案、监控链接、签名 SVG、代码雨关键词、导航 |
+| `src/config/about.ts` | About 页介绍、社交链接、工具列表、时间线 |
+| `src/config/links.ts` | 友链页配置、友链列表、失联链接 |
+| `src/pages/rss.xml.ts` | RSS language 字段 |
+| `src/content/` | 博客文章、笔记、项目介绍（MDX） |
+| `public/` | 头像 SVG、站点图标、友链头像、文章图片 |
+
 ## 命令
 
 ```bash
@@ -38,6 +93,8 @@ pnpm build            # 构建生产产物到 ./dist/
 pnpm preview          # 本地预览构建产物
 pnpm check            # Astro 类型检查
 pnpm format           # Prettier 格式化
+pnpm config:extract   # 提取用户配置和内容（打包）
+pnpm config:apply     # 应用配置和内容（复原）
 ```
 
 ## 部署

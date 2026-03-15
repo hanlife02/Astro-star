@@ -11,7 +11,9 @@
     "astro": "astro",
     "migrate:content": "node scripts/migrate-legacy-content.mjs",
     "format": "prettier . --write",
-    "format:check": "prettier . --check"
+    "format:check": "prettier . --check",
+    "config:extract": "node --experimental-strip-types scripts/config-extract.mjs",
+    "config:apply": "node scripts/config-apply.mjs"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

@@ -1,0 +1,145 @@
+import { readFileSync, writeFileSync, existsSync } from "node:fs";
+import { execSync } from "node:child_process";
+import { resolve, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+
+// --- 1. Read user-config.json ---
+const jsonPath = resolve(ROOT, "src/data/user-config.json");
+if (!existsSync(jsonPath)) {
+  console.error("Error: src/data/user-config.json not found.");
+  console.error(
+    'Copy user-config.example.json → user-config.json, edit it, then run "pnpm run config:apply".',
+  );
+  process.exit(1);
+}
+
+const config = JSON.parse(readFileSync(jsonPath, "utf-8"));
+const toTS = (obj) => JSON.stringify(obj, null, 2);
+
+// --- 2. Generate src/config/site.ts ---
+writeFileSync(
+  resolve(ROOT, "src/config/site.ts"),
+  `export const site = ${toTS(config.site)} as const;\n\nexport type SiteConfig = typeof site;\n`,
+  "utf-8",
+);
+console.log("Written: src/config/site.ts");
+
+// --- 3. Generate src/config/about.ts ---
+writeFileSync(
+  resolve(ROOT, "src/config/about.ts"),
+  [
+    `export interface AboutPanelItem {`,
+    `  icon: string;`,
+    `  name: string;`,
+    `  description: string;`,
+    `  href?: string;`,
+    `}`,
+    ``,
+    `export interface AboutTimelineYear {`,
+    `  label: string;`,
+    `  events: readonly string[];`,
+    `  summary?: string;`,
+    `}`,
+    ``,
+    `export interface AboutPageConfig {`,
+    `  title: string;`,
+    `  introTitle: string;`,
+    `  introParagraphs: readonly string[];`,
+    `  socialTitle: string;`,
+    `  socialItems: readonly AboutPanelItem[];`,
+    `  toolsTitle: string;`,
+    `  toolItems: readonly AboutPanelItem[];`,
+    `  blogTitle: string;`,
+    `  timelineTitle: string;`,
+    `  timeline: readonly AboutTimelineYear[];`,
+    `}`,
+    ``,
+    `export const aboutPage = ${toTS(config.about)} satisfies AboutPageConfig;`,
+    ``,
+  ].join("\n"),
+  "utf-8",
+);
+console.log("Written: src/config/about.ts");
+
+// --- 4. Generate src/config/links.ts ---
+writeFileSync(
+  resolve(ROOT, "src/config/links.ts"),
+  [
+    `export interface FriendLinkItem {`,
+    `  name: string;`,
+    `  description: string;`,
+    `  href: string;`,
+    `  avatarSrc: string;`,
+    `}`,
+    ``,
+    `export interface LostLinkItem {`,
+    `  name: string;`,
+    `  description: string;`,
+    `  href: string;`,
+    `}`,
+    ``,
+    `export interface LinksPageConfig {`,
+    `  title: string;`,
+    `  intro: string;`,
+    `  friendsTitle: string;`,
+    `  lostTitle: string;`,
+    `  applyTitle: string;`,
+    `  applyRules: readonly string[];`,
+    `}`,
+    ``,
+    `export const linksPage = ${toTS(config.links.page)} satisfies LinksPageConfig;`,
+    ``,
+    `export const friendLinks = ${toTS(config.links.friendLinks)} satisfies readonly FriendLinkItem[];`,
+    ``,
+    `export const lostLinks = ${toTS(config.links.lostLinks)} satisfies readonly LostLinkItem[];`,
+    ``,
+  ].join("\n"),
+  "utf-8",
+);
+console.log("Written: src/config/links.ts");
+
+// --- 5. Patch rss.xml.ts language ---
+const rssPath = resolve(ROOT, "src/pages/rss.xml.ts");
+const rssContent = readFileSync(rssPath, "utf-8");
+writeFileSync(
+  rssPath,
+  rssContent.replace(
+    /<language>[\w-]+<\/language>/,
+    `<language>${config.rss.language}</language>`,
+  ),
+  "utf-8",
+);
+console.log("Written: src/pages/rss.xml.ts");
+
+// --- 6. Extract content archive ---
+const tarPath = resolve(ROOT, "src/data/user-content.tar.gz");
+if (existsSync(tarPath)) {
+  execSync("tar -xzf src/data/user-content.tar.gz", {
+    cwd: ROOT,
+    stdio: "inherit",
+  });
+  console.log("Extracted: src/data/user-content.tar.gz");
+} else {
+  console.log("No user-content.tar.gz found, skipping content restore.");
+}
+
+// --- 7. Format modified files with prettier ---
+const filesToFormat = [
+  "src/config/site.ts",
+  "src/config/about.ts",
+  "src/config/links.ts",
+  "src/pages/rss.xml.ts",
+];
+try {
+  execSync(`npx prettier --write ${filesToFormat.join(" ")}`, {
+    cwd: ROOT,
+    stdio: "inherit",
+  });
+  console.log("Formatted with prettier.");
+} catch {
+  console.warn("Warning: prettier formatting failed (files are still valid).");
+}
+
+console.log("\nApply complete!");
