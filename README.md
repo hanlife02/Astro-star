@@ -46,14 +46,32 @@ pnpm format           # Prettier 格式化
 
 通过源码 hash 对比避免无变更时的重复构建。
 
-### 需要配置的 GitHub Secrets / Variables
+### 服务器环境要求
 
-| 类型 | 名称 | 说明 |
-|------|------|------|
-| Secret | `SSH_PRIVATE_KEY` | SSH 私钥 |
-| Secret | `SSH_HOST` | 服务器 IP 或域名 |
-| Secret | `SSH_USER` | SSH 用户名 |
-| Secret | `SSH_PORT` | SSH 端口（默认 22） |
-| Variable | `DEPLOY_PATH` | 服务器目标目录路径 |
-| Variable | `PM2_APP_NAME` | PM2 应用名称 |
-| Variable | `PUBLIC_WALINE_SERVER_URL` | Waline 评论服务地址 |
+```bash
+# Node.js (>= 22)
+curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+sudo apt install -y nodejs
+
+# pnpm
+npm install -g pnpm
+
+# PM2
+npm install -g pm2
+
+# rsync (通常已预装)
+sudo apt install -y rsync
+```
+
+### GitHub Secrets / Variables
+
+| 类型 | 名称 | 默认值 | 说明 |
+|------|------|--------|------|
+| Secret | `SSH_PRIVATE_KEY` | — | SSH 私钥 |
+| Secret | `SSH_HOST` | — | 服务器 IP 或域名 |
+| Secret | `SSH_USER` | `ubuntu` | SSH 用户名 |
+| Secret | `SSH_PORT` | `22` | SSH 端口 |
+| Secret | `APP_PORT` | `4321` | Astro 服务监听端口 |
+| Variable | `DEPLOY_PATH` | `~/Astro-star` | 服务器目标目录路径 |
+| Variable | `PM2_APP_NAME` | `Astro-star` | PM2 应用名称 |
+| Variable | `PUBLIC_WALINE_SERVER_URL` | — | Waline 评论服务地址 |

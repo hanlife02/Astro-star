@@ -8,6 +8,13 @@ concurrency:
   group: deploy-production
   cancel-in-progress: false
 
+env:
+  SSH_USER: ${{ secrets.SSH_USER || 'ubuntu' }}
+  SSH_PORT: ${{ secrets.SSH_PORT || '22' }}
+  DEPLOY_PATH: ${{ vars.DEPLOY_PATH || '~/Astro-star' }}
+  PM2_APP_NAME: ${{ vars.PM2_APP_NAME || 'Astro-star' }}
+  APP_PORT: ${{ secrets.APP_PORT || '4321' }}
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -62,22 +69,22 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -p ${{ secrets.SSH_PORT || 22 }} -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+          ssh-keyscan -p ${{ env.SSH_PORT }} -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
       - name: Rsync to server
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
           rsync -azP --delete \
-            -e "ssh -i ~/.ssh/deploy_key -p ${{ secrets.SSH_PORT || 22 }}" \
+            -e "ssh -i ~/.ssh/deploy_key -p ${{ env.SSH_PORT }}" \
             dist/ package.json pnpm-lock.yaml \
-            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ vars.DEPLOY_PATH }}/
+            ${{ env.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ env.DEPLOY_PATH }}/
 
       - name: Install & restart on server
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
-          ssh -i ~/.ssh/deploy_key -p ${{ secrets.SSH_PORT || 22 }} \
-            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
-            "cd ${{ vars.DEPLOY_PATH }} && pnpm install --prod --frozen-lockfile && (pm2 restart ${{ vars.PM2_APP_NAME }} 2>/dev/null || pm2 start dist/server/entry.mjs --name ${{ vars.PM2_APP_NAME }}) && pm2 save"
+          ssh -i ~/.ssh/deploy_key -p ${{ env.SSH_PORT }} \
+            ${{ env.SSH_USER }}@${{ secrets.SSH_HOST }} \
+            "cd ${{ env.DEPLOY_PATH }} && pnpm install --prod --frozen-lockfile && (pm2 restart ${{ env.PM2_APP_NAME }} 2>/dev/null || PORT=${{ env.APP_PORT }} pm2 start dist/server/entry.mjs --name ${{ env.PM2_APP_NAME }}) && pm2 save"
 
       - name: Cleanup SSH
         if: steps.cache.outputs.cache-hit != 'true'
