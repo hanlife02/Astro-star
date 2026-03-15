@@ -10,27 +10,21 @@ const {
 } = Astro.props as Props;
 ---
 
-<section
-  class="article-comments"
-  aria-label="Comments"
-  data-article-waline
-  data-waline-server-url={walineServerURL}
-  data-waline-path={articleRoutePath}
->
-  <header class="article-comments-header">
-    <h2 class="article-comments-title">Comments</h2>
-    <p class="article-comments-description">Discuss this article here.</p>
-  </header>
-  {
-    walineServerURL ? (
-      <div class="article-comments-thread" data-waline-thread></div>
-    ) : (
-      <p class="article-comments-empty">
-        Comments are unavailable until <code>WALINE_SERVER_URL</code> is configured.
-      </p>
-    )
-  }
-</section>
+{walineServerURL && (
+  <section
+    class="article-comments"
+    aria-label="Comments"
+    data-article-waline
+    data-waline-server-url={walineServerURL}
+    data-waline-path={articleRoutePath}
+  >
+    <header class="article-comments-header">
+      <h2 class="article-comments-title">Comments</h2>
+      <p class="article-comments-description">Discuss this article here.</p>
+    </header>
+    <div class="article-comments-thread" data-waline-thread></div>
+  </section>
+)}
 
 <script>
   import { init } from "@waline/client";
@@ -44,7 +38,7 @@ const {
     const lang = document.documentElement.lang === "zh-CN" ? "zh-CN" : "en";
 
     if (!serverURL) {
-      console.warn("[Waline] PUBLIC_WALINE_SERVER_URL is not configured.");
+      console.warn("[Waline] WALINE_SERVER_URL is not configured.");
       return;
     }
 
