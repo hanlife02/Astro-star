@@ -23,7 +23,8 @@ function buildRssItems(
   for (const entry of entries) {
     const title = resolveContentTitle(entry.id, entry.data.title);
     const slug = resolveContentSlug(entry.id, entry.data.routeSlug);
-    const contentPath = entry.filePath ?? `src/content/${section}/${entry.id}.mdx`;
+    const contentPath =
+      entry.filePath ?? `src/content/${section}/${entry.id}.mdx`;
     const { createdAt: gitCreatedAt, updatedAt: gitUpdatedAt } =
       getGitTimestamps(contentPath);
     const { createdAt, updatedAt } = resolveContentDates(entry.data, {

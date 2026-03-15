@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync, existsSync } from "node:fs";
+import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
 import { execSync } from "node:child_process";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -18,8 +18,14 @@ if (!existsSync(jsonPath)) {
 const config = JSON.parse(readFileSync(jsonPath, "utf-8"));
 const toTS = (obj) => JSON.stringify(obj, null, 2);
 
+/** writeFileSync with automatic parent directory creation */
+function writeFileSyncSafe(filePath, data, encoding) {
+  mkdirSync(dirname(filePath), { recursive: true });
+  writeFileSync(filePath, data, encoding);
+}
+
 // --- 2. Generate src/config/site.ts ---
-writeFileSync(
+writeFileSyncSafe(
   resolve(ROOT, "src/config/site.ts"),
   `export const site = ${toTS(config.site)} as const;\n\nexport type SiteConfig = typeof site;\n`,
   "utf-8",
@@ -27,7 +33,7 @@ writeFileSync(
 console.log("Written: src/config/site.ts");
 
 // --- 3. Generate src/config/about.ts ---
-writeFileSync(
+writeFileSyncSafe(
   resolve(ROOT, "src/config/about.ts"),
   [
     `export interface AboutPanelItem {`,
@@ -64,7 +70,7 @@ writeFileSync(
 console.log("Written: src/config/about.ts");
 
 // --- 4. Generate src/config/links.ts ---
-writeFileSync(
+writeFileSyncSafe(
   resolve(ROOT, "src/config/links.ts"),
   [
     `export interface FriendLinkItem {`,
@@ -103,7 +109,7 @@ console.log("Written: src/config/links.ts");
 // --- 5. Patch rss.xml.ts language ---
 const rssPath = resolve(ROOT, "src/pages/rss.xml.ts");
 const rssContent = readFileSync(rssPath, "utf-8");
-writeFileSync(
+writeFileSyncSafe(
   rssPath,
   rssContent.replace(
     /<language>[\w-]+<\/language>/,

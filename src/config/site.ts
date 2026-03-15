@@ -1,4 +1,4 @@
-﻿export const site = {
+export const site = {
   name: "Ethan",
   url: "https://hanlife02.com",
   iconSrc: "/site-icon.svg",
