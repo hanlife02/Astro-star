@@ -1,0 +1,89 @@
+name: Build & Deploy
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # ── Source hash: skip build if nothing changed ──
+      - name: Compute source hash
+        id: hash
+        run: |
+          HASH=${{ hashFiles('src/**', 'public/**', 'package.json', 'pnpm-lock.yaml', 'astro.config.mjs') }}
+          echo "source_hash=$HASH" >> "$GITHUB_OUTPUT"
+
+      - name: Check hash cache
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: .hash-marker
+          key: deploy-hash-${{ steps.hash.outputs.source_hash }}
+
+      - name: Skip notice
+        if: steps.cache.outputs.cache-hit == 'true'
+        run: echo "Source unchanged — skipping build & deploy."
+
+      # ── Build ──
+      - name: Setup pnpm
+        if: steps.cache.outputs.cache-hit != 'true'
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        if: steps.cache.outputs.cache-hit != 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: pnpm build
+        env:
+          PUBLIC_WALINE_SERVER_URL: ${{ vars.PUBLIC_WALINE_SERVER_URL }}
+
+      # ── Deploy via rsync + SSH ──
+      - name: Setup SSH
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -p ${{ secrets.SSH_PORT || 22 }} -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Rsync to server
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          rsync -azP --delete \
+            -e "ssh -i ~/.ssh/deploy_key -p ${{ secrets.SSH_PORT || 22 }}" \
+            dist/ package.json pnpm-lock.yaml \
+            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ vars.DEPLOY_PATH }}/
+
+      - name: Install & restart on server
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          ssh -i ~/.ssh/deploy_key -p ${{ secrets.SSH_PORT || 22 }} \
+            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
+            "cd ${{ vars.DEPLOY_PATH }} && pnpm install --prod --frozen-lockfile && (pm2 restart ${{ vars.PM2_APP_NAME }} 2>/dev/null || pm2 start dist/server/entry.mjs --name ${{ vars.PM2_APP_NAME }}) && pm2 save"
+
+      - name: Cleanup SSH
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: rm -f ~/.ssh/deploy_key
+
+      # ── Save hash marker on success ──
+      - name: Save hash marker
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: echo "${{ steps.hash.outputs.source_hash }}" > .hash-marker
