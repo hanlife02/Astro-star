@@ -104,7 +104,7 @@ export const aboutPage = {
       label: "2026 - now : A new attempt",
       events: ["03.08 - New theme ---- Astro-star"],
       summary:
-        "I don't have much experience in writing front-end. The theme I've written so far is very rough. I will continue to optimize it.",
+        "I don't have much experience in writing front-end. The theme I've written so far is very rough. I will continue to optimize it. If you have suggestions or find bugs, please raise an issue here , https://github.com/hanlife02/Astro-star/issues, I will be very grateful. Likewise, PRs are very welcome for this project",
     },
   ],
 } satisfies AboutPageConfig;
