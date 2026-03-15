@@ -27,5 +27,8 @@ pnpm-debug.log*
 src/data/*
 !src/data/user-config.example.json
 
+# generated git timestamps (build artifact)
+src/gitlog/
+
 # claude
 .claude/
