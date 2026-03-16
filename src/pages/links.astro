@@ -3,6 +3,7 @@ import DocumentPageShell from "../components/layout/DocumentPageShell.astro";
 import WalineComments from "../components/content/WalineComments.astro";
 import FriendLinksPanel from "../components/links/FriendLinksPanel.astro";
 import LostLinksPanel from "../components/links/LostLinksPanel.astro";
+import OwnerInfoCard from "../components/links/OwnerInfoCard.astro";
 import { WALINE_SERVER_URL } from "astro:env/server";
 import { friendLinks, linksPage, lostLinks } from "../config/links";
 import "../style/pages/content-page.css";
@@ -34,6 +35,8 @@ const tocItems = [
   <LostLinksPanel items={lostLinks} title={linksPage.lostTitle} />
 
   <h2 id="apply">{linksPage.applyTitle}</h2>
+  <p>Please apply in the format below and leave a comment.</p>
+  <OwnerInfoCard {...linksPage.applyOwner} />
   {linksPage.applyRules.map((rule) => <p>{rule}</p>)}
 
   <WalineComments articleRoutePath="/links/" walineServerURL={walineServerURL} />

@@ -1,0 +1,23 @@
+---
+import "../../style/components/links/owner-info-card.css";
+
+interface Props {
+  name: string;
+  description: string;
+  href: string;
+  avatarSrc: string;
+}
+
+const { name, description, href, avatarSrc } = Astro.props;
+---
+
+<dl class="owner-info-card">
+  <dt class="owner-info-label">Name:</dt>
+  <dd class="owner-info-value">{name}</dd>
+  <dt class="owner-info-label">Desc:</dt>
+  <dd class="owner-info-value">{description}</dd>
+  <dt class="owner-info-label">Link:</dt>
+  <dd class="owner-info-value"><a href={href}>{href}</a></dd>
+  <dt class="owner-info-label">Avatar:</dt>
+  <dd class="owner-info-value"><a href={avatarSrc}>{avatarSrc}</a></dd>
+</dl>

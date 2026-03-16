@@ -17,6 +17,12 @@ export interface LinksPageConfig {
   friendsTitle: string;
   lostTitle: string;
   applyTitle: string;
+  applyOwner: {
+    name: string;
+    description: string;
+    href: string;
+    avatarSrc: string;
+  };
   applyRules: readonly string[];
 }
 
@@ -26,6 +32,12 @@ export const linksPage = {
   friendsTitle: "Friends",
   lostTitle: "Lost",
   applyTitle: "Apply",
+  applyOwner: {
+    name: "Ethan",
+    description: "Don't stay awake for too long.",
+    href: "https://hanlife02.com",
+    avatarSrc: "https://hanlife02.com/avatar.svg",
+  },
   applyRules: [
     "Before applying, make sure your site already lists my link. If your application is approved and you later remove my link, I will remove yours and add your site to a blacklist.",
     "If your site is unreachable for a long time, I may remove your link. You can apply again after your site is back online.",
