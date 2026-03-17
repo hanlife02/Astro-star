@@ -4,6 +4,7 @@ import "katex/dist/katex.min.css";
 
 interface Props {
   title?: string;
+  description?: string;
 }
 
 const THEME_COOKIE_KEY = "theme-preference";
@@ -15,7 +16,8 @@ type ThemeMode = (typeof VALID_THEME_MODES)[number];
 const isThemeMode = (value: string | undefined): value is ThemeMode =>
   VALID_THEME_MODES.includes(value as ThemeMode);
 
-const { title } = Astro.props as Props;
+const { title, description } = Astro.props as Props;
+const pageDescription = description ?? site.description;
 const pathname = Astro.url.pathname.replace(/\/+$/, "") || "/";
 const routeRoot = pathname.split("/").filter(Boolean)[0] || "";
 const PAGE_NAME_BY_ROUTE_ROOT = {
@@ -62,6 +64,7 @@ const initialTheme =
       name="theme-color"
       content={initialTheme === "dark" ? "#000000" : "#ffffff"}
     />
+    <meta name="description" content={pageDescription} />
     <meta name="generator" content={Astro.generator} />
     <link rel="preload" href="/fonts/Biotif-Regular.ttf" as="font" type="font/ttf" crossorigin />
     <link rel="preload" href="/fonts/Biotif-Medium.ttf" as="font" type="font/ttf" crossorigin />

@@ -1,6 +1,7 @@
 export const site = {
   name: "Ethan",
   url: "https://hanlife02.com",
+  description: "Ethan's personal blog — coding, AI4S, and life at Peking University.",
   iconSrc: "/site-icon.svg",
   owner: {
     name: "Ethan",
