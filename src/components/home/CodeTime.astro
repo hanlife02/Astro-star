@@ -4,27 +4,31 @@ import "../../style/components/home/codetime.css";
 
 const badge = {
   alt: "CodeTime Badge",
-  src: site.profile.codeTimeBadgeSrc,
-  href: site.profile.codeTimeHref,
+  src: site.profile.codetime
+    ? `https://shields.jannchie.com/endpoint?style=social&color=222&url=${encodeURIComponent(`https://api.codetime.dev/v3/users/shield?uid=${site.profile.codetime}`)}`
+    : "",
+  href: "https://codetime.dev",
 };
 ---
 
 {
-  <a
-    class="codetime-link"
-    href={badge.href}
-    target="_blank"
-    rel="noopener noreferrer"
-    aria-label={badge.alt}
-  >
-    <img
-      src={badge.src}
-      alt={badge.alt}
-      width="168"
-      height="20"
-      loading="lazy"
-      decoding="async"
-      referrerpolicy="no-referrer"
-    />
-  </a>
+  badge.src && (
+    <a
+      class="codetime-link"
+      href={badge.href}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={badge.alt}
+    >
+      <img
+        src={badge.src}
+        alt={badge.alt}
+        width="168"
+        height="20"
+        loading="lazy"
+        decoding="async"
+        referrerpolicy="no-referrer"
+      />
+    </a>
+  )
 }

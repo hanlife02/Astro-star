@@ -8,11 +8,11 @@ import { resolveContentSlug } from "../utils/content-slug";
 import { resolveContentTitle } from "../utils/content-title";
 import { getGitTimestamps } from "../utils/git-timestamps";
 
-const { profile, owner } = site;
-const githubUsername = (profile.githubUsername || site.contact.githubUsername).trim();
+const { profile } = site;
+const githubUsername = profile.githubUsername.trim();
 const bilibiliId = profile.bilibiliId.trim();
 const cloudMusicId = profile.cloudMusicId.trim();
-const emailAddress = (profile.email || site.contact.email).trim();
+const emailAddress = profile.email.trim();
 
 const latestBlogEntries = await getCollection("blog");
 const latestNoteEntries = await getCollection("note");
@@ -127,7 +127,7 @@ const profileLinks = [
 
 <HomePageContent
   profile={profile}
-  ownerName={owner.name}
+  ownerName={profile.name}
   profileLinks={profileLinks}
   latestBlogTimelineGroups={latestBlogTimelineGroups}
   latestNoteTimelineGroups={latestNoteTimelineGroups}

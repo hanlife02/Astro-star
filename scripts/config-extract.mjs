@@ -5,9 +5,9 @@ import {
   copyFileSync,
   existsSync,
 } from "node:fs";
-import { execSync } from "node:child_process";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { create as createTarball } from "tar";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -18,6 +18,83 @@ const { linksPage, friendLinks, lostLinks } = await import(
   "../src/config/links.ts"
 );
 
+function resolveCodeTimeId(profile = {}) {
+  if (typeof profile.codetime === "string") return profile.codetime;
+
+  const legacyBadgeSrc =
+    typeof profile.codeTimeBadgeSrc === "string" ? profile.codeTimeBadgeSrc : "";
+  const uidMatch = legacyBadgeSrc.match(/uid(?:%3D|=)(\d+)/i);
+
+  return uidMatch?.[1] ?? "";
+}
+
+function normalizeSplitSiteConfig(input) {
+  if (input?.profile && input?.site) {
+    return {
+      profile: {
+        name: input.profile.name ?? "",
+        email: input.profile.email ?? "",
+        githubUsername: input.profile.githubUsername ?? "",
+        avatarSrc: input.profile.avatarSrc ?? "",
+        bio: input.profile.bio ?? "",
+        intro: input.profile.intro ?? "",
+        bilibiliId: input.profile.bilibiliId ?? "",
+        cloudMusicId: input.profile.cloudMusicId ?? "",
+        codetime: resolveCodeTimeId(input.profile),
+        signatureSvg: input.profile.signatureSvg ?? "",
+      },
+      site: {
+        name: input.site.name ?? "",
+        url: input.site.url ?? "",
+        description: input.site.description ?? "",
+        iconSrc: input.site.iconSrc ?? "",
+        startYear: input.site.startYear ?? new Date().getFullYear(),
+        beian: input.site.beian ?? {
+          icp: { text: "", href: "" },
+          moe: { text: "", href: "" },
+        },
+        monitorLinks: input.site.monitorLinks ?? [],
+        codeRainKeywords: input.site.codeRainKeywords ?? [],
+        nav: input.site.nav ?? [],
+      },
+    };
+  }
+
+  const legacyProfile = input?.profile ?? {};
+  const legacyOwner = input?.owner ?? {};
+  const legacyContact = input?.contact ?? {};
+
+  return {
+    profile: {
+      name: legacyOwner.name ?? input?.name ?? "",
+      email: legacyProfile.email ?? legacyContact.email ?? "",
+      githubUsername:
+        legacyProfile.githubUsername ?? legacyContact.githubUsername ?? "",
+      avatarSrc: legacyProfile.avatarSrc ?? "",
+      bio: legacyProfile.bio ?? "",
+      intro: legacyProfile.intro ?? "",
+      bilibiliId: legacyProfile.bilibiliId ?? "",
+      cloudMusicId: legacyProfile.cloudMusicId ?? "",
+      codetime: resolveCodeTimeId(legacyProfile),
+      signatureSvg: legacyProfile.signatureSvg ?? "",
+    },
+    site: {
+      name: input?.name ?? "",
+      url: input?.url ?? "",
+      description: input?.description ?? "",
+      iconSrc: input?.iconSrc ?? "",
+      startYear: legacyOwner.startYear ?? new Date().getFullYear(),
+      beian: input?.beian ?? {
+        icp: { text: "", href: "" },
+        moe: { text: "", href: "" },
+      },
+      monitorLinks: input?.monitorLinks ?? [],
+      codeRainKeywords: legacyProfile.codeRainKeywords ?? [],
+      nav: input?.nav ?? [],
+    },
+  };
+}
+
 // --- 2. Extract RSS language via regex ---
 const rssContent = readFileSync(
   resolve(ROOT, "src/pages/rss.xml.ts"),
@@ -27,8 +104,11 @@ const langMatch = rssContent.match(/<language>([\w-]+)<\/language>/);
 const rssLanguage = langMatch ? langMatch[1] : "zh-cn";
 
 // --- 3. Build unified config object ---
+const normalizedSiteConfig = normalizeSplitSiteConfig(site);
+
 const config = {
-  site,
+  profile: normalizedSiteConfig.profile,
+  site: normalizedSiteConfig.site,
   about: aboutPage,
   links: {
     page: linksPage,
@@ -64,9 +144,14 @@ const packPaths = [
 ].filter((p) => existsSync(resolve(ROOT, p)));
 
 if (packPaths.length > 0) {
-  execSync(
-    `tar -czf src/data/user-content.tar.gz ${packPaths.join(" ")}`,
-    { cwd: ROOT, stdio: "inherit" },
+  await createTarball(
+    {
+      cwd: ROOT,
+      file: "src/data/user-content.tar.gz",
+      gzip: true,
+      portable: true,
+    },
+    packPaths,
   );
   console.log("Written: src/data/user-content.tar.gz");
 } else {

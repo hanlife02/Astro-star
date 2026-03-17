@@ -58,9 +58,9 @@ const rssItems = [
 
 export const GET: APIRoute = async ({ site }) => {
   return rss({
-    title: `${siteConfig.name} Feed`,
+    title: `${siteConfig.site.name} Feed`,
     description: siteConfig.profile.bio,
-    site: site ?? siteConfig.url,
+    site: site ?? siteConfig.site.url,
     items: rssItems,
     customData: "<language>zh-cn</language>",
   });

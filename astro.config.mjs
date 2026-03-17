@@ -11,7 +11,7 @@ import { site } from './src/config/site.ts';
 
 // https://astro.build/config
 export default defineConfig({
-  site: site.url,
+  site: site.site.url,
   output: 'server',
   adapter: node({
     mode: 'standalone',

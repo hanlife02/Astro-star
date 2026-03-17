@@ -2,6 +2,7 @@ import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
 import { execSync } from "node:child_process";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { extract as extractTarball } from "tar";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -18,6 +19,88 @@ if (!existsSync(jsonPath)) {
 const config = JSON.parse(readFileSync(jsonPath, "utf-8"));
 const toTS = (obj) => JSON.stringify(obj, null, 2);
 
+function resolveCodeTimeId(profile = {}) {
+  if (typeof profile.codetime === "string") return profile.codetime;
+
+  const legacyBadgeSrc =
+    typeof profile.codeTimeBadgeSrc === "string" ? profile.codeTimeBadgeSrc : "";
+  const uidMatch = legacyBadgeSrc.match(/uid(?:%3D|=)(\d+)/i);
+
+  return uidMatch?.[1] ?? "";
+}
+
+function normalizeSplitSiteConfig(input) {
+  if (input?.site?.profile && input?.site?.site) {
+    return normalizeSplitSiteConfig(input.site);
+  }
+
+  if (input?.profile && input?.site) {
+    return {
+      profile: {
+        name: input.profile.name ?? "",
+        email: input.profile.email ?? "",
+        githubUsername: input.profile.githubUsername ?? "",
+        avatarSrc: input.profile.avatarSrc ?? "",
+        bio: input.profile.bio ?? "",
+        intro: input.profile.intro ?? "",
+        bilibiliId: input.profile.bilibiliId ?? "",
+        cloudMusicId: input.profile.cloudMusicId ?? "",
+        codetime: resolveCodeTimeId(input.profile),
+        signatureSvg: input.profile.signatureSvg ?? "",
+      },
+      site: {
+        name: input.site.name ?? "",
+        url: input.site.url ?? "",
+        description: input.site.description ?? "",
+        iconSrc: input.site.iconSrc ?? "",
+        startYear: input.site.startYear ?? new Date().getFullYear(),
+        beian: input.site.beian ?? {
+          icp: { text: "", href: "" },
+          moe: { text: "", href: "" },
+        },
+        monitorLinks: input.site.monitorLinks ?? [],
+        codeRainKeywords: input.site.codeRainKeywords ?? [],
+        nav: input.site.nav ?? [],
+      },
+    };
+  }
+
+  const legacySite = input?.site ?? input ?? {};
+  const legacyProfile = legacySite.profile ?? {};
+  const legacyOwner = legacySite.owner ?? {};
+  const legacyContact = legacySite.contact ?? {};
+
+  return {
+    profile: {
+      name: legacyOwner.name ?? legacySite.name ?? "",
+      email: legacyProfile.email ?? legacyContact.email ?? "",
+      githubUsername:
+        legacyProfile.githubUsername ?? legacyContact.githubUsername ?? "",
+      avatarSrc: legacyProfile.avatarSrc ?? "",
+      bio: legacyProfile.bio ?? "",
+      intro: legacyProfile.intro ?? "",
+      bilibiliId: legacyProfile.bilibiliId ?? "",
+      cloudMusicId: legacyProfile.cloudMusicId ?? "",
+      codetime: resolveCodeTimeId(legacyProfile),
+      signatureSvg: legacyProfile.signatureSvg ?? "",
+    },
+    site: {
+      name: legacySite.name ?? "",
+      url: legacySite.url ?? "",
+      description: legacySite.description ?? "",
+      iconSrc: legacySite.iconSrc ?? "",
+      startYear: legacyOwner.startYear ?? new Date().getFullYear(),
+      beian: legacySite.beian ?? {
+        icp: { text: "", href: "" },
+        moe: { text: "", href: "" },
+      },
+      monitorLinks: legacySite.monitorLinks ?? [],
+      codeRainKeywords: legacyProfile.codeRainKeywords ?? [],
+      nav: legacySite.nav ?? [],
+    },
+  };
+}
+
 /** writeFileSync with automatic parent directory creation */
 function writeFileSyncSafe(filePath, data, encoding) {
   mkdirSync(dirname(filePath), { recursive: true });
@@ -25,9 +108,11 @@ function writeFileSyncSafe(filePath, data, encoding) {
 }
 
 // --- 2. Generate src/config/site.ts ---
+const normalizedSiteConfig = normalizeSplitSiteConfig(config);
+
 writeFileSyncSafe(
   resolve(ROOT, "src/config/site.ts"),
-  `export const site = ${toTS(config.site)} as const;\n\nexport type SiteConfig = typeof site;\n`,
+  `export const site = ${toTS(normalizedSiteConfig)} as const;\n\nexport type SiteConfig = typeof site;\n`,
   "utf-8",
 );
 console.log("Written: src/config/site.ts");
@@ -128,9 +213,10 @@ console.log("Written: src/pages/rss.xml.ts");
 // --- 6. Extract content archive ---
 const tarPath = resolve(ROOT, "src/data/user-content.tar.gz");
 if (existsSync(tarPath)) {
-  execSync("tar -xzf src/data/user-content.tar.gz", {
+  await extractTarball({
     cwd: ROOT,
-    stdio: "inherit",
+    file: tarPath,
+    gzip: true,
   });
   console.log("Extracted: src/data/user-content.tar.gz");
 } else {

@@ -25,7 +25,8 @@
     "better-sqlite3": "^12.6.2",
     "bson": "^7.2.0",
     "prettier": "latest",
-    "prettier-plugin-astro": "latest"
+    "prettier-plugin-astro": "latest",
+    "tar": "^7.5.11"
   },
   "dependencies": {
     "@ascorbic/feed-loader": "^2.0.1",
