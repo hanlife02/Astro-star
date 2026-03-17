@@ -2,7 +2,7 @@
 import { site } from "../../config/site";
 import "../../style/components/home/githeatmap.css";
 
-const username = site.profile.githubUsername || site.contact.githubUsername;
+const username = site.profile.githubUsername;
 const heatmapSrc = `https://ghchart.rshah.org/${encodeURIComponent(username)}`;
 const profileHref = `https://github.com/${encodeURIComponent(username)}`;
 ---

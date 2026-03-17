@@ -36,7 +36,7 @@ const articleSource = articleEntry.body ?? "";
 const title = resolveContentTitle(articleEntry.id, articleEntry.data.title);
 const description = articleEntry.data.description?.trim() || "";
 const articleType = articleEntry.data.type?.trim() || "Uncategorized";
-const author = site.owner.name;
+const author = site.profile.name;
 const walineServerURL = WALINE_SERVER_URL?.trim() || "";
 const articleRoutePath = `/${section}/${slug}/`;
 const contentPath = articleEntry.filePath ?? `src/content/${section}/${articleEntry.id}.mdx`;
@@ -82,7 +82,7 @@ const countWords = (source: string) => {
 };
 
 const articleWordCount = countWords(articleSource);
-const canonicalUrl = new URL(articleRoutePath, site.url).toString();
+const canonicalUrl = new URL(articleRoutePath, site.site.url).toString();
 const tocHeadings = headings
   .filter((heading) => heading.depth >= 1 && heading.depth <= 3)
   .map((heading) => ({
@@ -106,5 +106,5 @@ const tocHeadings = headings
   tocHeadings={tocHeadings}
   ArticleContent={Content}
   canonicalUrl={canonicalUrl}
-  siteName={site.name}
+  siteName={site.site.name}
 />

@@ -9,7 +9,7 @@ interface Props {
 
 const { repoHref = "https://github.com/hanlife02/Astro-star", separator = "|" } = Astro.props as Props;
 const currentYear = new Date().getFullYear();
-const copyrightYears = `${site.owner.startYear}-${currentYear}`;
+const copyrightYears = `${site.site.startYear}-${currentYear}`;
 ---
 
 <div class="footer-meta" aria-label="Site footer information">
@@ -19,12 +19,12 @@ const copyrightYears = `${site.owner.startYear}-${currentYear}`;
     </a>
     <span class="footer-meta-separator footer-meta-separator--primary" aria-hidden="true">{separator}</span>
     <span class="footer-meta-group">
-      <a class="footer-meta-link" href={site.beian.icp.href} target="_blank" rel="noreferrer">
-        {site.beian.icp.text}
+      <a class="footer-meta-link" href={site.site.beian.icp.href} target="_blank" rel="noreferrer">
+        {site.site.beian.icp.text}
       </a>
       <span class="footer-meta-separator" aria-hidden="true">{separator}</span>
-      <a class="footer-meta-link" href={site.beian.moe.href} target="_blank" rel="noreferrer">
-        {site.beian.moe.text}
+      <a class="footer-meta-link" href={site.site.beian.moe.href} target="_blank" rel="noreferrer">
+        {site.site.beian.moe.text}
       </a>
     </span>
   </p>
