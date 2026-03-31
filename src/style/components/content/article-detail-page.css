@@ -166,6 +166,29 @@ html:lang(zh-CN) .content-page--article {
   object-fit: contain;
 }
 
+.article-comments-thread .wl-card .wl-content .wl-reply-to {
+  float: none;
+  display: inline-flex;
+  align-items: baseline;
+  margin: 0 0.38em 0 0;
+}
+
+.article-comments-thread .wl-card .wl-content > .wl-reply-to + div {
+  display: contents;
+}
+
+.article-comments-thread .wl-card .wl-content > .wl-reply-to + div > :first-child {
+  margin-top: 0;
+}
+
+.article-comments-thread .wl-card .wl-content > .wl-reply-to + div > :last-child {
+  margin-bottom: 0;
+}
+
+.article-comments-thread .wl-card .wl-content > .wl-reply-to + div > p:first-child {
+  display: inline;
+}
+
 .article-license {
   margin-top: 2rem;
   padding-top: 1rem;
