@@ -69,14 +69,7 @@
   border: 1px solid color-mix(in srgb, var(--line) 12%, transparent);
   border-radius: var(--radius-md);
   background: color-mix(in srgb, var(--line) 2.5%, transparent);
-  transition: border-color 0.22s ease, transform 0.22s ease, background 0.22s ease;
-}
-
-:is(.listing-card, .collection-page-card):hover,
-:is(.listing-card, .collection-page-card):focus-within {
-  border-color: color-mix(in srgb, var(--accent) 36%, transparent);
-  background: color-mix(in srgb, var(--accent) 4%, transparent);
-  transform: translateY(-0.08rem);
+  transition: none;
 }
 
 :is(.listing-card-link, .collection-page-card-link) {
@@ -133,23 +126,7 @@
   line-height: 1;
   pointer-events: none;
   transform: translate3d(0, -50%, 0);
-  transition: color 0.22s ease, transform 0.22s ease;
-}
-
-:is(.listing-card-link, .collection-page-card-link):hover :is(.listing-card-title, .collection-page-card-title),
-:is(.listing-card-link, .collection-page-card-link):focus-visible :is(.listing-card-title, .collection-page-card-title),
-:is(.listing-card-link, .collection-page-card-link):hover :is(.listing-card-meta, .collection-page-card-meta),
-:is(.listing-card-link, .collection-page-card-link):focus-visible :is(.listing-card-meta, .collection-page-card-meta),
-:is(.listing-card-link, .collection-page-card-link):hover :is(.listing-card-description, .collection-page-card-description),
-:is(.listing-card-link, .collection-page-card-link):focus-visible :is(.listing-card-description, .collection-page-card-description),
-:is(.listing-card-link, .collection-page-card-link):hover :is(.listing-card-arrow, .collection-page-card-arrow),
-:is(.listing-card-link, .collection-page-card-link):focus-visible :is(.listing-card-arrow, .collection-page-card-arrow) {
-  color: var(--accent);
-}
-
-:is(.listing-card-link, .collection-page-card-link):hover :is(.listing-card-arrow, .collection-page-card-arrow),
-:is(.listing-card-link, .collection-page-card-link):focus-visible :is(.listing-card-arrow, .collection-page-card-arrow) {
-  transform: translate3d(0.26rem, -50%, 0);
+  transition: color 0.22s ease;
 }
 
 @media (min-width: 56.25rem) {

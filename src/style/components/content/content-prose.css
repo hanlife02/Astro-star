@@ -4,7 +4,9 @@
   --content-image-radius: clamp(0.75rem, 0.6rem + 0.5vw, 1rem);
   --content-body-font-size: inherit;
   --content-body-line-height: 1.8;
-  --content-code-font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --content-code-font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
   --content-code-font-size: clamp(12.5px, 12.15px + 0.18vw, 13.5px);
   --content-code-line-height: 1.55;
   --content-code-padding-block: clamp(10px, 9.5px + 0.2vw, 12px);
@@ -98,16 +100,7 @@ html:lang(zh-CN) .content-page--article .content-page-body {
   text-decoration-line: underline;
   text-decoration-thickness: 0.08em;
   text-underline-offset: 0.16em;
-  text-decoration-color: color-mix(in srgb, var(--accent) 38%, transparent);
-  transition:
-    color 0.2s ease,
-    text-decoration-color 0.2s ease;
-}
-
-.content-page-body a:hover,
-.content-page-body a:focus-visible {
-  color: color-mix(in srgb, var(--accent) 92%, var(--line) 8%);
-  text-decoration-color: currentColor;
+  transition: color 0.2s ease;
 }
 
 .content-page-body h1,
@@ -175,7 +168,8 @@ html:lang(zh-CN) .content-page--article .content-page-body {
   height: auto;
 }
 
-.content-page-body :is(
+.content-page-body
+  :is(
     p > img:only-child,
     p > a:only-child > img,
     p > picture:only-child > img,

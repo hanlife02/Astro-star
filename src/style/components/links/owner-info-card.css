@@ -29,13 +29,7 @@
   white-space: nowrap;
 }
 
-.content-page-body .owner-info-card a,
-.content-page-body .owner-info-card a:hover,
-.content-page-body .owner-info-card a:focus-visible {
+.content-page-body .owner-info-card a {
   color: inherit;
   text-decoration: none;
-}
-
-.content-page-body .owner-info-card a:hover {
-  color: var(--accent);
 }

@@ -21,24 +21,10 @@
   white-space: nowrap;
 }
 
-.content-page-body :is(.listing-view-all-link, .collection-page-view-all-link):hover,
-.content-page-body :is(.listing-view-all-link, .collection-page-view-all-link):focus-visible {
-  color: var(--accent);
-}
-
 :is(.listing-groups, .collection-page-groups) .content-toc-link,
 :is(.listing-groups, .collection-page-groups) .content-toc-link--depth-2 {
   color: var(--line);
   opacity: 1;
-  text-decoration-color: transparent;
-}
-
-:is(.listing-groups, .collection-page-groups) .content-toc-link:hover,
-:is(.listing-groups, .collection-page-groups) .content-toc-link:focus-visible,
-:is(.listing-groups, .collection-page-groups) .content-toc-link--depth-2:hover,
-:is(.listing-groups, .collection-page-groups) .content-toc-link--depth-2:focus-visible {
-  color: var(--accent);
-  text-decoration-color: color-mix(in srgb, var(--accent) 32%, transparent);
 }
 
 :is(.listing-groups, .collection-page-groups) > .content-toc-list {
@@ -46,8 +32,12 @@
   overflow-x: hidden;
 }
 
-:is(.listing-groups, .collection-page-groups) > .content-toc-list > .content-toc-item,
-:is(.listing-groups, .collection-page-groups) > .content-toc-list > .content-toc-item--depth-2 {
+:is(.listing-groups, .collection-page-groups)
+  > .content-toc-list
+  > .content-toc-item,
+:is(.listing-groups, .collection-page-groups)
+  > .content-toc-list
+  > .content-toc-item--depth-2 {
   padding-left: 0;
   min-width: 0;
 }
@@ -55,7 +45,8 @@
 :is(.listing-groups, .collection-page-groups) .content-toc-link,
 :is(.listing-groups, .collection-page-groups) .content-toc-link--depth-2,
 :is(.content-toc--listing, .content-toc--collection) .content-toc-link,
-:is(.content-toc--listing, .content-toc--collection) .content-toc-link--depth-2 {
+:is(.content-toc--listing, .content-toc--collection)
+  .content-toc-link--depth-2 {
   display: block;
   max-width: 100%;
   min-width: 0;

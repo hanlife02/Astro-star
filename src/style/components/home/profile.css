@@ -68,13 +68,7 @@
   justify-content: center;
   color: var(--line-soft);
   text-decoration: none;
-  transition: color 0.2s ease, transform 0.2s ease;
-}
-
-.profile-link:hover,
-.profile-link:focus-visible {
-  color: var(--line);
-  transform: translateY(-0.0625rem);
+  transition: color 0.2s ease;
 }
 
 .profile-link svg {

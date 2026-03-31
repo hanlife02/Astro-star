@@ -72,10 +72,6 @@
   display: none;
 }
 
-.signature-collapse-trigger:hover {
-  color: var(--line);
-}
-
 .signature-collapse-trigger svg {
   width: var(--menu-icon-size);
   height: var(--menu-icon-size);
@@ -136,14 +132,7 @@
   text-decoration: none;
   font-size: var(--signature-link-size);
   line-height: 1.3;
-  transform-origin: left center;
-  transition: color 0.22s ease, transform 0.22s ease;
-}
-
-.signature-collapse-links a:hover,
-.signature-collapse-links a:focus-visible {
-  color: #483D8B;
-  transform: scale(1.06);
+  transition: color 0.22s ease;
 }
 
 .nav-drawer {
@@ -173,15 +162,13 @@
   list-style: none;
   color: var(--line-soft);
   line-height: 0;
-  transition: color 0.2s ease, opacity 0.2s ease;
+  transition:
+    color 0.2s ease,
+    opacity 0.2s ease;
 }
 
 .hamburger::-webkit-details-marker {
   display: none;
-}
-
-.hamburger:hover {
-  color: var(--line);
 }
 
 .hamburger svg {
@@ -252,8 +239,6 @@
 
 .mobile-nav-drawer .signature-collapse-links a:hover,
 .mobile-nav-drawer .signature-collapse-links a:focus-visible {
-  background: color-mix(in srgb, #483D8B 8%, transparent);
-  transform: none;
   outline: none;
 }
 
@@ -301,7 +286,9 @@
   padding: 0;
   line-height: 0;
   cursor: pointer;
-  transition: color 0.2s ease, opacity 0.2s ease;
+  transition:
+    color 0.2s ease,
+    opacity 0.2s ease;
 }
 
 .theme-btn svg,
@@ -322,11 +309,6 @@
 .theme-btn [data-theme-icon]:not([hidden]) svg {
   width: 100%;
   height: 100%;
-}
-
-.theme-btn:hover,
-.search-btn:hover {
-  color: var(--line);
 }
 
 .theme-btn[aria-pressed="true"] {
@@ -423,11 +405,9 @@
   padding-bottom: 0;
   cursor: pointer;
   text-decoration: none;
-  transition: color 0.2s ease, opacity 0.2s ease;
-}
-
-.footer-rss-btn:hover {
-  color: var(--line);
+  transition:
+    color 0.2s ease,
+    opacity 0.2s ease;
 }
 
 .footer-rss-btn:focus-visible {
@@ -551,16 +531,12 @@
   }
 }
 
-
 @media (min-width: 150rem) {
   :root {
     --font-size-base: clamp(1.0625rem, 1.15vw, 1.4rem);
     --shell-max: min(93vw, 137.5rem);
   }
 }
-
-
-
 
 .floating-action-stack {
   position: fixed;
