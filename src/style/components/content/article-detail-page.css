@@ -122,9 +122,13 @@ html:lang(zh-CN) .content-page--article {
 .article-comments-thread {
   --waline-theme-color: var(--accent);
   --waline-color: var(--line);
+  --waline-light-grey: color-mix(in srgb, var(--line) 56%, transparent);
+  --waline-dark-grey: color-mix(in srgb, var(--line) 82%, transparent);
   --waline-bg-color: transparent;
   --waline-bg-color-light: color-mix(in srgb, var(--line) 2.5%, transparent);
+  --waline-bg-color-hover: color-mix(in srgb, var(--line) 5%, transparent);
   --waline-border-color: color-mix(in srgb, var(--line) 14%, transparent);
+  --waline-info-bg-color: color-mix(in srgb, var(--line) 9%, transparent);
   --waline-info-color: color-mix(in srgb, var(--line) 62%, transparent);
   --waline-text-color: color-mix(in srgb, var(--line) 76%, transparent);
   --waline-border: 1px solid var(--waline-border-color);
@@ -135,6 +139,31 @@ html:lang(zh-CN) .content-page--article {
 .article-comments-thread .wl-panel,
 .article-comments-thread .wl-card {
   border-radius: var(--radius-md);
+}
+
+.article-comments-thread .wl-card .wl-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.32rem;
+}
+
+.article-comments-thread .wl-card .wl-meta > span {
+  margin-inline-end: 0;
+  background: var(--waline-info-bg-color);
+  color: var(--waline-info-color);
+}
+
+.article-comments-thread .wl-content .vemoji,
+.article-comments-thread .wl-content .wl-emoji {
+  display: inline-block;
+  width: 1.25em;
+  height: 1.25em;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  margin-inline-start: 0.08em;
+  vertical-align: -0.22em;
+  object-fit: contain;
 }
 
 .article-license {
