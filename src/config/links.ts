@@ -52,6 +52,12 @@ export const linksPage = {
 
 export const friendLinks = [
   {
+    name: "lanhao.site",
+    description: "Blog of LanHao",
+    href: "https://site.lanhao.cc", 
+    avatarSrc: "https://img.lanhao.cc/file/AgACAgUAAxkDAAMIabYspSOWQMwSyhadQAwEEAABY0O0AAIjD2sb92ewVdFz-0Xsk40tAQADAgADeAADOgQ.jpg",
+  },
+  {
     name: "启动台LaunchPad",
     description: "代码改变世界",
     href: "https://launchpadx.top/",
