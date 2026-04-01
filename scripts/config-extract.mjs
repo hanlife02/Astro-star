@@ -139,8 +139,7 @@ const packPaths = [
   "src/content/project",
   "public/avatar.svg",
   "public/site-icon.svg",
-  "public/legacy/avatar",
-  "public/legacy/file",
+  "public/figures",
 ].filter((p) => existsSync(resolve(ROOT, p)));
 
 if (packPaths.length > 0) {

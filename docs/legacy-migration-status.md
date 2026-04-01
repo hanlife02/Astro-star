@@ -24,7 +24,7 @@
 | `notes` | 45 | `src/content/note/` | 45 | 已完成 |
 | `projects` | 4 | `src/content/project/` | 4 | 已完成 |
 
-这些内容文件都带有 `legacySourceCollection` / `legacySourceId`，可以继续作为后续审计依据。
+历史内容已经完成迁移，当前站点不再保留旧库来源字段。
 
 ### 2. 页面级配置
 

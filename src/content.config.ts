@@ -14,8 +14,6 @@ const baseContentSchema = z
     projectUrl: z.string().optional(),
     docUrl: z.string().optional(),
     avatar: z.string().optional(),
-    legacySourceCollection: z.string().optional(),
-    legacySourceId: z.string().optional(),
   })
   .passthrough();
 
@@ -29,8 +27,6 @@ const projectSchema = z.object({
   projectUrl: z.string().min(1),
   docUrl: z.string().min(1).optional(),
   avatar: z.string().min(1),
-  legacySourceCollection: z.literal("projects"),
-  legacySourceId: z.string().min(1),
 });
 
 const blog = defineCollection({

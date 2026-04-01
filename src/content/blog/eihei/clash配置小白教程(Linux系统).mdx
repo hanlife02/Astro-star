@@ -3,15 +3,13 @@ routeSlug: "clash"
 title: "clash配置小白教程(Linux系统)"
 createdAt: "2025-03-28 16:04:06"
 type: "折腾🐦"
-legacySourceCollection: "posts"
-legacySourceId: "67e540761acdff9805f92d9c"
 ---
 
 # 前言
 
 前几日试着将自己云服务器部署的一个 ai 服务迁移到clab上，结果在部署的时候发现网速如下图，由于clab使用校园网，作者也不会其他的方式😭，只能尝试着在clab上用`clash`代理提高访问外网(主要是`github`)的速度。
 
-![好慢](/legacy-assets/uwdrm4b5kctasdplec.jpeg)
+![好慢](/figures/uwdrm4b5kctasdplec.jpeg)
 
 # 壹 · 基础部署过程
 
@@ -49,7 +47,7 @@ chmod u+x clash
 
 1. 首先我们需要获得订阅地址，打开https://189854.xyz/verify 验证北大邮箱获得。
 
-![订阅地址](	/legacy-assets/4w1gxfylujteas2zig.jpg)
+![订阅地址](	/figures/4w1gxfylujteas2zig.jpg)
 
 2. 接着打开clab终端，cd到刚下载的二进制文件所在目录，下载配置文件，只需要修改订阅url并执行下面指令
 
@@ -60,7 +58,7 @@ wget -O config.yaml "订阅url"
 
 看到下图即为成功
 
-![配置文件下载](/legacy-assets/i3ieyplv6e8f9t8h8u.png)
+![配置文件下载](/figures/i3ieyplv6e8f9t8h8u.png)
 
 3. 接着我们首次启动clash,执行下面指令
 
@@ -72,7 +70,7 @@ wget -O config.yaml "订阅url"
 
 出现下图时恭喜你成功！
 
-![成功](	/legacy-assets/ajzi7e92s4xgx13o6k.png)
+![成功](	/figures/ajzi7e92s4xgx13o6k.png)
 
 # 贰 · Dashboard部署（可选）
 
@@ -82,7 +80,7 @@ wget -O config.yaml "订阅url"
 
 作者更推荐后者，因为前者很容易被他人访问。
 
-![dashboard示意](/legacy-assets/mo6bxbld7ny23m8pio.jpeg)
+![dashboard示意](/figures/mo6bxbld7ny23m8pio.jpeg)
 
 1. 首先，cd到clash目录编辑`config.yaml`文件
 
@@ -120,7 +118,7 @@ git checkout gh-pages
 
 部署完成，后续可配置反代通过域名访问或直接ip+端口9090访问
 
-![成功！](/legacy-assets/6n9ysmepc9fntnp88x.jpg)
+![成功！](/figures/6n9ysmepc9fntnp88x.jpg)
 
 # 叁 · 配置开机自启（可选）
 
@@ -162,7 +160,7 @@ sudo systemctl start clash
 ```
 sudo systemctl status clash
 ```
-![成功！](/legacy-assets/5umm4okpytv6i6vooc.png)
+![成功！](/figures/5umm4okpytv6i6vooc.png)
 
 # 肆 · 开启系统代理
 不要忘了开系统代理呀！执行下面指令临时开启
