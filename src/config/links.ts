@@ -208,6 +208,12 @@ export const friendLinks = [
     href: "https://bluelanm.github.io",
     avatarSrc: "https://bluelanm.github.io/my-website/img/3.ico",
   },
+  {
+    name: "虚无与信条",
+    description: "知我者谓我心忧，不知我者谓我何求",
+    href: "https://fomalhaut647.com/",
+    avatarSrc: "https://fomalhaut647.com/avatar",
+  }
 ] satisfies readonly FriendLinkItem[];
 
 export const lostLinks = [
