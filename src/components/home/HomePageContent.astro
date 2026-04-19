@@ -191,9 +191,6 @@ const {
           window.__homeEntranceLastPath = currentPageKey;
           profileRoot.dataset.homeEntranceCompleted = "false";
 
-          profileRoot.dataset.homeEntranceEnabled = "true";
-          latestRoot.dataset.homeEntranceEnabled = "true";
-
           const runToken = `${Date.now()}`;
           profileRoot.dataset.homeEntranceRun = runToken;
 
@@ -204,30 +201,20 @@ const {
             }
           });
 
-          const reset = () => {
+          requestAnimationFrame(() => {
+            if (profileRoot.dataset.homeEntranceRun !== runToken) return;
+
+            profileRoot.dataset.homeEntranceEnabled = "true";
+            latestRoot.dataset.homeEntranceEnabled = "true";
+
             profileItems.forEach((element) => {
               if (element instanceof HTMLElement) {
-                element.classList.remove("is-visible");
+                element.classList.add("is-visible");
               }
             });
 
-            latestRoot.classList.remove("latest-articles--frame-visible", "latest-articles--entered");
-          };
-
-          reset();
-          requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-              if (profileRoot.dataset.homeEntranceRun !== runToken) return;
-
-              profileItems.forEach((element) => {
-                if (element instanceof HTMLElement) {
-                  element.classList.add("is-visible");
-                }
-              });
-
-              latestRoot.classList.add("latest-articles--frame-visible", "latest-articles--entered");
-              profileRoot.dataset.homeEntranceCompleted = "true";
-            });
+            latestRoot.classList.add("latest-articles--frame-visible", "latest-articles--entered");
+            profileRoot.dataset.homeEntranceCompleted = "true";
           });
         };
 
