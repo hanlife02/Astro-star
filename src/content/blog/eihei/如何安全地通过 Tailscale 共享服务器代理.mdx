@@ -153,28 +153,49 @@ set -euo pipefail
 
 PORT="${1:-7890}"
 
-mapfile -t DOCKER_BRIDGES < <(
+# 1. 自动获取所有 Docker 相关网桥的名称
+mapfile -t DOCKER_INTERFACES < <(
   ip -o link show \
   | awk -F': ' '{print $2}' \
   | grep -E '^(docker0|br-[a-f0-9]+)$' \
   || true
 )
 
-if [ "${#DOCKER_BRIDGES[@]}" -eq 0 ]; then
-  echo "没有检测到 Docker bridge 网卡"
+if [ "${#DOCKER_INTERFACES[@]}" -eq 0 ]; then
+  echo "未检测到任何 Docker bridge 网卡。"
   exit 1
 fi
 
-for IFACE in "${DOCKER_BRIDGES[@]}"; do
-  if sudo ufw status | grep -Fq "${PORT}/tcp on ${IFACE}"; then
-    echo "已存在规则: ${IFACE} -> ${PORT}/tcp"
+echo "正在为端口 ${PORT} 配置精准子网放行..."
+
+# 2. 遍历网卡并提取子网
+for IFACE in "${DOCKER_INTERFACES[@]}"; do
+  # 提取该网卡的子网段，例如 172.18.0.1/16
+  SUBNET=$(ip -o -f inet addr show "$IFACE" | awk '{print $4}' | head -n 1)
+
+  if [ -z "$SUBNET" ]; then
+    echo "警告: 无法获取网卡 ${IFACE} 的子网信息，跳过。"
     continue
   fi
 
-  echo "添加规则: ${IFACE} -> ${PORT}/tcp"
-  sudo ufw insert 2 allow in on "${IFACE}" to any port "${PORT}" proto tcp
+  # 检查规则是否已存在，防止重复添加
+  if sudo ufw status | grep -Fq "${PORT}/tcp" | grep -Fq "$SUBNET"; then
+    echo "已存在规则: 允许来自子网 ${SUBNET} 的流量访问端口 ${PORT}"
+    continue
+  fi
+
+  echo "正在添加规则: 允许子网 ${SUBNET} -> 端口 ${PORT}"
+  # 插入到第 1 条规则位置，确保优先级最高
+  sudo ufw insert 1 allow from "$SUBNET" to any port "$PORT" proto tcp
 done
 
+# 3. 补充：始终确保本机回环地址被放行（防止本机 App 失败）
+if ! sudo ufw status | grep -Fq "${PORT}/tcp" | grep -Fq "127.0.0.1"; then
+  echo "正在添加规则: 允许本机回环 (127.0.0.1) -> 端口 ${PORT}"
+  sudo ufw insert 1 allow from 127.0.0.1 to any port "$PORT" proto tcp
+fi
+
+echo "-----------------------------------"
 sudo ufw status numbered
 ```
 
