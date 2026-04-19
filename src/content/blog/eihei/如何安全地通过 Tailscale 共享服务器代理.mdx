@@ -114,6 +114,86 @@ sudo ufw status numbered
 
 这样代理只会在 Tailnet 内部可达，不会暴露给公网。
 
+## 如何代理跳板机本身的 Docker 容器
+
+这里有一个很容易踩坑的点：
+
+**容器访问宿主机 `7890` 时，流量走的通常不是 `tailscale0`，而是 Docker 网桥，比如 `docker0`。**
+
+也就是说，如果你只写了：
+
+```bash
+sudo ufw insert 1 allow in on tailscale0 to any port 7890 proto tcp
+sudo ufw deny 7890/tcp
+```
+
+那么容器里的程序即使和宿主机在同一台机器上，也可能还是连不上，因为它的请求不会命中 `tailscale0` 那条规则。
+
+如果你只用默认 Docker bridge，那补一条 `docker0` 规则就够了：
+
+```bash
+sudo ufw insert 2 allow in on docker0 to any port 7890 proto tcp
+```
+
+这样规则顺序就变成：
+
+```text
+[ 1] 7890/tcp on tailscale0  ALLOW IN  Anywhere
+[ 2] 7890/tcp on docker0     ALLOW IN  Anywhere
+[ 3] 7890/tcp                DENY IN   Anywhere
+```
+
+但这条规则只覆盖默认的 `docker0`，**不等于跳板机上所有 Docker 网络都放行**。
+
+如果你还创建了自定义 bridge 网络，宿主机上通常会出现额外的 `br-xxxx` 网卡。更省事的做法是直接把当前所有 Docker bridge 网卡都放行：
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+
+PORT="${1:-7890}"
+
+mapfile -t DOCKER_BRIDGES < <(
+  ip -o link show \
+  | awk -F': ' '{print $2}' \
+  | grep -E '^(docker0|br-[a-f0-9]+)$' \
+  || true
+)
+
+if [ "${#DOCKER_BRIDGES[@]}" -eq 0 ]; then
+  echo "没有检测到 Docker bridge 网卡"
+  exit 1
+fi
+
+for IFACE in "${DOCKER_BRIDGES[@]}"; do
+  if sudo ufw status | grep -Fq "${PORT}/tcp on ${IFACE}"; then
+    echo "已存在规则: ${IFACE} -> ${PORT}/tcp"
+    continue
+  fi
+
+  echo "添加规则: ${IFACE} -> ${PORT}/tcp"
+  sudo ufw insert 2 allow in on "${IFACE}" to any port "${PORT}" proto tcp
+done
+
+sudo ufw status numbered
+```
+
+例如保存成 `allow-docker-proxy.sh` 后执行：
+
+```bash
+chmod +x allow-docker-proxy.sh
+./allow-docker-proxy.sh 7890
+```
+
+这个脚本会自动扫描：
+
+- 默认 bridge：`docker0`
+- 自定义 bridge：`br-xxxx`
+
+如果后面又新建了 Docker 网络，需要再运行一次脚本，把新出现的 bridge 网卡补进 `UFW` 规则。
+
+另外，`network_mode: host` 的容器不走 bridge，这种模式本来就不在这个脚本的覆盖范围内。
+
 # 叁 · 常见端口用途速查
 
 在服务器运维里，下面几个端口比较常见，可以按需开放：
