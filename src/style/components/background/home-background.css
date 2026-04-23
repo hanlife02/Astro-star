@@ -8,6 +8,12 @@
   --fg: #7d7d7d;
   --snow-strength: 36%;
   --snow-ink: color-mix(in srgb, var(--fg) var(--snow-strength, 24%), transparent);
+}
+
+.snow-bg::before {
+  content: "";
+  position: absolute;
+  inset: -12%;
   background-image:
     radial-gradient(circle at 6% 14%, var(--snow-ink) 0 0.0813rem, transparent 0.1625rem),
     radial-gradient(circle at 18% 62%, var(--snow-ink) 0 0.1125rem, transparent 0.2063rem),
@@ -22,7 +28,12 @@
     radial-gradient(circle at 86% 83%, var(--snow-ink) 0 0.0813rem, transparent 0.1625rem),
     radial-gradient(circle at 92% 24%, var(--snow-ink) 0 0.1375rem, transparent 0.2438rem);
   background-size: 56.25rem 40.625rem;
-  animation: snow-drift 22s linear infinite;
+  transform: translate3d(0, 0, 0);
+}
+
+.snow-bg[data-animated="true"]::before {
+  animation: snow-drift-transform 22s linear infinite;
+  will-change: transform;
 }
 
 :root[data-theme="light"] .snow-bg {
@@ -38,17 +49,17 @@
   --snow-strength: 24%;
 }
 
-@keyframes snow-drift {
+@keyframes snow-drift-transform {
   from {
-    background-position: 0 0, 0.625rem 0.75rem, -1.25rem -1.875rem;
+    transform: translate3d(0, 0, 0);
   }
   to {
-    background-position: 7.5rem 18.75rem, 13.125rem 32.5rem, 5rem 47.5rem;
+    transform: translate3d(7.5rem, 18.75rem, 0);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .snow-bg {
+  .snow-bg::before {
     animation: none;
   }
 }

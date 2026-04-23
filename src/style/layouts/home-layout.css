@@ -288,7 +288,8 @@
   cursor: pointer;
   transition:
     color 0.2s ease,
-    opacity 0.2s ease;
+    opacity 0.2s ease,
+    transform 0.18s ease;
 }
 
 .theme-btn svg,
@@ -313,6 +314,25 @@
 
 .theme-btn[aria-pressed="true"] {
   color: var(--line);
+}
+
+@media (hover: hover) {
+  .theme-btn:hover,
+  .search-btn:hover,
+  .hamburger:hover,
+  .signature-collapse-trigger:hover {
+    color: var(--line);
+    transform: translateY(-0.08rem);
+  }
+}
+
+.theme-btn:focus-visible,
+.search-btn:focus-visible,
+.hamburger:focus-visible,
+.signature-collapse-trigger:focus-visible {
+  outline: none;
+  color: var(--line);
+  transform: translateY(-0.08rem);
 }
 
 .home-main {
