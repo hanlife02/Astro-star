@@ -20,9 +20,8 @@ const profileHref = `https://github.com/${encodeURIComponent(username)}`;
     alt={`${username} GitHub contribution heatmap`}
     width="663"
     height="104"
-    loading="eager"
-    decoding="sync"
-    fetchpriority="high"
+    loading="lazy"
+    decoding="async"
     referrerpolicy="no-referrer"
   />
 </a>

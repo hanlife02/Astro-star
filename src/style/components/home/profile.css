@@ -90,3 +90,25 @@
 .profile-bio {
   font-size: var(--bio-size);
 }
+
+@media (hover: hover) {
+  .profile-card:hover {
+    transform: translateY(-0.08rem);
+  }
+
+  .profile-card:hover .profile-avatar {
+    transform: scale(1.02);
+    border-color: var(--line);
+  }
+
+  .profile-link:hover {
+    color: var(--line);
+    transform: translateY(-0.08rem);
+  }
+}
+
+.profile-link:focus-visible {
+  outline: none;
+  color: var(--line);
+  transform: translateY(-0.08rem);
+}

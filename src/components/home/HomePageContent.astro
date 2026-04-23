@@ -206,6 +206,7 @@ const {
 
             profileRoot.dataset.homeEntranceEnabled = "true";
             latestRoot.dataset.homeEntranceEnabled = "true";
+            profileRoot.classList.remove("home-profile--entered");
 
             profileItems.forEach((element) => {
               if (element instanceof HTMLElement) {
@@ -213,6 +214,7 @@ const {
               }
             });
 
+            profileRoot.classList.add("home-profile--entered");
             latestRoot.classList.add("latest-articles--frame-visible", "latest-articles--entered");
             profileRoot.dataset.homeEntranceCompleted = "true";
           });
