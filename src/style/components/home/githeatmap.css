@@ -4,6 +4,9 @@
   max-width: 16rem;
   text-decoration: none;
   line-height: 0;
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease;
 }
 
 .githeatmap-image {
@@ -12,8 +15,31 @@
   height: auto;
 }
 
+@media (hover: hover) {
+  .githeatmap-link:hover {
+    opacity: 0.86;
+    transform: translateY(-0.08rem) scale(1.01);
+  }
+}
+
+.githeatmap-link:focus-visible {
+  opacity: 0.86;
+  transform: translateY(-0.08rem) scale(1.01);
+}
+
 @media (min-width: 48rem) {
   .githeatmap-link {
     max-width: 18rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .githeatmap-link {
+    transition: none;
+  }
+
+  .githeatmap-link:hover,
+  .githeatmap-link:focus-visible {
+    transform: none;
   }
 }

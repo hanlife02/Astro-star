@@ -3,6 +3,9 @@
   width: 100%;
   max-width: 9.5rem;
   line-height: 0;
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease;
 }
 
 .codetime-link img {
@@ -12,8 +15,31 @@
   height: auto;
 }
 
+@media (hover: hover) {
+  .codetime-link:hover {
+    opacity: 0.86;
+    transform: translateY(-0.08rem) scale(1.02);
+  }
+}
+
+.codetime-link:focus-visible {
+  opacity: 0.86;
+  transform: translateY(-0.08rem) scale(1.02);
+}
+
 @media (min-width: 48rem) {
   .codetime-link {
     max-width: 11rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .codetime-link {
+    transition: none;
+  }
+
+  .codetime-link:hover,
+  .codetime-link:focus-visible {
+    transform: none;
   }
 }
