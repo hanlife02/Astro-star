@@ -173,9 +173,14 @@
   display: inline-block;
   font-size: var(--latest-date-size);
   line-height: var(--latest-text-line-height);
-  font-family: inherit;
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
   font-weight: 500;
   font-variant-numeric: tabular-nums;
+  font-feature-settings:
+    "tnum" 1,
+    "lnum" 1;
   white-space: nowrap;
   color: var(--line-soft);
   letter-spacing: 0.01em;
