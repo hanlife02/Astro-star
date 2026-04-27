@@ -17,6 +17,7 @@
   display: block;
   width: 100%;
   height: auto;
+  will-change: clip-path;
 }
 
 .signature-mark svg,
@@ -25,8 +26,47 @@
   stroke: currentColor !important;
 }
 
+@media (hover: hover) {
+  .signature-wrap:hover .signature-mark svg {
+    animation: signature-write 1.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .signature-wrap:hover .signature-mark path {
+    stroke-opacity: 0;
+  }
+}
+
+.signature-wrap:focus-visible {
+  outline: none;
+}
+
+.signature-wrap:focus-visible .signature-mark svg {
+  animation: signature-write 1.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.signature-wrap:focus-visible .signature-mark path {
+  stroke-opacity: 0;
+}
+
+@keyframes signature-write {
+  0% {
+    clip-path: inset(0 100% 0 0);
+  }
+
+  100% {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
 @media (min-width: 48rem) {
   .signature-wrap {
     --signature-svg-max: min(clamp(6.2rem, 5.5rem + 2vw, 9rem), 100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .signature-wrap:hover .signature-mark svg,
+  .signature-wrap:focus-visible .signature-mark svg {
+    animation: none;
   }
 }
