@@ -21,7 +21,10 @@
   display: inline-block;
   position: relative;
   z-index: 0;
-  transition: color 0.22s ease;
+  transform-origin: center;
+  transition:
+    color 0.22s ease,
+    transform 0.18s ease;
 }
 
 .footer-meta-link--copyright {
@@ -41,6 +44,19 @@
   display: none;
 }
 
+@media (hover: hover) {
+  .footer-meta-link:hover {
+    color: var(--line);
+    transform: scale(1.04);
+  }
+}
+
+.footer-meta-link:focus-visible {
+  outline: none;
+  color: var(--line);
+  transform: scale(1.04);
+}
+
 @media (min-width: 56.25rem) {
   .footer-meta-line {
     align-items: flex-end;
@@ -58,5 +74,16 @@
 
   .footer-meta-separator--primary {
     display: inline;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .footer-meta-link {
+    transition: none;
+  }
+
+  .footer-meta-link:hover,
+  .footer-meta-link:focus-visible {
+    transform: none;
   }
 }
