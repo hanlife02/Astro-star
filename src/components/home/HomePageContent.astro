@@ -118,15 +118,41 @@ const {
   >
     {
       [
-        { key: "blogs", title: "Latest Blogs", groups: latestBlogTimelineGroups },
-        { key: "notes", title: "Latest Notes", groups: latestNoteTimelineGroups },
+        {
+          key: "blogs",
+          title: "Latest Blogs",
+          archiveHref: "/blog-archive/",
+          archiveLabel: "View all blogs",
+          archiveHint: "View all blogs",
+          groups: latestBlogTimelineGroups,
+        },
+        {
+          key: "notes",
+          title: "Latest Notes",
+          archiveHref: "/note-archive/",
+          archiveLabel: "View all notes",
+          archiveHint: "View all notes",
+          groups: latestNoteTimelineGroups,
+        },
       ].map((block) => (
         <section
           class="latest-articles-panel"
           aria-label={block.title}
           data-latest-key={block.key}
         >
-          <h2 class="latest-articles-title">{block.title}</h2>
+          <header class="latest-articles-heading">
+            <h2 class="latest-articles-title">
+              <a
+                class="latest-articles-title-link"
+                href={block.archiveHref}
+                aria-label={block.archiveLabel}
+                title={block.archiveLabel}
+              >
+                <span class="latest-articles-title-text">{block.title}</span>
+                <span class="latest-articles-title-hint">{block.archiveHint}</span>
+              </a>
+            </h2>
+          </header>
           {
             block.groups.length > 0 ? (
               <div class="latest-articles-groups" aria-label={`${block.title} timeline`}>
