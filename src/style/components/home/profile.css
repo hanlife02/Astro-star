@@ -92,11 +92,7 @@
 }
 
 @media (hover: hover) {
-  .profile-card:hover {
-    transform: translateY(-0.08rem);
-  }
-
-  .profile-card:hover .profile-avatar {
+  .profile-avatar:hover {
     transform: scale(1.02);
     border-color: var(--line);
   }
