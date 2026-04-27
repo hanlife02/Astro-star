@@ -74,6 +74,8 @@
 .profile-link svg {
   width: clamp(0.95rem, 1.2vw, 1.2rem);
   height: clamp(0.95rem, 1.2vw, 1.2rem);
+  transform-origin: center;
+  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .profile-one-word,
@@ -99,12 +101,29 @@
 
   .profile-link:hover {
     color: var(--line);
-    transform: translateY(-0.08rem);
+  }
+
+  .profile-link:hover svg {
+    transform: scale(1.45) translateY(-0.04rem);
   }
 }
 
 .profile-link:focus-visible {
   outline: none;
   color: var(--line);
-  transform: translateY(-0.08rem);
+}
+
+.profile-link:focus-visible svg {
+  transform: scale(1.45) translateY(-0.04rem);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .profile-link svg {
+    transition: none;
+  }
+
+  .profile-link:hover svg,
+  .profile-link:focus-visible svg {
+    transform: none;
+  }
 }
