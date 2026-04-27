@@ -15,7 +15,7 @@ type: "搭建🦤"
 ### **1.Fork 项目**<br><br>
 [shiroi-deploy-action](https://github.com/innei-dev/shiroi-deploy-action)<br><br>
 你可以看到示例如下图
-![示例图片1](/figures/ktpsqspw0uknnevzu6.png)<br><br>
+![示例图片1](/figures/006-Shiroi部署的大致流程和补充.png)<br><br>
 ### **2.获取GitHub Token**<br><br>
 **Github Token** 的获取方法为<br><br>
 进入[Tokens](https://github.com/settings/tokens) ->Personal access tokens -> Tokens (classic) -><br><br> Generate new token -> Generate new token (classic)<br><br>
@@ -33,7 +33,7 @@ Settings -> Secrets and variables -> Actions<br><br>
 `GH_PAT` 可访问 Shiroi 仓库的 Github Token<br><br>
 ---------------------------------------------------------------------------------------<br><br>
 完成后如图所示<br><br>
-![示例图片2](/figures/g7hnybz6jkdzt1g6ss.png)<br><br>
+![示例图片2](/figures/007-Shiroi部署的大致流程和补充.png)<br><br>
 ### **4.新建`.env`**<br><br>
 在你的服务器家目录，新建`shiro`的目录，然后新建`.env`<br>
 
@@ -67,12 +67,12 @@ GH_TOKEN=
 ```
 ### **6.更改哈希初始值，执行工作流**<br><br>
 由于防止重构建配置，起初的Action应为如下<br><br>
-![示例图片3](/figures/zcc1gns24s8inmzgn7.png)<br>
+![示例图片3](/figures/008-Shiroi部署的大致流程和补充.png)<br>
 即显示后三个job被跳过<br><br>
 此时回到Code页面<br><br>
 修改`build_hash`文件为一个随机的初始哈希值<br><br>
 再次回到Action,你会发现工作流如下图<br>
-![示例图片4](/figures/ss8r8ezjjrpnlfcqlo.png)
+![示例图片4](/figures/009-Shiroi部署的大致流程和补充.png)
 
 至此已全部完成Shiroi的部署<br><br><br>
 本文参考[跨仓库全自动构建项目并部署到服务器](https://github.com/innei-dev/shiroi-deploy-action/blob/main/post.md)并作相关补充<br><br>
