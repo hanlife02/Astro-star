@@ -10,6 +10,12 @@
   --snow-ink: color-mix(in srgb, var(--fg) var(--snow-strength, 24%), transparent);
 }
 
+@supports (view-transition-name: none) {
+  .snow-bg {
+    view-transition-name: page-background;
+  }
+}
+
 .snow-bg::before {
   content: "";
   position: absolute;

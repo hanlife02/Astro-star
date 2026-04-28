@@ -8,6 +8,12 @@
   background-color: #ffffff;
 }
 
+@supports (view-transition-name: none) {
+  .coderain {
+    view-transition-name: page-background;
+  }
+}
+
 html[data-theme="dark"] .coderain,
 :root[data-theme="dark"] .coderain {
   --rain: rgba(255, 255, 255, 1);

@@ -12,6 +12,24 @@
   overflow: visible;
 }
 
+@supports (view-transition-name: none) {
+  .home-header {
+    view-transition-name: site-header;
+  }
+
+  .profile-area {
+    view-transition-name: primary-panel;
+  }
+
+  .latest-area {
+    view-transition-name: secondary-panel;
+  }
+
+  .home-footer {
+    view-transition-name: site-footer;
+  }
+}
+
 .home-header {
   position: sticky;
   top: var(--layout-sticky-top);

@@ -1,0 +1,230 @@
+:root {
+  --route-transition-duration: 680ms;
+  --route-transition-exit-duration: 420ms;
+  --route-transition-enter-duration: 680ms;
+  --route-transition-enter-delay: 0ms;
+  --route-transition-background-duration: 760ms;
+  --route-transition-ease: cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+html[data-route-transitioning="true"] body {
+  pointer-events: none;
+}
+
+::view-transition-group(*) {
+  animation-duration: var(--route-transition-background-duration);
+  animation-timing-function: var(--route-transition-ease);
+}
+
+::view-transition-old(*),
+::view-transition-new(*) {
+  mix-blend-mode: normal;
+  transform-origin: center center;
+}
+
+::view-transition-old(*) {
+  animation: route-soft-out var(--route-transition-exit-duration) var(--route-transition-ease) both;
+}
+
+::view-transition-new(*) {
+  animation: route-soft-in var(--route-transition-enter-duration) var(--route-transition-ease)
+    var(--route-transition-enter-delay) both;
+}
+
+html[data-astro-transition="back"]::view-transition-old(*) {
+  animation-name: route-soft-out;
+}
+
+html[data-astro-transition="back"]::view-transition-new(*) {
+  animation-name: route-soft-in;
+}
+
+::view-transition-old(page-background) {
+  animation: route-background-out var(--route-transition-background-duration) var(--route-transition-ease) both;
+}
+
+::view-transition-new(page-background) {
+  animation: route-background-in var(--route-transition-background-duration) var(--route-transition-ease) both;
+}
+
+::view-transition-old(site-header),
+::view-transition-old(site-footer) {
+  animation: route-chrome-out 380ms var(--route-transition-ease) both;
+}
+
+::view-transition-new(site-header),
+::view-transition-new(site-footer) {
+  animation: route-chrome-in 640ms var(--route-transition-ease) both;
+}
+
+::view-transition-old(primary-panel),
+::view-transition-old(secondary-panel) {
+  animation: route-panel-out 420ms var(--route-transition-ease) both;
+}
+
+::view-transition-new(primary-panel),
+::view-transition-new(secondary-panel) {
+  animation: route-panel-in 700ms var(--route-transition-ease) both;
+}
+
+html[data-astro-transition-fallback="old"] body {
+  animation: route-transition-fallback-out var(--route-transition-exit-duration) var(--route-transition-ease) both;
+}
+
+html[data-astro-transition-fallback="new"] body {
+  animation: route-transition-fallback-in var(--route-transition-enter-duration) var(--route-transition-ease)
+    var(--route-transition-enter-delay) both;
+}
+
+@keyframes route-soft-out {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  72% {
+    opacity: 0;
+    transform: scale(0.998);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.998);
+  }
+}
+
+@keyframes route-soft-in {
+  0% {
+    opacity: 0.001;
+    transform: scale(0.994);
+  }
+  28% {
+    opacity: 0.18;
+    transform: scale(0.996);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes route-background-out {
+  0% {
+    opacity: 1;
+  }
+  58% {
+    opacity: 0.08;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes route-background-in {
+  0% {
+    opacity: 0.001;
+  }
+  32% {
+    opacity: 0.72;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes route-chrome-out {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  72% {
+    opacity: 0;
+    transform: scale(0.998);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.998);
+  }
+}
+
+@keyframes route-chrome-in {
+  0% {
+    opacity: 0.001;
+    transform: scale(0.996);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes route-panel-out {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  72% {
+    opacity: 0;
+    transform: scale(0.996);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.996);
+  }
+}
+
+@keyframes route-panel-in {
+  0% {
+    opacity: 0.001;
+    transform: scale(0.992);
+  }
+  26% {
+    opacity: 0.16;
+    transform: scale(0.995);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes route-transition-fallback-out {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  72% {
+    opacity: 0;
+    transform: scale(0.998);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.998);
+  }
+}
+
+@keyframes route-transition-fallback-in {
+  0% {
+    opacity: 0.001;
+    transform: scale(0.994);
+  }
+  28% {
+    opacity: 0.18;
+    transform: scale(0.996);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+
+  html[data-astro-transition-fallback="old"] body,
+  html[data-astro-transition-fallback="new"] body {
+    animation: none !important;
+  }
+}

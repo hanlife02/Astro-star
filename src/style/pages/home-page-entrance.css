@@ -1,5 +1,5 @@
 html[data-js="true"] .home-profile-sequence.home-profile--entered {
-  animation: home-section-fade-in 0.24s ease both;
+  animation: home-section-fade-in 0.76s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 html[data-js="true"] .home-profile-sequence[data-home-entrance-enabled="true"] .home-enter-item,
@@ -9,7 +9,7 @@ html[data-js="true"] .home-profile-sequence[data-home-entrance-enabled="true"] .
 }
 
 html[data-js="true"] .home-latest-sequence[data-home-entrance-enabled="true"].latest-articles--entered .latest-articles-panel {
-  animation: home-section-fade-in 0.24s ease both;
+  animation: home-section-fade-in 0.76s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 html[data-js="true"] .home-latest-sequence[data-home-entrance-enabled="true"].latest-articles--entered .latest-articles-panel:nth-of-type(2) {
@@ -50,11 +50,11 @@ html[data-js="true"] .home-latest-sequence[data-home-entrance-enabled="true"] .l
 @keyframes home-section-fade-in {
   from {
     opacity: 0.001;
-    transform: translateY(0.28rem);
+    transform: scale(0.994);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: scale(1);
   }
 }
 

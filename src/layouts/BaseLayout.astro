@@ -2,6 +2,7 @@
 import { ClientRouter } from "astro:transitions";
 import { site } from "../config/site";
 import "katex/dist/katex.min.css";
+import "../style/base/route-transitions.css";
 
 interface Props {
   title?: string;
@@ -67,14 +68,7 @@ const initialTheme =
     />
     <meta name="description" content={pageDescription} />
     <meta name="generator" content={Astro.generator} />
-    <ClientRouter fallback="swap" />
-    <style is:global>
-      ::view-transition-group(*),
-      ::view-transition-old(*),
-      ::view-transition-new(*) {
-        animation: none !important;
-      }
-    </style>
+    <ClientRouter fallback="animate" />
     <link rel="preload" href="/fonts/Biotif-Regular.ttf" as="font" type="font/ttf" crossorigin />
     <link rel="preload" href="/fonts/Biotif-Medium.ttf" as="font" type="font/ttf" crossorigin />
     <link rel="preload" href="/fonts/Biotif-SemiBold.ttf" as="font" type="font/ttf" crossorigin />
