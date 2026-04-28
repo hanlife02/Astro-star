@@ -155,7 +155,23 @@
   text-decoration: none;
   font-size: var(--signature-link-size);
   line-height: 1.3;
-  transition: color 0.22s ease;
+  transform: translateX(0);
+  transition:
+    color 0.22s ease,
+    transform 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (hover: hover) {
+  .signature-collapse-links a:hover {
+    color: var(--line);
+    transform: translateX(0.22rem);
+  }
+}
+
+.signature-collapse-links a:focus-visible {
+  outline: none;
+  color: var(--line);
+  transform: translateX(0.22rem);
 }
 
 .nav-drawer {
@@ -263,6 +279,9 @@
 .mobile-nav-drawer .signature-collapse-links a:hover,
 .mobile-nav-drawer .signature-collapse-links a:focus-visible {
   outline: none;
+  color: var(--line);
+  background: color-mix(in srgb, var(--line) 7%, transparent);
+  transform: translateX(0);
 }
 
 .nav-drawer[open] .nav-panel {
