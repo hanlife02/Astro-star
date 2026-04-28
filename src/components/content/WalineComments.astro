@@ -21,33 +21,3 @@ const {
     <div class="article-comments-thread" data-waline-thread></div>
   </section>
 )}
-
-<script>
-  import { init } from "@waline/client";
-
-  const walineRoots = document.querySelectorAll("[data-article-waline]");
-
-  walineRoots.forEach((walineRoot) => {
-    const walineThread = walineRoot.querySelector("[data-waline-thread]");
-    const serverURL = walineRoot.getAttribute("data-waline-server-url")?.trim();
-    const path = walineRoot.getAttribute("data-waline-path")?.trim();
-    const lang = document.documentElement.lang === "zh-CN" ? "zh-CN" : "en";
-
-    if (!serverURL) {
-      console.warn("[Waline] WALINE_SERVER_URL is not configured.");
-      return;
-    }
-
-    if (!(walineThread instanceof HTMLElement) || !path) {
-      return;
-    }
-
-    init({
-      el: walineThread,
-      serverURL,
-      path,
-      lang,
-      pageview: false,
-    });
-  });
-</script>

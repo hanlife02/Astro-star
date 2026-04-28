@@ -8,11 +8,29 @@
       import { initHomeShellContentToc } from "../../scripts/home-shell-content-toc";
       import { initHomeShellMobileToc } from "../../scripts/home-shell-mobile-toc";
       import { initHomeShellContentPageEntrance } from "../../scripts/home-shell-content-page-entrance";
+      import { initHomeShellWalineComments, initHomeShellWalinePageviews } from "../../scripts/home-shell-waline";
 
-      initHomeShellTheme();
-      initHomeShellDesktopSignatureNav();
-      initHomeShellMobileNav();
-      initHomeShellContentToc();
-      initHomeShellMobileToc();
-      initHomeShellContentPageEntrance();
+      type HomeShellWindow = Window & {
+        __homeShellPageLoadBound?: boolean;
+      };
+
+      const browserWindow = window as HomeShellWindow;
+
+      const initHomeShell = () => {
+        initHomeShellTheme();
+        initHomeShellDesktopSignatureNav();
+        initHomeShellMobileNav();
+        initHomeShellContentToc();
+        initHomeShellMobileToc();
+        initHomeShellContentPageEntrance();
+        initHomeShellWalineComments();
+        initHomeShellWalinePageviews();
+      };
+
+      if (!browserWindow.__homeShellPageLoadBound) {
+        document.addEventListener("astro:page-load", initHomeShell);
+        browserWindow.__homeShellPageLoadBound = true;
+      }
+
+      initHomeShell();
 </script>
