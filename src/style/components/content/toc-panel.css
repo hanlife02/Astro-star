@@ -166,7 +166,10 @@ html[data-js="true"]
   color: color-mix(in srgb, var(--line) 58%, transparent);
   opacity: 1;
   text-decoration: none;
-  transition: color 0.2s ease;
+  transform: translateX(0);
+  transition:
+    color 0.2s ease,
+    transform 0.22s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .content-toc-link--depth-1 {
@@ -209,6 +212,19 @@ html[data-js="true"]
   text-decoration: none;
 }
 
+@media (hover: hover) {
+  .content-toc-link:hover {
+    color: var(--line);
+    transform: translateX(0.18rem);
+  }
+}
+
+.content-toc-link:focus-visible {
+  outline: none;
+  color: var(--line);
+  transform: translateX(0.18rem);
+}
+
 .content-toc-item {
   position: relative;
   min-width: 0;
@@ -217,6 +233,7 @@ html[data-js="true"]
 .content-toc-link.is-active {
   color: var(--line);
   opacity: 1;
+  transform: translateX(0);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -297,6 +314,29 @@ html[data-js="true"]
     padding-left: 0.75rem;
     overflow: auto;
     scroll-behavior: smooth;
+  }
+
+  .home-shell--has-mobile-toc.is-mobile-toc-open
+    .latest-area
+    > .content-toc
+    .content-toc-link {
+    border-radius: 0.35rem;
+    padding-block: 0.08rem;
+    transition:
+      background 0.2s ease,
+      color 0.2s ease;
+  }
+
+  .home-shell--has-mobile-toc.is-mobile-toc-open
+    .latest-area
+    > .content-toc
+    .content-toc-link:hover,
+  .home-shell--has-mobile-toc.is-mobile-toc-open
+    .latest-area
+    > .content-toc
+    .content-toc-link:focus-visible {
+    background: color-mix(in srgb, var(--line) 7%, transparent);
+    transform: translateX(0);
   }
 }
 

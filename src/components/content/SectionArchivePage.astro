@@ -45,7 +45,10 @@ const { pageLabel, yearGroups } = Astro.props as Props;
                   {group.articles.map((article) => (
                     <li class="archive-list-item collection-archive-item">
                       <time class="archive-item-date collection-archive-date">{article.createdLabel}</time>
-                      <a class="archive-item-link collection-archive-link" href={article.href}>{article.title}</a>
+                      <a class="archive-item-link collection-archive-link" href={article.href}>
+                        <span class="archive-item-link-text collection-archive-link-text">{article.title}</span>
+                        <span class="archive-item-link-arrow collection-archive-link-arrow" aria-hidden="true" />
+                      </a>
                     </li>
                   ))}
                 </ol>

@@ -45,10 +45,97 @@
 }
 
 .content-page-body :is(.archive-item-link, .collection-archive-link) {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.36rem;
+  max-width: 100%;
   min-width: 0;
   color: var(--line);
   text-decoration: none;
   line-height: 1.6;
+  white-space: nowrap;
+  overflow: hidden;
+  transform: translateX(0);
+  transition:
+    color 0.22s ease,
+    opacity 0.18s ease,
+    transform 0.18s ease;
+}
+
+.archive-item-link-text,
+.collection-archive-link-text {
+  display: block;
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.archive-item-link-arrow,
+.collection-archive-link-arrow {
+  position: relative;
+  display: block;
+  flex: 0 0 0.72rem;
+  width: 0.72rem;
+  height: 0.72rem;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-0.32rem);
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease;
+}
+
+.archive-item-link-arrow::before,
+.archive-item-link-arrow::after,
+.collection-archive-link-arrow::before,
+.collection-archive-link-arrow::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 50%;
+}
+
+.archive-item-link-arrow::before,
+.collection-archive-link-arrow::before {
+  width: 0.72rem;
+  height: 1px;
+  background: currentColor;
+  transform: translateY(-50%);
+}
+
+.archive-item-link-arrow::after,
+.collection-archive-link-arrow::after {
+  width: 0.36rem;
+  height: 0.36rem;
+  border-top: 1px solid currentColor;
+  border-right: 1px solid currentColor;
+  transform: translateY(-50%) rotate(45deg);
+}
+
+@media (hover: hover) {
+  :is(.archive-list-item, .collection-archive-item):hover
+    :is(.archive-item-link, .collection-archive-link) {
+    color: var(--line-soft);
+    transform: translateX(0.14rem);
+  }
+
+  :is(.archive-list-item, .collection-archive-item):hover
+    :is(.archive-item-link-arrow, .collection-archive-link-arrow) {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.content-page-body :is(.archive-item-link, .collection-archive-link):focus-visible {
+  outline: none;
+}
+
+.content-page-body
+  :is(.archive-item-link, .collection-archive-link):focus-visible
+  :is(.archive-item-link-arrow, .collection-archive-link-arrow) {
+  opacity: 1;
+  transform: translateX(0);
 }
 
 @media not all and (min-width: 40.001rem) {
