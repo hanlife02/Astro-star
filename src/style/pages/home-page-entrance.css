@@ -2,6 +2,10 @@ html[data-js="true"] .home-profile-sequence.home-profile--entered {
   animation: home-section-fade-in 0.76s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
+html[data-js="true"][data-route-swapping="true"] .home-profile-sequence.home-profile--entered {
+  animation: none;
+}
+
 html[data-js="true"] .home-profile-sequence[data-home-entrance-enabled="true"] .home-enter-item,
 html[data-js="true"] .home-profile-sequence[data-home-entrance-enabled="true"] .home-profile-metric {
   opacity: 1;
@@ -12,8 +16,16 @@ html[data-js="true"] .home-latest-sequence[data-home-entrance-enabled="true"].la
   animation: home-section-fade-in 0.76s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-html[data-js="true"] .home-latest-sequence[data-home-entrance-enabled="true"].latest-articles--entered .latest-articles-panel:nth-of-type(2) {
+html[data-js="true"]
+  .home-latest-sequence[data-home-entrance-enabled="true"].latest-articles--entered
+  .latest-articles-panel:nth-of-type(2) {
   animation-delay: 0.06s;
+}
+
+html[data-js="true"][data-route-swapping="true"]
+  .home-latest-sequence[data-home-entrance-enabled="true"].latest-articles--entered
+  .latest-articles-panel {
+  animation: none;
 }
 
 .home-profile-metrics {

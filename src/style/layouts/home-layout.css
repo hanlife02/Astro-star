@@ -28,6 +28,11 @@
   .home-footer {
     view-transition-name: site-footer;
   }
+
+  html[data-disable-panel-transition="true"] .profile-area,
+  html[data-disable-panel-transition="true"] .latest-area {
+    view-transition-name: none;
+  }
 }
 
 .home-header {
