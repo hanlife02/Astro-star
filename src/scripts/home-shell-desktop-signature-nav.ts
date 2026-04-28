@@ -1,13 +1,31 @@
 ﻿import { HOME_SHELL_DESKTOP_MEDIA_QUERY } from "./home-shell-breakpoints";
 
+type HomeShellDesktopSignatureNavWindow = Window & {
+  __homeShellDesktopSignatureNavCleanup?: () => void;
+};
+
 export function initHomeShellDesktopSignatureNav() {
+  const browserWindow = window as HomeShellDesktopSignatureNavWindow;
+  browserWindow.__homeShellDesktopSignatureNavCleanup?.();
+
+  const controller = new AbortController();
   const shell = document.querySelector("[data-home-shell-root]");
-  const signatureCollapse = shell?.querySelector("[data-home-shell-signature-nav]");
+  const signatureCollapse = shell?.querySelector(
+    "[data-home-shell-signature-nav]",
+  );
+  let signatureCollapseCloseTimer = 0;
+
+  browserWindow.__homeShellDesktopSignatureNavCleanup = () => {
+    window.clearTimeout(signatureCollapseCloseTimer);
+    controller.abort();
+  };
+
   if (!(signatureCollapse instanceof HTMLDetailsElement)) return;
 
-  const signatureCollapseTrigger = signatureCollapse.querySelector(".signature-collapse-trigger");
+  const signatureCollapseTrigger = signatureCollapse.querySelector(
+    ".signature-collapse-trigger",
+  );
   const desktopNavMedia = window.matchMedia(HOME_SHELL_DESKTOP_MEDIA_QUERY);
-  let signatureCollapseCloseTimer = 0;
 
   const syncDesktopSignatureCollapse = () => {
     window.clearTimeout(signatureCollapseCloseTimer);
@@ -38,31 +56,57 @@ export function initHomeShellDesktopSignatureNav() {
   };
 
   syncDesktopSignatureCollapse();
-  desktopNavMedia.addEventListener("change", syncDesktopSignatureCollapse);
-
-  signatureCollapseTrigger?.addEventListener("click", (event) => {
-    if (!desktopNavMedia.matches) return;
-    event.preventDefault();
+  desktopNavMedia.addEventListener("change", syncDesktopSignatureCollapse, {
+    signal: controller.signal,
   });
 
-  signatureCollapse.addEventListener("mouseenter", () => {
-    openDesktopSignatureCollapse();
-  });
+  signatureCollapseTrigger?.addEventListener(
+    "click",
+    (event) => {
+      if (!desktopNavMedia.matches) return;
+      event.preventDefault();
+    },
+    { signal: controller.signal },
+  );
 
-  signatureCollapse.addEventListener("mouseleave", () => {
-    closeDesktopSignatureCollapse();
-  });
+  signatureCollapse.addEventListener(
+    "mouseenter",
+    () => {
+      openDesktopSignatureCollapse();
+    },
+    { signal: controller.signal },
+  );
 
-  signatureCollapse.addEventListener("focusin", () => {
-    openDesktopSignatureCollapse();
-  });
+  signatureCollapse.addEventListener(
+    "mouseleave",
+    () => {
+      closeDesktopSignatureCollapse();
+    },
+    { signal: controller.signal },
+  );
 
-  signatureCollapse.addEventListener("focusout", (event) => {
-    if (!desktopNavMedia.matches) return;
+  signatureCollapse.addEventListener(
+    "focusin",
+    () => {
+      openDesktopSignatureCollapse();
+    },
+    { signal: controller.signal },
+  );
 
-    const relatedTarget = event.relatedTarget;
-    if (relatedTarget instanceof Node && signatureCollapse.contains(relatedTarget)) return;
+  signatureCollapse.addEventListener(
+    "focusout",
+    (event) => {
+      if (!desktopNavMedia.matches) return;
 
-    closeDesktopSignatureCollapse();
-  });
+      const relatedTarget = event.relatedTarget;
+      if (
+        relatedTarget instanceof Node &&
+        signatureCollapse.contains(relatedTarget)
+      )
+        return;
+
+      closeDesktopSignatureCollapse();
+    },
+    { signal: controller.signal },
+  );
 }
