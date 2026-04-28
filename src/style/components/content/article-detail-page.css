@@ -1,4 +1,4 @@
-@import url("https://unpkg.com/@waline/client@v3/dist/waline.css");
+@import "@waline/client/waline.css";
 
 .content-page--article .content-page-body > h1:first-of-type {
   display: none;
