@@ -1,12 +1,38 @@
 ---
 import { getCollection } from "astro:content";
 import SectionListingPage from "../components/content/SectionListingPage.astro";
-import { normalizeArchiveSlug as normalizeContentArchiveSlug } from "../utils/content-slug";
+import { resolveContentDates } from "../utils/content-dates";
+import {
+  normalizeArchiveSlug as normalizeContentArchiveSlug,
+  resolveContentSlug,
+} from "../utils/content-slug";
+import { resolveContentTitle } from "../utils/content-title";
+import { getGitTimestamps } from "../utils/git-timestamps";
+
+interface ContentEntryMeta {
+  filePath?: string;
+  id: string;
+  data: {
+    archiveSlug?: string;
+    createdAt?: string | Date;
+    routeSlug?: string | number;
+    title?: string;
+    type?: string;
+    updatedAt?: string | Date;
+  };
+}
+
+interface SectionArticleEntry {
+  createdLabel: string;
+  href: string;
+  timestamp: number;
+  title: string;
+}
 
 interface SectionCategoryEntry {
   archiveSlug: string;
+  articles: SectionArticleEntry[];
   count: number;
-  href: string;
   label: string;
 }
 
@@ -24,14 +50,6 @@ function getArchiveSlugFromEntryId(id: string) {
   return normalizeArchiveSlug(id.split("/").slice(0, -1).at(-1));
 }
 
-function getEntrySlug(id: string, routeSlug?: string | number) {
-  return normalizeArchiveSlug(routeSlug) || id.split("/").at(-1) || "untitled";
-}
-
-function getEntryLabel(id: string, title?: string) {
-  return title?.trim() || id.split("/").at(-1) || "Untitled";
-}
-
 function slugifyCategoryLabel(value: string) {
   return value
     .toLowerCase()
@@ -41,6 +59,60 @@ function slugifyCategoryLabel(value: string) {
     .replace(/\s+/g, "-")
     .replace(/-+/g, "-")
     .replace(/^-|-$/g, "");
+}
+
+function getEntryCategory(
+  section: keyof typeof sectionLabels,
+  entry: ContentEntryMeta,
+) {
+  const directoryArchiveSlug = getArchiveSlugFromEntryId(entry.id);
+  const label =
+    entry.data.type?.trim() || directoryArchiveSlug || "Uncategorized";
+  const archiveSlug =
+    (section === "blog" ? directoryArchiveSlug : "") ||
+    normalizeArchiveSlug(entry.data.archiveSlug) ||
+    directoryArchiveSlug ||
+    slugifyCategoryLabel(label) ||
+    "uncategorized";
+
+  return {
+    archiveSlug,
+    label,
+  };
+}
+
+function getEntryArticle(
+  section: keyof typeof sectionLabels,
+  entry: ContentEntryMeta,
+) {
+  const routeSlug = resolveContentSlug(entry.id, entry.data.routeSlug);
+  const title = resolveContentTitle(entry.id, entry.data.title);
+  const contentPath =
+    entry.filePath ?? `src/content/${section}/${entry.id}.mdx`;
+  const { createdAt: gitCreatedAt, updatedAt: gitUpdatedAt } =
+    getGitTimestamps(contentPath);
+  const { createdAt, updatedAt } = resolveContentDates(entry.data, {
+    createdAt: gitCreatedAt,
+    updatedAt: gitUpdatedAt,
+  });
+  const publishedAt = createdAt ?? updatedAt;
+
+  return {
+    createdLabel:
+      publishedAt && !Number.isNaN(publishedAt.getTime())
+        ? new Intl.DateTimeFormat("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "2-digit",
+          }).format(publishedAt)
+        : "",
+    href: `/${section}/${routeSlug}/`,
+    timestamp:
+      publishedAt && !Number.isNaN(publishedAt.getTime())
+        ? publishedAt.getTime()
+        : 0,
+    title,
+  } satisfies SectionArticleEntry;
 }
 
 export function getStaticPaths() {
@@ -56,58 +128,40 @@ if (!section || !(section in sectionLabels)) {
 }
 
 const sectionKey = section as keyof typeof sectionLabels;
-const collectionEntries = await getCollection(sectionKey);
+const collectionEntries = (await getCollection(
+  sectionKey,
+)) as ContentEntryMeta[];
 
-let categories: SectionCategoryEntry[] = [];
+const categories = collectionEntries
+  .reduce<SectionCategoryEntry[]>((entries, entry) => {
+    const category = getEntryCategory(sectionKey, entry);
+    const article = getEntryArticle(sectionKey, entry);
+    const existingEntry = entries.find(
+      (item) => item.archiveSlug === category.archiveSlug,
+    );
 
-if (sectionKey === "project") {
-  categories = collectionEntries
-    .map((entry) => {
-      const slug = getEntrySlug(entry.id, entry.data.routeSlug);
-
-      return {
-        archiveSlug: slug,
-        count: 1,
-        href: `/${section}/${slug}/`,
-        label: getEntryLabel(entry.id, entry.data.title),
-      };
-    })
-    .sort((a, b) => a.label.localeCompare(b.label, "en-US"));
-} else {
-  categories = collectionEntries
-    .map((entry) => {
-      const directoryArchiveSlug = getArchiveSlugFromEntryId(entry.id);
-      const label = entry.data.type?.trim() || directoryArchiveSlug || "Uncategorized";
-      const archiveSlug =
-        (sectionKey === "blog" ? directoryArchiveSlug : "") ||
-        normalizeArchiveSlug(entry.data.archiveSlug) ||
-        directoryArchiveSlug ||
-        slugifyCategoryLabel(label) ||
-        "uncategorized";
-
-      return {
-        archiveSlug,
-        label,
-      };
-    })
-    .reduce<SectionCategoryEntry[]>((entries, item) => {
-      const existingEntry = entries.find((entry) => entry.archiveSlug === item.archiveSlug);
-
-      if (existingEntry) {
-        existingEntry.count += 1;
-        return entries;
-      }
-
-      entries.push({
-        archiveSlug: item.archiveSlug,
-        count: 1,
-        href: `/${section}-archive/${item.archiveSlug}/`,
-        label: item.label,
-      });
+    if (existingEntry) {
+      existingEntry.count += 1;
+      existingEntry.articles.push(article);
       return entries;
-    }, [])
-    .sort((a, b) => a.label.localeCompare(b.label, "en-US"));
-}
+    }
+
+    entries.push({
+      archiveSlug: category.archiveSlug,
+      articles: [article],
+      count: 1,
+      label: category.label,
+    });
+    return entries;
+  }, [])
+  .map((category) => ({
+    ...category,
+    articles: category.articles.sort(
+      (a, b) =>
+        b.timestamp - a.timestamp || a.title.localeCompare(b.title, "en-US"),
+    ),
+  }))
+  .sort((a, b) => a.label.localeCompare(b.label, "en-US"));
 
 const pageLabel = sectionLabels[sectionKey];
 const viewAllHref = `/${section}-archive/`;

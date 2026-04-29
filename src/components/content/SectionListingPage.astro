@@ -3,8 +3,12 @@ import CollectionPageShell from "../layout/CollectionPageShell.astro";
 
 interface SectionCategoryEntry {
   archiveSlug: string;
+  articles: {
+    createdLabel: string;
+    href: string;
+    title: string;
+  }[];
   count: number;
-  href: string;
   label: string;
 }
 
@@ -16,9 +20,16 @@ interface Props {
   viewAllLabel: string;
 }
 
-const { categories, pageLabel, showCounts = true, viewAllHref, viewAllLabel } = Astro.props as Props;
+const {
+  categories,
+  pageLabel,
+  showCounts = true,
+  viewAllHref,
+  viewAllLabel,
+} = Astro.props as Props;
 
-const toAnchorId = (value: string) => value.toLowerCase().trim().replace(/\s+/g, "-");
+const toAnchorId = (value: string) =>
+  value.toLowerCase().trim().replace(/\s+/g, "-");
 ---
 
 <CollectionPageShell
@@ -27,39 +38,79 @@ const toAnchorId = (value: string) => value.toLowerCase().trim().replace(/\s+/g,
   tocAriaLabel={`${pageLabel} categories`}
   tocEmptyText="No categories yet."
   tocItems={categories.map((category) => ({
-    href: category.href,
+    href: `#${toAnchorId(category.label)}`,
     label: category.label,
     depth: 2 as const,
   }))}
 >
-      <header class="listing-header collection-page-header">
-        <div class="listing-header-bar collection-page-header-bar">
-          <h1 class="listing-header-title listing-header-title--compact collection-page-title collection-page-title--compact">{pageLabel}</h1>
-          <a class="listing-view-all-link collection-page-view-all-link" href={viewAllHref}>
-            <span class="listing-view-all-link-text collection-page-view-all-link-text">{viewAllLabel}</span>
-            <span class="listing-view-all-link-arrow collection-page-view-all-link-arrow" aria-hidden="true"></span>
-          </a>
-        </div>
-      </header>
+  <header class="listing-header collection-page-header">
+    <div class="listing-header-bar collection-page-header-bar">
+      <h1
+        class="listing-header-title listing-header-title--compact collection-page-title collection-page-title--compact"
+      >
+        {pageLabel}
+      </h1>
+      <a
+        class="listing-view-all-link collection-page-view-all-link"
+        href={viewAllHref}
+      >
+        <span
+          class="listing-view-all-link-text collection-page-view-all-link-text"
+          >{viewAllLabel}</span
+        >
+        <span
+          class="listing-view-all-link-arrow collection-page-view-all-link-arrow"
+          aria-hidden="true"></span>
+      </a>
+    </div>
+  </header>
 
-      {
-        categories.length > 0 ? (
-          <div class="listing-groups collection-page-groups">
-            <ol class="content-toc-list" aria-label={`${pageLabel} categories`}>
-              {categories.map((category) => (
-                <li id={toAnchorId(category.label)} class="content-toc-item content-toc-item--depth-2">
-                  <a class="content-toc-link content-toc-link--depth-2" href={category.href}>
-                    {category.label}
-                    {showCounts && (
-                      <span class="listing-category-count collection-page-category-count">{` (${category.count})`}</span>
-                    )}
+  {
+    categories.length > 0 ? (
+      <div class="archive-groups collection-archive-groups">
+        {categories.map((category) => (
+          <section
+            class="archive-group collection-archive-group"
+            aria-label={`${category.label} category`}
+          >
+            <h2
+              id={toAnchorId(category.label)}
+              class="archive-year-heading collection-archive-year"
+            >
+              {category.label}
+              {showCounts && (
+                <span class="listing-category-count collection-page-category-count">{` (${category.count})`}</span>
+              )}
+            </h2>
+            <ol
+              class="archive-list collection-archive-list"
+              aria-label={`${category.label} articles`}
+            >
+              {category.articles.slice(0, 4).map((article) => (
+                <li class="archive-list-item collection-archive-item">
+                  <time class="archive-item-date collection-archive-date">
+                    {article.createdLabel}
+                  </time>
+                  <a
+                    class="archive-item-link collection-archive-link"
+                    href={article.href}
+                  >
+                    <span class="archive-item-link-text collection-archive-link-text">
+                      {article.title}
+                    </span>
+                    <span
+                      class="archive-item-link-arrow collection-archive-link-arrow"
+                      aria-hidden="true"
+                    />
                   </a>
                 </li>
               ))}
             </ol>
-          </div>
-        ) : (
-          <p class="content-toc-empty">No content yet.</p>
-        )
-      }
+          </section>
+        ))}
+      </div>
+    ) : (
+      <p class="content-toc-empty">No content yet.</p>
+    )
+  }
 </CollectionPageShell>
