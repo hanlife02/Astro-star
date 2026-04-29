@@ -28,6 +28,12 @@ interface ActivityMonth {
   x: number;
 }
 
+interface ActivityYear {
+  key: string;
+  label: string;
+  x: number;
+}
+
 const { entries, label } = Astro.props as Props;
 
 const monthFormatter = new Intl.DateTimeFormat("en-US", {
@@ -101,6 +107,7 @@ const rangeStart = rangeEnd
   : null;
 const buckets: ActivityBucket[] = [];
 const months: ActivityMonth[] = [];
+const years: ActivityYear[] = [];
 
 if (rangeStart && rangeEnd) {
   const countsByBucket = new Map<string, number>();
@@ -134,7 +141,7 @@ if (rangeStart && rangeEnd) {
       count,
       index: monthIndex,
       key: currentMonth.toISOString().slice(0, 7),
-      label: `${currentMonth.getUTCFullYear()}.${currentMonth.getUTCMonth() + 1}`,
+      label: `${currentMonth.getUTCMonth() + 1}`,
       level: getLevel(count, maxMonthCount),
       title: `${count} ${count === 1 ? "post" : "posts"} in ${monthFormatter.format(currentMonth)}`,
       x: getMonthPosition(monthIndex),
@@ -158,6 +165,18 @@ if (rangeStart && rangeEnd) {
       title,
       x: getBucketPosition(monthIndexValue, weekIndexValue),
     });
+  }
+
+  for (const month of months) {
+    if (month.label === "1") {
+      const year = month.key.slice(0, 4);
+
+      years.push({
+        key: year,
+        label: year,
+        x: month.x,
+      });
+    }
   }
 }
 ---
@@ -200,6 +219,15 @@ if (rangeStart && rangeEnd) {
               <span class="archive-activity-timeline-dot" aria-hidden="true" />
               <span class="archive-activity-timeline-label">{month.label}</span>
             </div>
+          ))}
+
+          {years.map((year) => (
+            <span
+              class="archive-activity-timeline-year"
+              style={`--archive-activity-x: ${year.x.toFixed(3)}%;`}
+            >
+              {year.label}
+            </span>
           ))}
         </div>
       </div>
