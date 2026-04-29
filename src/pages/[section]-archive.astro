@@ -88,6 +88,10 @@ const yearGroups = articles.reduce<Array<{ articles: ArchiveArticleItem[]; year:
 }, []);
 
 const pageLabel = sectionLabels[sectionKey];
+const activityEntries =
+  sectionKey === "blog" || sectionKey === "note"
+    ? articles.map((article) => ({ date: article.createdAt.toISOString() }))
+    : [];
 ---
 
-<SectionArchivePage pageLabel={pageLabel} yearGroups={yearGroups} />
+<SectionArchivePage activityEntries={activityEntries} pageLabel={pageLabel} yearGroups={yearGroups} />

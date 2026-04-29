@@ -1,5 +1,6 @@
 ---
 import CollectionPageShell from "../layout/CollectionPageShell.astro";
+import ArchiveActivityHeatmap from "./ArchiveActivityHeatmap.astro";
 
 interface ArchiveArticleItem {
   createdLabel: string;
@@ -8,17 +9,22 @@ interface ArchiveArticleItem {
   year: string;
 }
 
+interface ArchiveActivityEntry {
+  date: string;
+}
+
 interface ArchiveYearGroup {
   articles: ArchiveArticleItem[];
   year: string;
 }
 
 interface Props {
+  activityEntries?: ArchiveActivityEntry[];
   pageLabel: string;
   yearGroups: ArchiveYearGroup[];
 }
 
-const { pageLabel, yearGroups } = Astro.props as Props;
+const { activityEntries = [], pageLabel, yearGroups } = Astro.props as Props;
 ---
 
 <CollectionPageShell
@@ -34,6 +40,8 @@ const { pageLabel, yearGroups } = Astro.props as Props;
       <header class="listing-header collection-page-header">
         <h1 class="listing-header-title collection-page-title">{pageLabel}</h1>
       </header>
+
+      {activityEntries.length > 0 && <ArchiveActivityHeatmap entries={activityEntries} label={pageLabel} />}
 
       {
         yearGroups.length > 0 ? (
