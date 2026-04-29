@@ -33,6 +33,7 @@ interface SectionCategoryEntry {
   archiveSlug: string;
   articles: SectionArticleEntry[];
   count: number;
+  href: string;
   label: string;
 }
 
@@ -77,6 +78,7 @@ function getEntryCategory(
 
   return {
     archiveSlug,
+    href: `/${section}-archive/${archiveSlug}/`,
     label,
   };
 }
@@ -150,6 +152,7 @@ const categories = collectionEntries
       archiveSlug: category.archiveSlug,
       articles: [article],
       count: 1,
+      href: category.href,
       label: category.label,
     });
     return entries;

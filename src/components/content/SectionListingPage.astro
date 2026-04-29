@@ -9,6 +9,7 @@ interface SectionCategoryEntry {
     title: string;
   }[];
   count: number;
+  href: string;
   label: string;
 }
 
@@ -77,10 +78,22 @@ const toAnchorId = (value: string) =>
               id={toAnchorId(category.label)}
               class="archive-year-heading collection-archive-year"
             >
-              {category.label}
-              {showCounts && (
-                <span class="listing-category-count collection-page-category-count">{` (${category.count})`}</span>
-              )}
+              <a
+                class="listing-category-heading-link collection-page-category-heading-link"
+                href={category.href}
+                aria-label={`View more ${category.label}`}
+                title={`View more ${category.label}`}
+              >
+                <span class="listing-category-heading-text collection-page-category-heading-text">
+                  {category.label}
+                  {showCounts && (
+                    <span class="listing-category-count collection-page-category-count">{` (${category.count})`}</span>
+                  )}
+                </span>
+                <span class="listing-category-heading-hint collection-page-category-heading-hint">
+                  View more
+                </span>
+              </a>
             </h2>
             <ol
               class="archive-list collection-archive-list"
