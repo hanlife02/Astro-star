@@ -50,7 +50,9 @@ const toAnchorId = (value: string) => value.toLowerCase().trim().replace(/\s+/g,
                 <li id={toAnchorId(category.label)} class="content-toc-item content-toc-item--depth-2">
                   <a class="content-toc-link content-toc-link--depth-2" href={category.href}>
                     {category.label}
-                    {showCounts ? ` (${category.count})` : ""}
+                    {showCounts && (
+                      <span class="listing-category-count collection-page-category-count">{` (${category.count})`}</span>
+                    )}
                   </a>
                 </li>
               ))}
