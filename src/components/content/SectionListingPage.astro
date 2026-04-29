@@ -36,8 +36,8 @@ const toAnchorId = (value: string) => value.toLowerCase().trim().replace(/\s+/g,
         <div class="listing-header-bar collection-page-header-bar">
           <h1 class="listing-header-title listing-header-title--compact collection-page-title collection-page-title--compact">{pageLabel}</h1>
           <a class="listing-view-all-link collection-page-view-all-link" href={viewAllHref}>
-            <span>{viewAllLabel}</span>
-            <span aria-hidden="true">&rarr;</span>
+            <span class="listing-view-all-link-text collection-page-view-all-link-text">{viewAllLabel}</span>
+            <span class="listing-view-all-link-arrow collection-page-view-all-link-arrow" aria-hidden="true"></span>
           </a>
         </div>
       </header>

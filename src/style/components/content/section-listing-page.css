@@ -19,12 +19,92 @@
   line-height: 1.4;
   text-decoration: none;
   white-space: nowrap;
+  transform: translateX(0);
+  transition:
+    color 0.22s ease,
+    opacity 0.18s ease,
+    transform 0.18s ease;
+}
+
+.listing-view-all-link-text,
+.collection-page-view-all-link-text {
+  display: block;
+}
+
+.listing-view-all-link-arrow,
+.collection-page-view-all-link-arrow {
+  position: relative;
+  display: block;
+  flex: 0 0 0.72rem;
+  width: 0.72rem;
+  height: 0.72rem;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-0.32rem);
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease;
+}
+
+.listing-view-all-link-arrow::before,
+.listing-view-all-link-arrow::after,
+.collection-page-view-all-link-arrow::before,
+.collection-page-view-all-link-arrow::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 50%;
+}
+
+.listing-view-all-link-arrow::before,
+.collection-page-view-all-link-arrow::before {
+  width: 0.72rem;
+  height: 1px;
+  background: currentColor;
+  transform: translateY(-50%);
+}
+
+.listing-view-all-link-arrow::after,
+.collection-page-view-all-link-arrow::after {
+  width: 0.36rem;
+  height: 0.36rem;
+  border-top: 1px solid currentColor;
+  border-right: 1px solid currentColor;
+  transform: translateY(-50%) rotate(45deg);
+}
+
+@media (hover: hover) {
+  .content-page-body
+    :is(.listing-view-all-link, .collection-page-view-all-link):hover {
+    color: var(--line-soft);
+    transform: translateX(0.14rem);
+  }
+
+  .content-page-body
+    :is(.listing-view-all-link, .collection-page-view-all-link):hover
+    :is(.listing-view-all-link-arrow, .collection-page-view-all-link-arrow) {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.content-page-body
+  :is(.listing-view-all-link, .collection-page-view-all-link):focus-visible {
+  outline: none;
+}
+
+.content-page-body
+  :is(.listing-view-all-link, .collection-page-view-all-link):focus-visible
+  :is(.listing-view-all-link-arrow, .collection-page-view-all-link-arrow) {
+  opacity: 1;
+  transform: translateX(0);
 }
 
 :is(.listing-groups, .collection-page-groups) .content-toc-link,
 :is(.listing-groups, .collection-page-groups) .content-toc-link--depth-2 {
   color: var(--line);
   opacity: 1;
+  text-decoration-line: none;
 }
 
 :is(.listing-groups, .collection-page-groups) > .content-toc-list {
