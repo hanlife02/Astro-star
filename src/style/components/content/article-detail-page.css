@@ -5,20 +5,20 @@
 }
 
 .content-page--article {
-  --article-title-size: clamp(2.25rem, 1.95rem + 1vw, 3.4rem);
+  --article-title-size: clamp(1.82rem, 1.62rem + 0.64vw, 2.65rem);
 }
 
 html:lang(zh-CN) .content-page--article {
-  --article-title-size: clamp(2rem, 1.75rem + 0.7vw, 2.85rem);
+  --article-title-size: clamp(1.52rem, 1.4rem + 0.38vw, 2.05rem);
 }
 
 .article-content-header {
-  margin: 0 0 1.6rem;
-  padding-bottom: 1.15rem;
+  margin: 0 0 1.35rem;
+  padding-bottom: 0.95rem;
   border-bottom: 1px solid color-mix(in srgb, var(--line) 16%, transparent);
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
+  gap: 0.58rem;
 }
 
 .article-content-section {
@@ -28,7 +28,7 @@ html:lang(zh-CN) .content-page--article {
   letter-spacing: 0.16em;
 }
 
-.article-content-title {
+.content-page-body .article-content-title {
   margin: 0;
   font-size: var(--article-title-size);
   font-weight: 400;
@@ -47,25 +47,25 @@ html:lang(zh-CN) .content-page--article {
 .article-content-meta {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.8rem 1.25rem;
+  gap: 0.52rem 0.95rem;
 }
 
 .article-content-meta-item {
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.18rem;
+  gap: 0.08rem;
 }
 
 .article-content-meta-item span {
   color: color-mix(in srgb, var(--line) 52%, transparent);
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   letter-spacing: 0.02em;
 }
 
 .article-content-meta-item strong {
   color: var(--line);
-  font-size: clamp(0.95rem, 0.91rem + 0.2vw, 1.06rem);
+  font-size: clamp(0.86rem, 0.83rem + 0.14vw, 0.98rem);
   font-weight: 600;
 }
 
@@ -215,6 +215,6 @@ html:lang(zh-CN) .content-page--article {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     grid-template-rows: repeat(2, auto);
     grid-auto-flow: column;
-    gap: 0.95rem 1.4rem;
+    gap: 0.64rem 1rem;
   }
 }
