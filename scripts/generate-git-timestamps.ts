@@ -1,8 +1,9 @@
 import { execFileSync } from "node:child_process";
 import { readdirSync, statSync, writeFileSync, mkdirSync } from "node:fs";
-import { join, relative } from "node:path";
+import { dirname, join, relative } from "node:path";
+import { fileURLToPath } from "node:url";
 
-const ROOT = join(import.meta.dirname, "..");
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const CONTENT_DIR = join(ROOT, "src", "content");
 const OUT_DIR = join(ROOT, "src", "gitlog");
 const OUT_FILE = join(OUT_DIR, "git-timestamps.json");
