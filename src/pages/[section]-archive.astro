@@ -1,8 +1,13 @@
 ---
 import { getCollection } from "astro:content";
 import SectionArchivePage from "../components/content/SectionArchivePage.astro";
+import SectionListingPage from "../components/content/SectionListingPage.astro";
 import { resolveContentDates } from "../utils/content-dates";
-import { resolveContentSlug } from "../utils/content-slug";
+import {
+  normalizeArchiveSlug,
+  resolveContentSlug,
+  slugifyCategoryLabel,
+} from "../utils/content-slug";
 import { resolveContentTitle } from "../utils/content-title";
 import { getGitTimestamps } from "../utils/git-timestamps";
 
@@ -10,9 +15,11 @@ interface ContentEntryMeta {
   filePath?: string;
   id: string;
   data: {
+    archiveSlug?: string;
     createdAt?: string | Date;
     routeSlug?: string | number;
     title?: string;
+    type?: string;
     updatedAt?: string | Date;
   };
 }
@@ -25,11 +32,106 @@ interface ArchiveArticleItem {
   year: string;
 }
 
+interface SectionArticleEntry {
+  createdLabel: string;
+  href: string;
+  timestamp: number;
+  title: string;
+}
+
+interface SectionCategoryEntry {
+  archiveSlug: string;
+  articles: SectionArticleEntry[];
+  count: number;
+  href: string;
+  label: string;
+}
+
 const sectionLabels = {
-  blog: "All Blogs",
-  note: "All Notes",
+  blog: "Blog",
+  note: "Note",
   project: "All Projects",
 } as const;
+
+type SectionKey = keyof typeof sectionLabels;
+
+function getArchiveSlugFromEntryId(id: string) {
+  return normalizeArchiveSlug(id.split("/").slice(0, -1).at(-1));
+}
+
+function getEntryCategory(section: SectionKey, entry: ContentEntryMeta) {
+  const directoryArchiveSlug = getArchiveSlugFromEntryId(entry.id);
+  const label =
+    entry.data.type?.trim() || directoryArchiveSlug || "Uncategorized";
+  const archiveSlug =
+    (section === "blog" ? directoryArchiveSlug : "") ||
+    normalizeArchiveSlug(entry.data.archiveSlug) ||
+    directoryArchiveSlug ||
+    slugifyCategoryLabel(label) ||
+    "uncategorized";
+
+  return {
+    archiveSlug,
+    href: `/${section}-archive/${archiveSlug}/`,
+    label,
+  };
+}
+
+function getEntryPublishedAt(section: SectionKey, entry: ContentEntryMeta) {
+  const contentPath =
+    entry.filePath ?? `src/content/${section}/${entry.id}.mdx`;
+  const { createdAt: gitCreatedAt, updatedAt: gitUpdatedAt } =
+    getGitTimestamps(contentPath);
+  const { createdAt, updatedAt } = resolveContentDates(entry.data, {
+    createdAt: gitCreatedAt,
+    updatedAt: gitUpdatedAt,
+  });
+
+  return createdAt ?? updatedAt;
+}
+
+function formatContentDate(date: Date) {
+  return new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "2-digit",
+  }).format(date);
+}
+
+function getEntryArticle(section: SectionKey, entry: ContentEntryMeta) {
+  const routeSlug = resolveContentSlug(entry.id, entry.data.routeSlug);
+  const title = resolveContentTitle(entry.id, entry.data.title);
+  const publishedAt = getEntryPublishedAt(section, entry);
+
+  return {
+    createdLabel:
+      publishedAt && !Number.isNaN(publishedAt.getTime())
+        ? formatContentDate(publishedAt)
+        : "",
+    href: `/${section}/${routeSlug}/`,
+    timestamp:
+      publishedAt && !Number.isNaN(publishedAt.getTime())
+        ? publishedAt.getTime()
+        : 0,
+    title,
+  } satisfies SectionArticleEntry;
+}
+
+function getEntryArchiveArticle(section: SectionKey, entry: ContentEntryMeta) {
+  const routeSlug = resolveContentSlug(entry.id, entry.data.routeSlug);
+  const title = resolveContentTitle(entry.id, entry.data.title);
+  const publishedAt = getEntryPublishedAt(section, entry);
+
+  if (!publishedAt || Number.isNaN(publishedAt.getTime())) return null;
+
+  return {
+    createdAt: publishedAt,
+    createdLabel: formatContentDate(publishedAt),
+    href: `/${section}/${routeSlug}/`,
+    title,
+    year: publishedAt.toISOString().slice(0, 4),
+  } satisfies ArchiveArticleItem;
+}
 
 export function getStaticPaths() {
   return ["blog", "note", "project"].map((section) => ({
@@ -46,39 +148,51 @@ if (!section || !(section in sectionLabels)) {
   });
 }
 
-const sectionKey = section as keyof typeof sectionLabels;
-const collectionEntries = (await getCollection(sectionKey)) as ContentEntryMeta[];
+const sectionKey = section as SectionKey;
+const collectionEntries = (await getCollection(
+  sectionKey,
+)) as ContentEntryMeta[];
+
+const categories = collectionEntries
+  .reduce<SectionCategoryEntry[]>((entries, entry) => {
+    const category = getEntryCategory(sectionKey, entry);
+    const article = getEntryArticle(sectionKey, entry);
+    const existingEntry = entries.find(
+      (item) => item.archiveSlug === category.archiveSlug,
+    );
+
+    if (existingEntry) {
+      existingEntry.count += 1;
+      existingEntry.articles.push(article);
+      return entries;
+    }
+
+    entries.push({
+      archiveSlug: category.archiveSlug,
+      articles: [article],
+      count: 1,
+      href: category.href,
+      label: category.label,
+    });
+    return entries;
+  }, [])
+  .map((category) => ({
+    ...category,
+    articles: category.articles.sort(
+      (a, b) =>
+        b.timestamp - a.timestamp || a.title.localeCompare(b.title, "en-US"),
+    ),
+  }))
+  .sort((a, b) => a.label.localeCompare(b.label, "en-US"));
 
 const articles = collectionEntries
-  .map((entry) => {
-    const routeSlug = resolveContentSlug(entry.id, entry.data.routeSlug);
-    const title = resolveContentTitle(entry.id, entry.data.title);
-    const contentPath = entry.filePath ?? `src/content/${section}/${entry.id}.mdx`;
-    const { createdAt: gitCreatedAt, updatedAt: gitUpdatedAt } = getGitTimestamps(contentPath);
-    const { createdAt, updatedAt } = resolveContentDates(entry.data, {
-      createdAt: gitCreatedAt,
-      updatedAt: gitUpdatedAt,
-    });
-    const publishedAt = createdAt ?? updatedAt;
-
-    if (!publishedAt || Number.isNaN(publishedAt.getTime())) return null;
-
-    return {
-      createdAt: publishedAt,
-      createdLabel: new Intl.DateTimeFormat("en-US", {
-        year: "numeric",
-        month: "short",
-        day: "2-digit",
-      }).format(publishedAt),
-      href: `/${section}/${routeSlug}/`,
-      title,
-      year: publishedAt.toISOString().slice(0, 4),
-    } satisfies ArchiveArticleItem;
-  })
+  .map((entry) => getEntryArchiveArticle(sectionKey, entry))
   .filter((item): item is ArchiveArticleItem => item !== null)
   .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 
-const yearGroups = articles.reduce<Array<{ articles: ArchiveArticleItem[]; year: string }>>((groups, article) => {
+const yearGroups = articles.reduce<
+  Array<{ articles: ArchiveArticleItem[]; year: string }>
+>((groups, article) => {
   const currentGroup = groups[groups.length - 1];
 
   if (currentGroup?.year === article.year) {
@@ -90,11 +204,33 @@ const yearGroups = articles.reduce<Array<{ articles: ArchiveArticleItem[]; year:
   return groups;
 }, []);
 
-const pageLabel = sectionLabels[sectionKey];
+const usesCategoryPage = sectionKey === "blog" || sectionKey === "note";
+const basePageLabel = sectionLabels[sectionKey];
+const pageLabel = usesCategoryPage
+  ? `${basePageLabel} Categories`
+  : basePageLabel;
 const activityEntries =
   sectionKey === "blog" || sectionKey === "note"
     ? articles.map((article) => ({ date: article.createdAt.toISOString() }))
     : [];
+const viewAllHref = `/${section}/`;
+const viewAllLabel = `View all ${basePageLabel.toLowerCase()}s`;
 ---
 
-<SectionArchivePage activityEntries={activityEntries} pageLabel={pageLabel} yearGroups={yearGroups} />
+{
+  usesCategoryPage ? (
+    <SectionListingPage
+      categories={categories}
+      pageLabel={pageLabel}
+      showCounts
+      viewAllHref={viewAllHref}
+      viewAllLabel={viewAllLabel}
+    />
+  ) : (
+    <SectionArchivePage
+      activityEntries={activityEntries}
+      pageLabel={pageLabel}
+      yearGroups={yearGroups}
+    />
+  )
+}

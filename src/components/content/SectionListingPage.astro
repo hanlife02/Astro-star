@@ -99,7 +99,7 @@ const toAnchorId = (value: string) =>
               class="archive-list collection-archive-list"
               aria-label={`${category.label} articles`}
             >
-              {category.articles.slice(0, 4).map((article) => (
+              {category.articles.map((article) => (
                 <li class="archive-list-item collection-archive-item">
                   <time class="archive-item-date collection-archive-date">
                     {article.createdLabel}
