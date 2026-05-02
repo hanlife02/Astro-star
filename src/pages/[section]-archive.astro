@@ -1,6 +1,5 @@
 ---
 import { getCollection } from "astro:content";
-import SectionArchivePage from "../components/content/SectionArchivePage.astro";
 import SectionListingPage from "../components/content/SectionListingPage.astro";
 import { resolveContentDates } from "../utils/content-dates";
 import {
@@ -24,14 +23,6 @@ interface ContentEntryMeta {
   };
 }
 
-interface ArchiveArticleItem {
-  createdAt: Date;
-  createdLabel: string;
-  href: string;
-  title: string;
-  year: string;
-}
-
 interface SectionArticleEntry {
   createdLabel: string;
   href: string;
@@ -50,7 +41,6 @@ interface SectionCategoryEntry {
 const sectionLabels = {
   blog: "Blog",
   note: "Note",
-  project: "All Projects",
 } as const;
 
 type SectionKey = keyof typeof sectionLabels;
@@ -117,24 +107,8 @@ function getEntryArticle(section: SectionKey, entry: ContentEntryMeta) {
   } satisfies SectionArticleEntry;
 }
 
-function getEntryArchiveArticle(section: SectionKey, entry: ContentEntryMeta) {
-  const routeSlug = resolveContentSlug(entry.id, entry.data.routeSlug);
-  const title = resolveContentTitle(entry.id, entry.data.title);
-  const publishedAt = getEntryPublishedAt(section, entry);
-
-  if (!publishedAt || Number.isNaN(publishedAt.getTime())) return null;
-
-  return {
-    createdAt: publishedAt,
-    createdLabel: formatContentDate(publishedAt),
-    href: `/${section}/${routeSlug}/`,
-    title,
-    year: publishedAt.toISOString().slice(0, 4),
-  } satisfies ArchiveArticleItem;
-}
-
 export function getStaticPaths() {
-  return ["blog", "note", "project"].map((section) => ({
+  return ["blog", "note"].map((section) => ({
     params: { section },
   }));
 }
@@ -185,52 +159,16 @@ const categories = collectionEntries
   }))
   .sort((a, b) => a.label.localeCompare(b.label, "en-US"));
 
-const articles = collectionEntries
-  .map((entry) => getEntryArchiveArticle(sectionKey, entry))
-  .filter((item): item is ArchiveArticleItem => item !== null)
-  .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
-
-const yearGroups = articles.reduce<
-  Array<{ articles: ArchiveArticleItem[]; year: string }>
->((groups, article) => {
-  const currentGroup = groups[groups.length - 1];
-
-  if (currentGroup?.year === article.year) {
-    currentGroup.articles.push(article);
-    return groups;
-  }
-
-  groups.push({ year: article.year, articles: [article] });
-  return groups;
-}, []);
-
-const usesCategoryPage = sectionKey === "blog" || sectionKey === "note";
 const basePageLabel = sectionLabels[sectionKey];
-const pageLabel = usesCategoryPage
-  ? `${basePageLabel} Categories`
-  : basePageLabel;
-const activityEntries =
-  sectionKey === "blog" || sectionKey === "note"
-    ? articles.map((article) => ({ date: article.createdAt.toISOString() }))
-    : [];
+const pageLabel = `${basePageLabel} Categories`;
 const viewAllHref = `/${section}/`;
 const viewAllLabel = `View all ${basePageLabel.toLowerCase()}s`;
 ---
 
-{
-  usesCategoryPage ? (
-    <SectionListingPage
-      categories={categories}
-      pageLabel={pageLabel}
-      showCounts
-      viewAllHref={viewAllHref}
-      viewAllLabel={viewAllLabel}
-    />
-  ) : (
-    <SectionArchivePage
-      activityEntries={activityEntries}
-      pageLabel={pageLabel}
-      yearGroups={yearGroups}
-    />
-  )
-}
+<SectionListingPage
+  categories={categories}
+  pageLabel={pageLabel}
+  showCounts
+  viewAllHref={viewAllHref}
+  viewAllLabel={viewAllLabel}
+/>
