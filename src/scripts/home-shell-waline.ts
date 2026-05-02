@@ -7,6 +7,9 @@ type HomeShellWalineWindow = Window & {
   __homeShellWalinePageviewRunId?: number;
 };
 
+const walineClientModule = import("@waline/client");
+const walinePageviewModule = import("@waline/client/pageview");
+
 export async function initHomeShellWalineComments() {
   const browserWindow = window as HomeShellWalineWindow;
   browserWindow.__homeShellWalineCommentsCleanup?.();
@@ -21,7 +24,7 @@ export async function initHomeShellWalineComments() {
     return;
   }
 
-  const { init } = await import("@waline/client");
+  const { init } = await walineClientModule;
   if (browserWindow.__homeShellWalineCommentsRunId !== runId) return;
 
   const instances: WalineInstance[] = [];
@@ -75,7 +78,7 @@ export async function initHomeShellWalinePageviews() {
     return;
   }
 
-  const { pageviewCount } = await import("@waline/client/pageview");
+  const { pageviewCount } = await walinePageviewModule;
   if (browserWindow.__homeShellWalinePageviewRunId !== runId) return;
 
   const abort: WalineAbort = pageviewCount({ serverURL, update: true });
