@@ -232,6 +232,14 @@
   transform: translateX(0);
 }
 
+@media not all and (min-width: 56.25rem) {
+  :is(.listing-category-heading-hint, .collection-page-category-heading-hint) {
+    max-width: 9rem;
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 :is(.listing-groups, .collection-page-groups) > .content-toc-list {
   padding-left: 0;
   overflow-x: hidden;

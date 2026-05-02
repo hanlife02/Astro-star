@@ -369,6 +369,12 @@
     justify-content: center;
   }
 
+  .latest-articles-title-hint {
+    max-width: 9rem;
+    opacity: 1;
+    transform: translateX(0);
+  }
+
   .latest-articles-list,
   .latest-articles-groups {
     width: 100%;
