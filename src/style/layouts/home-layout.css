@@ -377,6 +377,34 @@
   transform: translateY(-0.08rem);
 }
 
+.home-shell-search-root {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.home-shell-search-root .sitesearch-button {
+  display: none !important;
+}
+
+:root[data-theme="dark"] .ss-exp,
+:root[data-theme="dark"] .modal-backdrop,
+:root[data-theme="dark"] .sitesearch-button {
+  --search-primary-color: #7aa2ff;
+  --search-secondary-color: #9aa1b2;
+  --search-background-color: #202127;
+  --search-neutral-color: #111016;
+  --search-subtle-color: #94a3b8;
+  --search-text-color: #e5e7eb;
+  --search-subtle-text-color: #94a3b8;
+  --search-border-color: #374151;
+  --search-hover-color: #1f2937;
+}
+
 .home-main {
   flex: 1 0 auto;
   display: grid;
