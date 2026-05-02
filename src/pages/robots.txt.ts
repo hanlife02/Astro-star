@@ -1,8 +1,8 @@
 import type { APIRoute } from 'astro';
+import { algoliaCrawlerVerification } from '../config/search';
 
 const getRobotsTxt = (sitemapURL: URL) =>
-  `# Algolia-Crawler-Verif: 4DD129FBB60A97E4
-User-agent: *
+  `${algoliaCrawlerVerification ? `# Algolia-Crawler-Verif: ${algoliaCrawlerVerification}\n` : ""}User-agent: *
 Allow: /
 
 Sitemap: ${sitemapURL.href}

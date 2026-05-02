@@ -28,7 +28,7 @@ jobs:
       - name: Compute source hash
         id: hash
         run: |
-          HASH=${{ hashFiles('src/**', 'public/**', 'package.json', 'pnpm-lock.yaml', 'astro.config.mjs', '.github/workflows/deploy.yml', 'ecosystem.config.cjs') }}
+          HASH=${{ hashFiles('src/**', 'scripts/**', 'public/**', 'package.json', 'pnpm-lock.yaml', 'astro.config.mjs', '.github/workflows/deploy.yml', 'ecosystem.config.cjs') }}
           echo "source_hash=$HASH" >> "$GITHUB_OUTPUT"
 
       - name: Check hash cache
@@ -61,6 +61,14 @@ jobs:
       - name: Build
         if: steps.cache.outputs.cache-hit != 'true'
         run: pnpm build
+
+      - name: Sync Algolia index
+        if: steps.cache.outputs.cache-hit != 'true'
+        continue-on-error: true
+        env:
+          ALGOLIA_WRITE_API_KEY: ${{ secrets.ALGOLIA_WRITE_API_KEY }}
+          ALGOLIA_ADMIN_API_KEY: ${{ secrets.ALGOLIA_ADMIN_API_KEY }}
+        run: pnpm run algolia:sync
 
       # ── Deploy via rsync + SSH ──
       - name: Setup SSH

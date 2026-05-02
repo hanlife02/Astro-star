@@ -2,6 +2,7 @@
 import Icon from "../../components/ui/Icon.astro";
 import RssIcon from "../../components/ui/icons/RssIcon.astro";
 import FloatingActionButton from "../../components/ui/FloatingActionButton.astro";
+import { isAlgoliaSiteSearchConfigured } from "../../config/search";
 import { AlignLeft, Github, Monitor, Moon, Search, Sun, TableOfContents } from "lucide-static";
 
 interface NavItem {
@@ -46,9 +47,13 @@ const {
           <span data-theme-icon="system" hidden={initialThemeMode !== "system"}><Icon svg={Monitor} /></span>
         </button>
       </div>
-      <button type="button" class="search-btn" aria-label="Search">
-        <Icon svg={Search} />
-      </button>
+      {
+        isAlgoliaSiteSearchConfigured && (
+          <button type="button" class="search-btn" aria-label="Search" aria-controls="home-shell-search" aria-haspopup="dialog" data-home-shell-search-trigger>
+            <Icon svg={Search} />
+          </button>
+        )
+      }
       <details class="nav-drawer mobile-nav-drawer" data-home-shell-mobile-nav>
         <summary class="hamburger" aria-label="Toggle navigation">
           <Icon svg={AlignLeft} />
@@ -109,6 +114,12 @@ const {
       className="floating-action-button--toc"
     />
   </div>
+
+  {
+    isAlgoliaSiteSearchConfigured && (
+      <div id="home-shell-search" class="home-shell-search-root" aria-hidden="true" data-home-shell-search-container />
+    )
+  }
 
   <footer class="home-footer">
     <div class="wire-box footer-info" aria-label="Footer info area">
