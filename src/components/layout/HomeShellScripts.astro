@@ -9,6 +9,7 @@
       import { initHomeShellMobileToc } from "../../scripts/home-shell-mobile-toc";
       import { initHomeShellContentPageEntrance } from "../../scripts/home-shell-content-page-entrance";
       import { initHomeShellRouteTransitionLock } from "../../scripts/home-shell-route-transition-lock";
+      import { initHomeShellSearch } from "../../scripts/home-shell-search";
       import { initHomeShellWalineComments, initHomeShellWalinePageviews } from "../../scripts/home-shell-waline";
 
       type HomeShellWindow = Window & {
@@ -25,6 +26,7 @@
         initHomeShellMobileToc();
         initHomeShellContentPageEntrance();
         initHomeShellRouteTransitionLock();
+        initHomeShellSearch();
         initHomeShellWalineComments();
         initHomeShellWalinePageviews();
       };
