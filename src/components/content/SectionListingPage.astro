@@ -9,7 +9,7 @@ interface SectionCategoryEntry {
     title: string;
   }[];
   count: number;
-  href: string;
+  href?: string;
   label: string;
 }
 
@@ -17,8 +17,8 @@ interface Props {
   categories: SectionCategoryEntry[];
   pageLabel: string;
   showCounts?: boolean;
-  viewAllHref: string;
-  viewAllLabel: string;
+  viewAllHref?: string;
+  viewAllLabel?: string;
 }
 
 const {
@@ -51,18 +51,22 @@ const toAnchorId = (value: string) =>
       >
         {pageLabel}
       </h1>
-      <a
-        class="listing-view-all-link collection-page-view-all-link"
-        href={viewAllHref}
-      >
-        <span
-          class="listing-view-all-link-text collection-page-view-all-link-text"
-          >{viewAllLabel}</span
-        >
-        <span
-          class="listing-view-all-link-arrow collection-page-view-all-link-arrow"
-          aria-hidden="true"></span>
-      </a>
+      {
+        viewAllHref && viewAllLabel && (
+          <a
+            class="listing-view-all-link collection-page-view-all-link"
+            href={viewAllHref}
+          >
+            <span class="listing-view-all-link-text collection-page-view-all-link-text">
+              {viewAllLabel}
+            </span>
+            <span
+              class="listing-view-all-link-arrow collection-page-view-all-link-arrow"
+              aria-hidden="true"
+            />
+          </a>
+        )
+      }
     </div>
   </header>
 
@@ -78,22 +82,31 @@ const toAnchorId = (value: string) =>
               id={toAnchorId(category.label)}
               class="archive-year-heading collection-archive-year"
             >
-              <a
-                class="listing-category-heading-link collection-page-category-heading-link"
-                href={category.href}
-                aria-label={`View more ${category.label}`}
-                title={`View more ${category.label}`}
-              >
+              {category.href ? (
+                <a
+                  class="listing-category-heading-link collection-page-category-heading-link"
+                  href={category.href}
+                  aria-label={`View more ${category.label}`}
+                  title={`View more ${category.label}`}
+                >
+                  <span class="listing-category-heading-text collection-page-category-heading-text">
+                    {category.label}
+                    {showCounts && (
+                      <span class="listing-category-count collection-page-category-count">{` (${category.count})`}</span>
+                    )}
+                  </span>
+                  <span class="listing-category-heading-hint collection-page-category-heading-hint">
+                    View more
+                  </span>
+                </a>
+              ) : (
                 <span class="listing-category-heading-text collection-page-category-heading-text">
                   {category.label}
                   {showCounts && (
                     <span class="listing-category-count collection-page-category-count">{` (${category.count})`}</span>
                   )}
                 </span>
-                <span class="listing-category-heading-hint collection-page-category-heading-hint">
-                  View more
-                </span>
-              </a>
+              )}
             </h2>
             <ol
               class="archive-list collection-archive-list"

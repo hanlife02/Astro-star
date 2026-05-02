@@ -34,7 +34,7 @@ interface SectionCategoryEntry {
   archiveSlug: string;
   articles: SectionArticleEntry[];
   count: number;
-  href: string;
+  href?: string;
   label: string;
 }
 
@@ -89,7 +89,8 @@ function getEntryCategory(
 
   return {
     archiveSlug,
-    href: `/${section}-archive/${archiveSlug}/`,
+    href:
+      section === "project" ? undefined : `/${section}-archive/${archiveSlug}/`,
     label,
   };
 }
@@ -235,7 +236,6 @@ const activityEntries = usesArchivePage
     }))
   : [];
 const viewAllHref = `/${section}-archive/`;
-const viewAllLabel = `View all ${basePageLabel.toLowerCase()}s`;
 const viewCategoriesLabel = `View ${basePageLabel.toLowerCase()} categories`;
 ---
 
@@ -253,8 +253,6 @@ const viewCategoriesLabel = `View ${basePageLabel.toLowerCase()} categories`;
       categories={categories}
       pageLabel={pageLabel}
       showCounts={sectionKey !== "project"}
-      viewAllHref={viewAllHref}
-      viewAllLabel={viewAllLabel}
     />
   )
 }
