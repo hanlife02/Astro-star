@@ -5,6 +5,7 @@
   pointer-events: none;
   z-index: 0;
   --rain: rgba(0, 0, 0, 1);
+  --rain-alpha-boost: 0;
   background-color: #ffffff;
 }
 
@@ -17,6 +18,7 @@
 html[data-theme="dark"] .coderain,
 :root[data-theme="dark"] .coderain {
   --rain: rgba(255, 255, 255, 1);
+  --rain-alpha-boost: 0.09;
   background-color: #000000;
 }
 
@@ -24,7 +26,7 @@ html[data-theme="dark"] .coderain,
   position: absolute;
   top: -20%;
   color: var(--rain);
-  opacity: var(--alpha);
+  opacity: calc(var(--alpha) + var(--rain-alpha-boost));
   font-family: var(--mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace);
   white-space: nowrap;
   animation: rain var(--dur) linear infinite;
