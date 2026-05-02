@@ -126,7 +126,10 @@ export function getStaticPaths() {
 const { section } = Astro.params;
 
 if (!section || !(section in sectionLabels)) {
-  throw new Error("Unsupported section.");
+  return new Response(null, {
+    status: 404,
+    statusText: "Not found",
+  });
 }
 
 const sectionKey = section as keyof typeof sectionLabels;
