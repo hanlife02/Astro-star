@@ -85,7 +85,10 @@ export async function getStaticPaths() {
 const { section, archiveSlug } = Astro.params;
 
 if (!section || !(section in sectionBaseLabels) || !archiveSlug) {
-  throw new Error("Unsupported archive section or archive slug.");
+  return new Response(null, {
+    status: 404,
+    statusText: "Not found",
+  });
 }
 
 const sectionKey = section as SectionKey;
