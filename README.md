@@ -65,17 +65,29 @@ The project focuses on a small but important kind of community: independent webs
 
 > 🌐 Live site: **<https://hanlife02.com>**
 
-**Home (Dark)** | **Home (Light)**
-:---:|:---:
-<img src="figures/Home.png" width="100%" /> | <img src="figures/Home-light.png" width="100%" />
+### Home (Dark)
 
-**Blog** | **Blog Categories**
-:---:|:---:
-<img src="figures/Blog.png" width="100%" /> | <img src="figures/Blog-Categories.png" width="100%" />
+![Home Dark](figures/Home.png)
 
-**Content** | **Friend Links**
-:---:|:---:
-<img src="figures/Content.png" width="100%" /> | <img src="figures/Links.png" width="100%" />
+### Home (Light)
+
+![Home Light](figures/Home-light.png)
+
+### Blog
+
+![Blog](figures/Blog.png)
+
+### Blog Categories
+
+![Blog Categories](figures/Blog-Categories.png)
+
+### Content
+
+![Content](figures/Content.png)
+
+### Friend Links
+
+![Links](figures/Links.png)
 
 ## Project Map
 
