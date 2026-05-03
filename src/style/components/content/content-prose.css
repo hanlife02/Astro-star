@@ -84,7 +84,27 @@
 }
 
 .content-page-body .content-image-figure img {
-  cursor: zoom-in;
+  cursor: pointer;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+@media (hover: hover) {
+  .content-page-body .content-image-figure img:hover {
+    transform: translateY(-0.06rem) scale(1.01);
+    box-shadow: 0 1.15rem 2.6rem color-mix(in srgb, var(--line) 13%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .content-page-body .content-image-figure img {
+    transition: none;
+  }
+
+  .content-page-body .content-image-figure img:hover {
+    transform: none;
+  }
 }
 
 .content-page-body .content-image-caption {
@@ -389,7 +409,7 @@ html:lang(zh-CN) .content-page--article .content-page-body {
   background: color-mix(in srgb, var(--paper) 82%, transparent);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-  cursor: zoom-out;
+  cursor: pointer;
 }
 
 .content-image-lightbox-frame {
