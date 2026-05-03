@@ -12,6 +12,7 @@
       import { initHomeShellSearch } from "../../scripts/home-shell-search";
       import { initHomeShellWalineComments, initHomeShellWalinePageviews } from "../../scripts/home-shell-waline";
       import { initHomeShellGitHubRepoCards } from "../../scripts/home-shell-github-repo-cards";
+      import { initHomeShellContentImageLightbox } from "../../scripts/home-shell-content-image-lightbox";
 
       type HomeShellWindow = Window & {
         __homeShellPageLoadBound?: boolean;
@@ -31,6 +32,7 @@
         initHomeShellWalineComments();
         initHomeShellWalinePageviews();
         initHomeShellGitHubRepoCards();
+        initHomeShellContentImageLightbox();
       };
 
       if (!browserWindow.__homeShellPageLoadBound) {
