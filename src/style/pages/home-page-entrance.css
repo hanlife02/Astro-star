@@ -33,7 +33,7 @@ html[data-js="true"][data-route-swapping="true"]
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--profile-gap);
+  gap: clamp(1rem, 0.9rem + 0.4vw, 1.45rem);
 }
 
 .home-profile-metric {

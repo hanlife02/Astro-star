@@ -1,7 +1,7 @@
 .githeatmap-link {
   display: block;
   width: 100%;
-  max-width: 16rem;
+  max-width: 20rem;
   text-decoration: none;
   line-height: 0;
   transition:
@@ -29,7 +29,7 @@
 
 @media (min-width: 48rem) {
   .githeatmap-link {
-    max-width: 18rem;
+    max-width: 22rem;
   }
 }
 
