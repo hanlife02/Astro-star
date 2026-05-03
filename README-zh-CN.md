@@ -28,11 +28,7 @@
 - [这是什么](#这是什么)
 - [功能亮点](#功能亮点)
 - [预览](#预览)
-- [自定义配置](#自定义配置)
-- [配置迁移](#配置与内容迁移)
 - [项目结构](#项目地图)
-- [常用命令](#常用命令)
-- [部署](#部署)
 - [一起建设](#一起建设)
 - [技术栈](#技术栈)
 - [许可证](#许可证)
@@ -81,45 +77,6 @@ Astro-star 最初是一个个人博客，现在希望慢慢变成一个可一起
 |:---:|:---:|
 | ![Content](figures/Content.png) | ![Links](figures/Links.png) |
 
-## 自定义配置
-
-如果你要把它变成自己的站点，通常会改这些地方：
-
-| 目标                           | 位置                   |
-| ------------------------------ | ---------------------- |
-| 站点名称、头像、导航、社交账号 | `src/config/site.ts`   |
-| 关于页内容                     | `src/config/about.ts`  |
-| 友链页和友链列表               | `src/config/links.ts`  |
-| Algolia 搜索公开配置           | `src/config/search.ts` |
-| 博客文章                       | `src/content/blog/`    |
-| 短笔记                         | `src/content/note/`    |
-| 项目展示                       | `src/content/project/` |
-| 头像、站点图标、文章图片       | `public/`              |
-
-## 配置与内容迁移
-
-如果你已经在本地配置好了自己的站点，可以把个人配置和内容打包：
-
-```bash
-pnpm run config:extract
-```
-
-它会生成或更新：
-
-| 文件                                | 用途                               |
-| ----------------------------------- | ---------------------------------- |
-| `src/data/user-config.json`         | 结构化站点配置                     |
-| `src/data/user-config.example.json` | 可分享的配置模板                   |
-| `src/data/user-content.tar.gz`      | 博客、笔记、项目、头像和图片资源包 |
-
-在另一份仓库中复原这些配置：
-
-```bash
-pnpm run config:apply
-```
-
-这会重写 `src/config/site.ts`、`src/config/about.ts`、`src/config/links.ts`，并按需解压内容资源。不要把密钥、私有链接或不可公开的个人数据放进这些配置文件。
-
 ## 项目地图
 
 ```text
@@ -150,69 +107,6 @@ pnpm run config:apply
 | `/note`    | 笔记 |
 | `/project` | 项目 |
 | `/links`   | 友链 |
-
-## 常用命令
-
-```bash
-pnpm dev              # 启动开发服务器
-pnpm build            # 构建生产产物到 ./dist/
-pnpm preview          # 本地预览构建产物
-pnpm check            # Astro 类型检查
-pnpm format           # Prettier 格式化
-pnpm format:check     # 检查格式
-pnpm algolia:sync     # 同步 src/content 到 Algolia 索引
-pnpm migrate:content  # 迁移旧内容结构
-pnpm config:extract   # 提取用户配置和内容
-pnpm config:apply     # 应用用户配置和内容
-```
-
-## 部署
-
-项目内置 GitHub Actions 工作流：推送到 `main` 后计算源码 hash，无变更时跳过构建；有变更时安装依赖、执行 `pnpm build`，再通过 rsync + SSH 同步到服务器，并用 PM2 启动 `dist/server/entry.mjs`。
-
-<details>
-<summary><strong>服务器要求</strong></summary>
-
-| 工具    | 要求                             |
-| ------- | -------------------------------- |
-| Node.js | `>= 22`                          |
-| pnpm    | 与 `packageManager` 字段保持一致 |
-| PM2     | 用于进程管理                     |
-| rsync   | 用于文件同步                     |
-
-</details>
-
-<details>
-<summary><strong>GitHub Secrets</strong></summary>
-
-| 名称                       | 默认值         | 说明                                         |
-| -------------------------- | -------------- | -------------------------------------------- |
-| `SSH_PRIVATE_KEY`          | 无             | 部署用 SSH 私钥                              |
-| `SSH_HOST`                 | 无             | 服务器 IP 或域名                             |
-| `SSH_USER`                 | `ubuntu`       | SSH 用户名                                   |
-| `SSH_PORT`                 | `22`           | SSH 端口                                     |
-| `DEPLOY_PATH`              | `~/Astro-star` | 服务器目标目录                               |
-| `PM2_APP_NAME`             | `Astro-star`   | PM2 应用名称                                 |
-| `APP_PORT`                 | `4321`         | Astro 服务监听端口                           |
-| `PUBLIC_WALINE_SERVER_URL` | 无             | Waline 评论服务地址                          |
-| `ALGOLIA_WRITE_API_KEY`    | 可选           | Algolia 索引写入 Key                         |
-| `ALGOLIA_ADMIN_API_KEY`    | 可选           | 同步前清空旧索引；不配置时不会自动删除旧记录 |
-
-</details>
-
-<details>
-<summary><strong>本地环境</strong></summary>
-
-本地开发可创建 `.env`：
-
-```env
-WALINE_SERVER_URL=https://your-waline-server.com
-GITHUB_TOKEN=your_github_token
-```
-
-`.env` 已被 Git 忽略。`GITHUB_TOKEN` 只用于提高 GitHub 仓库卡片 API 请求稳定性，不是必填项。
-
-</details>
 
 ## 一起建设
 
