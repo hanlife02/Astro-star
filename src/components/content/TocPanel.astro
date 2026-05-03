@@ -11,7 +11,7 @@ interface Props {
   emptyText?: string;
 }
 
-const { items, title, emptyText = "No headings yet." } = Astro.props as Props;
+const { items, title, emptyText = "The author is too lazy to write a title." } = Astro.props as Props;
 
 const hasHanCharacters = /[\u3400-\u9fff\uf900-\ufaff]/u;
 const hasLatinCharacters = /[A-Za-z]/;
