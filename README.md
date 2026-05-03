@@ -17,7 +17,8 @@ English · [简体中文](./README-zh-CN.md)
 <a href="https://hanlife02.com">🌐 Live Demo</a> &nbsp;·&nbsp;
 <a href="./CONTRIBUTING.md">🤝 Contributing</a> &nbsp;·&nbsp;
 <a href="https://github.com/hanlife02/Astro-star/issues">🐛 Issues</a> &nbsp;·&nbsp;
-<a href="https://github.com/hanlife02/Astro-star/discussions">💬 Discussions</a>
+<a href="https://github.com/hanlife02/Astro-star/discussions">💬 Discussions</a> &nbsp;·&nbsp;
+<a href="https://hanlife02.github.io/Astro-star-docs/">📖 Docs</a>
 
 </div>
 
