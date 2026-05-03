@@ -102,44 +102,6 @@ src/
 - 支持亮色 / 暗色主题，通过 `html[data-theme="dark"]` 选择器切换。
 - 新增组件时，在 `src/style/components/` 下创建对应的 CSS 文件。
 
-## 内容贡献
-
-### 添加博客文章
-
-在 `src/content/blog/` 下创建 `.md` 或 `.mdx` 文件：
-
-```markdown
----
-routeSlug: 路由目录
-title: 文章标题
-createdAt: "2025-05-22 11:19:27" //创建日期
-type: 类别
----
-
-正文内容...
-```
-
-### 添加笔记
-
-在 `src/content/note/` 下创建文件，frontmatter 格式同博客。
-
-### 添加项目
-
-在 `src/content/project/` 下创建 `.mdx` 文件：
-
-```markdown
----
-title: 项目名称
-description: 项目简介
-type: Project
-url: https://example.com
-repo: https://github.com/user/repo
-avatar: /images/project-avatar.svg
----
-
-项目详细介绍...
-```
-
 ## Git 提交规范
 
 使用 [Conventional Commits](https://www.conventionalcommits.org/) 格式：
@@ -193,16 +155,6 @@ refactor: extract article card into standalone component
 - [ ] `pnpm format:check` 通过
 - [ ] `pnpm build` 成功
 - [ ] Commit message 符合 Conventional Commits
-
-## 环境变量
-
-开发时可在项目根目录创建 `.env` 文件：
-
-```env
-WALINE_SERVER_URL=https://your-waline-server.com  # 可选，Waline 评论服务
-```
-
-> `.env` 文件已在 `.gitignore` 中，不会被提交。
 
 ## 需要帮助？
 
