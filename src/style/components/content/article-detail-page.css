@@ -1,8 +1,6 @@
 @import "@waline/client/waline.css";
 
-.content-page--article .content-page-body > h1:first-of-type {
-  display: none;
-}
+.content-page--article .content-page-body > h1:first-of-type {}
 
 .content-page--article {
   --article-title-size: clamp(1.82rem, 1.62rem + 0.64vw, 2.65rem);
