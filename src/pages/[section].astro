@@ -77,6 +77,10 @@ function getEntryCategory(
   section: keyof typeof sectionLabels,
   entry: ContentEntryMeta,
 ) {
+  if (section === "project") {
+    return { archiveSlug: "project", label: "Project", href: undefined };
+  }
+
   const directoryArchiveSlug = getArchiveSlugFromEntryId(entry.id);
   const label =
     entry.data.type?.trim() || directoryArchiveSlug || "Uncategorized";
@@ -89,8 +93,7 @@ function getEntryCategory(
 
   return {
     archiveSlug,
-    href:
-      section === "project" ? undefined : `/${section}-archive/${archiveSlug}/`,
+    href: `/${section}-archive/${archiveSlug}/`,
     label,
   };
 }
