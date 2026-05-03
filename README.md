@@ -1,10 +1,13 @@
 <div align="center">
 
+<img src="figures/Astro-star.png" alt="Astro-star" width="144" />
+
 # Astro-star
 
-一个把博客、笔记、项目展示和朋友网络放在一起的 Astro 社区主题。
+An Astro theme community that brings blogs, notes, projects, comments, and friend links into one personal website.
 
-[在线示例](https://hanlife02.com) · [贡献指南](./CONTRIBUTING.md) · [提交 Issue](https://github.com/hanlife02/Astro-star/issues) · [许可证](./LICENSE)
+English · [简体中文](./README-zh-CN.md)
+[Live Demo](https://hanlife02.com) · [Contributing](./CONTRIBUTING.md) · [Issues](https://github.com/hanlife02/Astro-star/issues) · [License](./LICENSE)
 
 ![Astro](https://img.shields.io/badge/Astro-5.x-ff5d01?style=flat-square&logo=astro&logoColor=white)
 ![Node.js](https://img.shields.io/badge/Node.js-%3E%3D22-339933?style=flat-square&logo=node.js&logoColor=white)
@@ -14,37 +17,37 @@
 
 </div>
 
-## 这是什么
+## What Is This
 
-Astro-star 最初是一个个人博客，现在希望慢慢变成一个可一起打磨的个人站点主题。你可以把它 Fork 成自己的家页，也可以把遇到的问题、做出的组件、迁移经验和部署方案带回来，让下一个搭站的人少走一点弯路。
+Astro-star started as a personal blog and is now moving toward a community-shaped personal site theme. You can fork it as your own homepage, or bring back your fixes, components, migration notes, deployment experience, and design ideas so the next person has an easier path.
 
-它关注的是“个人站点里的社区感”：文章有人读，笔记能被翻到，项目可以被展示，友链和评论能把独立网站重新连起来。
+The project focuses on a small but important kind of community: independent websites that are connected by writing, notes, projects, RSS, comments, friend links, and open-source collaboration.
 
-## 你可以在这里做什么
+## What You Can Do Here
 
-| 你是           | 可以从这里开始                                  |
-| -------------- | ----------------------------------------------- |
-| 想搭站的人     | Fork 仓库，替换个人配置和内容，部署成自己的博客 |
-| 正在改主题的人 | 复用现有布局、路由、内容集合和样式 Token        |
-| 想贡献的人     | 修 Bug、补文档、优化移动端、完善组件和部署经验  |
-| 想交流的人     | 通过 Issue 提建议、贴截图、讨论设计和使用体验   |
+| If you are             | Start here                                                                                 |
+| ---------------------- | ------------------------------------------------------------------------------------------ |
+| Building your own site | Fork the repository, replace the personal configuration and content, then deploy your blog |
+| Customizing a theme    | Reuse the layouts, routes, content collections, and design tokens                          |
+| Contributing           | Fix bugs, improve docs, polish mobile views, or add reusable components                    |
+| Looking for discussion | Open an Issue with ideas, screenshots, design feedback, or usage questions                 |
 
-## 功能亮点
+## Highlights
 
-| 能力         | 说明                                                          |
-| ------------ | ------------------------------------------------------------- |
-| Astro SSR    | 使用 `@astrojs/node` standalone 输出，适合部署到自有服务器    |
-| 内容集合     | `blog`、`note`、`project` 基于 Astro Content Collections 管理 |
-| 固定站点路由 | 首页、关于、博客、笔记、项目、友链六个核心入口                |
-| 主题切换     | 支持亮色、暗色、跟随系统，并通过 Cookie 保持首屏一致          |
-| MDX 写作     | 支持 MDX、数学公式、KaTeX、图片题注和自定义内容组件           |
-| 评论与友链   | Waline 评论接入，友链页支持申请说明和失联链接展示             |
-| 搜索与订阅   | Algolia 站内搜索可选，内置 RSS、Sitemap、robots.txt           |
-| GitHub 卡片  | 可在内容中展示 GitHub 仓库信息和 Star 数据                    |
-| 配置迁移     | 可提取和复原站点配置、内容、头像与文章图片                    |
-| 自动部署     | GitHub Actions 构建，rsync + SSH 发布，PM2 管理进程           |
+| Feature              | Description                                                                        |
+| -------------------- | ---------------------------------------------------------------------------------- |
+| Astro SSR            | Uses `@astrojs/node` standalone output, suitable for deployment on your own server |
+| Content collections  | `blog`, `note`, and `project` are powered by Astro Content Collections             |
+| Fixed site routes    | Home, About, Blog, Note, Project, and Links are built in                           |
+| Theme switching      | Supports light, dark, and system modes with cookies for stable first paint         |
+| MDX writing          | Supports MDX, math, KaTeX, figure captions, and custom content components          |
+| Comments and links   | Includes Waline comments and a friend links page with application notes            |
+| Search and feeds     | Optional Algolia site search, RSS, Sitemap, and robots.txt are included            |
+| GitHub repo cards    | Content pages can display GitHub repository metadata and star counts               |
+| Config migration     | Extract and restore site config, content, avatars, and article images              |
+| Automated deployment | GitHub Actions builds, rsync + SSH deploys, and PM2 manages the process            |
 
-## 快速加入
+## Quick Start
 
 ```bash
 git clone https://github.com/hanlife02/Astro-star.git
@@ -54,45 +57,45 @@ pnpm install
 pnpm dev
 ```
 
-开发服务器默认运行在 <http://localhost:4321>。
+The development server runs at <http://localhost:4321> by default.
 
-如果你要把它变成自己的站点，通常会改这些地方：
+To turn it into your own site, these are the usual places to edit:
 
-| 目标                           | 位置                   |
-| ------------------------------ | ---------------------- |
-| 站点名称、头像、导航、社交账号 | `src/config/site.ts`   |
-| 关于页内容                     | `src/config/about.ts`  |
-| 友链页和友链列表               | `src/config/links.ts`  |
-| Algolia 搜索公开配置           | `src/config/search.ts` |
-| 博客文章                       | `src/content/blog/`    |
-| 短笔记                         | `src/content/note/`    |
-| 项目展示                       | `src/content/project/` |
-| 头像、站点图标、文章图片       | `public/`              |
+| Goal                                           | Location               |
+| ---------------------------------------------- | ---------------------- |
+| Site name, avatar, navigation, social accounts | `src/config/site.ts`   |
+| About page content                             | `src/config/about.ts`  |
+| Links page and friend links                    | `src/config/links.ts`  |
+| Public Algolia search settings                 | `src/config/search.ts` |
+| Blog posts                                     | `src/content/blog/`    |
+| Short notes                                    | `src/content/note/`    |
+| Project pages                                  | `src/content/project/` |
+| Avatar, site icon, and article images          | `public/`              |
 
-## 写作方式
+## Writing Content
 
-博客和笔记使用 `.md` 或 `.mdx`，放进对应内容目录即可。
+Blog posts and notes use `.md` or `.mdx` files in their matching content directories.
 
 ```md
 ---
 routeSlug: my-first-post
-title: 第一篇文章
-description: 这篇文章的简短介绍
+title: My First Post
+description: A short description for this post
 createdAt: "2026-05-03 20:00:00"
 type: Essay
 archiveSlug: writing
 ---
 
-正文内容...
+Write your content here...
 ```
 
-项目展示使用 `src/content/project/`，需要更完整的项目信息。
+Project pages live in `src/content/project/` and require more complete project metadata.
 
 ```md
 ---
 routeSlug: my-project
-title: 项目名称
-description: 项目简介
+title: Project Name
+description: A short project description
 createdAt: "2026-05-03 20:00:00"
 type: Project
 archiveSlug: project
@@ -101,92 +104,92 @@ docUrl: https://github.com/user/repo/blob/main/README.md
 avatar: /images/project-avatar.svg
 ---
 
-项目详细介绍...
+Write the project details here...
 ```
 
-## 配置与内容迁移
+## Config And Content Migration
 
-如果你已经在本地配置好了自己的站点，可以把个人配置和内容打包：
+If you have already customized your local site, you can package your personal config and content:
 
 ```bash
 pnpm run config:extract
 ```
 
-它会生成或更新：
+This creates or updates:
 
-| 文件                                | 用途                               |
-| ----------------------------------- | ---------------------------------- |
-| `src/data/user-config.json`         | 结构化站点配置                     |
-| `src/data/user-config.example.json` | 可分享的配置模板                   |
-| `src/data/user-content.tar.gz`      | 博客、笔记、项目、头像和图片资源包 |
+| File                                | Purpose                                        |
+| ----------------------------------- | ---------------------------------------------- |
+| `src/data/user-config.json`         | Structured site configuration                  |
+| `src/data/user-config.example.json` | Shareable configuration template               |
+| `src/data/user-content.tar.gz`      | Blog, note, project, avatar, and image archive |
 
-在另一份仓库中复原这些配置：
+Restore those files in another copy of the repository:
 
 ```bash
 pnpm run config:apply
 ```
 
-这会重写 `src/config/site.ts`、`src/config/about.ts`、`src/config/links.ts`，并按需解压内容资源。不要把密钥、私有链接或不可公开的个人数据放进这些配置文件。
+This rewrites `src/config/site.ts`, `src/config/about.ts`, and `src/config/links.ts`, then restores content assets when an archive is available. Do not put secrets, private links, or non-public personal data into these configuration files.
 
-## 项目地图
+## Project Map
 
 ```text
 /
-├── public/                 # 静态资源、头像、站点图标、文章图片
-├── scripts/                # 配置迁移、索引同步和构建辅助脚本
+├── public/                 # Static assets, avatars, site icon, article images
+├── scripts/                # Config migration, index sync, and build helpers
 ├── src/
-│   ├── components/         # 可复用组件
-│   ├── config/             # 站点、关于页、友链和搜索配置
-│   ├── content/            # blog / note / project 内容集合
-│   ├── layouts/            # 页面布局
-│   ├── pages/              # 路由页面和 API
-│   ├── scripts/            # 浏览器端交互脚本
-│   ├── style/              # 全局样式、组件样式和设计 Token
-│   └── utils/              # Markdown、MDX 和通用工具
+│   ├── components/         # Reusable components
+│   ├── config/             # Site, about, links, and search config
+│   ├── content/            # blog / note / project content collections
+│   ├── layouts/            # Page layouts
+│   ├── pages/              # Routes and API endpoints
+│   ├── scripts/            # Browser-side interaction scripts
+│   ├── style/              # Global styles, component styles, design tokens
+│   └── utils/              # Markdown, MDX, and shared utilities
 ├── astro.config.mjs
 ├── ecosystem.config.cjs
 └── package.json
 ```
 
-固定的顶级路由：
+Top-level routes:
 
-| 路径       | 说明 |
-| ---------- | ---- |
-| `/`        | 首页 |
-| `/about`   | 关于 |
-| `/blog`    | 博客 |
-| `/note`    | 笔记 |
-| `/project` | 项目 |
-| `/links`   | 友链 |
+| Path       | Description  |
+| ---------- | ------------ |
+| `/`        | Home         |
+| `/about`   | About        |
+| `/blog`    | Blog         |
+| `/note`    | Notes        |
+| `/project` | Projects     |
+| `/links`   | Friend links |
 
-## 常用命令
+## Commands
 
 ```bash
-pnpm dev              # 启动开发服务器
-pnpm build            # 构建生产产物到 ./dist/
-pnpm preview          # 本地预览构建产物
-pnpm check            # Astro 类型检查
-pnpm format           # Prettier 格式化
-pnpm format:check     # 检查格式
-pnpm algolia:sync     # 同步 src/content 到 Algolia 索引
-pnpm migrate:content  # 迁移旧内容结构
-pnpm config:extract   # 提取用户配置和内容
-pnpm config:apply     # 应用用户配置和内容
+pnpm dev              # Start the development server
+pnpm build            # Build production output into ./dist/
+pnpm preview          # Preview the production build locally
+pnpm check            # Run Astro type checks
+pnpm format           # Format with Prettier
+pnpm format:check     # Check formatting
+pnpm algolia:sync     # Sync src/content into the Algolia index
+pnpm migrate:content  # Migrate legacy content structure
+pnpm config:extract   # Extract user config and content
+pnpm config:apply     # Apply user config and content
 ```
 
-## 一起建设
+## Build Together
 
-欢迎从小改动开始。一个清晰的 Issue、一张移动端截图、一个可复现的 Bug、一个更顺手的组件，都能让这个主题更像一个可长期维护的社区项目。
+Small contributions are welcome. A clear Issue, a mobile screenshot, a reproducible bug, a more ergonomic component, or a short setup note can all make this theme easier to maintain and reuse.
 
-| 类型     | 适合提交的内容                             |
-| -------- | ------------------------------------------ |
-| Bug      | 构建失败、页面错位、路由异常、暗色主题问题 |
-| 体验优化 | 移动端布局、可访问性、交互细节、加载状态   |
-| 主题能力 | 新组件、内容卡片、归档视图、友链展示方式   |
-| 文档     | 搭站教程、部署记录、配置说明、迁移经验     |
-| 集成     | 搜索、评论、订阅、统计和更多部署平台       |
+| Type             | Good contributions                                                    |
+| ---------------- | --------------------------------------------------------------------- |
+| Bug              | Build failures, layout glitches, route issues, dark-mode problems     |
+| UX polish        | Mobile layout, accessibility, interaction details, loading states     |
+| Theme capability | New components, content cards, archive views, link display patterns   |
+| Documentation    | Setup guides, deployment notes, configuration docs, migration stories |
+| Integrations     | Search, comments, feeds, analytics, and more deployment platforms     |
 
-提交 PR 前建议运行：
+Before opening a PR, it is recommended to run:
 
 ```bash
 pnpm check
@@ -194,45 +197,45 @@ pnpm format:check
 pnpm build
 ```
 
-核心约定请看 [CONTRIBUTING.md](./CONTRIBUTING.md)。最重要的几条是：组件不硬编码业务内容，样式放在 `src/style/`，移动端优先，密钥不进入源码。
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for the core rules. The most important ones are: do not hard-code business content in components, keep styles in `src/style/`, build mobile-first, and never commit secrets.
 
-## 部署
+## Deployment
 
-项目内置 GitHub Actions 工作流：推送到 `main` 后计算源码 hash，无变更时跳过构建；有变更时安装依赖、执行 `pnpm build`，再通过 rsync + SSH 同步到服务器，并用 PM2 启动 `dist/server/entry.mjs`。
+The repository includes a GitHub Actions workflow. Pushes to `main` compute a source hash and skip builds when nothing changed. Otherwise, the workflow installs dependencies, runs `pnpm build`, syncs files to the server with rsync + SSH, and starts `dist/server/entry.mjs` with PM2.
 
-服务器需要准备：
+Server requirements:
 
-| 工具    | 要求                             |
+| Tool    | Requirement                      |
 | ------- | -------------------------------- |
 | Node.js | `>= 22`                          |
-| pnpm    | 与 `packageManager` 字段保持一致 |
-| PM2     | 用于进程管理                     |
-| rsync   | 用于文件同步                     |
+| pnpm    | Match the `packageManager` field |
+| PM2     | Process management               |
+| rsync   | File synchronization             |
 
-GitHub Secrets：
+GitHub Secrets:
 
-| 名称                       | 默认值         | 说明                                         |
-| -------------------------- | -------------- | -------------------------------------------- |
-| `SSH_PRIVATE_KEY`          | 无             | 部署用 SSH 私钥                              |
-| `SSH_HOST`                 | 无             | 服务器 IP 或域名                             |
-| `SSH_USER`                 | `ubuntu`       | SSH 用户名                                   |
-| `SSH_PORT`                 | `22`           | SSH 端口                                     |
-| `DEPLOY_PATH`              | `~/Astro-star` | 服务器目标目录                               |
-| `PM2_APP_NAME`             | `Astro-star`   | PM2 应用名称                                 |
-| `APP_PORT`                 | `4321`         | Astro 服务监听端口                           |
-| `PUBLIC_WALINE_SERVER_URL` | 无             | Waline 评论服务地址                          |
-| `ALGOLIA_WRITE_API_KEY`    | 可选           | Algolia 索引写入 Key                         |
-| `ALGOLIA_ADMIN_API_KEY`    | 可选           | 同步前清空旧索引；不配置时不会自动删除旧记录 |
+| Name                       | Default        | Description                                                                               |
+| -------------------------- | -------------- | ----------------------------------------------------------------------------------------- |
+| `SSH_PRIVATE_KEY`          | None           | SSH private key for deployment                                                            |
+| `SSH_HOST`                 | None           | Server IP or domain                                                                       |
+| `SSH_USER`                 | `ubuntu`       | SSH username                                                                              |
+| `SSH_PORT`                 | `22`           | SSH port                                                                                  |
+| `DEPLOY_PATH`              | `~/Astro-star` | Target directory on the server                                                            |
+| `PM2_APP_NAME`             | `Astro-star`   | PM2 application name                                                                      |
+| `APP_PORT`                 | `4321`         | Astro server port                                                                         |
+| `PUBLIC_WALINE_SERVER_URL` | None           | Waline comment server URL                                                                 |
+| `ALGOLIA_WRITE_API_KEY`    | Optional       | Algolia indexing key                                                                      |
+| `ALGOLIA_ADMIN_API_KEY`    | Optional       | Clears the old index before syncing; old records are not automatically removed without it |
 
-本地开发可创建 `.env`：
+For local development, you can create a `.env` file:
 
 ```env
 WALINE_SERVER_URL=https://your-waline-server.com
 GITHUB_TOKEN=your_github_token
 ```
 
-`.env` 已被 Git 忽略。`GITHUB_TOKEN` 只用于提高 GitHub 仓库卡片 API 请求稳定性，不是必填项。
+`.env` is ignored by Git. `GITHUB_TOKEN` is optional and only improves the reliability of GitHub repository card API requests.
 
-## 许可证
+## License
 
-Astro-star 使用 [Apache License 2.0](./LICENSE) 开源。
+Astro-star is open-source under the [Apache License 2.0](./LICENSE).
