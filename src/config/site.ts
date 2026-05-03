@@ -30,12 +30,6 @@ export const site = {
         href: "https://icp.gov.moe/?keyword=20249110",
       },
     },
-    monitorLinks: [
-      {
-        label: "Status",
-        href: "https://status.ethan02.com/status/all",
-      },
-    ],
     codeRainKeywords: [
       "git",
       "C",

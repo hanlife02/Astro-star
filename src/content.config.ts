@@ -10,7 +10,6 @@ const baseContentSchema = z
     createdAt: z.string().optional(),
     updatedAt: z.string().optional(),
     type: z.string().optional(),
-    archiveSlug: z.string().optional(),
     projectUrl: z.string().optional(),
     docUrl: z.string().optional(),
     avatar: z.string().optional(),
@@ -22,11 +21,6 @@ const projectSchema = z.object({
   title: z.string().min(1),
   description: z.string().min(1),
   createdAt: z.string().min(1),
-  type: z.literal("Project"),
-  archiveSlug: z.literal("project"),
-  projectUrl: z.string().min(1),
-  docUrl: z.string().min(1).optional(),
-  avatar: z.string().min(1),
 });
 
 const blog = defineCollection({
