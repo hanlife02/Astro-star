@@ -82,7 +82,6 @@ Blog posts and notes use `.md` or `.mdx` files in their matching content directo
 routeSlug: my-first-post
 title: My First Post
 description: A short description for this post
-createdAt: "2026-05-03 20:00:00"
 type: Essay
 archiveSlug: writing
 ---
@@ -97,7 +96,6 @@ Project pages live in `src/content/project/` and require more complete project m
 routeSlug: my-project
 title: Project Name
 description: A short project description
-createdAt: "2026-05-03 20:00:00"
 type: Project
 archiveSlug: project
 projectUrl: https://example.com

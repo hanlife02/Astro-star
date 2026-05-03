@@ -82,7 +82,6 @@ pnpm dev
 routeSlug: my-first-post
 title: 第一篇文章
 description: 这篇文章的简短介绍
-createdAt: "2026-05-03 20:00:00"
 type: Essay
 archiveSlug: writing
 ---
@@ -97,7 +96,6 @@ archiveSlug: writing
 routeSlug: my-project
 title: 项目名称
 description: 项目简介
-createdAt: "2026-05-03 20:00:00"
 type: Project
 archiveSlug: project
 projectUrl: https://example.com
