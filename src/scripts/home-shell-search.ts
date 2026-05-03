@@ -172,11 +172,7 @@ export function initHomeShellSearch() {
     "[data-home-shell-search-container]",
   );
 
-  if (
-    !trigger ||
-    !container ||
-    trigger.dataset.searchInitialized === "true"
-  )
+  if (!trigger || !container || trigger.dataset.searchInitialized === "true")
     return;
 
   trigger.addEventListener("click", () => {

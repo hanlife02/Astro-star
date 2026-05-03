@@ -93,7 +93,8 @@
 @media (hover: hover) {
   .content-page-body .content-image-figure img:hover {
     transform: translateY(-0.06rem) scale(1.01);
-    box-shadow: 0 1.15rem 2.6rem color-mix(in srgb, var(--line) 13%, transparent);
+    box-shadow: 0 1.15rem 2.6rem
+      color-mix(in srgb, var(--line) 13%, transparent);
   }
 }
 
@@ -231,7 +232,7 @@
   width: 0.92em;
   height: 0.92em;
   flex: 0 0 auto;
-  color: #E4B342;
+  color: #e4b342;
   fill: currentColor;
 }
 
@@ -344,7 +345,8 @@ html:lang(zh-CN) .content-page--article .content-page-body {
   height: auto;
 }
 
-.content-page-body :is(p > a:only-child:has(> img), p > a:only-child:has(> picture)) {
+.content-page-body
+  :is(p > a:only-child:has(> img), p > a:only-child:has(> picture)) {
   display: block;
   line-height: 0;
 }
@@ -371,13 +373,16 @@ html:lang(zh-CN) .content-page--article .content-page-body {
   object-fit: contain;
 }
 
-.content-page-body :is(p > picture:only-child, p > a:only-child > picture, figure > picture) {
+.content-page-body
+  :is(p > picture:only-child, p > a:only-child > picture, figure > picture) {
   display: block;
   max-width: var(--content-image-max-width);
   margin-inline: auto;
 }
 
-.content-page-body :is(p > picture:only-child, p > a:only-child > picture, figure > picture) > img {
+.content-page-body
+  :is(p > picture:only-child, p > a:only-child > picture, figure > picture)
+  > img {
   display: block;
   width: auto;
   max-width: 100%;
@@ -429,7 +434,8 @@ html:lang(zh-CN) .content-page--article .content-page-body {
     transform 0.18s ease;
 }
 
-.content-image-lightbox[data-lightbox-state="open"] .content-image-lightbox-frame {
+.content-image-lightbox[data-lightbox-state="open"]
+  .content-image-lightbox-frame {
   opacity: 1;
   transform: scale(1);
 }

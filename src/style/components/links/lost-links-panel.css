@@ -34,7 +34,9 @@
   border-right: 1.5px solid currentColor;
   opacity: 0.72;
   transform: rotate(45deg);
-  transition: transform 160ms ease, opacity 160ms ease;
+  transition:
+    transform 160ms ease,
+    opacity 160ms ease;
 }
 
 .lost-links-panel[open] .lost-links-summary::after {

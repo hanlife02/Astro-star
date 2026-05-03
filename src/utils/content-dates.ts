@@ -40,13 +40,19 @@ function toValidDate(value?: string | Date | null) {
     return isValidDate(value) ? value : null;
   }
 
-  return parseLocalDateString(value) ?? (() => {
-    const date = new Date(value);
-    return isValidDate(date) ? date : null;
-  })();
+  return (
+    parseLocalDateString(value) ??
+    (() => {
+      const date = new Date(value);
+      return isValidDate(date) ? date : null;
+    })()
+  );
 }
 
-export function resolveContentDates(frontmatter: DateFrontmatter | undefined, fallback: DateFallbacks) {
+export function resolveContentDates(
+  frontmatter: DateFrontmatter | undefined,
+  fallback: DateFallbacks,
+) {
   return {
     createdAt: toValidDate(frontmatter?.createdAt) ?? fallback.createdAt,
     updatedAt: toValidDate(frontmatter?.updatedAt) ?? fallback.updatedAt,

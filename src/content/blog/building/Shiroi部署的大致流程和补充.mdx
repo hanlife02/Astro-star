@@ -4,6 +4,7 @@ title: "Shiroi部署的大致流程和补充"
 createdAt: "2024-07-21 20:19:56"
 type: "搭建🦤"
 ---
+
 <br># 部署<br><br>
 ## 壹 · 准备工作 (不分先后顺序)<br><br>
 1. 已经部署完core并配置反代 （参考**https://mx-space.js.org/docs/core/docker**)<br><br>
@@ -12,29 +13,37 @@ type: "搭建🦤"
 4. 已经完成主题的配置<br><br>
 
 ## 贰 · 部署过程<br><br>
+
 ### **1.Fork 项目**<br><br>
+
 [shiroi-deploy-action](https://github.com/innei-dev/shiroi-deploy-action)<br><br>
 你可以看到示例如下图
 ![示例图片1](/figures/006-Shiroi部署的大致流程和补充.png)<br><br>
+
 ### **2.获取GitHub Token**<br><br>
+
 **Github Token** 的获取方法为<br><br>
 进入[Tokens](https://github.com/settings/tokens) ->Personal access tokens -> Tokens (classic) -><br><br> Generate new token -> Generate new token (classic)<br><br>
 并确保repo权限选中<br><br><br>
+
 ### **3.添加Secrets**<br><br>
+
 打开fork之后的库<br><br>
 Settings -> Secrets and variables -> Actions<br><br>
 依次添加以下`secret`<br><br>
 ---------------------------------------------------------------------------------------<br><br>
 `HOST` 服务器地址 <br><br>
 `USER` 服务器用户名（通常是root或ubuntu）<br><br>
-`PASSWORD` 服务器密码<br><br> 
+`PASSWORD` 服务器密码<br><br>
 `PORT` 服务器 SSH 端口（通常是22）<br><br>
 `KEY` 服务器 SSH Key（可选，密码 key 二选一）<br><br>
 `GH_PAT` 可访问 Shiroi 仓库的 Github Token<br><br>
 ---------------------------------------------------------------------------------------<br><br>
 完成后如图所示<br><br>
 ![示例图片2](/figures/007-Shiroi部署的大致流程和补充.png)<br><br>
+
 ### **4.新建`.env`**<br><br>
+
 在你的服务器家目录，新建`shiro`的目录，然后新建`.env`<br>
 
 ```
@@ -44,6 +53,7 @@ cd shiro
 touch .env
 nano .env
 ```
+
 ### **5.填写变量**<br>
 
 ```
@@ -65,7 +75,9 @@ TMDB_API_KEY=
 
 GH_TOKEN=
 ```
+
 ### **6.更改哈希初始值，执行工作流**<br><br>
+
 由于防止重构建配置，起初的Action应为如下<br><br>
 ![示例图片3](/figures/008-Shiroi部署的大致流程和补充.png)<br>
 即显示后三个job被跳过<br><br>

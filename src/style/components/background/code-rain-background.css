@@ -27,7 +27,17 @@ html[data-theme="dark"] .coderain,
   top: -20%;
   color: var(--rain);
   opacity: calc(var(--alpha) + var(--rain-alpha-boost));
-  font-family: var(--mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace);
+  font-family: var(
+    --mono,
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Monaco,
+    Consolas,
+    "Liberation Mono",
+    "Courier New",
+    monospace
+  );
   white-space: nowrap;
   animation: rain var(--dur) linear infinite;
   animation-delay: var(--delay);

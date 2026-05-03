@@ -33,7 +33,9 @@ function normalizeVoidHtmlTags(line) {
     const chunk = line.slice(cursor, nextFence);
     output += inlineCodeFenceLength
       ? chunk
-      : chunk.replace(VOID_HTML_TAG_PATTERN, (match) => (match.endsWith("/>") ? match : `${match.slice(0, -1)} />`));
+      : chunk.replace(VOID_HTML_TAG_PATTERN, (match) =>
+          match.endsWith("/>") ? match : `${match.slice(0, -1)} />`,
+        );
     cursor = nextFence;
   }
 
@@ -75,7 +77,10 @@ function normalizeMdxVoidHtml(source) {
 
       if (!fencedCodeMarker) {
         fencedCodeMarker = fenceMatch[2];
-      } else if (fenceMatch[2][0] === fencedCodeMarker[0] && fenceMatch[2].length >= fencedCodeMarker.length) {
+      } else if (
+        fenceMatch[2][0] === fencedCodeMarker[0] &&
+        fenceMatch[2].length >= fencedCodeMarker.length
+      ) {
         fencedCodeMarker = "";
       }
 

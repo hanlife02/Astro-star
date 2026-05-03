@@ -3,12 +3,21 @@ function normalizeSlug(value?: unknown) {
     return "";
   }
 
-  const slug = String(value).trim().replace(/^\/+|\/+$/g, "") || "";
+  const slug =
+    String(value)
+      .trim()
+      .replace(/^\/+|\/+$/g, "") || "";
   return slug.includes("/") ? "" : slug;
 }
 
 export function getContentSlugFromPath(path: string) {
-  return path.split("/").pop()?.replace(/\.(md|mdx)$/i, "")?.trim() || "untitled";
+  return (
+    path
+      .split("/")
+      .pop()
+      ?.replace(/\.(md|mdx)$/i, "")
+      ?.trim() || "untitled"
+  );
 }
 
 export function normalizeArchiveSlug(value?: unknown) {
@@ -27,8 +36,12 @@ export function slugifyCategoryLabel(value: string) {
 }
 
 export function getArchiveSlugFromPath(path: string, section?: string) {
-  const sectionPattern = section ? section.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") : "(?:blog|note|project)";
-  const match = path.match(new RegExp(`content/${sectionPattern}/([^/]+)/[^/]+\\.(md|mdx)$`, "i"));
+  const sectionPattern = section
+    ? section.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+    : "(?:blog|note|project)";
+  const match = path.match(
+    new RegExp(`content/${sectionPattern}/([^/]+)/[^/]+\\.(md|mdx)$`, "i"),
+  );
 
   return normalizeSlug(match?.[1]);
 }

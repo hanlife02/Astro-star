@@ -7,7 +7,11 @@
   background-color: #ffffff;
   --fg: #7d7d7d;
   --snow-strength: 36%;
-  --snow-ink: color-mix(in srgb, var(--fg) var(--snow-strength, 24%), transparent);
+  --snow-ink: color-mix(
+    in srgb,
+    var(--fg) var(--snow-strength, 24%),
+    transparent
+  );
 }
 
 @supports (view-transition-name: none) {
@@ -21,18 +25,66 @@
   position: absolute;
   inset: -12%;
   background-image:
-    radial-gradient(circle at 6% 14%, var(--snow-ink) 0 0.0813rem, transparent 0.1625rem),
-    radial-gradient(circle at 18% 62%, var(--snow-ink) 0 0.1125rem, transparent 0.2063rem),
-    radial-gradient(circle at 27% 28%, var(--snow-ink) 0 0.0813rem, transparent 0.1625rem),
-    radial-gradient(circle at 33% 80%, var(--snow-ink) 0 0.1438rem, transparent 0.2438rem),
-    radial-gradient(circle at 41% 18%, var(--snow-ink) 0 0.0938rem, transparent 0.1938rem),
-    radial-gradient(circle at 49% 55%, var(--snow-ink) 0 0.0813rem, transparent 0.1625rem),
-    radial-gradient(circle at 57% 32%, var(--snow-ink) 0 0.125rem, transparent 0.225rem),
-    radial-gradient(circle at 63% 74%, var(--snow-ink) 0 0.0813rem, transparent 0.1625rem),
-    radial-gradient(circle at 71% 12%, var(--snow-ink) 0 0.175rem, transparent 0.2938rem),
-    radial-gradient(circle at 78% 46%, var(--snow-ink) 0 0.0938rem, transparent 0.1938rem),
-    radial-gradient(circle at 86% 83%, var(--snow-ink) 0 0.0813rem, transparent 0.1625rem),
-    radial-gradient(circle at 92% 24%, var(--snow-ink) 0 0.1375rem, transparent 0.2438rem);
+    radial-gradient(
+      circle at 6% 14%,
+      var(--snow-ink) 0 0.0813rem,
+      transparent 0.1625rem
+    ),
+    radial-gradient(
+      circle at 18% 62%,
+      var(--snow-ink) 0 0.1125rem,
+      transparent 0.2063rem
+    ),
+    radial-gradient(
+      circle at 27% 28%,
+      var(--snow-ink) 0 0.0813rem,
+      transparent 0.1625rem
+    ),
+    radial-gradient(
+      circle at 33% 80%,
+      var(--snow-ink) 0 0.1438rem,
+      transparent 0.2438rem
+    ),
+    radial-gradient(
+      circle at 41% 18%,
+      var(--snow-ink) 0 0.0938rem,
+      transparent 0.1938rem
+    ),
+    radial-gradient(
+      circle at 49% 55%,
+      var(--snow-ink) 0 0.0813rem,
+      transparent 0.1625rem
+    ),
+    radial-gradient(
+      circle at 57% 32%,
+      var(--snow-ink) 0 0.125rem,
+      transparent 0.225rem
+    ),
+    radial-gradient(
+      circle at 63% 74%,
+      var(--snow-ink) 0 0.0813rem,
+      transparent 0.1625rem
+    ),
+    radial-gradient(
+      circle at 71% 12%,
+      var(--snow-ink) 0 0.175rem,
+      transparent 0.2938rem
+    ),
+    radial-gradient(
+      circle at 78% 46%,
+      var(--snow-ink) 0 0.0938rem,
+      transparent 0.1938rem
+    ),
+    radial-gradient(
+      circle at 86% 83%,
+      var(--snow-ink) 0 0.0813rem,
+      transparent 0.1625rem
+    ),
+    radial-gradient(
+      circle at 92% 24%,
+      var(--snow-ink) 0 0.1375rem,
+      transparent 0.2438rem
+    );
   background-size: 56.25rem 40.625rem;
   transform: translate3d(0, 0, 0);
 }

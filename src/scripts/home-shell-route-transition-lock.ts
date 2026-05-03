@@ -60,22 +60,40 @@ export function initHomeShellRouteTransitionLock() {
   };
 
   const isModifiedClick = (event: MouseEvent) =>
-    event.button !== 0 || event.metaKey || event.ctrlKey || event.altKey || event.shiftKey;
+    event.button !== 0 ||
+    event.metaKey ||
+    event.ctrlKey ||
+    event.altKey ||
+    event.shiftKey;
 
   const getRoutedLink = (event: MouseEvent) => {
     const target = event.composedPath()[0];
     if (!(target instanceof Element)) return null;
 
     const link = target.closest("a, area");
-    if (!(link instanceof HTMLAnchorElement) && !(link instanceof HTMLAreaElement)) return null;
-    if (!link.href || link.hasAttribute("download") || link.dataset.astroReload !== undefined) return null;
+    if (
+      !(link instanceof HTMLAnchorElement) &&
+      !(link instanceof HTMLAreaElement)
+    )
+      return null;
+    if (
+      !link.href ||
+      link.hasAttribute("download") ||
+      link.dataset.astroReload !== undefined
+    )
+      return null;
 
     const linkTarget = link instanceof HTMLElement ? link.target : "";
     if (linkTarget && linkTarget !== "_self") return null;
 
     const url = new URL(link.href, window.location.href);
     if (url.origin !== window.location.origin) return null;
-    if (url.pathname === window.location.pathname && url.search === window.location.search && url.hash) return null;
+    if (
+      url.pathname === window.location.pathname &&
+      url.search === window.location.search &&
+      url.hash
+    )
+      return null;
 
     return link;
   };
@@ -83,7 +101,12 @@ export function initHomeShellRouteTransitionLock() {
   document.addEventListener(
     "click",
     (event) => {
-      if (event.defaultPrevented || isModifiedClick(event) || !getRoutedLink(event)) return;
+      if (
+        event.defaultPrevented ||
+        isModifiedClick(event) ||
+        !getRoutedLink(event)
+      )
+        return;
 
       if (document.documentElement.dataset.routeTransitioning === "true") {
         event.preventDefault();
@@ -107,19 +130,31 @@ export function initHomeShellRouteTransitionLock() {
 
   document.addEventListener("astro:before-swap", (event) => {
     const transitionEvent = event as TransitionEventWithViewTransition;
-    transitionEvent.newDocument?.documentElement.setAttribute("data-route-transitioning", "true");
-    transitionEvent.newDocument?.documentElement.setAttribute("data-route-swapping", "true");
+    transitionEvent.newDocument?.documentElement.setAttribute(
+      "data-route-transitioning",
+      "true",
+    );
+    transitionEvent.newDocument?.documentElement.setAttribute(
+      "data-route-swapping",
+      "true",
+    );
 
     clearSwapTimer();
-    browserWindow.__homeShellRouteTransitionSwapTimer = window.setTimeout(() => {
-      delete document.documentElement.dataset.routeSwapping;
-      browserWindow.__homeShellRouteTransitionSwapTimer = undefined;
-    }, 1200);
+    browserWindow.__homeShellRouteTransitionSwapTimer = window.setTimeout(
+      () => {
+        delete document.documentElement.dataset.routeSwapping;
+        browserWindow.__homeShellRouteTransitionSwapTimer = undefined;
+      },
+      1200,
+    );
 
     const transitionDone =
-      transitionEvent.viewTransition?.finished ?? transitionEvent.viewTransition?.updateCallbackDone;
+      transitionEvent.viewTransition?.finished ??
+      transitionEvent.viewTransition?.updateCallbackDone;
 
-    void transitionDone?.finally(unlockRouteTransition).catch(unlockRouteTransition);
+    void transitionDone
+      ?.finally(unlockRouteTransition)
+      .catch(unlockRouteTransition);
   });
 
   window.addEventListener("pageshow", unlockRouteTransition);

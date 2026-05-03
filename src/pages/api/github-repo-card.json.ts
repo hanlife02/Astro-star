@@ -37,7 +37,9 @@ function jsonResponse(payload: unknown, init?: ResponseInit) {
 
 function decodeHtmlEntities(value: string) {
   return value
-    .replace(/&#(\d+);/g, (_, codePoint: string) => String.fromCodePoint(Number(codePoint)))
+    .replace(/&#(\d+);/g, (_, codePoint: string) =>
+      String.fromCodePoint(Number(codePoint)),
+    )
     .replace(/&#x([0-9a-f]+);/gi, (_, codePoint: string) =>
       String.fromCodePoint(Number.parseInt(codePoint, 16)),
     )
@@ -74,21 +76,30 @@ function extractAboutDescription(html: string) {
   const aboutIndex = html.search(/<h2[^>]*>\s*About\s*<\/h2>/i);
   if (aboutIndex >= 0) {
     const aboutSection = html.slice(aboutIndex, aboutIndex + 5000);
-    const aboutDescription = aboutSection.match(/<p[^>]*class="[^"]*\bf4\b[^"]*"[^>]*>([\s\S]*?)<\/p>/i);
+    const aboutDescription = aboutSection.match(
+      /<p[^>]*class="[^"]*\bf4\b[^"]*"[^>]*>([\s\S]*?)<\/p>/i,
+    );
 
     if (aboutDescription?.[1]) {
       return normalizeText(aboutDescription[1]);
     }
   }
 
-  const metaDescription = html.match(/<meta\s+(?:name="description"|property="og:description")\s+content="([^"]*)"/i);
+  const metaDescription = html.match(
+    /<meta\s+(?:name="description"|property="og:description")\s+content="([^"]*)"/i,
+  );
   if (!metaDescription?.[1]) return "";
 
-  return normalizeText(metaDescription[1]).replace(/\s+-\s+[^/\s]+\/[^/\s]+$/, "");
+  return normalizeText(metaDescription[1]).replace(
+    /\s+-\s+[^/\s]+\/[^/\s]+$/,
+    "",
+  );
 }
 
 function extractStars(html: string) {
-  const counterTitle = html.match(/id="repo-stars-counter-star"[^>]*title="([^"]*)"/i);
+  const counterTitle = html.match(
+    /id="repo-stars-counter-star"[^>]*title="([^"]*)"/i,
+  );
   if (counterTitle?.[1]) {
     return parseStars(decodeHtmlEntities(counterTitle[1]));
   }
@@ -107,9 +118,12 @@ async function fetchFromGitHubApi(owner: string, repo: string) {
     headers.authorization = `Bearer ${GITHUB_TOKEN}`;
   }
 
-  const response = await fetch(`https://api.github.com/repos/${owner}/${repo}`, {
-    headers,
-  });
+  const response = await fetch(
+    `https://api.github.com/repos/${owner}/${repo}`,
+    {
+      headers,
+    },
+  );
 
   if (!response.ok) return null;
 
@@ -117,8 +131,10 @@ async function fetchFromGitHubApi(owner: string, repo: string) {
 
   return {
     description: data.description?.trim() ?? "",
-    stars: typeof data.stargazers_count === "number" ? data.stargazers_count : 0,
-    avatarUrl: data.owner?.avatar_url ?? `https://github.com/${owner}.png?size=96`,
+    stars:
+      typeof data.stargazers_count === "number" ? data.stargazers_count : 0,
+    avatarUrl:
+      data.owner?.avatar_url ?? `https://github.com/${owner}.png?size=96`,
   };
 }
 
@@ -150,7 +166,10 @@ export const GET: APIRoute = async ({ url }) => {
     !REPOSITORY_PART_PATTERN.test(owner) ||
     !REPOSITORY_PART_PATTERN.test(repo)
   ) {
-    return jsonResponse({ error: "Invalid GitHub repository." }, { status: 400 });
+    return jsonResponse(
+      { error: "Invalid GitHub repository." },
+      { status: 400 },
+    );
   }
 
   const cacheKey = `${owner}/${repo}`;
@@ -169,7 +188,9 @@ export const GET: APIRoute = async ({ url }) => {
     description: htmlPayload?.description || apiPayload?.description || "",
     stars: htmlPayload?.stars || apiPayload?.stars || 0,
     avatarUrl:
-      apiPayload?.avatarUrl || htmlPayload?.avatarUrl || `https://github.com/${owner}.png?size=96`,
+      apiPayload?.avatarUrl ||
+      htmlPayload?.avatarUrl ||
+      `https://github.com/${owner}.png?size=96`,
   };
 
   repositoryCache.set(cacheKey, {

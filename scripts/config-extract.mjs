@@ -14,15 +14,16 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 // --- 1. Import TS configs (requires --experimental-strip-types) ---
 const { site } = await import("../src/config/site.ts");
 const { aboutPage } = await import("../src/config/about.ts");
-const { linksPage, friendLinks, lostLinks } = await import(
-  "../src/config/links.ts"
-);
+const { linksPage, friendLinks, lostLinks } =
+  await import("../src/config/links.ts");
 
 function resolveCodeTimeId(profile = {}) {
   if (typeof profile.codetime === "string") return profile.codetime;
 
   const legacyBadgeSrc =
-    typeof profile.codeTimeBadgeSrc === "string" ? profile.codeTimeBadgeSrc : "";
+    typeof profile.codeTimeBadgeSrc === "string"
+      ? profile.codeTimeBadgeSrc
+      : "";
   const uidMatch = legacyBadgeSrc.match(/uid(?:%3D|=)(\d+)/i);
 
   return uidMatch?.[1] ?? "";
@@ -96,10 +97,7 @@ function normalizeSplitSiteConfig(input) {
 }
 
 // --- 2. Extract RSS language via regex ---
-const rssContent = readFileSync(
-  resolve(ROOT, "src/pages/rss.xml.ts"),
-  "utf-8",
-);
+const rssContent = readFileSync(resolve(ROOT, "src/pages/rss.xml.ts"), "utf-8");
 const langMatch = rssContent.match(/<language>([\w-]+)<\/language>/);
 const rssLanguage = langMatch ? langMatch[1] : "zh-cn";
 

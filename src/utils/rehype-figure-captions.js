@@ -12,11 +12,14 @@ function isImageMediaNode(node) {
   }
 
   if (isElement(node, "a") && Array.isArray(node.children)) {
-    const meaningfulChildren = node.children.filter((item) => !isIgnorableParagraphNode(item));
+    const meaningfulChildren = node.children.filter(
+      (item) => !isIgnorableParagraphNode(item),
+    );
 
     return (
       meaningfulChildren.length === 1 &&
-      (isElement(meaningfulChildren[0], "img") || isElement(meaningfulChildren[0], "picture"))
+      (isElement(meaningfulChildren[0], "img") ||
+        isElement(meaningfulChildren[0], "picture"))
     );
   }
 
@@ -25,18 +28,27 @@ function isImageMediaNode(node) {
 
 function getCaptionSource(node) {
   if (isElement(node, "img")) {
-    return typeof node.properties?.alt === "string" ? node.properties.alt.trim() : "";
+    return typeof node.properties?.alt === "string"
+      ? node.properties.alt.trim()
+      : "";
   }
 
   if (isElement(node, "a") && Array.isArray(node.children)) {
-    const meaningfulChildren = node.children.filter((item) => !isIgnorableParagraphNode(item));
+    const meaningfulChildren = node.children.filter(
+      (item) => !isIgnorableParagraphNode(item),
+    );
 
-    if (meaningfulChildren.length !== 1 || !isElement(meaningfulChildren[0], "img")) {
+    if (
+      meaningfulChildren.length !== 1 ||
+      !isElement(meaningfulChildren[0], "img")
+    ) {
       return "";
     }
 
     const image = meaningfulChildren[0];
-    return typeof image.properties?.alt === "string" ? image.properties.alt.trim() : "";
+    return typeof image.properties?.alt === "string"
+      ? image.properties.alt.trim()
+      : "";
   }
 
   return "";
@@ -280,19 +292,29 @@ function transformNode(node) {
         return [child];
       }
 
-      const meaningfulChildren = child.children.filter((item) => !isIgnorableParagraphNode(item));
+      const meaningfulChildren = child.children.filter(
+        (item) => !isIgnorableParagraphNode(item),
+      );
       const isImageOnlyParagraph =
-        meaningfulChildren.length > 0 && meaningfulChildren.every(isImageMediaNode);
+        meaningfulChildren.length > 0 &&
+        meaningfulChildren.every(isImageMediaNode);
 
       if (isImageOnlyParagraph) {
         return meaningfulChildren.map(createImageFigure);
       }
 
-      if (meaningfulChildren.length === 1 && isElement(meaningfulChildren[0], "a")) {
-        const repository = getGitHubRepository(meaningfulChildren[0].properties?.href);
+      if (
+        meaningfulChildren.length === 1 &&
+        isElement(meaningfulChildren[0], "a")
+      ) {
+        const repository = getGitHubRepository(
+          meaningfulChildren[0].properties?.href,
+        );
 
         if (repository) {
-          return [createGitHubRepositoryCard(meaningfulChildren[0], repository)];
+          return [
+            createGitHubRepositoryCard(meaningfulChildren[0], repository),
+          ];
         }
       }
 

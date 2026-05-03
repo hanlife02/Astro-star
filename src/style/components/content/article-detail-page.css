@@ -1,6 +1,7 @@
 @import "@waline/client/waline.css";
 
-.content-page--article .content-page-body > h1:first-of-type {}
+.content-page--article .content-page-body > h1:first-of-type {
+}
 
 .content-page--article {
   --article-title-size: clamp(1.82rem, 1.62rem + 0.64vw, 2.65rem);
@@ -170,15 +171,30 @@ html:lang(zh-CN) .content-page--article {
   display: contents;
 }
 
-.article-comments-thread .wl-card .wl-content > .wl-reply-to + div > :first-child {
+.article-comments-thread
+  .wl-card
+  .wl-content
+  > .wl-reply-to
+  + div
+  > :first-child {
   margin-top: 0;
 }
 
-.article-comments-thread .wl-card .wl-content > .wl-reply-to + div > :last-child {
+.article-comments-thread
+  .wl-card
+  .wl-content
+  > .wl-reply-to
+  + div
+  > :last-child {
   margin-bottom: 0;
 }
 
-.article-comments-thread .wl-card .wl-content > .wl-reply-to + div > p:first-child {
+.article-comments-thread
+  .wl-card
+  .wl-content
+  > .wl-reply-to
+  + div
+  > p:first-child {
   display: inline;
 }
 
@@ -193,7 +209,8 @@ html:lang(zh-CN) .content-page--article {
   color: color-mix(in srgb, var(--line) 66%, transparent);
   font-size: clamp(0.82rem, 0.79rem + 0.12vw, 0.92rem);
   line-height: 1.7;
-  font-family: "Iowan Old Style", "Palatino Linotype", "Songti SC", "Noto Serif SC", serif;
+  font-family:
+    "Iowan Old Style", "Palatino Linotype", "Songti SC", "Noto Serif SC", serif;
   letter-spacing: 0.01em;
 }
 

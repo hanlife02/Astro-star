@@ -27,7 +27,9 @@ function getCachedRepository(cacheKey: string) {
     const cachedValue = window.localStorage.getItem(cacheKey);
     if (!cachedValue) return null;
 
-    const cachedRepository = JSON.parse(cachedValue) as GitHubRepositoryCardCache;
+    const cachedRepository = JSON.parse(
+      cachedValue,
+    ) as GitHubRepositoryCardCache;
     if (Date.now() - cachedRepository.cachedAt > GITHUB_REPO_CARD_CACHE_TTL) {
       window.localStorage.removeItem(cacheKey);
       return null;
@@ -39,7 +41,10 @@ function getCachedRepository(cacheKey: string) {
   }
 }
 
-function setCachedRepository(cacheKey: string, repository: GitHubRepositoryCardCache) {
+function setCachedRepository(
+  cacheKey: string,
+  repository: GitHubRepositoryCardCache,
+) {
   try {
     window.localStorage.setItem(cacheKey, JSON.stringify(repository));
   } catch {
@@ -47,7 +52,10 @@ function setCachedRepository(cacheKey: string, repository: GitHubRepositoryCardC
   }
 }
 
-function applyRepositoryData(card: HTMLElement, repository: GitHubRepositoryCardCache) {
+function applyRepositoryData(
+  card: HTMLElement,
+  repository: GitHubRepositoryCardCache,
+) {
   const description = card.querySelector("[data-github-repo-description]");
   const stars = card.querySelector("[data-github-repo-stars]");
   const starCount = card.querySelector("[data-github-repo-star-count]");
@@ -95,13 +103,16 @@ async function hydrateRepositoryCard(card: HTMLElement) {
 
   try {
     const params = new URLSearchParams({ owner, repo });
-    const response = await fetch(`/api/github-repo-card.json?${params.toString()}`);
+    const response = await fetch(
+      `/api/github-repo-card.json?${params.toString()}`,
+    );
 
     if (!response.ok) return;
 
     const data = (await response.json()) as GitHubRepositoryCardPayload;
     const repository = {
-      description: typeof data.description === "string" ? data.description.trim() : "",
+      description:
+        typeof data.description === "string" ? data.description.trim() : "",
       stars: typeof data.stars === "number" ? data.stars : 0,
       avatarUrl:
         typeof data.avatarUrl === "string" && data.avatarUrl

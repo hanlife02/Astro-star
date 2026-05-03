@@ -14,12 +14,14 @@
   align-self: stretch;
 }
 
-html[data-js="true"] .content-page[data-content-entrance-enabled="true"][data-page-entrance="ready"] {
+html[data-js="true"]
+  .content-page[data-content-entrance-enabled="true"][data-page-entrance="ready"] {
   opacity: 0;
   transform: translateY(0.9rem);
 }
 
-html[data-js="true"] .content-page[data-content-entrance-enabled="true"][data-page-entrance="entered"] {
+html[data-js="true"]
+  .content-page[data-content-entrance-enabled="true"][data-page-entrance="entered"] {
   opacity: 1;
   transform: translateY(0);
   transition:

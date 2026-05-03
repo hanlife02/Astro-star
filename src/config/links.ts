@@ -54,8 +54,9 @@ export const friendLinks = [
   {
     name: "lanhao.site",
     description: "Blog of LanHao",
-    href: "https://site.lanhao.cc", 
-    avatarSrc: "https://img.lanhao.cc/file/AgACAgUAAxkDAAMIabYspSOWQMwSyhadQAwEEAABY0O0AAIjD2sb92ewVdFz-0Xsk40tAQADAgADeAADOgQ.jpg",
+    href: "https://site.lanhao.cc",
+    avatarSrc:
+      "https://img.lanhao.cc/file/AgACAgUAAxkDAAMIabYspSOWQMwSyhadQAwEEAABY0O0AAIjD2sb92ewVdFz-0Xsk40tAQADAgADeAADOgQ.jpg",
   },
   {
     name: "启动台LaunchPad",
@@ -213,7 +214,7 @@ export const friendLinks = [
     description: "知我者谓我心忧，不知我者谓我何求",
     href: "https://fomalhaut647.com/",
     avatarSrc: "https://fomalhaut647.com/avatar",
-  }
+  },
 ] satisfies readonly FriendLinkItem[];
 
 export const lostLinks = [

@@ -7,7 +7,10 @@ interface GitTimestamps {
   updatedAt: Date | null;
 }
 
-type ManifestData = Record<string, { createdAt: string | null; updatedAt: string | null }>;
+type ManifestData = Record<
+  string,
+  { createdAt: string | null; updatedAt: string | null }
+>;
 
 // Vite bundles this JSON into the server output at build time.
 // In dev without prebuild, the glob matches nothing → empty object → undefined.
@@ -54,9 +57,13 @@ export function getGitTimestamps(contentPath: string): GitTimestamps {
   let updatedAt: Date | null = null;
 
   try {
-    const gitLog = execFileSync("git", ["log", "--follow", "--format=%aI", "--", absolutePath], {
-      encoding: "utf8",
-    });
+    const gitLog = execFileSync(
+      "git",
+      ["log", "--follow", "--format=%aI", "--", absolutePath],
+      {
+        encoding: "utf8",
+      },
+    );
     const timestamps = gitLog
       .split(/\r?\n/)
       .map((item) => item.trim())
@@ -66,8 +73,7 @@ export function getGitTimestamps(contentPath: string): GitTimestamps {
       updatedAt = new Date(timestamps[0]);
       createdAt = new Date(timestamps[timestamps.length - 1]);
     }
-  } catch {
-  }
+  } catch {}
 
   // 3. File stats fallback
   try {
@@ -80,8 +86,7 @@ export function getGitTimestamps(contentPath: string): GitTimestamps {
     if (!isValidDate(updatedAt)) {
       updatedAt = stats.mtime;
     }
-  } catch {
-  }
+  } catch {}
 
   const result = {
     createdAt: isValidDate(createdAt) ? createdAt : null,

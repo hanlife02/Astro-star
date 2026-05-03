@@ -4,8 +4,8 @@
   --profile-gap: clamp(0.55rem, 0.75vw, 0.95rem);
   --avatar-size: clamp(3.2rem, 7.3vw, 8rem);
   --name-size: clamp(1.2rem, 2.25vw, 4.8rem);
-  --one-word-size: clamp(1.0rem, 3.25vw, 4.8rem);
-  --bio-size: clamp(1.0rem, 3.25vw, 4.8rem);
+  --one-word-size: clamp(1rem, 3.25vw, 4.8rem);
+  --bio-size: clamp(1rem, 3.25vw, 4.8rem);
 
   width: var(--profile-max-width);
   padding: var(--profile-padding);

@@ -70,4 +70,6 @@ for (const file of files) {
 mkdirSync(OUT_DIR, { recursive: true });
 writeFileSync(OUT_FILE, JSON.stringify(result, null, 2), "utf8");
 
-console.log(`Generated ${OUT_FILE} with ${Object.keys(result).length} entries.`);
+console.log(
+  `Generated ${OUT_FILE} with ${Object.keys(result).length} entries.`,
+);

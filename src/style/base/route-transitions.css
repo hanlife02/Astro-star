@@ -23,12 +23,13 @@ html[data-route-transitioning="true"] body {
 }
 
 ::view-transition-old(*) {
-  animation: route-soft-out var(--route-transition-exit-duration) var(--route-transition-ease) both;
+  animation: route-soft-out var(--route-transition-exit-duration)
+    var(--route-transition-ease) both;
 }
 
 ::view-transition-new(*) {
-  animation: route-soft-in var(--route-transition-enter-duration) var(--route-transition-ease)
-    var(--route-transition-enter-delay) both;
+  animation: route-soft-in var(--route-transition-enter-duration)
+    var(--route-transition-ease) var(--route-transition-enter-delay) both;
 }
 
 html[data-astro-transition="back"]::view-transition-old(*) {
@@ -40,11 +41,13 @@ html[data-astro-transition="back"]::view-transition-new(*) {
 }
 
 ::view-transition-old(page-background) {
-  animation: route-background-out var(--route-transition-background-duration) var(--route-transition-ease) both;
+  animation: route-background-out var(--route-transition-background-duration)
+    var(--route-transition-ease) both;
 }
 
 ::view-transition-new(page-background) {
-  animation: route-background-in var(--route-transition-background-duration) var(--route-transition-ease) both;
+  animation: route-background-in var(--route-transition-background-duration)
+    var(--route-transition-ease) both;
 }
 
 ::view-transition-old(site-header),
@@ -68,12 +71,13 @@ html[data-astro-transition="back"]::view-transition-new(*) {
 }
 
 html[data-astro-transition-fallback="old"] body {
-  animation: route-transition-fallback-out var(--route-transition-exit-duration) var(--route-transition-ease) both;
+  animation: route-transition-fallback-out var(--route-transition-exit-duration)
+    var(--route-transition-ease) both;
 }
 
 html[data-astro-transition-fallback="new"] body {
-  animation: route-transition-fallback-in var(--route-transition-enter-duration) var(--route-transition-ease)
-    var(--route-transition-enter-delay) both;
+  animation: route-transition-fallback-in var(--route-transition-enter-duration)
+    var(--route-transition-ease) var(--route-transition-enter-delay) both;
 }
 
 @keyframes route-soft-out {

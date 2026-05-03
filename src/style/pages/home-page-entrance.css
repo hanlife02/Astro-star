@@ -2,17 +2,24 @@ html[data-js="true"] .home-profile-sequence.home-profile--entered {
   animation: home-section-fade-in 0.76s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-html[data-js="true"][data-route-swapping="true"] .home-profile-sequence.home-profile--entered {
+html[data-js="true"][data-route-swapping="true"]
+  .home-profile-sequence.home-profile--entered {
   animation: none;
 }
 
-html[data-js="true"] .home-profile-sequence[data-home-entrance-enabled="true"] .home-enter-item,
-html[data-js="true"] .home-profile-sequence[data-home-entrance-enabled="true"] .home-profile-metric {
+html[data-js="true"]
+  .home-profile-sequence[data-home-entrance-enabled="true"]
+  .home-enter-item,
+html[data-js="true"]
+  .home-profile-sequence[data-home-entrance-enabled="true"]
+  .home-profile-metric {
   opacity: 1;
   transition: none;
 }
 
-html[data-js="true"] .home-latest-sequence[data-home-entrance-enabled="true"].latest-articles--entered .latest-articles-panel {
+html[data-js="true"]
+  .home-latest-sequence[data-home-entrance-enabled="true"].latest-articles--entered
+  .latest-articles-panel {
   animation: home-section-fade-in 0.76s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
@@ -42,19 +49,29 @@ html[data-js="true"][data-route-swapping="true"]
   justify-content: center;
 }
 
-html[data-js="true"] .home-latest-sequence[data-home-entrance-enabled="true"] .latest-articles-title,
-html[data-js="true"] .home-latest-sequence[data-home-entrance-enabled="true"] .latest-articles-year-label {
+html[data-js="true"]
+  .home-latest-sequence[data-home-entrance-enabled="true"]
+  .latest-articles-title,
+html[data-js="true"]
+  .home-latest-sequence[data-home-entrance-enabled="true"]
+  .latest-articles-year-label {
   opacity: 1;
   transition: none;
 }
 
-html[data-js="true"] .home-latest-sequence[data-home-entrance-enabled="true"] .latest-articles-item::before,
-html[data-js="true"] .home-latest-sequence[data-home-entrance-enabled="true"] .latest-articles-item::after {
+html[data-js="true"]
+  .home-latest-sequence[data-home-entrance-enabled="true"]
+  .latest-articles-item::before,
+html[data-js="true"]
+  .home-latest-sequence[data-home-entrance-enabled="true"]
+  .latest-articles-item::after {
   opacity: 1;
   transition: none;
 }
 
-html[data-js="true"] .home-latest-sequence[data-home-entrance-enabled="true"] .latest-articles-item-content {
+html[data-js="true"]
+  .home-latest-sequence[data-home-entrance-enabled="true"]
+  .latest-articles-item-content {
   opacity: 1;
   transition: none;
 }

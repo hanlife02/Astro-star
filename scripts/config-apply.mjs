@@ -23,7 +23,9 @@ function resolveCodeTimeId(profile = {}) {
   if (typeof profile.codetime === "string") return profile.codetime;
 
   const legacyBadgeSrc =
-    typeof profile.codeTimeBadgeSrc === "string" ? profile.codeTimeBadgeSrc : "";
+    typeof profile.codeTimeBadgeSrc === "string"
+      ? profile.codeTimeBadgeSrc
+      : "";
   const uidMatch = legacyBadgeSrc.match(/uid(?:%3D|=)(\d+)/i);
 
   return uidMatch?.[1] ?? "";

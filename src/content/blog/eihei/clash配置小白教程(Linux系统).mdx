@@ -47,7 +47,7 @@ chmod u+x clash
 
 1. 首先我们需要获得订阅地址，打开https://189854.xyz/verify 验证北大邮箱获得。
 
-![订阅地址](	/figures/064-clash配置小白教程-Linux系统.jpg)
+![订阅地址](/figures/064-clash配置小白教程-Linux系统.jpg)
 
 2. 接着打开clab终端，cd到刚下载的二进制文件所在目录，下载配置文件，只需要修改订阅url并执行下面指令
 
@@ -70,7 +70,7 @@ wget -O config.yaml "订阅url"
 
 出现下图时恭喜你成功！
 
-![成功](	/figures/066-clash配置小白教程-Linux系统.png)
+![成功](/figures/066-clash配置小白教程-Linux系统.png)
 
 # 贰 · Dashboard部署（可选）
 
@@ -88,7 +88,6 @@ wget -O config.yaml "订阅url"
 cd home/user/clash
 vim config.yaml
 ```
-
 
 ```
 allow-lan: true
@@ -138,7 +137,7 @@ After=network.target
 [Service]
 Type=simple
 Restart=always
-ExecStart=/usr/local/bin/clash -d /home/user/clash 
+ExecStart=/usr/local/bin/clash -d /home/user/clash
 
 [Install]
 WantedBy=multi-user.target
@@ -160,9 +159,11 @@ sudo systemctl start clash
 ```
 sudo systemctl status clash
 ```
+
 ![成功！](/figures/069-clash配置小白教程-Linux系统.png)
 
 # 肆 · 开启系统代理
+
 不要忘了开系统代理呀！执行下面指令临时开启
 
 ```
@@ -170,6 +171,7 @@ export http_proxy="http://127.0.0.1:7890"
 export https_proxy="http://127.0.0.1:7890"
 export all_proxy="socks5://127.0.0.1:7891"
 ```
+
 这里的端口记得根据你的服务商提供的配置文件修改，例如作者使用的服务商是7891和7892
 端口也可以在dashboard的配置里查看获得
 

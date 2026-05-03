@@ -127,7 +127,8 @@
   }
 }
 
-.content-page-body :is(.archive-item-link, .collection-archive-link):focus-visible {
+.content-page-body
+  :is(.archive-item-link, .collection-archive-link):focus-visible {
   outline: none;
 }
 
