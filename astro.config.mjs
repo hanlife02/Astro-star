@@ -23,6 +23,11 @@ export default defineConfig({
         access: 'secret',
         optional: true,
       }),
+      GITHUB_TOKEN: envField.string({
+        context: 'server',
+        access: 'secret',
+        optional: true,
+      }),
     },
   },
   integrations: [mdx(), sitemap()],

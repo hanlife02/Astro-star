@@ -11,6 +11,7 @@
       import { initHomeShellRouteTransitionLock } from "../../scripts/home-shell-route-transition-lock";
       import { initHomeShellSearch } from "../../scripts/home-shell-search";
       import { initHomeShellWalineComments, initHomeShellWalinePageviews } from "../../scripts/home-shell-waline";
+      import { initHomeShellGitHubRepoCards } from "../../scripts/home-shell-github-repo-cards";
 
       type HomeShellWindow = Window & {
         __homeShellPageLoadBound?: boolean;
@@ -29,6 +30,7 @@
         initHomeShellSearch();
         initHomeShellWalineComments();
         initHomeShellWalinePageviews();
+        initHomeShellGitHubRepoCards();
       };
 
       if (!browserWindow.__homeShellPageLoadBound) {
