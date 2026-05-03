@@ -27,6 +27,14 @@
   text-indent: 2em;
 }
 
+.content-page--article .content-page-body > p:has(> img + img) {
+  text-indent: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(1.15rem, 1rem + 0.55vw, 1.75rem);
+}
+
 .content-page-body h1 {
   margin: 0 0 1rem;
   font-size: clamp(2rem, 1.8rem + 1vw, 3.5rem);
@@ -72,6 +80,7 @@
   flex-direction: column;
   align-items: center;
   gap: 0;
+  margin-bottom: clamp(1.15rem, 1rem + 0.55vw, 1.75rem);
 }
 
 .content-page-body .content-image-caption {
@@ -177,8 +186,14 @@ html:lang(zh-CN) .content-page--article .content-page-body {
   height: auto;
 }
 
+.content-page-body :is(p > a:only-child:has(> img), p > a:only-child:has(> picture)) {
+  display: block;
+  line-height: 0;
+}
+
 .content-page-body
   :is(
+    p:has(> img + img) > img,
     p > img:only-child,
     p > a:only-child > img,
     p > picture:only-child > img,
@@ -198,13 +213,13 @@ html:lang(zh-CN) .content-page--article .content-page-body {
   object-fit: contain;
 }
 
-.content-page-body :is(p > picture:only-child, figure > picture) {
+.content-page-body :is(p > picture:only-child, p > a:only-child > picture, figure > picture) {
   display: block;
   max-width: var(--content-image-max-width);
   margin-inline: auto;
 }
 
-.content-page-body :is(p > picture:only-child, figure > picture) > img {
+.content-page-body :is(p > picture:only-child, p > a:only-child > picture, figure > picture) > img {
   display: block;
   width: auto;
   max-width: 100%;
