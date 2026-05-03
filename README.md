@@ -1,30 +1,46 @@
 <div align="center">
 
-<img src="figures/Astro-star.png" alt="Astro-star" width="144" />
+<img src="figures/Astro-star.png" alt="Astro-star" width="128" />
 
 # Astro-star
 
-An Astro theme community that brings blogs, notes, projects, comments, and friend links into one personal website.
+**An open-source Astro theme that brings blogs, notes, projects, comments, and friend links into one personal site.**
+
+[![Astro](https://img.shields.io/badge/Astro-5.x-ff5d01?style=flat-square&logo=astro&logoColor=white)](https://astro.build)
+[![Node.js](https://img.shields.io/badge/Node.js-%3E%3D22-339933?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org)
+[![pnpm](https://img.shields.io/badge/pnpm-10.30.x-f69220?style=flat-square&logo=pnpm&logoColor=white)](https://pnpm.io)
+[![License](https://img.shields.io/badge/License-Apache--2.0-blue?style=flat-square)](./LICENSE)
+[![PRs](https://img.shields.io/badge/PRs-welcome-brightgreen?style=flat-square)](./CONTRIBUTING.md)
 
 English · [简体中文](./README-zh-CN.md)
 
-[Live Demo](https://hanlife02.com) · [Contributing](./CONTRIBUTING.md) · [Issues](https://github.com/hanlife02/Astro-star/issues) · [License](./LICENSE)
-
-![Astro](https://img.shields.io/badge/Astro-5.x-ff5d01?style=flat-square&logo=astro&logoColor=white)
-![Node.js](https://img.shields.io/badge/Node.js-%3E%3D22-339933?style=flat-square&logo=node.js&logoColor=white)
-![pnpm](https://img.shields.io/badge/pnpm-10.30.x-f69220?style=flat-square&logo=pnpm&logoColor=white)
-![License](https://img.shields.io/badge/License-Apache--2.0-blue?style=flat-square)
-![PRs](https://img.shields.io/badge/PRs-welcome-brightgreen?style=flat-square)
+<a href="https://hanlife02.com">🌐 Live Demo</a> &nbsp;·&nbsp;
+<a href="./CONTRIBUTING.md">🤝 Contributing</a> &nbsp;·&nbsp;
+<a href="https://github.com/hanlife02/Astro-star/issues">🐛 Issues</a> &nbsp;·&nbsp;
+<a href="https://github.com/hanlife02/Astro-star/discussions">💬 Discussions</a>
 
 </div>
+
+---
+
+## Table of Contents
+
+- [What Is This](#what-is-this)
+- [Highlights](#highlights)
+- [Preview](#preview)
+- [Customization](#customization)
+- [Config Migration](#config-and-content-migration)
+- [Project Structure](#project-map)
+- [Commands](#commands)
+- [Deployment](#deployment)
+- [Contributing](#build-together)
+- [License](#license)
 
 ## What Is This
 
 Astro-star started as a personal blog and is now moving toward a community-shaped personal site theme. You can fork it as your own homepage, or bring back your fixes, components, migration notes, deployment experience, and design ideas so the next person has an easier path.
 
 The project focuses on a small but important kind of community: independent websites that are connected by writing, notes, projects, RSS, comments, friend links, and open-source collaboration.
-
-## What You Can Do Here
 
 | If you are             | Start here                                                                                 |
 | ---------------------- | ------------------------------------------------------------------------------------------ |
@@ -48,17 +64,23 @@ The project focuses on a small but important kind of community: independent webs
 | Config migration     | Extract and restore site config, content, avatars, and article images              |
 | Automated deployment | GitHub Actions builds, rsync + SSH deploys, and PM2 manages the process            |
 
-## Quick Start
+## Preview
 
-```bash
-git clone https://github.com/hanlife02/Astro-star.git
-cd Astro-star
+> 🌐 Live site: **<https://hanlife02.com>**
 
-pnpm install
-pnpm dev
-```
+| Home (Dark) | Home (Light) |
+|:---:|:---:|
+| ![Home Dark](figures/Home.png) | ![Home Light](figures/Home-light.png) |
 
-The development server runs at <http://localhost:4321> by default.
+| Blog | Blog Categories |
+|:---:|:---:|
+| ![Blog](figures/Blog.png) | ![Blog Categories](figures/Blog-Categories.png) |
+
+| Content | Friend Links |
+|:---:|:---:|
+| ![Content](figures/Content.png) | ![Links](figures/Links.png) |
+
+## Customization
 
 To turn it into your own site, these are the usual places to edit:
 
@@ -72,39 +94,6 @@ To turn it into your own site, these are the usual places to edit:
 | Short notes                                    | `src/content/note/`    |
 | Project pages                                  | `src/content/project/` |
 | Avatar, site icon, and article images          | `public/`              |
-
-## Writing Content
-
-Blog posts and notes use `.md` or `.mdx` files in their matching content directories.
-
-```md
----
-routeSlug: my-first-post
-title: My First Post
-description: A short description for this post
-type: Essay
-archiveSlug: writing
----
-
-Write your content here...
-```
-
-Project pages live in `src/content/project/` and require more complete project metadata.
-
-```md
----
-routeSlug: my-project
-title: Project Name
-description: A short project description
-type: Project
-archiveSlug: project
-projectUrl: https://example.com
-docUrl: https://github.com/user/repo/blob/main/README.md
-avatar: /images/project-avatar.svg
----
-
-Write the project details here...
-```
 
 ## Config And Content Migration
 
@@ -176,6 +165,54 @@ pnpm config:extract   # Extract user config and content
 pnpm config:apply     # Apply user config and content
 ```
 
+## Deployment
+
+The repository includes a GitHub Actions workflow. Pushes to `main` compute a source hash and skip builds when nothing changed. Otherwise, the workflow installs dependencies, runs `pnpm build`, syncs files to the server with rsync + SSH, and starts `dist/server/entry.mjs` with PM2.
+
+<details>
+<summary><strong>Server requirements</strong></summary>
+
+| Tool    | Requirement                      |
+| ------- | -------------------------------- |
+| Node.js | `>= 22`                          |
+| pnpm    | Match the `packageManager` field |
+| PM2     | Process management               |
+| rsync   | File synchronization             |
+
+</details>
+
+<details>
+<summary><strong>GitHub Secrets</strong></summary>
+
+| Name                       | Default        | Description                                                                               |
+| -------------------------- | -------------- | ----------------------------------------------------------------------------------------- |
+| `SSH_PRIVATE_KEY`          | None           | SSH private key for deployment                                                            |
+| `SSH_HOST`                 | None           | Server IP or domain                                                                       |
+| `SSH_USER`                 | `ubuntu`       | SSH username                                                                              |
+| `SSH_PORT`                 | `22`           | SSH port                                                                                  |
+| `DEPLOY_PATH`              | `~/Astro-star` | Target directory on the server                                                            |
+| `PM2_APP_NAME`             | `Astro-star`   | PM2 application name                                                                      |
+| `APP_PORT`                 | `4321`         | Astro server port                                                                         |
+| `PUBLIC_WALINE_SERVER_URL` | None           | Waline comment server URL                                                                 |
+| `ALGOLIA_WRITE_API_KEY`    | Optional       | Algolia indexing key                                                                      |
+| `ALGOLIA_ADMIN_API_KEY`    | Optional       | Clears the old index before syncing; old records are not automatically removed without it |
+
+</details>
+
+<details>
+<summary><strong>Local environment</strong></summary>
+
+For local development, you can create a `.env` file:
+
+```env
+WALINE_SERVER_URL=https://your-waline-server.com
+GITHUB_TOKEN=your_github_token
+```
+
+`.env` is ignored by Git. `GITHUB_TOKEN` is optional and only improves the reliability of GitHub repository card API requests.
+
+</details>
+
 ## Build Together
 
 Small contributions are welcome. A clear Issue, a mobile screenshot, a reproducible bug, a more ergonomic component, or a short setup note can all make this theme easier to maintain and reuse.
@@ -198,43 +235,37 @@ pnpm build
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for the core rules. The most important ones are: do not hard-code business content in components, keep styles in `src/style/`, build mobile-first, and never commit secrets.
 
-## Deployment
+## Tech Stack
 
-The repository includes a GitHub Actions workflow. Pushes to `main` compute a source hash and skip builds when nothing changed. Otherwise, the workflow installs dependencies, runs `pnpm build`, syncs files to the server with rsync + SSH, and starts `dist/server/entry.mjs` with PM2.
+<div align="center">
 
-Server requirements:
+[![Astro](https://img.shields.io/badge/Astro-ff5d01?style=for-the-badge&logo=astro&logoColor=white)](https://astro.build)
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
+[![MDX](https://img.shields.io/badge/MDX-fb6200?style=for-the-badge&logo=mdx&logoColor=white)](https://mdxjs.com)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
+[![Waline](https://img.shields.io/badge/Waline-24292e?style=for-the-badge&logo=github&logoColor=white)](https://waline.js.org)
+[![Algolia](https://img.shields.io/badge/Algolia-5468FF?style=for-the-badge&logo=algolia&logoColor=white)](https://www.algolia.com)
 
-| Tool    | Requirement                      |
-| ------- | -------------------------------- |
-| Node.js | `>= 22`                          |
-| pnpm    | Match the `packageManager` field |
-| PM2     | Process management               |
-| rsync   | File synchronization             |
+</div>
 
-GitHub Secrets:
+## Star History
 
-| Name                       | Default        | Description                                                                               |
-| -------------------------- | -------------- | ----------------------------------------------------------------------------------------- |
-| `SSH_PRIVATE_KEY`          | None           | SSH private key for deployment                                                            |
-| `SSH_HOST`                 | None           | Server IP or domain                                                                       |
-| `SSH_USER`                 | `ubuntu`       | SSH username                                                                              |
-| `SSH_PORT`                 | `22`           | SSH port                                                                                  |
-| `DEPLOY_PATH`              | `~/Astro-star` | Target directory on the server                                                            |
-| `PM2_APP_NAME`             | `Astro-star`   | PM2 application name                                                                      |
-| `APP_PORT`                 | `4321`         | Astro server port                                                                         |
-| `PUBLIC_WALINE_SERVER_URL` | None           | Waline comment server URL                                                                 |
-| `ALGOLIA_WRITE_API_KEY`    | Optional       | Algolia indexing key                                                                      |
-| `ALGOLIA_ADMIN_API_KEY`    | Optional       | Clears the old index before syncing; old records are not automatically removed without it |
-
-For local development, you can create a `.env` file:
-
-```env
-WALINE_SERVER_URL=https://your-waline-server.com
-GITHUB_TOKEN=your_github_token
-```
-
-`.env` is ignored by Git. `GITHUB_TOKEN` is optional and only improves the reliability of GitHub repository card API requests.
+<a href="https://star-history.com/#hanlife02/Astro-star&Date">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=hanlife02/Astro-star&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=hanlife02/Astro-star&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=hanlife02/Astro-star&type=Date" />
+ </picture>
+</a>
 
 ## License
 
 Astro-star is open-source under the [Apache License 2.0](./LICENSE).
+
+---
+
+<div align="center">
+
+If you find this project helpful, consider giving it a ⭐ to show your support!
+
+</div>

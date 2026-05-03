@@ -1,30 +1,47 @@
 <div align="center">
 
-<img src="figures/Astro-star.png" alt="Astro-star" width="144" />
+<img src="figures/Astro-star.png" alt="Astro-star" width="128" />
 
 # Astro-star
 
-一个把博客、笔记、项目展示和朋友网络放在一起的 Astro 社区主题。
+**一个把博客、笔记、项目展示、评论和友链放在一起的开源 Astro 个人站点主题。**
+
+[![Astro](https://img.shields.io/badge/Astro-5.x-ff5d01?style=flat-square&logo=astro&logoColor=white)](https://astro.build)
+[![Node.js](https://img.shields.io/badge/Node.js-%3E%3D22-339933?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org)
+[![pnpm](https://img.shields.io/badge/pnpm-10.30.x-f69220?style=flat-square&logo=pnpm&logoColor=white)](https://pnpm.io)
+[![License](https://img.shields.io/badge/License-Apache--2.0-blue?style=flat-square)](./LICENSE)
+[![PRs](https://img.shields.io/badge/PRs-welcome-brightgreen?style=flat-square)](./CONTRIBUTING.md)
 
 [English](./README.md) · 简体中文
 
-[在线示例](https://hanlife02.com) · [贡献指南](./CONTRIBUTING.md) · [提交 Issue](https://github.com/hanlife02/Astro-star/issues) · [许可证](./LICENSE)
-
-![Astro](https://img.shields.io/badge/Astro-5.x-ff5d01?style=flat-square&logo=astro&logoColor=white)
-![Node.js](https://img.shields.io/badge/Node.js-%3E%3D22-339933?style=flat-square&logo=node.js&logoColor=white)
-![pnpm](https://img.shields.io/badge/pnpm-10.30.x-f69220?style=flat-square&logo=pnpm&logoColor=white)
-![License](https://img.shields.io/badge/License-Apache--2.0-blue?style=flat-square)
-![PRs](https://img.shields.io/badge/PRs-welcome-brightgreen?style=flat-square)
+<a href="https://hanlife02.com">🌐 在线预览</a> &nbsp;·&nbsp;
+<a href="./CONTRIBUTING.md">🤝 贡献指南</a> &nbsp;·&nbsp;
+<a href="https://github.com/hanlife02/Astro-star/issues">🐛 提交 Issue</a> &nbsp;·&nbsp;
+<a href="https://github.com/hanlife02/Astro-star/discussions">💬 参与讨论</a>
 
 </div>
+
+---
+
+## 目录
+
+- [这是什么](#这是什么)
+- [功能亮点](#功能亮点)
+- [预览](#预览)
+- [自定义配置](#自定义配置)
+- [配置迁移](#配置与内容迁移)
+- [项目结构](#项目地图)
+- [常用命令](#常用命令)
+- [部署](#部署)
+- [一起建设](#一起建设)
+- [技术栈](#技术栈)
+- [许可证](#许可证)
 
 ## 这是什么
 
 Astro-star 最初是一个个人博客，现在希望慢慢变成一个可一起打磨的个人站点主题。你可以把它 Fork 成自己的家页，也可以把遇到的问题、做出的组件、迁移经验和部署方案带回来，让下一个搭站的人少走一点弯路。
 
-它关注的是“个人站点里的社区感”：文章有人读，笔记能被翻到，项目可以被展示，友链和评论能把独立网站重新连起来。
-
-## 你可以在这里做什么
+它关注的是"个人站点里的社区感"：文章有人读，笔记能被翻到，项目可以被展示，友链和评论能把独立网站重新连起来。
 
 | 你是           | 可以从这里开始                                  |
 | -------------- | ----------------------------------------------- |
@@ -48,17 +65,23 @@ Astro-star 最初是一个个人博客，现在希望慢慢变成一个可一起
 | 配置迁移     | 可提取和复原站点配置、内容、头像与文章图片                    |
 | 自动部署     | GitHub Actions 构建，rsync + SSH 发布，PM2 管理进程           |
 
-## 快速加入
+## 预览
 
-```bash
-git clone https://github.com/hanlife02/Astro-star.git
-cd Astro-star
+> 🌐 在线预览：**<https://hanlife02.com>**
 
-pnpm install
-pnpm dev
-```
+| 首页（暗色） | 首页（亮色） |
+|:---:|:---:|
+| ![Home Dark](figures/Home.png) | ![Home Light](figures/Home-light.png) |
 
-开发服务器默认运行在 <http://localhost:4321>。
+| 博客列表 | 博客分类 |
+|:---:|:---:|
+| ![Blog](figures/Blog.png) | ![Blog Categories](figures/Blog-Categories.png) |
+
+| 文章详情 | 友链页面 |
+|:---:|:---:|
+| ![Content](figures/Content.png) | ![Links](figures/Links.png) |
+
+## 自定义配置
 
 如果你要把它变成自己的站点，通常会改这些地方：
 
@@ -72,39 +95,6 @@ pnpm dev
 | 短笔记                         | `src/content/note/`    |
 | 项目展示                       | `src/content/project/` |
 | 头像、站点图标、文章图片       | `public/`              |
-
-## 写作方式
-
-博客和笔记使用 `.md` 或 `.mdx`，放进对应内容目录即可。
-
-```md
----
-routeSlug: my-first-post
-title: 第一篇文章
-description: 这篇文章的简短介绍
-type: Essay
-archiveSlug: writing
----
-
-正文内容...
-```
-
-项目展示使用 `src/content/project/`，需要更完整的项目信息。
-
-```md
----
-routeSlug: my-project
-title: 项目名称
-description: 项目简介
-type: Project
-archiveSlug: project
-projectUrl: https://example.com
-docUrl: https://github.com/user/repo/blob/main/README.md
-avatar: /images/project-avatar.svg
----
-
-项目详细介绍...
-```
 
 ## 配置与内容迁移
 
@@ -176,6 +166,54 @@ pnpm config:extract   # 提取用户配置和内容
 pnpm config:apply     # 应用用户配置和内容
 ```
 
+## 部署
+
+项目内置 GitHub Actions 工作流：推送到 `main` 后计算源码 hash，无变更时跳过构建；有变更时安装依赖、执行 `pnpm build`，再通过 rsync + SSH 同步到服务器，并用 PM2 启动 `dist/server/entry.mjs`。
+
+<details>
+<summary><strong>服务器要求</strong></summary>
+
+| 工具    | 要求                             |
+| ------- | -------------------------------- |
+| Node.js | `>= 22`                          |
+| pnpm    | 与 `packageManager` 字段保持一致 |
+| PM2     | 用于进程管理                     |
+| rsync   | 用于文件同步                     |
+
+</details>
+
+<details>
+<summary><strong>GitHub Secrets</strong></summary>
+
+| 名称                       | 默认值         | 说明                                         |
+| -------------------------- | -------------- | -------------------------------------------- |
+| `SSH_PRIVATE_KEY`          | 无             | 部署用 SSH 私钥                              |
+| `SSH_HOST`                 | 无             | 服务器 IP 或域名                             |
+| `SSH_USER`                 | `ubuntu`       | SSH 用户名                                   |
+| `SSH_PORT`                 | `22`           | SSH 端口                                     |
+| `DEPLOY_PATH`              | `~/Astro-star` | 服务器目标目录                               |
+| `PM2_APP_NAME`             | `Astro-star`   | PM2 应用名称                                 |
+| `APP_PORT`                 | `4321`         | Astro 服务监听端口                           |
+| `PUBLIC_WALINE_SERVER_URL` | 无             | Waline 评论服务地址                          |
+| `ALGOLIA_WRITE_API_KEY`    | 可选           | Algolia 索引写入 Key                         |
+| `ALGOLIA_ADMIN_API_KEY`    | 可选           | 同步前清空旧索引；不配置时不会自动删除旧记录 |
+
+</details>
+
+<details>
+<summary><strong>本地环境</strong></summary>
+
+本地开发可创建 `.env`：
+
+```env
+WALINE_SERVER_URL=https://your-waline-server.com
+GITHUB_TOKEN=your_github_token
+```
+
+`.env` 已被 Git 忽略。`GITHUB_TOKEN` 只用于提高 GitHub 仓库卡片 API 请求稳定性，不是必填项。
+
+</details>
+
 ## 一起建设
 
 欢迎从小改动开始。一个清晰的 Issue、一张移动端截图、一个可复现的 Bug、一个更顺手的组件，都能让这个主题更像一个可长期维护的社区项目。
@@ -198,43 +236,37 @@ pnpm build
 
 核心约定请看 [CONTRIBUTING.md](./CONTRIBUTING.md)。最重要的几条是：组件不硬编码业务内容，样式放在 `src/style/`，移动端优先，密钥不进入源码。
 
-## 部署
+## 技术栈
 
-项目内置 GitHub Actions 工作流：推送到 `main` 后计算源码 hash，无变更时跳过构建；有变更时安装依赖、执行 `pnpm build`，再通过 rsync + SSH 同步到服务器，并用 PM2 启动 `dist/server/entry.mjs`。
+<div align="center">
 
-服务器需要准备：
+[![Astro](https://img.shields.io/badge/Astro-ff5d01?style=for-the-badge&logo=astro&logoColor=white)](https://astro.build)
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
+[![MDX](https://img.shields.io/badge/MDX-fb6200?style=for-the-badge&logo=mdx&logoColor=white)](https://mdxjs.com)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
+[![Waline](https://img.shields.io/badge/Waline-24292e?style=for-the-badge&logo=github&logoColor=white)](https://waline.js.org)
+[![Algolia](https://img.shields.io/badge/Algolia-5468FF?style=for-the-badge&logo=algolia&logoColor=white)](https://www.algolia.com)
 
-| 工具    | 要求                             |
-| ------- | -------------------------------- |
-| Node.js | `>= 22`                          |
-| pnpm    | 与 `packageManager` 字段保持一致 |
-| PM2     | 用于进程管理                     |
-| rsync   | 用于文件同步                     |
+</div>
 
-GitHub Secrets：
+## Star History
 
-| 名称                       | 默认值         | 说明                                         |
-| -------------------------- | -------------- | -------------------------------------------- |
-| `SSH_PRIVATE_KEY`          | 无             | 部署用 SSH 私钥                              |
-| `SSH_HOST`                 | 无             | 服务器 IP 或域名                             |
-| `SSH_USER`                 | `ubuntu`       | SSH 用户名                                   |
-| `SSH_PORT`                 | `22`           | SSH 端口                                     |
-| `DEPLOY_PATH`              | `~/Astro-star` | 服务器目标目录                               |
-| `PM2_APP_NAME`             | `Astro-star`   | PM2 应用名称                                 |
-| `APP_PORT`                 | `4321`         | Astro 服务监听端口                           |
-| `PUBLIC_WALINE_SERVER_URL` | 无             | Waline 评论服务地址                          |
-| `ALGOLIA_WRITE_API_KEY`    | 可选           | Algolia 索引写入 Key                         |
-| `ALGOLIA_ADMIN_API_KEY`    | 可选           | 同步前清空旧索引；不配置时不会自动删除旧记录 |
-
-本地开发可创建 `.env`：
-
-```env
-WALINE_SERVER_URL=https://your-waline-server.com
-GITHUB_TOKEN=your_github_token
-```
-
-`.env` 已被 Git 忽略。`GITHUB_TOKEN` 只用于提高 GitHub 仓库卡片 API 请求稳定性，不是必填项。
+<a href="https://star-history.com/#hanlife02/Astro-star&Date">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=hanlife02/Astro-star&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=hanlife02/Astro-star&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=hanlife02/Astro-star&type=Date" />
+ </picture>
+</a>
 
 ## 许可证
 
 Astro-star 使用 [Apache License 2.0](./LICENSE) 开源。
+
+---
+
+<div align="center">
+
+如果觉得这个项目有帮助，欢迎点个 ⭐ 支持一下！
+
+</div>
