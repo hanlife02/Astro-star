@@ -68,29 +68,44 @@ const {
         <meta name="article:author" content={author} />
       </Fragment>
       <header class="article-content-header">
-        <p class="article-content-section">{section.toUpperCase()}</p>
         <h1 class="article-content-title">{title}</h1>
         {
           description && <p class="article-content-description">{description}</p>
         }
         <div class="article-content-meta" aria-label="Article metadata">
-          <p class="article-content-meta-item"><span>Author</span><strong>{author}</strong></p>
-          <p class="article-content-meta-item"><span>Type</span><strong>{articleType}</strong></p>
-          <p class="article-content-meta-item"><span>Created</span><strong>{createdLabel}</strong></p>
-          <p class="article-content-meta-item"><span>Updated</span><strong>{updatedLabel}</strong></p>
-          <p class="article-content-meta-item">
-            <span>Views</span>
-            <strong>
+          <p class="article-content-meta-line">
+            <span class="article-content-meta-label">Type</span>{" "}
+            <span class="article-content-meta-value">{articleType}</span>
+          </p>
+          <p class="article-content-meta-line">
+            <span class="article-content-meta-label">Created</span>{" "}
+            <span class="article-content-meta-value">{createdLabel}</span>
+            <span class="article-content-meta-separator">/</span>
+            <span class="article-content-meta-label">Updated</span>{" "}
+            <span class="article-content-meta-value">{updatedLabel}</span>
+          </p>
+          <p class="article-content-meta-line">
+            <span class="article-content-meta-label">Views</span>{" "}
               <span
-                class="waline-pageview-count"
+                class="article-content-meta-value waline-pageview-count"
                 data-path={articleRoutePath}
                 data-server-url={walineServerURL}
               >
                 —
               </span>
-            </strong>
+            <span class="article-content-meta-separator">/</span>
+            <span class="article-content-meta-label">Comments</span>{" "}
+              <span
+                class="article-content-meta-value waline-comment-count"
+                data-path={articleRoutePath}
+                data-server-url={walineServerURL}
+              >
+                —
+              </span>
+            <span class="article-content-meta-separator">/</span>
+            <span class="article-content-meta-label">Words</span>{" "}
+            <span class="article-content-meta-value">{articleWordCount.toLocaleString("en-US")}</span>
           </p>
-          <p class="article-content-meta-item"><span>Words</span><strong>{articleWordCount.toLocaleString("en-US")}</strong></p>
         </div>
       </header>
 

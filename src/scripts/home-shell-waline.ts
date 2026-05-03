@@ -9,6 +9,7 @@ type HomeShellWalineWindow = Window & {
 
 const walineClientModule = import("@waline/client");
 const walinePageviewModule = import("@waline/client/pageview");
+const walineCommentModule = import("@waline/client/comment");
 
 export async function initHomeShellWalineComments() {
   const browserWindow = window as HomeShellWalineWindow;
@@ -71,19 +72,39 @@ export async function initHomeShellWalinePageviews() {
   browserWindow.__homeShellWalinePageviewRunId = runId;
 
   const pageviewElement = document.querySelector(".waline-pageview-count");
-  const serverURL = pageviewElement?.getAttribute("data-server-url")?.trim();
+  const commentElement = document.querySelector(".waline-comment-count");
+  const serverURL =
+    pageviewElement?.getAttribute("data-server-url")?.trim() ||
+    commentElement?.getAttribute("data-server-url")?.trim();
 
-  if (!(pageviewElement instanceof HTMLElement) || !serverURL) {
+  if (
+    (!(pageviewElement instanceof HTMLElement) &&
+      !(commentElement instanceof HTMLElement)) ||
+    !serverURL
+  ) {
     browserWindow.__homeShellWalinePageviewCleanup = undefined;
     return;
   }
 
-  const { pageviewCount } = await walinePageviewModule;
+  const [{ pageviewCount }, { commentCount }] = await Promise.all([
+    walinePageviewModule,
+    walineCommentModule,
+  ]);
   if (browserWindow.__homeShellWalinePageviewRunId !== runId) return;
 
-  const abort: WalineAbort = pageviewCount({ serverURL, update: true });
+  const aborts: WalineAbort[] = [];
+
+  if (pageviewElement instanceof HTMLElement) {
+    aborts.push(pageviewCount({ serverURL, update: true }));
+  }
+
+  if (commentElement instanceof HTMLElement) {
+    aborts.push(commentCount({ serverURL }));
+  }
 
   browserWindow.__homeShellWalinePageviewCleanup = () => {
-    abort();
+    aborts.forEach((abort) => {
+      abort();
+    });
   };
 }

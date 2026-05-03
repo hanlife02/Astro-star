@@ -11,19 +11,12 @@ html:lang(zh-CN) .content-page--article {
 }
 
 .article-content-header {
-  margin: 0 0 1.35rem;
-  padding-bottom: 0.95rem;
+  margin: 0 0 1rem;
+  padding-bottom: 0.75rem;
   border-bottom: 1px solid color-mix(in srgb, var(--line) 16%, transparent);
   display: flex;
   flex-direction: column;
-  gap: 0.58rem;
-}
-
-.article-content-section {
-  margin: 0;
-  color: color-mix(in srgb, var(--line) 52%, transparent);
-  font-size: 0.9rem;
-  letter-spacing: 0.16em;
+  gap: 0.42rem;
 }
 
 .content-page-body .article-content-title {
@@ -43,34 +36,36 @@ html:lang(zh-CN) .content-page--article {
 }
 
 .article-content-meta {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.52rem 0.95rem;
-}
-
-.article-content-meta-item {
-  margin: 0;
+  margin-top: 1.24rem;
   display: flex;
   flex-direction: column;
-  gap: 0.08rem;
+  gap: 0.86rem;
 }
 
-.article-content-meta-item span {
-  color: color-mix(in srgb, var(--line) 52%, transparent);
-  font-size: 0.68rem;
-  letter-spacing: 0.02em;
+.content-page-body .article-content-meta-line {
+  margin: 0;
+  color: color-mix(in srgb, var(--line) 68%, transparent);
+  font-size: clamp(0.78rem, 0.75rem + 0.1vw, 0.9rem);
+  font-style: italic;
+  line-height: 1.25;
 }
 
-.article-content-meta-item strong {
-  color: var(--line);
-  font-size: clamp(0.86rem, 0.83rem + 0.14vw, 0.98rem);
-  font-weight: 600;
+.article-content-meta-label {
+  color: color-mix(in srgb, var(--line) 46%, transparent);
 }
 
-.article-content-meta-item .waline-pageview-count {
-  color: inherit;
-  font: inherit;
-  letter-spacing: inherit;
+.article-content-meta-label::after {
+  content: ":";
+}
+
+.article-content-meta-value {
+  color: color-mix(in srgb, var(--line) 88%, transparent);
+  font-weight: 500;
+}
+
+.article-content-meta-separator {
+  margin-inline: 0.34rem;
+  color: color-mix(in srgb, var(--line) 36%, transparent);
 }
 
 .article-comments {
@@ -206,13 +201,4 @@ html:lang(zh-CN) .content-page--article {
   color: inherit;
   text-decoration: underline;
   text-underline-offset: 0.14em;
-}
-
-@media (min-width: 56.25rem) {
-  .article-content-meta {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    grid-template-rows: repeat(2, auto);
-    grid-auto-flow: column;
-    gap: 0.64rem 1rem;
-  }
 }
