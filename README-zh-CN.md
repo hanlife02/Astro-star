@@ -65,17 +65,17 @@ Astro-star 最初是一个个人博客，现在希望慢慢变成一个可一起
 
 > 🌐 在线预览：**<https://hanlife02.com>**
 
-| 首页（暗色） | 首页（亮色） |
-|:---:|:---:|
-| ![Home Dark](figures/Home.png) | ![Home Light](figures/Home-light.png) |
+**首页（暗色）** | **首页（亮色）**
+:---:|:---:
+<img src="figures/Home.png" width="100%" /> | <img src="figures/Home-light.png" width="100%" />
 
-| 博客列表 | 博客分类 |
-|:---:|:---:|
-| ![Blog](figures/Blog.png) | ![Blog Categories](figures/Blog-Categories.png) |
+**博客列表** | **博客分类**
+:---:|:---:
+<img src="figures/Blog.png" width="100%" /> | <img src="figures/Blog-Categories.png" width="100%" />
 
-| 文章详情 | 友链页面 |
-|:---:|:---:|
-| ![Content](figures/Content.png) | ![Links](figures/Links.png) |
+**文章详情** | **友链页面**
+:---:|:---:
+<img src="figures/Content.png" width="100%" /> | <img src="figures/Links.png" width="100%" />
 
 ## 项目地图
 
