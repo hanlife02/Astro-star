@@ -7,6 +7,7 @@
 An Astro theme community that brings blogs, notes, projects, comments, and friend links into one personal website.
 
 English · [简体中文](./README-zh-CN.md)
+
 [Live Demo](https://hanlife02.com) · [Contributing](./CONTRIBUTING.md) · [Issues](https://github.com/hanlife02/Astro-star/issues) · [License](./LICENSE)
 
 ![Astro](https://img.shields.io/badge/Astro-5.x-ff5d01?style=flat-square&logo=astro&logoColor=white)

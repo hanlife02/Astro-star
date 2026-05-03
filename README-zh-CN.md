@@ -7,6 +7,7 @@
 一个把博客、笔记、项目展示和朋友网络放在一起的 Astro 社区主题。
 
 [English](./README.md) · 简体中文
+
 [在线示例](https://hanlife02.com) · [贡献指南](./CONTRIBUTING.md) · [提交 Issue](https://github.com/hanlife02/Astro-star/issues) · [许可证](./LICENSE)
 
 ![Astro](https://img.shields.io/badge/Astro-5.x-ff5d01?style=flat-square&logo=astro&logoColor=white)
