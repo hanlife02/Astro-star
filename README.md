@@ -28,12 +28,9 @@ English · [简体中文](./README-zh-CN.md)
 - [What Is This](#what-is-this)
 - [Highlights](#highlights)
 - [Preview](#preview)
-- [Customization](#customization)
-- [Config Migration](#config-and-content-migration)
 - [Project Structure](#project-map)
-- [Commands](#commands)
-- [Deployment](#deployment)
 - [Contributing](#build-together)
+- [Tech Stack](#tech-stack)
 - [License](#license)
 
 ## What Is This
@@ -80,45 +77,6 @@ The project focuses on a small but important kind of community: independent webs
 |:---:|:---:|
 | ![Content](figures/Content.png) | ![Links](figures/Links.png) |
 
-## Customization
-
-To turn it into your own site, these are the usual places to edit:
-
-| Goal                                           | Location               |
-| ---------------------------------------------- | ---------------------- |
-| Site name, avatar, navigation, social accounts | `src/config/site.ts`   |
-| About page content                             | `src/config/about.ts`  |
-| Links page and friend links                    | `src/config/links.ts`  |
-| Public Algolia search settings                 | `src/config/search.ts` |
-| Blog posts                                     | `src/content/blog/`    |
-| Short notes                                    | `src/content/note/`    |
-| Project pages                                  | `src/content/project/` |
-| Avatar, site icon, and article images          | `public/`              |
-
-## Config And Content Migration
-
-If you have already customized your local site, you can package your personal config and content:
-
-```bash
-pnpm run config:extract
-```
-
-This creates or updates:
-
-| File                                | Purpose                                        |
-| ----------------------------------- | ---------------------------------------------- |
-| `src/data/user-config.json`         | Structured site configuration                  |
-| `src/data/user-config.example.json` | Shareable configuration template               |
-| `src/data/user-content.tar.gz`      | Blog, note, project, avatar, and image archive |
-
-Restore those files in another copy of the repository:
-
-```bash
-pnpm run config:apply
-```
-
-This rewrites `src/config/site.ts`, `src/config/about.ts`, and `src/config/links.ts`, then restores content assets when an archive is available. Do not put secrets, private links, or non-public personal data into these configuration files.
-
 ## Project Map
 
 ```text
@@ -149,69 +107,6 @@ Top-level routes:
 | `/note`    | Notes        |
 | `/project` | Projects     |
 | `/links`   | Friend links |
-
-## Commands
-
-```bash
-pnpm dev              # Start the development server
-pnpm build            # Build production output into ./dist/
-pnpm preview          # Preview the production build locally
-pnpm check            # Run Astro type checks
-pnpm format           # Format with Prettier
-pnpm format:check     # Check formatting
-pnpm algolia:sync     # Sync src/content into the Algolia index
-pnpm migrate:content  # Migrate legacy content structure
-pnpm config:extract   # Extract user config and content
-pnpm config:apply     # Apply user config and content
-```
-
-## Deployment
-
-The repository includes a GitHub Actions workflow. Pushes to `main` compute a source hash and skip builds when nothing changed. Otherwise, the workflow installs dependencies, runs `pnpm build`, syncs files to the server with rsync + SSH, and starts `dist/server/entry.mjs` with PM2.
-
-<details>
-<summary><strong>Server requirements</strong></summary>
-
-| Tool    | Requirement                      |
-| ------- | -------------------------------- |
-| Node.js | `>= 22`                          |
-| pnpm    | Match the `packageManager` field |
-| PM2     | Process management               |
-| rsync   | File synchronization             |
-
-</details>
-
-<details>
-<summary><strong>GitHub Secrets</strong></summary>
-
-| Name                       | Default        | Description                                                                               |
-| -------------------------- | -------------- | ----------------------------------------------------------------------------------------- |
-| `SSH_PRIVATE_KEY`          | None           | SSH private key for deployment                                                            |
-| `SSH_HOST`                 | None           | Server IP or domain                                                                       |
-| `SSH_USER`                 | `ubuntu`       | SSH username                                                                              |
-| `SSH_PORT`                 | `22`           | SSH port                                                                                  |
-| `DEPLOY_PATH`              | `~/Astro-star` | Target directory on the server                                                            |
-| `PM2_APP_NAME`             | `Astro-star`   | PM2 application name                                                                      |
-| `APP_PORT`                 | `4321`         | Astro server port                                                                         |
-| `PUBLIC_WALINE_SERVER_URL` | None           | Waline comment server URL                                                                 |
-| `ALGOLIA_WRITE_API_KEY`    | Optional       | Algolia indexing key                                                                      |
-| `ALGOLIA_ADMIN_API_KEY`    | Optional       | Clears the old index before syncing; old records are not automatically removed without it |
-
-</details>
-
-<details>
-<summary><strong>Local environment</strong></summary>
-
-For local development, you can create a `.env` file:
-
-```env
-WALINE_SERVER_URL=https://your-waline-server.com
-GITHUB_TOKEN=your_github_token
-```
-
-`.env` is ignored by Git. `GITHUB_TOKEN` is optional and only improves the reliability of GitHub repository card API requests.
-
-</details>
 
 ## Build Together
 
