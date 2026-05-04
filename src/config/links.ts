@@ -52,6 +52,13 @@ export const linksPage = {
 
 export const friendLinks = [
   {
+    name: "静かな森",
+    description: "致虚极，守静笃。",
+    href: "https://innei.in",
+    avatarSrc:
+      "https://avatars.githubusercontent.com/u/41265413?v=4",
+  },
+  {
     name: "lanhao.site",
     description: "Blog of LanHao",
     href: "https://site.lanhao.cc",
