@@ -24,15 +24,29 @@ English · [简体中文](./README-zh-CN.md)
 
 ---
 
+## Discussion and Exchange
+
+Welcome to participate in discussions, feedback issues, and feature suggestions in the [LINUX DO](https://linux.do) community.
+
 ## Table of Contents
 
-- [What Is This](#what-is-this)
-- [Highlights](#highlights)
-- [Preview](#preview)
-- [Project Structure](#project-map)
-- [Contributing](#build-together)
-- [Tech Stack](#tech-stack)
-- [License](#license)
+- [Astro-star](#astro-star)
+  - [Discussion and Exchange](#discussion-and-exchange)
+  - [Table of Contents](#table-of-contents)
+  - [What Is This](#what-is-this)
+  - [Highlights](#highlights)
+  - [Preview](#preview)
+    - [Home (Dark)](#home-dark)
+    - [Home (Light)](#home-light)
+    - [Blog](#blog)
+    - [Blog Categories](#blog-categories)
+    - [Content](#content)
+    - [Friend Links](#friend-links)
+  - [Project Map](#project-map)
+  - [Build Together](#build-together)
+  - [Tech Stack](#tech-stack)
+  - [Star History](#star-history)
+  - [License](#license)
 
 ## What Is This
 
