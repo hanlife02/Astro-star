@@ -45,6 +45,8 @@ const sectionLabels = {
 
 type SectionKey = keyof typeof sectionLabels;
 
+export const prerender = true;
+
 function getArchiveSlugFromEntryId(id: string) {
   return normalizeArchiveSlug(id.split("/").slice(0, -1).at(-1));
 }

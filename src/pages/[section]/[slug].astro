@@ -4,12 +4,33 @@ import ArticleDetailPage from "../../components/content/ArticleDetailPage.astro"
 import { WALINE_SERVER_URL } from "astro:env/server";
 import { site } from "../../config/site";
 import { resolveContentDates } from "../../utils/content-dates";
+import { resolveContentDescription } from "../../utils/content-description";
 import { resolveContentSlug } from "../../utils/content-slug";
 import { resolveContentTitle } from "../../utils/content-title";
 import { getGitTimestamps } from "../../utils/git-timestamps";
 
 const validSections = ["blog", "note", "project"] as const;
 type SectionKey = (typeof validSections)[number];
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const sections = ["blog", "note", "project"] as const;
+  const sectionEntries = await Promise.all(
+    sections.map(async (section) => {
+      const entries = await getCollection(section);
+
+      return entries.map((entry) => ({
+        params: {
+          section,
+          slug: resolveContentSlug(entry.id, entry.data.routeSlug),
+        },
+      }));
+    }),
+  );
+
+  return sectionEntries.flat();
+}
 
 const { section, slug } = Astro.params;
 
@@ -34,7 +55,11 @@ if (!articleEntry) {
 const { Content, headings } = await render(articleEntry);
 const articleSource = articleEntry.body ?? "";
 const title = resolveContentTitle(articleEntry.id, articleEntry.data.title);
-const description = articleEntry.data.description?.trim() || "";
+const description = resolveContentDescription(
+  articleSource,
+  articleEntry.data.description,
+  site.site.description,
+);
 const articleType = (articleEntry.data as { type?: string }).type?.trim() || "Uncategorized";
 const author = site.profile.name;
 const walineServerURL = WALINE_SERVER_URL?.trim() || "";
@@ -83,6 +108,8 @@ const countWords = (source: string) => {
 
 const articleWordCount = countWords(articleSource);
 const canonicalUrl = new URL(articleRoutePath, site.site.url).toString();
+const createdAtIso = createdAt?.toISOString() ?? "";
+const updatedAtIso = updatedAt?.toISOString() ?? "";
 const tocHeadings = headings
   .filter((heading) => heading.depth >= 1 && heading.depth <= 3)
   .map((heading) => ({
@@ -102,6 +129,8 @@ const tocHeadings = headings
   walineServerURL={walineServerURL}
   createdLabel={formatDateTime(createdAt)}
   updatedLabel={formatDateTime(updatedAt)}
+  createdAtIso={createdAtIso}
+  updatedAtIso={updatedAtIso}
   articleWordCount={articleWordCount}
   tocHeadings={tocHeadings}
   ArticleContent={Content}
