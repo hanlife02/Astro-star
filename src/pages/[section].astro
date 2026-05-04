@@ -54,6 +54,8 @@ const sectionLabels = {
 
 type SectionKey = keyof typeof sectionLabels;
 
+export const prerender = true;
+
 function normalizeArchiveSlug(value?: unknown) {
   return normalizeContentArchiveSlug(value);
 }

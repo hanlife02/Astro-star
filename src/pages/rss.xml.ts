@@ -2,6 +2,7 @@ import type { APIRoute } from "astro";
 import rss from "@astrojs/rss";
 import { getCollection } from "astro:content";
 import { site as siteConfig } from "../config/site";
+import { resolveContentDescription } from "../utils/content-description";
 import { resolveContentDates } from "../utils/content-dates";
 import { resolveContentSlug } from "../utils/content-slug";
 import { resolveContentTitle } from "../utils/content-title";
@@ -15,7 +16,7 @@ interface RssItem {
 }
 
 function buildRssItems(
-  entries: { id: string; data: Record<string, any>; filePath?: string }[],
+  entries: { id: string; body?: string; data: Record<string, any>; filePath?: string }[],
   section: string,
 ): RssItem[] {
   const items: RssItem[] = [];
@@ -37,7 +38,11 @@ function buildRssItems(
 
     items.push({
       title,
-      description: entry.data.description?.trim(),
+      description: resolveContentDescription(
+        entry.body ?? "",
+        entry.data.description,
+        siteConfig.site.description,
+      ),
       pubDate,
       link: `/${section}/${slug}/`,
     });

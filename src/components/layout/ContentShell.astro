@@ -8,6 +8,8 @@ interface Props {
   mainCol3Fr?: string;
   variant?: "default" | "article";
   background?: "home" | "code-rain" | "constellation";
+  title?: string;
+  description?: string;
   contentClass?: string;
   tocClass?: string;
   contentAriaLabel: string;
@@ -19,6 +21,8 @@ const {
   mainCol3Fr = "1.5fr",
   variant = "default",
   background,
+  title,
+  description,
   contentClass = "content-page",
   tocClass = "content-toc",
   contentAriaLabel,
@@ -31,6 +35,8 @@ const {
   mainCol3Fr={mainCol3Fr}
   variant={variant}
   background={background}
+  title={title}
+  description={description}
 >
   <slot name="head" slot="head" />
   <Signature slot="signature" />

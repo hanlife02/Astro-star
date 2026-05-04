@@ -11,6 +11,8 @@ interface TocItem {
 interface Props {
   variant?: "default" | "article";
   background?: "home" | "code-rain" | "constellation";
+  title?: string;
+  description?: string;
   contentClass?: string;
   contentAriaLabel: string;
   tocAriaLabel: string;
@@ -22,6 +24,8 @@ interface Props {
 const {
   variant = "default",
   background,
+  title,
+  description,
   contentClass = "content-page",
   contentAriaLabel,
   tocAriaLabel,
@@ -34,6 +38,8 @@ const {
 <ContentShell
   variant={variant}
   background={background}
+  title={title}
+  description={description}
   contentClass={contentClass}
   contentAriaLabel={contentAriaLabel}
   tocAriaLabel={tocAriaLabel}

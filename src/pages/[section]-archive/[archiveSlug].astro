@@ -38,6 +38,8 @@ const sectionBaseLabels = {
 
 type SectionKey = keyof typeof sectionBaseLabels;
 
+export const prerender = true;
+
 function getArchiveSlugFromEntryId(id: string) {
   return normalizeArchiveSlug(id.split("/").slice(0, -1).at(-1));
 }
@@ -56,13 +58,32 @@ function getArchiveSlugFromEntry(section: SectionKey, entry: ContentEntryMeta) {
 }
 
 export async function getStaticPaths() {
+  const sections = ["blog", "note"] as const;
+  const getStaticArchiveSlugFromEntryId = (id: string) =>
+    normalizeArchiveSlug(id.split("/").slice(0, -1).at(-1));
+  const getStaticArchiveSlugFromEntry = (
+    section: (typeof sections)[number],
+    entry: ContentEntryMeta,
+  ) => {
+    const directoryArchiveSlug = getStaticArchiveSlugFromEntryId(entry.id);
+    const label =
+      entry.data.type?.trim() || directoryArchiveSlug || "Uncategorized";
+
+    return (
+      (section === "blog" ? directoryArchiveSlug : "") ||
+      normalizeArchiveSlug(entry.data.archiveSlug) ||
+      directoryArchiveSlug ||
+      slugifyCategoryLabel(label) ||
+      "uncategorized"
+    );
+  };
   const archiveEntries = (
     await Promise.all(
-      (Object.keys(sectionBaseLabels) as SectionKey[]).map(async (section) => {
+      sections.map(async (section) => {
         const collectionEntries = (await getCollection(section)) as ContentEntryMeta[];
 
         return collectionEntries.map((entry) => ({
-          archiveSlug: getArchiveSlugFromEntry(section, entry),
+          archiveSlug: getStaticArchiveSlugFromEntry(section, entry),
           section,
         }));
       }),
