@@ -16,7 +16,12 @@ interface RssItem {
 }
 
 function buildRssItems(
-  entries: { id: string; body?: string; data: Record<string, any>; filePath?: string }[],
+  entries: {
+    id: string;
+    body?: string;
+    data: Record<string, any>;
+    filePath?: string;
+  }[],
   section: string,
 ): RssItem[] {
   const items: RssItem[] = [];
