@@ -24,6 +24,7 @@ interface Props {
   tocHeadings: TocHeading[];
   ArticleContent: any;
   canonicalUrl?: string;
+  imageUrl?: string;
   siteName?: string;
 }
 
@@ -43,10 +44,45 @@ const {
   tocHeadings,
   ArticleContent,
   canonicalUrl = "",
+  imageUrl = "",
   siteName = "",
 } = Astro.props as Props;
 
 const pageTitle = siteName ? `${title} - ${siteName}` : title;
+const articleJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  headline: title,
+  description: description || undefined,
+  author: {
+    "@type": "Person",
+    name: author,
+  },
+  publisher: {
+    "@type": "Person",
+    name: author,
+  },
+  datePublished: createdAtIso || undefined,
+  dateModified: updatedAtIso || createdAtIso || undefined,
+  mainEntityOfPage: canonicalUrl
+    ? {
+        "@type": "WebPage",
+        "@id": canonicalUrl,
+      }
+    : undefined,
+  url: canonicalUrl || undefined,
+  image: imageUrl ? [imageUrl] : undefined,
+  isPartOf: siteName
+    ? {
+        "@type": "WebSite",
+        name: siteName,
+      }
+    : undefined,
+};
+const articleJsonLdText = JSON.stringify(articleJsonLd).replace(
+  /</g,
+  "\\u003c",
+);
 ---
 
 <DocumentPageShell
@@ -68,13 +104,16 @@ const pageTitle = siteName ? `${title} - ${siteName}` : title;
         {description && <meta property="og:description" content={description} />}
         <meta property="og:type" content="article" />
         {canonicalUrl && <meta property="og:url" content={canonicalUrl} />}
+        {imageUrl && <meta property="og:image" content={imageUrl} />}
         {siteName && <meta property="og:site_name" content={siteName} />}
-        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:card" content={imageUrl ? "summary_large_image" : "summary"} />
         <meta name="twitter:title" content={title} />
         {description && <meta name="twitter:description" content={description} />}
+        {imageUrl && <meta name="twitter:image" content={imageUrl} />}
         <meta name="article:author" content={author} />
         {createdAtIso && <meta property="article:published_time" content={createdAtIso} />}
         {updatedAtIso && <meta property="article:modified_time" content={updatedAtIso} />}
+        <script is:inline type="application/ld+json" set:html={articleJsonLdText} />
       </Fragment>
       <header class="article-content-header">
         <h1 class="article-content-title">{title}</h1>

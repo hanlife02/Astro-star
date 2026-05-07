@@ -7,6 +7,7 @@ const baseContentSchema = z
     routeSlug: z.union([z.string(), z.number()]).optional(),
     title: z.string().optional(),
     description: z.string().optional(),
+    image: z.string().optional(),
     createdAt: z.string().optional(),
     updatedAt: z.string().optional(),
     type: z.string().optional(),
@@ -20,6 +21,7 @@ const projectSchema = z.object({
   routeSlug: z.string().min(1),
   title: z.string().min(1),
   description: z.string().min(1),
+  image: z.string().optional(),
   createdAt: z.string().min(1),
 });
 
