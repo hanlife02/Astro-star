@@ -41,8 +41,5 @@ const tocItems = [
   <OwnerInfoCard {...linksPage.applyOwner} />
   {linksPage.applyRules.map((rule) => <p>{rule}</p>)}
 
-  <WalineComments
-    articleRoutePath="/links/"
-    walineServerURL={walineServerURL}
-  />
+  <WalineComments walineServerURL={walineServerURL} />
 </DocumentPageShell>

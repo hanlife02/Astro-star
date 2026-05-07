@@ -1,10 +1,25 @@
 ---
 interface Props {
-  articleRoutePath: string;
+  articleRoutePath?: string;
   walineServerURL?: string;
 }
 
-const { articleRoutePath, walineServerURL = "" } = Astro.props as Props;
+const { articleRoutePath: rawArticleRoutePath, walineServerURL = "" } =
+  Astro.props as Props;
+
+const normalizeWalinePath = (pathname: string) => {
+  const trimmedPathname = pathname.trim();
+
+  if (!trimmedPathname || trimmedPathname === "/") {
+    return "/";
+  }
+
+  return `/${trimmedPathname.replace(/^\/+|\/+$/g, "")}/`;
+};
+
+const articleRoutePath = normalizeWalinePath(
+  rawArticleRoutePath || Astro.url.pathname,
+);
 ---
 
 <section
