@@ -10,6 +10,11 @@ interface Props {
   background?: "home" | "code-rain" | "constellation";
   title?: string;
   description?: string;
+  canonicalUrl?: string;
+  imageUrl?: string;
+  ogTitle?: string;
+  ogType?: "article" | "website";
+  twitterCard?: "summary" | "summary_large_image";
   contentClass?: string;
   tocClass?: string;
   contentAriaLabel: string;
@@ -23,6 +28,11 @@ const {
   background,
   title,
   description,
+  canonicalUrl,
+  imageUrl,
+  ogTitle,
+  ogType,
+  twitterCard,
   contentClass = "content-page",
   tocClass = "content-toc",
   contentAriaLabel,
@@ -37,6 +47,11 @@ const {
   background={background}
   title={title}
   description={description}
+  canonicalUrl={canonicalUrl}
+  imageUrl={imageUrl}
+  ogTitle={ogTitle}
+  ogType={ogType}
+  twitterCard={twitterCard}
 >
   <slot name="head" slot="head" />
   <Signature slot="signature" />

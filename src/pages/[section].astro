@@ -7,6 +7,7 @@ import {
   normalizeArchiveSlug as normalizeContentArchiveSlug,
   resolveContentSlug,
 } from "../utils/content-slug";
+import { site } from "../config/site";
 import { resolveContentTitle } from "../utils/content-title";
 import { getGitTimestamps } from "../utils/git-timestamps";
 
@@ -50,6 +51,11 @@ const sectionLabels = {
   blog: "Blog",
   note: "Note",
   project: "Project",
+} as const;
+const sectionDescriptions = {
+  blog: "Browse Ethan's blog posts by date.",
+  note: "Browse Ethan's notes by date.",
+  project: "Explore Ethan's projects and tools.",
 } as const;
 
 type SectionKey = keyof typeof sectionLabels;
@@ -242,6 +248,8 @@ const activityEntries = usesArchivePage
   : [];
 const viewAllHref = `/${section}-archive/`;
 const viewCategoriesLabel = `View ${basePageLabel.toLowerCase()} categories`;
+const seoTitle = `${pageLabel} - ${site.site.name}`;
+const seoDescription = sectionDescriptions[sectionKey];
 ---
 
 {
@@ -251,12 +259,18 @@ const viewCategoriesLabel = `View ${basePageLabel.toLowerCase()} categories`;
       actionLabel={viewCategoriesLabel}
       activityEntries={activityEntries}
       pageLabel={pageLabel}
+      title={seoTitle}
+      description={seoDescription}
+      ogTitle={pageLabel}
       yearGroups={yearGroups}
     />
   ) : (
     <SectionListingPage
       categories={categories}
       pageLabel={pageLabel}
+      title={seoTitle}
+      description={seoDescription}
+      ogTitle={pageLabel}
       showCounts={sectionKey !== "project"}
     />
   )

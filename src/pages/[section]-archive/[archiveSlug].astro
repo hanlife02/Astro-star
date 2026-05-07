@@ -9,6 +9,7 @@ import {
 } from "../../utils/content-slug";
 import { getGitTimestamps } from "../../utils/git-timestamps";
 import { resolveContentTitle } from "../../utils/content-title";
+import { site } from "../../config/site";
 
 interface ContentEntryMeta {
   filePath?: string;
@@ -46,7 +47,8 @@ function getArchiveSlugFromEntryId(id: string) {
 
 function getArchiveSlugFromEntry(section: SectionKey, entry: ContentEntryMeta) {
   const directoryArchiveSlug = getArchiveSlugFromEntryId(entry.id);
-  const label = entry.data.type?.trim() || directoryArchiveSlug || "Uncategorized";
+  const label =
+    entry.data.type?.trim() || directoryArchiveSlug || "Uncategorized";
 
   return (
     (section === "blog" ? directoryArchiveSlug : "") ||
@@ -80,7 +82,9 @@ export async function getStaticPaths() {
   const archiveEntries = (
     await Promise.all(
       sections.map(async (section) => {
-        const collectionEntries = (await getCollection(section)) as ContentEntryMeta[];
+        const collectionEntries = (await getCollection(
+          section,
+        )) as ContentEntryMeta[];
 
         return collectionEntries.map((entry) => ({
           archiveSlug: getStaticArchiveSlugFromEntry(section, entry),
@@ -92,7 +96,10 @@ export async function getStaticPaths() {
 
   return Array.from(
     new Map(
-      archiveEntries.map((item) => [`${item.section}:${item.archiveSlug}`, item]),
+      archiveEntries.map((item) => [
+        `${item.section}:${item.archiveSlug}`,
+        item,
+      ]),
     ).values(),
   ).map((item) => ({
     params: {
@@ -112,7 +119,9 @@ if (!section || !(section in sectionBaseLabels) || !archiveSlug) {
 }
 
 const sectionKey = section as SectionKey;
-const collectionEntries = (await getCollection(sectionKey)) as ContentEntryMeta[];
+const collectionEntries = (await getCollection(
+  sectionKey,
+)) as ContentEntryMeta[];
 
 const articles = collectionEntries
   .map((entry) => {
@@ -121,8 +130,10 @@ const articles = collectionEntries
 
     const routeSlug = resolveContentSlug(entry.id, entry.data.routeSlug);
     const title = resolveContentTitle(entry.id, entry.data.title);
-    const contentPath = entry.filePath ?? `src/content/${section}/${entry.id}.mdx`;
-    const { createdAt: gitCreatedAt, updatedAt: gitUpdatedAt } = getGitTimestamps(contentPath);
+    const contentPath =
+      entry.filePath ?? `src/content/${section}/${entry.id}.mdx`;
+    const { createdAt: gitCreatedAt, updatedAt: gitUpdatedAt } =
+      getGitTimestamps(contentPath);
     const { createdAt, updatedAt } = resolveContentDates(entry.data, {
       createdAt: gitCreatedAt,
       updatedAt: gitUpdatedAt,
@@ -146,7 +157,9 @@ const articles = collectionEntries
   .filter((item): item is ArchiveArticleItem => item !== null)
   .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 
-const yearGroups = articles.reduce<Array<{ articles: ArchiveArticleItem[]; year: string }>>((groups, article) => {
+const yearGroups = articles.reduce<
+  Array<{ articles: ArchiveArticleItem[]; year: string }>
+>((groups, article) => {
   const currentGroup = groups[groups.length - 1];
 
   if (currentGroup?.year === article.year) {
@@ -160,6 +173,15 @@ const yearGroups = articles.reduce<Array<{ articles: ArchiveArticleItem[]; year:
 
 const sectionLabel = sectionBaseLabels[sectionKey];
 const pageLabel = `${sectionLabel} Archive`;
+const archiveLabel = archiveSlug.replace(/[_-]+/g, " ");
+const seoTitle = `${sectionLabel} Archive: ${archiveLabel} - ${site.site.name}`;
+const seoDescription = `Browse Ethan's ${sectionLabel.toLowerCase()} posts in ${archiveLabel}.`;
 ---
 
-<SectionArchivePage pageLabel={pageLabel} yearGroups={yearGroups} />
+<SectionArchivePage
+  pageLabel={pageLabel}
+  title={seoTitle}
+  description={seoDescription}
+  ogTitle={`${sectionLabel} Archive: ${archiveLabel}`}
+  yearGroups={yearGroups}
+/>

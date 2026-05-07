@@ -6,6 +6,7 @@ import LostLinksPanel from "../components/links/LostLinksPanel.astro";
 import OwnerInfoCard from "../components/links/OwnerInfoCard.astro";
 import { WALINE_SERVER_URL } from "astro:env/server";
 import { friendLinks, linksPage, lostLinks } from "../config/links";
+import { site } from "../config/site";
 
 const walineServerURL = WALINE_SERVER_URL?.trim() || "";
 
@@ -18,6 +19,9 @@ const tocItems = [
 
 <DocumentPageShell
   background="constellation"
+  title={`${linksPage.title} - ${site.site.name}`}
+  description={linksPage.intro}
+  ogTitle={linksPage.title}
   contentClass="content-page content-page--links"
   contentAriaLabel="Links content"
   tocAriaLabel="Links table of contents"
@@ -37,5 +41,8 @@ const tocItems = [
   <OwnerInfoCard {...linksPage.applyOwner} />
   {linksPage.applyRules.map((rule) => <p>{rule}</p>)}
 
-  <WalineComments articleRoutePath="/links/" walineServerURL={walineServerURL} />
+  <WalineComments
+    articleRoutePath="/links/"
+    walineServerURL={walineServerURL}
+  />
 </DocumentPageShell>

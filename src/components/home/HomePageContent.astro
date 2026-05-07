@@ -59,9 +59,14 @@ const {
   latestNoteTimelineGroups,
   latestAnimationOrderMap,
 } = Astro.props as Props;
+const homeDescription = profile.intro.trim() || profile.bio.trim();
 ---
 
-<HomeLayout>
+<HomeLayout
+  title={ownerName}
+  description={homeDescription || undefined}
+  ogTitle={ownerName}
+>
   <Signature slot="signature" />
   <section
     slot="profile"
@@ -81,21 +86,21 @@ const {
     {
       profileLinks.length > 0 && (
         <nav class="profile-links" aria-label="Profile quick links">
-          {
-            profileLinks.map((item) => (
-              <a
-                class="profile-link home-enter-item"
-                href={item.href}
-                target={item.external ? "_blank" : undefined}
-                rel={item.external ? "noreferrer" : undefined}
-                aria-label={item.label}
-              >
-                {item.key === "bilibili" ? <BilibiliIcon /> : null}
-                {item.key === "cloud-music" ? <NetEaseMusicIcon /> : null}
-                {item.key !== "bilibili" && item.key !== "cloud-music" ? <Icon svg={item.icon} /> : null}
-              </a>
-            ))
-          }
+          {profileLinks.map((item) => (
+            <a
+              class="profile-link home-enter-item"
+              href={item.href}
+              target={item.external ? "_blank" : undefined}
+              rel={item.external ? "noreferrer" : undefined}
+              aria-label={item.label}
+            >
+              {item.key === "bilibili" ? <BilibiliIcon /> : null}
+              {item.key === "cloud-music" ? <NetEaseMusicIcon /> : null}
+              {item.key !== "bilibili" && item.key !== "cloud-music" ? (
+                <Icon svg={item.icon} />
+              ) : null}
+            </a>
+          ))}
         </nav>
       )
     }
@@ -149,63 +154,82 @@ const {
                 title={block.archiveLabel}
               >
                 <span class="latest-articles-title-text">{block.title}</span>
-                <span class="latest-articles-title-hint">{block.archiveHint}</span>
+                <span class="latest-articles-title-hint">
+                  {block.archiveHint}
+                </span>
               </a>
             </h2>
           </header>
-          {
-            block.groups.length > 0 ? (
-              <div class="latest-articles-groups" aria-label={`${block.title} timeline`}>
-                {
-                  block.groups.map((group) => (
-                    <section class="latest-articles-group" aria-label={`${group.year} articles`}>
-                      <h3 class="latest-articles-year-label">{group.year}</h3>
-                      <ol class="latest-articles-list" aria-label={`${group.year} timeline`}>
-                        {
-                          group.articles.map((article, index) => (
-                            <li
-                              class:list={[
-                                "latest-articles-item",
-                                index === 0 && "latest-articles-item--year-start",
-                                index === group.articles.length - 1 && "latest-articles-item--year-end",
-                              ]}
-                            >
-                              <div
-                                class="latest-articles-item-content"
-                                style={`--latest-enter-order: ${latestAnimationOrderMap.get(article.href) ?? 0};`}
-                              >
-                                <time class="latest-articles-time" datetime={article.pubDateIso}>
-                                  {article.displayDate}
-                                </time>
-                                <a class="latest-articles-link" href={article.href}>
-                                  <span class="latest-articles-link-text">{article.title}</span>
-                                  <span class="latest-articles-link-arrow" aria-hidden="true" />
-                                </a>
-                              </div>
-                            </li>
-                          ))
-                        }
-                      </ol>
-                    </section>
-                  ))
-                }
-              </div>
-            ) : (
-              <p class="latest-articles-empty">No {block.key} published yet.</p>
-            )
-          }
+          {block.groups.length > 0 ? (
+            <div
+              class="latest-articles-groups"
+              aria-label={`${block.title} timeline`}
+            >
+              {block.groups.map((group) => (
+                <section
+                  class="latest-articles-group"
+                  aria-label={`${group.year} articles`}
+                >
+                  <h3 class="latest-articles-year-label">{group.year}</h3>
+                  <ol
+                    class="latest-articles-list"
+                    aria-label={`${group.year} timeline`}
+                  >
+                    {group.articles.map((article, index) => (
+                      <li
+                        class:list={[
+                          "latest-articles-item",
+                          index === 0 && "latest-articles-item--year-start",
+                          index === group.articles.length - 1 &&
+                            "latest-articles-item--year-end",
+                        ]}
+                      >
+                        <div
+                          class="latest-articles-item-content"
+                          style={`--latest-enter-order: ${latestAnimationOrderMap.get(article.href) ?? 0};`}
+                        >
+                          <time
+                            class="latest-articles-time"
+                            datetime={article.pubDateIso}
+                          >
+                            {article.displayDate}
+                          </time>
+                          <a class="latest-articles-link" href={article.href}>
+                            <span class="latest-articles-link-text">
+                              {article.title}
+                            </span>
+                            <span
+                              class="latest-articles-link-arrow"
+                              aria-hidden="true"
+                            />
+                          </a>
+                        </div>
+                      </li>
+                    ))}
+                  </ol>
+                </section>
+              ))}
+            </div>
+          ) : (
+            <p class="latest-articles-empty">No {block.key} published yet.</p>
+          )}
         </section>
       ))
     }
 
     <script is:inline>
       (() => {
-        const getCurrentPageKey = () => `${window.location.pathname}${window.location.search}`;
+        const getCurrentPageKey = () =>
+          `${window.location.pathname}${window.location.search}`;
 
         const runHomeEntrance = () => {
           const profileRoot = document.querySelector(".home-profile-sequence");
           const latestRoot = document.querySelector(".home-latest-sequence");
-          if (!(profileRoot instanceof HTMLElement) || !(latestRoot instanceof HTMLElement)) return;
+          if (
+            !(profileRoot instanceof HTMLElement) ||
+            !(latestRoot instanceof HTMLElement)
+          )
+            return;
 
           const currentPageKey = getCurrentPageKey();
           const isSamePageReplay =
@@ -221,7 +245,11 @@ const {
           const runToken = `${Date.now()}`;
           profileRoot.dataset.homeEntranceRun = runToken;
 
-          const profileItems = Array.from(profileRoot.querySelectorAll(".home-enter-item, .home-profile-metric"));
+          const profileItems = Array.from(
+            profileRoot.querySelectorAll(
+              ".home-enter-item, .home-profile-metric",
+            ),
+          );
           profileItems.forEach((element, index) => {
             if (element instanceof HTMLElement) {
               element.style.setProperty("--home-enter-order", `${index}`);
@@ -242,7 +270,10 @@ const {
             });
 
             profileRoot.classList.add("home-profile--entered");
-            latestRoot.classList.add("latest-articles--frame-visible", "latest-articles--entered");
+            latestRoot.classList.add(
+              "latest-articles--frame-visible",
+              "latest-articles--entered",
+            );
             profileRoot.dataset.homeEntranceCompleted = "true";
           });
         };

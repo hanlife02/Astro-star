@@ -16,6 +16,9 @@ interface SectionCategoryEntry {
 interface Props {
   categories: SectionCategoryEntry[];
   pageLabel: string;
+  title?: string;
+  description?: string;
+  ogTitle?: string;
   showCounts?: boolean;
   viewAllHref?: string;
   viewAllLabel?: string;
@@ -24,6 +27,9 @@ interface Props {
 const {
   categories,
   pageLabel,
+  title,
+  description,
+  ogTitle,
   showCounts = true,
   viewAllHref,
   viewAllLabel,
@@ -34,6 +40,9 @@ const toAnchorId = (value: string) =>
 ---
 
 <CollectionPageShell
+  title={title}
+  description={description}
+  ogTitle={ogTitle}
   tocClass="content-toc content-toc--collection content-toc--listing"
   contentAriaLabel={`${pageLabel} listing content`}
   tocAriaLabel={`${pageLabel} categories`}

@@ -7,13 +7,26 @@ import "../style/base/route-transitions.css";
 interface Props {
   title?: string;
   description?: string;
+  canonicalUrl?: string;
+  imageUrl?: string;
+  ogTitle?: string;
+  ogType?: "article" | "website";
+  twitterCard?: "summary" | "summary_large_image";
 }
 
 const VALID_THEME_MODES = ["light", "dark", "system"] as const;
 
 type ThemeMode = (typeof VALID_THEME_MODES)[number];
 
-const { title, description } = Astro.props as Props;
+const {
+  title,
+  description,
+  canonicalUrl,
+  imageUrl,
+  ogTitle,
+  ogType,
+  twitterCard,
+} = Astro.props as Props;
 const pageDescription = description ?? site.site.description;
 const pathname = Astro.url.pathname.replace(/\/+$/, "") || "/";
 const routeRoot = pathname.split("/").filter(Boolean)[0] || "";
@@ -27,18 +40,84 @@ const PAGE_NAME_BY_ROUTE_ROOT = {
   project: "Project",
   links: "Links",
 } as const;
-const documentLang = ["blog", "note", "project", "blog-archive", "note-archive"].includes(routeRoot)
+const documentLang = [
+  "blog",
+  "note",
+  "project",
+  "blog-archive",
+  "note-archive",
+].includes(routeRoot)
   ? "zh-CN"
   : "en";
 const pageName =
   PAGE_NAME_BY_ROUTE_ROOT[routeRoot as keyof typeof PAGE_NAME_BY_ROUTE_ROOT] ??
   (routeRoot ? routeRoot.charAt(0).toUpperCase() + routeRoot.slice(1) : "Home");
 const pageTitle = title ?? `${pageName} - ${site.site.name}`;
+const canonicalHref = new URL(
+  canonicalUrl?.trim() || Astro.url.pathname,
+  site.site.url,
+).toString();
+const socialTitle = ogTitle ?? pageTitle;
+const socialImageUrl = new URL(
+  imageUrl?.trim() || site.site.iconSrc,
+  site.site.url,
+).toString();
+const openGraphType = ogType ?? "website";
+const openGraphLocale = "zh_CN";
+const twitterCardType = twitterCard ?? "summary_large_image";
 const initialThemeMode: ThemeMode = "system";
 const initialTheme = "light";
+const siteUrl = new URL("/", site.site.url).toString();
+const personId = `${siteUrl}#person`;
+const websiteId = `${siteUrl}#website`;
+const profileEmail = site.profile.email.trim();
+const githubUsername = site.profile.githubUsername.trim();
+const bilibiliId = site.profile.bilibiliId.trim();
+const cloudMusicId = site.profile.cloudMusicId.trim();
+const sameAs = [
+  githubUsername
+    ? `https://github.com/${encodeURIComponent(githubUsername)}`
+    : "",
+  bilibiliId
+    ? `https://space.bilibili.com/${encodeURIComponent(bilibiliId)}`
+    : "",
+  cloudMusicId
+    ? `https://music.163.com/#/user/home?id=${encodeURIComponent(cloudMusicId)}`
+    : "",
+].filter(Boolean);
+const siteJsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": websiteId,
+      url: siteUrl,
+      name: site.site.name,
+      description: site.site.description,
+      inLanguage: documentLang,
+      publisher: {
+        "@id": personId,
+      },
+    },
+    {
+      "@type": "Person",
+      "@id": personId,
+      name: site.profile.name,
+      url: siteUrl,
+      image: new URL(site.profile.avatarSrc, site.site.url).toString(),
+      email: profileEmail || undefined,
+      sameAs: sameAs.length > 0 ? sameAs : undefined,
+    },
+  ],
+};
+const siteJsonLdText = JSON.stringify(siteJsonLd).replace(/</g, "\\u003c");
 ---
 
-<html lang={documentLang} data-theme={initialTheme} data-theme-mode={initialThemeMode}>
+<html
+  lang={documentLang}
+  data-theme={initialTheme}
+  data-theme-mode={initialThemeMode}
+>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
@@ -49,11 +128,47 @@ const initialTheme = "light";
     <meta name="theme-color" content="#ffffff" />
     <meta name="description" content={pageDescription} />
     <meta name="generator" content={Astro.generator} />
+    <link rel="canonical" href={canonicalHref} />
+    <meta property="og:locale" content={openGraphLocale} />
+    <meta property="og:site_name" content={site.site.name} />
+    <meta property="og:title" content={socialTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:type" content={openGraphType} />
+    <meta property="og:url" content={canonicalHref} />
+    <meta property="og:image" content={socialImageUrl} />
+    <meta name="twitter:card" content={twitterCardType} />
+    <meta name="twitter:title" content={socialTitle} />
+    <meta name="twitter:description" content={pageDescription} />
+    <meta name="twitter:image" content={socialImageUrl} />
     <ClientRouter fallback="animate" />
-    <link rel="preload" href="/fonts/Biotif-Regular.ttf" as="font" type="font/ttf" crossorigin />
-    <link rel="preload" href="/fonts/Biotif-Medium.ttf" as="font" type="font/ttf" crossorigin />
-    <link rel="preload" href="/fonts/Biotif-SemiBold.ttf" as="font" type="font/ttf" crossorigin />
-    <link rel="preload" href="/fonts/Biotif-Bold.ttf" as="font" type="font/ttf" crossorigin />
+    <link
+      rel="preload"
+      href="/fonts/Biotif-Regular.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/Biotif-Medium.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/Biotif-SemiBold.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/Biotif-Bold.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin
+    />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="icon" type="image/svg+xml" href={site.site.iconSrc} />
     <link
@@ -63,33 +178,44 @@ const initialTheme = "light";
       href={new URL("/rss.xml", site.site.url).toString()}
     />
     <title>{pageTitle}</title>
+    <script is:inline type="application/ld+json" set:html={siteJsonLdText} />
     <script is:inline>
-      (function() {
+      (function () {
         var root = document.documentElement;
-        var storageKey = 'theme-preference';
-        var resolvedCookieKey = 'theme-resolved';
-        var prefersDark = matchMedia('(prefers-color-scheme: dark)');
-        var readCookie = function(key) {
-          var match = document.cookie.match(new RegExp('(?:^|; )' + key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '=([^;]*)'));
-          return match ? decodeURIComponent(match[1]) : '';
+        var storageKey = "theme-preference";
+        var resolvedCookieKey = "theme-resolved";
+        var prefersDark = matchMedia("(prefers-color-scheme: dark)");
+        var readCookie = function (key) {
+          var match = document.cookie.match(
+            new RegExp(
+              "(?:^|; )" +
+                key.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") +
+                "=([^;]*)",
+            ),
+          );
+          return match ? decodeURIComponent(match[1]) : "";
         };
-        var writeCookie = function(key, value) {
-          document.cookie = key + '=' + encodeURIComponent(value) + '; Max-Age=31536000; Path=/; SameSite=Lax';
+        var writeCookie = function (key, value) {
+          document.cookie =
+            key +
+            "=" +
+            encodeURIComponent(value) +
+            "; Max-Age=31536000; Path=/; SameSite=Lax";
         };
-        var readStorage = function() {
+        var readStorage = function () {
           try {
-            return localStorage.getItem(storageKey) || '';
+            return localStorage.getItem(storageKey) || "";
           } catch (error) {
-            return '';
+            return "";
           }
         };
-        var writeStorage = function(value) {
+        var writeStorage = function (value) {
           try {
             localStorage.setItem(storageKey, value);
           } catch (error) {}
         };
-        var isValidMode = function(value) {
-          return value === 'light' || value === 'dark' || value === 'system';
+        var isValidMode = function (value) {
+          return value === "light" || value === "dark" || value === "system";
         };
         var storedMode = readStorage();
         var cookieMode = readCookie(storageKey);
@@ -99,12 +225,14 @@ const initialTheme = "light";
             ? cookieMode
             : isValidMode(root.dataset.themeMode)
               ? root.dataset.themeMode
-              : 'system';
-        var resolved = mode === 'system' ? (prefersDark.matches ? 'dark' : 'light') : mode;
+              : "system";
+        var resolved =
+          mode === "system" ? (prefersDark.matches ? "dark" : "light") : mode;
         root.dataset.themeMode = mode;
         root.dataset.theme = resolved;
         root.style.colorScheme = resolved;
-        root.style.backgroundColor = resolved === 'dark' ? '#000000' : '#ffffff';
+        root.style.backgroundColor =
+          resolved === "dark" ? "#000000" : "#ffffff";
         writeStorage(mode);
         writeCookie(storageKey, mode);
         writeCookie(resolvedCookieKey, resolved);

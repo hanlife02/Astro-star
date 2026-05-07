@@ -13,6 +13,11 @@ interface Props {
   background?: "home" | "code-rain" | "constellation";
   title?: string;
   description?: string;
+  canonicalUrl?: string;
+  imageUrl?: string;
+  ogTitle?: string;
+  ogType?: "article" | "website";
+  twitterCard?: "summary" | "summary_large_image";
   contentClass?: string;
   contentAriaLabel: string;
   tocAriaLabel: string;
@@ -26,6 +31,11 @@ const {
   background,
   title,
   description,
+  canonicalUrl,
+  imageUrl,
+  ogTitle,
+  ogType,
+  twitterCard,
   contentClass = "content-page",
   contentAriaLabel,
   tocAriaLabel,
@@ -40,6 +50,11 @@ const {
   background={background}
   title={title}
   description={description}
+  canonicalUrl={canonicalUrl}
+  imageUrl={imageUrl}
+  ogTitle={ogTitle}
+  ogType={ogType}
+  twitterCard={twitterCard}
   contentClass={contentClass}
   contentAriaLabel={contentAriaLabel}
   tocAriaLabel={tocAriaLabel}
@@ -47,5 +62,10 @@ const {
   <slot name="head" slot="head" />
   <slot />
 
-  <TocPanel slot="toc" title={tocTitle} emptyText={tocEmptyText} items={tocItems} />
+  <TocPanel
+    slot="toc"
+    title={tocTitle}
+    emptyText={tocEmptyText}
+    items={tocItems}
+  />
 </ContentShell>

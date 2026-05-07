@@ -23,6 +23,9 @@ interface Props {
   actionLabel?: string;
   activityEntries?: ArchiveActivityEntry[];
   pageLabel: string;
+  title?: string;
+  description?: string;
+  ogTitle?: string;
   yearGroups: ArchiveYearGroup[];
 }
 
@@ -31,11 +34,17 @@ const {
   actionLabel,
   activityEntries = [],
   pageLabel,
+  title,
+  description,
+  ogTitle,
   yearGroups,
 } = Astro.props as Props;
 ---
 
 <CollectionPageShell
+  title={title}
+  description={description}
+  ogTitle={ogTitle}
   contentAriaLabel={`${pageLabel} archive content`}
   tocAriaLabel={`${pageLabel} archive navigation`}
   tocEmptyText="No archive yet."

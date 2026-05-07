@@ -4,8 +4,10 @@ import WalineComments from "../components/content/WalineComments.astro";
 import AppPanelCard from "../components/ui/AppPanelCard.astro";
 import { WALINE_SERVER_URL } from "astro:env/server";
 import { aboutPage } from "../config/about";
+import { site } from "../config/site";
 
 const walineServerURL = WALINE_SERVER_URL?.trim() || "";
+const pageDescription = aboutPage.introParagraphs.join(" ");
 const tocItems = [
   { href: "#intro", label: aboutPage.introTitle, depth: 2 as const },
   { href: "#social", label: aboutPage.socialTitle, depth: 2 as const },
@@ -16,6 +18,9 @@ const tocItems = [
 
 <DocumentPageShell
   background="code-rain"
+  title={`${aboutPage.title} - ${site.site.name}`}
+  description={pageDescription}
+  ogTitle={aboutPage.title}
   contentAriaLabel="About content"
   tocAriaLabel="About table of contents"
   tocTitle="Contents"
@@ -40,11 +45,18 @@ const tocItems = [
         <p>
           <em>{year.label}</em>
         </p>
-        {year.events.map((event) => <blockquote><p>{event}</p></blockquote>)}
+        {year.events.map((event) => (
+          <blockquote>
+            <p>{event}</p>
+          </blockquote>
+        ))}
         {year.summary && <p>{year.summary}</p>}
       </>
     ))
   }
 
-  <WalineComments articleRoutePath="/about/" walineServerURL={walineServerURL} />
+  <WalineComments
+    articleRoutePath="/about/"
+    walineServerURL={walineServerURL}
+  />
 </DocumentPageShell>

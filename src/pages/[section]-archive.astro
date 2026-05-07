@@ -7,6 +7,7 @@ import {
   resolveContentSlug,
   slugifyCategoryLabel,
 } from "../utils/content-slug";
+import { site } from "../config/site";
 import { resolveContentTitle } from "../utils/content-title";
 import { getGitTimestamps } from "../utils/git-timestamps";
 
@@ -165,11 +166,16 @@ const basePageLabel = sectionLabels[sectionKey];
 const pageLabel = `${basePageLabel} Categories`;
 const viewAllHref = `/${section}/`;
 const viewAllLabel = `View all ${basePageLabel.toLowerCase()}s`;
+const seoTitle = `${pageLabel} - ${site.site.name}`;
+const seoDescription = `Browse Ethan's ${basePageLabel.toLowerCase()} categories.`;
 ---
 
 <SectionListingPage
   categories={categories}
   pageLabel={pageLabel}
+  title={seoTitle}
+  description={seoDescription}
+  ogTitle={pageLabel}
   showCounts
   viewAllHref={viewAllHref}
   viewAllLabel={viewAllLabel}
