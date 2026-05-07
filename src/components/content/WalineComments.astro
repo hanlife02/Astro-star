@@ -4,20 +4,15 @@ interface Props {
   walineServerURL?: string;
 }
 
-const {
-  articleRoutePath,
-  walineServerURL = "",
-} = Astro.props as Props;
+const { articleRoutePath, walineServerURL = "" } = Astro.props as Props;
 ---
 
-{walineServerURL && (
-  <section
-    class="article-comments"
-    aria-label="Comments"
-    data-article-waline
-    data-waline-server-url={walineServerURL}
-    data-waline-path={articleRoutePath}
-  >
-    <div class="article-comments-thread" data-waline-thread></div>
-  </section>
-)}
+<section
+  class="article-comments"
+  aria-label="Comments"
+  data-article-waline
+  data-waline-server-url={walineServerURL || undefined}
+  data-waline-path={articleRoutePath}
+>
+  <div class="article-comments-thread" data-waline-thread></div>
+</section>

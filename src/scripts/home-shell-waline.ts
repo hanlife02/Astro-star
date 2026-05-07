@@ -1,6 +1,7 @@
 import type { WalineAbort, WalineInstance } from "@waline/client";
 
 type HomeShellWalineWindow = Window & {
+  __homeShellWalineConfigPromise?: Promise<string>;
   __homeShellWalineCommentsCleanup?: () => void;
   __homeShellWalineCommentsRunId?: number;
   __homeShellWalinePageviewCleanup?: () => void;
@@ -10,6 +11,26 @@ type HomeShellWalineWindow = Window & {
 const walineClientModule = import("@waline/client");
 const walinePageviewModule = import("@waline/client/pageview");
 const walineCommentModule = import("@waline/client/comment");
+
+function getConfiguredWalineServerURL() {
+  const browserWindow = window as HomeShellWalineWindow;
+
+  if (!browserWindow.__homeShellWalineConfigPromise) {
+    browserWindow.__homeShellWalineConfigPromise = fetch(
+      "/api/waline-config.json",
+      {
+        credentials: "same-origin",
+      },
+    )
+      .then((response) => (response.ok ? response.json() : null))
+      .then((payload: { serverURL?: unknown } | null) =>
+        typeof payload?.serverURL === "string" ? payload.serverURL.trim() : "",
+      )
+      .catch(() => "");
+  }
+
+  return browserWindow.__homeShellWalineConfigPromise;
+}
 
 export async function initHomeShellWalineComments() {
   const browserWindow = window as HomeShellWalineWindow;
@@ -28,11 +49,21 @@ export async function initHomeShellWalineComments() {
   const { init } = await walineClientModule;
   if (browserWindow.__homeShellWalineCommentsRunId !== runId) return;
 
+  const needsConfiguredServerURL = walineRoots.some(
+    (walineRoot) => !walineRoot.getAttribute("data-waline-server-url")?.trim(),
+  );
+  const configuredServerURL = needsConfiguredServerURL
+    ? await getConfiguredWalineServerURL()
+    : "";
+  if (browserWindow.__homeShellWalineCommentsRunId !== runId) return;
+
   const instances: WalineInstance[] = [];
 
   walineRoots.forEach((walineRoot) => {
     const walineThread = walineRoot.querySelector("[data-waline-thread]");
-    const serverURL = walineRoot.getAttribute("data-waline-server-url")?.trim();
+    const serverURL =
+      walineRoot.getAttribute("data-waline-server-url")?.trim() ||
+      configuredServerURL;
     const path = walineRoot.getAttribute("data-waline-path")?.trim();
     const lang = document.documentElement.lang === "zh-CN" ? "zh-CN" : "en";
 
@@ -73,15 +104,23 @@ export async function initHomeShellWalinePageviews() {
 
   const pageviewElement = document.querySelector(".waline-pageview-count");
   const commentElement = document.querySelector(".waline-comment-count");
-  const serverURL =
+  let serverURL =
     pageviewElement?.getAttribute("data-server-url")?.trim() ||
     commentElement?.getAttribute("data-server-url")?.trim();
 
   if (
-    (!(pageviewElement instanceof HTMLElement) &&
-      !(commentElement instanceof HTMLElement)) ||
-    !serverURL
+    !(pageviewElement instanceof HTMLElement) &&
+    !(commentElement instanceof HTMLElement)
   ) {
+    browserWindow.__homeShellWalinePageviewCleanup = undefined;
+    return;
+  }
+
+  if (!serverURL) {
+    serverURL = await getConfiguredWalineServerURL();
+  }
+
+  if (!serverURL) {
     browserWindow.__homeShellWalinePageviewCleanup = undefined;
     return;
   }
