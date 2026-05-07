@@ -5,6 +5,7 @@ import { WALINE_SERVER_URL } from "astro:env/server";
 import { site } from "../../config/site";
 import { resolveContentDates } from "../../utils/content-dates";
 import { resolveContentDescription } from "../../utils/content-description";
+import { resolveContentImage } from "../../utils/content-image";
 import { resolveContentSlug } from "../../utils/content-slug";
 import { resolveContentTitle } from "../../utils/content-title";
 import { getGitTimestamps } from "../../utils/git-timestamps";
@@ -108,6 +109,7 @@ const countWords = (source: string) => {
 
 const articleWordCount = countWords(articleSource);
 const canonicalUrl = new URL(articleRoutePath, site.site.url).toString();
+const imageUrl = new URL(resolveContentImage(articleSource, articleEntry.data.image, site.site.iconSrc), site.site.url).toString();
 const createdAtIso = createdAt?.toISOString() ?? "";
 const updatedAtIso = updatedAt?.toISOString() ?? "";
 const tocHeadings = headings
@@ -135,5 +137,6 @@ const tocHeadings = headings
   tocHeadings={tocHeadings}
   ArticleContent={Content}
   canonicalUrl={canonicalUrl}
+  imageUrl={imageUrl}
   siteName={site.site.name}
 />
