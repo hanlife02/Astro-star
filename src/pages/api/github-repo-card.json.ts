@@ -179,14 +179,16 @@ export const GET: APIRoute = async ({ url }) => {
     return jsonResponse(cachedPayload.payload);
   }
 
-  const htmlPayload = await fetchFromGitHubHtml(owner, repo);
-  const apiPayload =
-    !htmlPayload || !htmlPayload.description || htmlPayload.stars === 0
-      ? await fetchFromGitHubApi(owner, repo)
+  const apiPayload = GITHUB_TOKEN
+    ? await fetchFromGitHubApi(owner, repo)
+    : null;
+  const htmlPayload =
+    !apiPayload || !apiPayload.description || apiPayload.stars === 0
+      ? await fetchFromGitHubHtml(owner, repo)
       : null;
   const payload = {
-    description: htmlPayload?.description || apiPayload?.description || "",
-    stars: htmlPayload?.stars || apiPayload?.stars || 0,
+    description: apiPayload?.description || htmlPayload?.description || "",
+    stars: apiPayload?.stars || htmlPayload?.stars || 0,
     avatarUrl:
       apiPayload?.avatarUrl ||
       htmlPayload?.avatarUrl ||

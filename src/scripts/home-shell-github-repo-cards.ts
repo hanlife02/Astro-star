@@ -11,7 +11,12 @@ type GitHubRepositoryCardCache = {
   cachedAt: number;
 };
 
+type GitHubRepositoryCardsWindow = Window & {
+  __homeShellGitHubRepoCardsCleanup?: () => void;
+};
+
 const GITHUB_REPO_CARD_CACHE_TTL = 1000 * 60 * 60 * 6;
+const GITHUB_REPO_CARD_ROOT_MARGIN = "420px 0px";
 
 function formatStars(stars: number) {
   if (!Number.isFinite(stars)) return "";
@@ -85,7 +90,7 @@ function applyRepositoryData(
   }
 }
 
-async function hydrateRepositoryCard(card: HTMLElement) {
+async function hydrateRepositoryCard(card: HTMLElement, signal?: AbortSignal) {
   if (card.dataset.githubRepoHydrated === "true") return;
 
   const owner = card.dataset.githubOwner;
@@ -105,6 +110,7 @@ async function hydrateRepositoryCard(card: HTMLElement) {
     const params = new URLSearchParams({ owner, repo });
     const response = await fetch(
       `/api/github-repo-card.json?${params.toString()}`,
+      { signal },
     );
 
     if (!response.ok) return;
@@ -129,11 +135,51 @@ async function hydrateRepositoryCard(card: HTMLElement) {
 }
 
 export function initHomeShellGitHubRepoCards() {
+  const browserWindow = window as GitHubRepositoryCardsWindow;
+  browserWindow.__homeShellGitHubRepoCardsCleanup?.();
+
+  const controller = new AbortController();
   const cards = Array.from(
     document.querySelectorAll<HTMLElement>("[data-github-repo-card='true']"),
   );
 
+  if (cards.length === 0) {
+    browserWindow.__homeShellGitHubRepoCardsCleanup = undefined;
+    return;
+  }
+
+  if (!("IntersectionObserver" in window)) {
+    browserWindow.__homeShellGitHubRepoCardsCleanup = () => {
+      controller.abort();
+    };
+    cards.forEach((card) => {
+      void hydrateRepositoryCard(card, controller.signal);
+    });
+    return;
+  }
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting || !(entry.target instanceof HTMLElement)) {
+          return;
+        }
+
+        observer.unobserve(entry.target);
+        void hydrateRepositoryCard(entry.target, controller.signal);
+      });
+    },
+    {
+      rootMargin: GITHUB_REPO_CARD_ROOT_MARGIN,
+    },
+  );
+
   cards.forEach((card) => {
-    void hydrateRepositoryCard(card);
+    observer.observe(card);
   });
+
+  browserWindow.__homeShellGitHubRepoCardsCleanup = () => {
+    observer.disconnect();
+    controller.abort();
+  };
 }
