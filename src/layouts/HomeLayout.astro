@@ -20,6 +20,7 @@ interface Props {
   ogTitle?: string;
   ogType?: "article" | "website";
   twitterCard?: "summary" | "summary_large_image";
+  includeKatexStyles?: boolean;
 }
 
 const {
@@ -34,6 +35,7 @@ const {
   ogTitle,
   ogType,
   twitterCard,
+  includeKatexStyles,
 } = Astro.props as Props;
 const pathname = Astro.url.pathname.replace(/\/+$/, "") || "/";
 const pathSegments = pathname.split("/").filter(Boolean);
@@ -68,6 +70,7 @@ const initialThemeMode = "system";
   ogTitle={ogTitle}
   ogType={ogType}
   twitterCard={twitterCard}
+  includeKatexStyles={includeKatexStyles}
 >
   <slot name="head" slot="head" />
   <HomeShellBackground

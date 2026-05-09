@@ -18,6 +18,7 @@ interface Props {
   ogTitle?: string;
   ogType?: "article" | "website";
   twitterCard?: "summary" | "summary_large_image";
+  includeKatexStyles?: boolean;
   contentClass?: string;
   contentAriaLabel: string;
   tocAriaLabel: string;
@@ -36,6 +37,7 @@ const {
   ogTitle,
   ogType,
   twitterCard,
+  includeKatexStyles,
   contentClass = "content-page",
   contentAriaLabel,
   tocAriaLabel,
@@ -55,6 +57,7 @@ const {
   ogTitle={ogTitle}
   ogType={ogType}
   twitterCard={twitterCard}
+  includeKatexStyles={includeKatexStyles}
   contentClass={contentClass}
   contentAriaLabel={contentAriaLabel}
   tocAriaLabel={tocAriaLabel}

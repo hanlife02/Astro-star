@@ -33,6 +33,7 @@ interface Props {
   canonicalUrl?: string;
   imageUrl?: string;
   siteName?: string;
+  includeKatexStyles?: boolean;
 }
 
 const {
@@ -55,6 +56,7 @@ const {
   canonicalUrl = "",
   imageUrl = "",
   siteName = "",
+  includeKatexStyles = false,
 } = Astro.props as Props;
 
 const pageTitle = siteName ? `${title} - ${siteName}` : title;
@@ -103,6 +105,7 @@ const articleJsonLdText = JSON.stringify(articleJsonLd).replace(
   ogTitle={title}
   ogType="article"
   twitterCard={imageUrl ? "summary_large_image" : "summary"}
+  includeKatexStyles={includeKatexStyles}
   contentClass="content-page content-page--article"
   contentAriaLabel={`${section} article content`}
   tocAriaLabel={`${section} table of contents`}

@@ -1,7 +1,7 @@
 ---
 import { ClientRouter } from "astro:transitions";
 import { site } from "../config/site";
-import "katex/dist/katex.min.css";
+import katexStylesheetUrl from "katex/dist/katex.min.css?url";
 import "../style/base/route-transitions.css";
 
 interface Props {
@@ -12,6 +12,7 @@ interface Props {
   ogTitle?: string;
   ogType?: "article" | "website";
   twitterCard?: "summary" | "summary_large_image";
+  includeKatexStyles?: boolean;
 }
 
 const VALID_THEME_MODES = ["light", "dark", "system"] as const;
@@ -26,6 +27,7 @@ const {
   ogTitle,
   ogType,
   twitterCard,
+  includeKatexStyles = false,
 } = Astro.props as Props;
 const pageDescription = description ?? site.site.description;
 const pathname = Astro.url.pathname.replace(/\/+$/, "") || "/";
@@ -141,32 +143,19 @@ const siteJsonLdText = JSON.stringify(siteJsonLd).replace(/</g, "\\u003c");
     <meta name="twitter:description" content={pageDescription} />
     <meta name="twitter:image" content={socialImageUrl} />
     <ClientRouter fallback="animate" />
+    {includeKatexStyles && <link rel="stylesheet" href={katexStylesheetUrl} />}
     <link
       rel="preload"
-      href="/fonts/Biotif-Regular.ttf"
+      href="/fonts/Biotif-Regular.woff2"
       as="font"
-      type="font/ttf"
+      type="font/woff2"
       crossorigin
     />
     <link
       rel="preload"
-      href="/fonts/Biotif-Medium.ttf"
+      href="/fonts/Biotif-SemiBold.woff2"
       as="font"
-      type="font/ttf"
-      crossorigin
-    />
-    <link
-      rel="preload"
-      href="/fonts/Biotif-SemiBold.ttf"
-      as="font"
-      type="font/ttf"
-      crossorigin
-    />
-    <link
-      rel="preload"
-      href="/fonts/Biotif-Bold.ttf"
-      as="font"
-      type="font/ttf"
+      type="font/woff2"
       crossorigin
     />
     <link rel="sitemap" href="/sitemap-index.xml" />

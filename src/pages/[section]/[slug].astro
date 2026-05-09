@@ -152,7 +152,11 @@ const countWords = (source: string) => {
   return (cjkUnits?.length ?? 0) + (latinWords?.length ?? 0);
 };
 
+const hasMathSyntax = (source: string) =>
+  /\$\$|\\\[|\\\(|\\begin\{|(^|[^$])\$[^$\n]+\$(?!\$)/m.test(source);
+
 const articleWordCount = countWords(articleSource);
+const includeKatexStyles = hasMathSyntax(articleSource);
 const canonicalUrl = new URL(articleRoutePath, site.site.url).toString();
 const imageUrl = new URL(
   resolveContentImage(
@@ -193,4 +197,5 @@ const tocHeadings = headings
   canonicalUrl={canonicalUrl}
   imageUrl={imageUrl}
   siteName={site.site.name}
+  includeKatexStyles={includeKatexStyles}
 />
