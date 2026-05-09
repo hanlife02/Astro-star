@@ -22,7 +22,7 @@
 - GitHub 仓库卡片改为页面存在仓库卡片节点时再拉取数据。
 - 新增 `pnpm audit:assets`，用于报告 `public/figures` 中超过 800KB 的图片和未引用图片。
 - 新增 `pnpm audit:content`，用于检查 blog、note、project 的关键 frontmatter 和日期格式。
-- 补齐当前缺失 `createdAt` 的 5 篇内容，内容审计已经无元数据问题。
+- 创建时间优先使用内容中已有的 frontmatter `createdAt` 覆盖迁移文章不准确的 Git 时间；未写 `createdAt` 的新内容使用 Git 历史时间戳。
 - 文章详情页新增上一篇/下一篇入口，降低读者继续阅读成本。
 - 文章代码块新增复制按钮，并纳入 ClientRouter 页面切换清理。
 - RSS 和 robots 响应补充缓存头。

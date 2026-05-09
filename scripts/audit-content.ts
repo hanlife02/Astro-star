@@ -6,9 +6,9 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const CONTENT_DIR = join(ROOT, "src", "content");
 const CONTENT_SECTIONS = ["blog", "note", "project"] as const;
 const REQUIRED_FIELDS_BY_SECTION = {
-  blog: ["title", "description", "createdAt"],
-  note: ["title", "createdAt"],
-  project: ["routeSlug", "title", "description", "createdAt"],
+  blog: ["title", "description"],
+  note: ["title"],
+  project: ["routeSlug", "title", "description"],
 } as const;
 
 type Section = (typeof CONTENT_SECTIONS)[number];
