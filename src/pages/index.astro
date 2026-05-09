@@ -34,7 +34,9 @@ interface LatestTimelineGroup {
 }
 
 function buildLatestArticles(
-  entries: Awaited<typeof latestBlogEntries> | Awaited<typeof latestNoteEntries>,
+  entries:
+    | Awaited<typeof latestBlogEntries>
+    | Awaited<typeof latestNoteEntries>,
   section: "blog" | "note",
 ) {
   const articles: LatestArticleItem[] = [];
@@ -42,8 +44,10 @@ function buildLatestArticles(
   for (const entry of entries) {
     const title = resolveContentTitle(entry.id, entry.data.title);
     const slug = resolveContentSlug(entry.id, entry.data.routeSlug);
-    const contentPath = entry.filePath ?? `src/content/${section}/${entry.id}.mdx`;
-    const { createdAt: gitCreatedAt, updatedAt: gitUpdatedAt } = getGitTimestamps(contentPath);
+    const contentPath =
+      entry.filePath ?? `src/content/${section}/${entry.id}.mdx`;
+    const { createdAt: gitCreatedAt, updatedAt: gitUpdatedAt } =
+      getGitTimestamps(contentPath);
     const { createdAt, updatedAt } = resolveContentDates(entry.data, {
       createdAt: gitCreatedAt,
       updatedAt: gitUpdatedAt,
@@ -81,10 +85,19 @@ function buildLatestTimelineGroups(latestArticles: LatestArticleItem[]) {
   }, []);
 }
 
-const latestBlogArticles = buildLatestArticles(latestBlogEntries, "blog").slice(0, 4);
-const latestNoteArticles = buildLatestArticles(latestNoteEntries, "note").slice(0, 4);
+const latestBlogArticles = buildLatestArticles(latestBlogEntries, "blog").slice(
+  0,
+  4,
+);
+const latestNoteArticles = buildLatestArticles(latestNoteEntries, "note").slice(
+  0,
+  4,
+);
 const latestAnimationOrderMap = new Map(
-  [...latestBlogArticles, ...latestNoteArticles].map((article, index) => [article.href, index]),
+  [...latestBlogArticles, ...latestNoteArticles].map((article, index) => [
+    article.href,
+    index,
+  ]),
 );
 const latestBlogTimelineGroups = buildLatestTimelineGroups(latestBlogArticles);
 const latestNoteTimelineGroups = buildLatestTimelineGroups(latestNoteArticles);
@@ -93,14 +106,18 @@ const profileLinks = [
   {
     key: "github",
     label: "GitHub",
-    href: githubUsername ? `https://github.com/${encodeURIComponent(githubUsername)}` : "",
+    href: githubUsername
+      ? `https://github.com/${encodeURIComponent(githubUsername)}`
+      : "",
     icon: Github,
     external: true,
   },
   {
     key: "bilibili",
     label: "Bilibili",
-    href: bilibiliId ? `https://space.bilibili.com/${encodeURIComponent(bilibiliId)}` : "",
+    href: bilibiliId
+      ? `https://space.bilibili.com/${encodeURIComponent(bilibiliId)}`
+      : "",
     icon: "",
     external: true,
   },
