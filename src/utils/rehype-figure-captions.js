@@ -54,6 +54,37 @@ function getCaptionSource(node) {
   return "";
 }
 
+function enhanceImageNode(node, { keyboardOpen = false } = {}) {
+  if (!isElement(node, "img")) return;
+
+  node.properties ??= {};
+  node.properties.loading ??= "lazy";
+  node.properties.decoding ??= "async";
+
+  if (!keyboardOpen) return;
+
+  const alt =
+    typeof node.properties.alt === "string" ? node.properties.alt.trim() : "";
+  node.properties.role ??= "button";
+  node.properties.tabIndex ??= 0;
+  node.properties.ariaLabel ??= alt
+    ? `Open image preview: ${alt}`
+    : "Open image preview";
+}
+
+function enhanceImageMediaNode(node) {
+  if (isElement(node, "img")) {
+    enhanceImageNode(node, { keyboardOpen: true });
+    return;
+  }
+
+  if (!isElement(node, "a") || !Array.isArray(node.children)) return;
+
+  node.children.forEach((child) => {
+    enhanceImageNode(child);
+  });
+}
+
 function getGitHubRepository(href) {
   if (typeof href !== "string") {
     return null;
@@ -252,6 +283,8 @@ function createGitHubRepositoryCard(repository) {
 }
 
 function createImageFigure(mediaNode) {
+  enhanceImageMediaNode(mediaNode);
+
   const caption = getCaptionSource(mediaNode);
   const children = [mediaNode];
 

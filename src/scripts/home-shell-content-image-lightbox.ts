@@ -181,6 +181,17 @@ export function initHomeShellContentImageLightbox() {
     "keydown",
     (event) => {
       const lightbox = document.getElementById(LIGHTBOX_ID);
+      const image = getClickedContentImage(event.target);
+
+      if (
+        image &&
+        (event.key === "Enter" || event.key === " ") &&
+        !isLightboxOpen(lightbox instanceof HTMLElement ? lightbox : null)
+      ) {
+        event.preventDefault();
+        openLightbox(image);
+        return;
+      }
 
       if (event.key === "Escape") {
         closeLightbox();
