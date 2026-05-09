@@ -16,7 +16,7 @@ type TransitionEventWithViewTransition = Event & {
   };
 };
 
-const ROUTE_TRANSITION_UNLOCK_TIMEOUT_MS = 2400;
+const ROUTE_TRANSITION_UNLOCK_TIMEOUT_MS = 900;
 const PANEL_TRANSITION_SCROLL_THRESHOLD_PX = 320;
 
 export function initHomeShellRouteTransitionLock() {
@@ -155,6 +155,10 @@ export function initHomeShellRouteTransitionLock() {
     void transitionDone
       ?.finally(unlockRouteTransition)
       .catch(unlockRouteTransition);
+
+    if (!transitionDone) {
+      window.setTimeout(unlockRouteTransition, 0);
+    }
   });
 
   window.addEventListener("pageshow", unlockRouteTransition);

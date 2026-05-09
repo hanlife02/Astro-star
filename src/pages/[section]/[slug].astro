@@ -3,6 +3,7 @@ import { getCollection, render } from "astro:content";
 import ArticleDetailPage from "../../components/content/ArticleDetailPage.astro";
 import { WALINE_SERVER_URL } from "astro:env/server";
 import { site } from "../../config/site";
+import { getAdjacentArticles } from "../../utils/adjacent-articles";
 import { resolveContentDates } from "../../utils/content-dates";
 import { resolveContentDescription } from "../../utils/content-description";
 import { resolveContentImage } from "../../utils/content-image";
@@ -77,38 +78,11 @@ const { createdAt, updatedAt } = resolveContentDates(articleEntry.data, {
   updatedAt: gitUpdatedAt,
 });
 
-const datedEntries = collectionEntries
-  .map((entry) => {
-    const entrySlug = resolveContentSlug(entry.id, entry.data.routeSlug);
-    const entryContentPath =
-      entry.filePath ?? `src/content/${section}/${entry.id}.mdx`;
-    const { createdAt: entryGitCreatedAt, updatedAt: entryGitUpdatedAt } =
-      getGitTimestamps(entryContentPath);
-    const entryDates = resolveContentDates(entry.data, {
-      createdAt: entryGitCreatedAt,
-      updatedAt: entryGitUpdatedAt,
-    });
-    const entryDate = entryDates.createdAt ?? entryDates.updatedAt;
-
-    return {
-      href: `/${section}/${entrySlug}/`,
-      id: entry.id,
-      slug: entrySlug,
-      timestamp: entryDate?.getTime() ?? 0,
-      title: resolveContentTitle(entry.id, entry.data.title),
-    };
-  })
-  .filter((entry) => entry.slug && entry.timestamp > 0)
-  .sort((a, b) => b.timestamp - a.timestamp);
-const currentArticleIndex = datedEntries.findIndex(
-  (entry) => entry.id === articleEntry.id,
+const { previousArticle, nextArticle } = getAdjacentArticles(
+  sectionKey,
+  collectionEntries,
+  articleEntry.id,
 );
-const previousArticle =
-  currentArticleIndex > 0 ? datedEntries[currentArticleIndex - 1] : null;
-const nextArticle =
-  currentArticleIndex >= 0 && currentArticleIndex < datedEntries.length - 1
-    ? datedEntries[currentArticleIndex + 1]
-    : null;
 
 const formatDateTime = (value: Date | null) => {
   if (!value || Number.isNaN(value.getTime())) return "Unknown";
@@ -152,8 +126,15 @@ const countWords = (source: string) => {
   return (cjkUnits?.length ?? 0) + (latinWords?.length ?? 0);
 };
 
-const hasMathSyntax = (source: string) =>
-  /\$\$|\\\[|\\\(|\\begin\{|(^|[^$])\$[^$\n]+\$(?!\$)/m.test(source);
+const stripNonContentBlocks = (source: string) =>
+  source.replace(/^---[\s\S]*?---\s*/u, "").replace(/```[\s\S]*?```/g, "");
+
+const hasMathSyntax = (source: string) => {
+  const contentSource = stripNonContentBlocks(source);
+  return /\$\$|\\\[|\\\(|\\begin\{|(^|[^$])\$[^$\n]+\$(?!\$)/m.test(
+    contentSource,
+  );
+};
 
 const articleWordCount = countWords(articleSource);
 const includeKatexStyles = hasMathSyntax(articleSource);

@@ -1,9 +1,9 @@
 :root {
-  --route-transition-duration: 680ms;
-  --route-transition-exit-duration: 420ms;
-  --route-transition-enter-duration: 680ms;
+  --route-transition-duration: 320ms;
+  --route-transition-exit-duration: 180ms;
+  --route-transition-enter-duration: 280ms;
   --route-transition-enter-delay: 0ms;
-  --route-transition-background-duration: 760ms;
+  --route-transition-background-duration: 320ms;
   --route-transition-ease: cubic-bezier(0.33, 1, 0.68, 1);
 }
 
@@ -52,22 +52,22 @@ html[data-astro-transition="back"]::view-transition-new(*) {
 
 ::view-transition-old(site-header),
 ::view-transition-old(site-footer) {
-  animation: route-chrome-out 380ms var(--route-transition-ease) both;
+  animation: route-chrome-out 180ms var(--route-transition-ease) both;
 }
 
 ::view-transition-new(site-header),
 ::view-transition-new(site-footer) {
-  animation: route-chrome-in 640ms var(--route-transition-ease) both;
+  animation: route-chrome-in 280ms var(--route-transition-ease) both;
 }
 
 ::view-transition-old(primary-panel),
 ::view-transition-old(secondary-panel) {
-  animation: route-panel-out 420ms var(--route-transition-ease) both;
+  animation: route-panel-out 180ms var(--route-transition-ease) both;
 }
 
 ::view-transition-new(primary-panel),
 ::view-transition-new(secondary-panel) {
-  animation: route-panel-in 700ms var(--route-transition-ease) both;
+  animation: route-panel-in 300ms var(--route-transition-ease) both;
 }
 
 html[data-astro-transition-fallback="old"] body {

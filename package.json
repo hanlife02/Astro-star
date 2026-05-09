@@ -4,6 +4,7 @@
   "version": "0.0.1",
   "packageManager": "pnpm@10.30.3",
   "scripts": {
+    "predev": "node --experimental-strip-types scripts/generate-git-timestamps.ts",
     "dev": "astro dev",
     "prebuild": "node --experimental-strip-types scripts/generate-git-timestamps.ts",
     "build": "astro build",

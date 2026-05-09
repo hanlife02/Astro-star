@@ -16,6 +16,8 @@ let walineCommentModule:
   | Promise<typeof import("@waline/client/comment")>
   | undefined;
 
+const WALINE_COMMENTS_ROOT_MARGIN = "360px 0px";
+
 function loadWalineClientModule() {
   walineClientModule ??= import("@waline/client");
   return walineClientModule;
@@ -95,6 +97,43 @@ export async function initHomeShellWalineComments() {
   const walineRoots = Array.from(
     document.querySelectorAll("[data-article-waline]"),
   );
+  if (walineRoots.length === 0) {
+    browserWindow.__homeShellWalineCommentsCleanup = undefined;
+    return;
+  }
+
+  if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+
+        observer.disconnect();
+        void hydrateWalineComments(runId);
+      },
+      {
+        rootMargin: WALINE_COMMENTS_ROOT_MARGIN,
+      },
+    );
+
+    walineRoots.forEach((walineRoot) => {
+      observer.observe(walineRoot);
+    });
+
+    browserWindow.__homeShellWalineCommentsCleanup = () => {
+      observer.disconnect();
+    };
+    return;
+  }
+
+  await hydrateWalineComments(runId);
+}
+
+async function hydrateWalineComments(runId: number) {
+  const browserWindow = window as HomeShellWalineWindow;
+  const walineRoots = Array.from(
+    document.querySelectorAll("[data-article-waline]"),
+  );
+
   if (walineRoots.length === 0) {
     browserWindow.__homeShellWalineCommentsCleanup = undefined;
     return;
