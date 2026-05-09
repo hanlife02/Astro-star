@@ -510,6 +510,7 @@ html.content-image-lightbox-open {
 }
 
 .content-page-body pre {
+  position: relative;
   max-width: 100%;
   padding: var(--content-code-padding-block) var(--content-code-padding-inline);
   overflow-x: auto;
@@ -523,12 +524,41 @@ html.content-image-lightbox-open {
   -webkit-overflow-scrolling: touch;
 }
 
+.content-page-body pre:has(.content-code-copy) {
+  padding-top: calc(var(--content-code-padding-block) + 1.7rem);
+}
+
 .content-page-body pre code {
   display: block;
   min-width: max-content;
   font-family: inherit;
   font-size: inherit;
   line-height: inherit;
+}
+
+.content-code-copy {
+  position: absolute;
+  top: 0.55rem;
+  right: 0.55rem;
+  padding: 0.22rem 0.48rem;
+  border: 1px solid color-mix(in srgb, var(--line) 16%, transparent);
+  border-radius: 999px;
+  color: color-mix(in srgb, var(--line) 72%, transparent);
+  background: color-mix(in srgb, var(--line) 4%, transparent);
+  font: 600 0.68rem/1.2 var(--content-code-font-family);
+  cursor: pointer;
+}
+
+.content-code-copy:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--line) 28%, transparent);
+  outline-offset: 0.12rem;
+}
+
+@media (hover: hover) {
+  .content-code-copy:hover {
+    color: var(--line);
+    background: color-mix(in srgb, var(--line) 7%, transparent);
+  }
 }
 
 .content-page-body :not(pre) > code {
