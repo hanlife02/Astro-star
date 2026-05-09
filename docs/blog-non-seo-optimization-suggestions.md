@@ -11,6 +11,31 @@
 - KaTeX 样式在全站基础布局中引入，构建产物中 KaTeX 字体约 1.1MB，但数学公式主要集中在少数课程文章。
 - `HomeShellScripts.astro` 会统一初始化主题、导航、目录、搜索、评论、GitHub 仓库卡片和图片灯箱等逻辑。
 
+## 实施记录
+
+### 2026-05-10
+
+已落地：
+
+- 站内搜索第三方资源已从 `latest` 改为固定版本，降低上游变更导致的回归风险。
+- 页面切换时补充前端交互模块清理，减少 ClientRouter 导航后的重复监听和残留状态。
+- GitHub 仓库卡片改为页面存在仓库卡片节点时再拉取数据。
+- 新增 `pnpm audit:assets`，用于报告 `public/figures` 中超过 800KB 的图片和未引用图片。
+- 新增 `pnpm audit:content`，用于检查 blog、note、project 的关键 frontmatter 和日期格式。
+- 补齐当前缺失 `createdAt` 的 5 篇内容，内容审计已经无元数据问题。
+- 文章详情页新增上一篇/下一篇入口，降低读者继续阅读成本。
+- 文章代码块新增复制按钮，并纳入 ClientRouter 页面切换清理。
+- RSS 和 robots 响应补充缓存头。
+- 清理 `astro check` 中的 deprecated icon、未使用参数和 inline script 类型提示，当前检查为 0 errors / 0 warnings / 0 hints。
+
+当前仍建议单独处理：
+
+- 图片资源真实压缩、WebP/AVIF 转换和响应式尺寸生成。
+- 字体 WOFF2 化及 preload 精简。
+- KaTeX CSS 按文章内容条件加载。
+- Waline 评论模块按页面条件动态加载。
+- 图片灯箱焦点锁定和关闭后焦点恢复。
+
 ## 优先级建议
 
 ### P0：图片与媒体资源
