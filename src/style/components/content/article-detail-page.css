@@ -206,6 +206,7 @@ html:lang(zh-CN) .content-page--article {
 }
 
 .article-neighbor {
+  grid-column: 1;
   min-width: 0;
   padding: 0.82rem 0;
   display: flex;
@@ -217,6 +218,7 @@ html:lang(zh-CN) .content-page--article {
 }
 
 .article-neighbor--next {
+  grid-column: 2;
   text-align: end;
 }
 
@@ -263,6 +265,7 @@ html:lang(zh-CN) .content-page--article {
   }
 
   .article-neighbor--next {
+    grid-column: 1;
     text-align: start;
   }
 }
