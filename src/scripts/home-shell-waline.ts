@@ -8,12 +8,33 @@ type HomeShellWalineWindow = Window & {
   __homeShellWalinePageviewRunId?: number;
 };
 
-const walineClientModule = import("@waline/client");
-const walinePageviewModule = import("@waline/client/pageview");
-const walineCommentModule = import("@waline/client/comment");
+let walineClientModule: Promise<typeof import("@waline/client")> | undefined;
+let walinePageviewModule:
+  | Promise<typeof import("@waline/client/pageview")>
+  | undefined;
+let walineCommentModule:
+  | Promise<typeof import("@waline/client/comment")>
+  | undefined;
+
+function loadWalineClientModule() {
+  walineClientModule ??= import("@waline/client");
+  return walineClientModule;
+}
+
+function loadWalinePageviewModule() {
+  walinePageviewModule ??= import("@waline/client/pageview");
+  return walinePageviewModule;
+}
+
+function loadWalineCommentModule() {
+  walineCommentModule ??= import("@waline/client/comment");
+  return walineCommentModule;
+}
 
 export function cleanupHomeShellWalineComments() {
   const browserWindow = window as HomeShellWalineWindow;
+  browserWindow.__homeShellWalineCommentsRunId =
+    (browserWindow.__homeShellWalineCommentsRunId ?? 0) + 1;
   const cleanup = browserWindow.__homeShellWalineCommentsCleanup;
   browserWindow.__homeShellWalineCommentsCleanup = undefined;
 
@@ -26,6 +47,22 @@ export function cleanupHomeShellWalineComments() {
       "[Waline] Failed to cleanup previous comments instance.",
       error,
     );
+  }
+}
+
+export function cleanupHomeShellWalinePageviews() {
+  const browserWindow = window as HomeShellWalineWindow;
+  browserWindow.__homeShellWalinePageviewRunId =
+    (browserWindow.__homeShellWalinePageviewRunId ?? 0) + 1;
+  const cleanup = browserWindow.__homeShellWalinePageviewCleanup;
+  browserWindow.__homeShellWalinePageviewCleanup = undefined;
+
+  if (!cleanup) return;
+
+  try {
+    cleanup();
+  } catch (error) {
+    console.warn("[Waline] Failed to cleanup previous pageviews.", error);
   }
 }
 
@@ -63,7 +100,7 @@ export async function initHomeShellWalineComments() {
     return;
   }
 
-  const { init } = await walineClientModule;
+  const { init } = await loadWalineClientModule();
   if (browserWindow.__homeShellWalineCommentsRunId !== runId) return;
 
   const needsConfiguredServerURL = walineRoots.some(
@@ -119,7 +156,7 @@ export async function initHomeShellWalineComments() {
 
 export async function initHomeShellWalinePageviews() {
   const browserWindow = window as HomeShellWalineWindow;
-  browserWindow.__homeShellWalinePageviewCleanup?.();
+  cleanupHomeShellWalinePageviews();
   const runId = (browserWindow.__homeShellWalinePageviewRunId ?? 0) + 1;
   browserWindow.__homeShellWalinePageviewRunId = runId;
 
@@ -147,8 +184,8 @@ export async function initHomeShellWalinePageviews() {
   }
 
   const [{ pageviewCount }, { commentCount }] = await Promise.all([
-    walinePageviewModule,
-    walineCommentModule,
+    loadWalinePageviewModule(),
+    loadWalineCommentModule(),
   ]);
   if (browserWindow.__homeShellWalinePageviewRunId !== runId) return;
 

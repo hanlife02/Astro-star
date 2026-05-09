@@ -1,52 +1,86 @@
 ﻿---
+
 ---
 
 <script>
-      import { initHomeShellTheme } from "../../scripts/home-shell-theme";
-      import { initHomeShellDesktopSignatureNav } from "../../scripts/home-shell-desktop-signature-nav";
-      import { initHomeShellMobileNav } from "../../scripts/home-shell-mobile-nav";
-      import { initHomeShellContentToc } from "../../scripts/home-shell-content-toc";
-      import { initHomeShellMobileToc } from "../../scripts/home-shell-mobile-toc";
-      import { initHomeShellContentPageEntrance } from "../../scripts/home-shell-content-page-entrance";
-      import { initHomeShellRouteTransitionLock } from "../../scripts/home-shell-route-transition-lock";
-      import { initHomeShellSearch } from "../../scripts/home-shell-search";
-      import {
-        cleanupHomeShellWalineComments,
-        initHomeShellWalineComments,
-        initHomeShellWalinePageviews,
-      } from "../../scripts/home-shell-waline";
-      import { initHomeShellGitHubRepoCards } from "../../scripts/home-shell-github-repo-cards";
-      import { initHomeShellContentImageLightbox } from "../../scripts/home-shell-content-image-lightbox";
+  import { initHomeShellTheme } from "../../scripts/home-shell-theme";
+  import { initHomeShellDesktopSignatureNav } from "../../scripts/home-shell-desktop-signature-nav";
+  import { initHomeShellMobileNav } from "../../scripts/home-shell-mobile-nav";
+  import { initHomeShellContentToc } from "../../scripts/home-shell-content-toc";
+  import { initHomeShellMobileToc } from "../../scripts/home-shell-mobile-toc";
+  import { initHomeShellContentPageEntrance } from "../../scripts/home-shell-content-page-entrance";
+  import { initHomeShellRouteTransitionLock } from "../../scripts/home-shell-route-transition-lock";
+  import { initHomeShellSearch } from "../../scripts/home-shell-search";
+  import {
+    cleanupHomeShellWalineComments,
+    cleanupHomeShellWalinePageviews,
+    initHomeShellWalineComments,
+    initHomeShellWalinePageviews,
+  } from "../../scripts/home-shell-waline";
+  import { initHomeShellGitHubRepoCards } from "../../scripts/home-shell-github-repo-cards";
+  import {
+    cleanupHomeShellContentImageLightbox,
+    initHomeShellContentImageLightbox,
+  } from "../../scripts/home-shell-content-image-lightbox";
 
-      type HomeShellWindow = Window & {
-        __homeShellPageLoadBound?: boolean;
-      };
+  const HOME_SHELL_BEFORE_SWAP_CLEANUP_KEYS = [
+    "__homeShellGitHubRepoCardsCleanup",
+    "__homeShellContentTocCleanup",
+    "__homeShellMobileTocCleanup",
+    "__homeShellMobileNavCleanup",
+    "__homeShellDesktopSignatureNavCleanup",
+  ] as const;
 
-      const browserWindow = window as HomeShellWindow;
+  type HomeShellBeforeSwapCleanupKey =
+    (typeof HOME_SHELL_BEFORE_SWAP_CLEANUP_KEYS)[number];
 
-      const initHomeShell = () => {
-        initHomeShellTheme();
-        initHomeShellDesktopSignatureNav();
-        initHomeShellMobileNav();
-        initHomeShellContentToc();
-        initHomeShellMobileToc();
-        initHomeShellContentPageEntrance();
-        initHomeShellRouteTransitionLock();
-        initHomeShellSearch();
-        initHomeShellWalineComments();
-        initHomeShellWalinePageviews();
-        initHomeShellGitHubRepoCards();
-        initHomeShellContentImageLightbox();
-      };
+  type HomeShellWindow = Window & {
+    __homeShellPageLoadBound?: boolean;
+  } & Partial<Record<HomeShellBeforeSwapCleanupKey, () => void>>;
 
-      if (!browserWindow.__homeShellPageLoadBound) {
-        document.addEventListener("astro:page-load", initHomeShell);
-        document.addEventListener(
-          "astro:before-swap",
-          cleanupHomeShellWalineComments,
+  const browserWindow = window as HomeShellWindow;
+
+  const cleanupHomeShellBeforeSwap = () => {
+    cleanupHomeShellWalineComments();
+    cleanupHomeShellWalinePageviews();
+    cleanupHomeShellContentImageLightbox();
+
+    HOME_SHELL_BEFORE_SWAP_CLEANUP_KEYS.forEach((cleanupKey) => {
+      const cleanup = browserWindow[cleanupKey];
+      browserWindow[cleanupKey] = undefined;
+
+      try {
+        cleanup?.();
+      } catch (error) {
+        console.warn(
+          "[HomeShell] Failed to cleanup before route swap.",
+          cleanupKey,
+          error,
         );
-        browserWindow.__homeShellPageLoadBound = true;
       }
+    });
+  };
 
-      initHomeShell();
+  const initHomeShell = () => {
+    initHomeShellTheme();
+    initHomeShellDesktopSignatureNav();
+    initHomeShellMobileNav();
+    initHomeShellContentToc();
+    initHomeShellMobileToc();
+    initHomeShellContentPageEntrance();
+    initHomeShellRouteTransitionLock();
+    initHomeShellSearch();
+    initHomeShellWalineComments();
+    initHomeShellWalinePageviews();
+    initHomeShellGitHubRepoCards();
+    initHomeShellContentImageLightbox();
+  };
+
+  if (!browserWindow.__homeShellPageLoadBound) {
+    document.addEventListener("astro:page-load", initHomeShell);
+    document.addEventListener("astro:before-swap", cleanupHomeShellBeforeSwap);
+    browserWindow.__homeShellPageLoadBound = true;
+  }
+
+  initHomeShell();
 </script>

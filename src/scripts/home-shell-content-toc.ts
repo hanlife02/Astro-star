@@ -6,6 +6,7 @@ type HeadingEntry = {
 const CONTENT_TOC_REFRESH_EVENT = "content-toc:refresh";
 const ACTIVE_HEADING_ROOT_MARGIN = "-18% 0px -55% 0px";
 const PAGE_EDGE_THRESHOLD = 4;
+const REDUCED_MOTION_MEDIA_QUERY = "(prefers-reduced-motion: reduce)";
 
 type HomeShellContentTocWindow = Window & {
   __homeShellContentTocCleanup?: () => void;
@@ -25,6 +26,7 @@ export function initHomeShellContentToc() {
   const contentPage = document.querySelector("[data-home-shell-content-page]");
   const toc = document.querySelector("[data-home-shell-content-toc]");
   const tocList = toc?.querySelector(".content-toc-list");
+  const motionMedia = window.matchMedia(REDUCED_MOTION_MEDIA_QUERY);
 
   if (
     !(contentPage instanceof HTMLElement) ||
@@ -195,7 +197,7 @@ export function initHomeShellContentToc() {
       (event) => {
         event.preventDefault();
         entry.heading.scrollIntoView({
-          behavior: "smooth",
+          behavior: motionMedia.matches ? "auto" : "smooth",
           block: "start",
         });
 
