@@ -27,14 +27,16 @@
 - 文章代码块新增复制按钮，并纳入 ClientRouter 页面切换清理。
 - RSS 和 robots 响应补充缓存头。
 - 清理 `astro check` 中的 deprecated icon、未使用参数和 inline script 类型提示，当前检查为 0 errors / 0 warnings / 0 hints。
+- 字体资源新增 WOFF2 版本，`@font-face` 优先使用 WOFF2，首屏 preload 从 4 个 TTF 缩减为 2 个 WOFF2。
+- KaTeX CSS 改为仅数学内容页加载，普通文章页不再加载 KaTeX 样式与字体资源。
+- Waline CSS 改为跟随评论组件加载，避免挂在文章详情样式入口上。
+- Markdown/MDX 正文图片统一补充 `loading="lazy"` 和 `decoding="async"`，并支持键盘打开灯箱预览。
 
 当前仍建议单独处理：
 
 - 图片资源真实压缩、WebP/AVIF 转换和响应式尺寸生成。
-- 字体 WOFF2 化及 preload 精简。
-- KaTeX CSS 按文章内容条件加载。
 - Waline 评论模块按页面条件动态加载。
-- 图片灯箱焦点锁定和关闭后焦点恢复。
+- 图片灯箱完整焦点锁定细节，例如 Shift+Tab 循环和更复杂的可聚焦元素管理。
 
 ## 优先级建议
 
