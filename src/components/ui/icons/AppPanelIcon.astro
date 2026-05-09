@@ -3,6 +3,7 @@ import Icon from "../Icon.astro";
 import ArcIcon from "./ArcIcon.astro";
 import BilibiliIcon from "./BilibiliIcon.astro";
 import CloudMusicIcon from "./CloudMusicIcon.astro";
+import FigmaIcon from "./FigmaIcon.astro";
 import GithubIcon from "./GithubIcon.astro";
 import Iterm2Icon from "./Iterm2Icon.astro";
 import MailIcon from "./MailIcon.astro";
@@ -18,10 +19,7 @@ import {
   Blocks,
   BookOpen,
   CodeXml,
-  Figma,
   Hammer,
-  Github,
-  Mail,
   PenTool,
   Rocket,
   Send,
@@ -51,27 +49,33 @@ const customIconKey =
         ? "cloud-music"
         : normalizedName === "github" || normalizedName === "gh"
           ? "github"
-          : normalizedName === "iterm2" || normalizedName === "iterm"
-            ? "iterm2"
-            : normalizedName === "mail" || normalizedName === "email" || normalizedName === "@"
-              ? "mail"
-              : normalizedName === "notion"
-                ? "notion"
-                : normalizedName === "raycast"
-                  ? "raycast"
-                  : normalizedName === "rss"
-                    ? "rss"
-                    : normalizedName === "star"
-                      ? "star"
-                      : normalizedName === "tailscale"
-                        ? "tailscale"
-                        : normalizedName === "thunderbird"
-                          ? "thunderbird"
-                          : normalizedName === "vscode" || normalizedName === "vs code" || normalizedName === "vs"
-                            ? "vscode"
-                            : normalizedName === "zotero"
-                              ? "zotero"
-                              : "";
+          : normalizedName === "figma" || normalizedName === "fg"
+            ? "figma"
+            : normalizedName === "iterm2" || normalizedName === "iterm"
+              ? "iterm2"
+              : normalizedName === "mail" ||
+                  normalizedName === "email" ||
+                  normalizedName === "@"
+                ? "mail"
+                : normalizedName === "notion"
+                  ? "notion"
+                  : normalizedName === "raycast"
+                    ? "raycast"
+                    : normalizedName === "rss"
+                      ? "rss"
+                      : normalizedName === "star"
+                        ? "star"
+                        : normalizedName === "tailscale"
+                          ? "tailscale"
+                          : normalizedName === "thunderbird"
+                            ? "thunderbird"
+                            : normalizedName === "vscode" ||
+                                normalizedName === "vs code" ||
+                                normalizedName === "vs"
+                              ? "vscode"
+                              : normalizedName === "zotero"
+                                ? "zotero"
+                                : "";
 
 const lucideIconMap: Record<string, string> = {
   as: Rocket,
@@ -79,8 +83,6 @@ const lucideIconMap: Record<string, string> = {
   blocks: Blocks,
   book: BookOpen,
   code: CodeXml,
-  figma: Figma,
-  fg: Figma,
   note: BookOpen,
   notebook: BookOpen,
   ob: Sparkles,
@@ -97,7 +99,7 @@ const lucideIconMap: Record<string, string> = {
   wrench: Wrench,
 };
 
-const lucideSvg = customIconKey ? "" : lucideIconMap[normalizedName] ?? "";
+const lucideSvg = customIconKey ? "" : (lucideIconMap[normalizedName] ?? "");
 const fallbackText = name.slice(0, 3).toUpperCase();
 ---
 
@@ -110,6 +112,8 @@ const fallbackText = name.slice(0, 3).toUpperCase();
     <CloudMusicIcon />
   ) : customIconKey === "github" ? (
     <GithubIcon />
+  ) : customIconKey === "figma" ? (
+    <FigmaIcon />
   ) : customIconKey === "iterm2" ? (
     <Iterm2Icon />
   ) : customIconKey === "mail" ? (

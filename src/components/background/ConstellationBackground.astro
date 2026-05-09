@@ -12,23 +12,33 @@ const {
   maxDistance = 140,
   speed = 0.22,
 } = Astro.props satisfies Props;
-
-const canvasId = `constellation-${Math.random().toString(36).slice(2)}`;
 ---
 
 <div class="constellation-bg" aria-hidden="true">
-  <canvas id={canvasId} class="constellation-bg__canvas"></canvas>
+  <canvas
+    class="constellation-bg__canvas"
+    data-density={density}
+    data-max-distance={maxDistance}
+    data-speed={speed}></canvas>
 </div>
 
-<script is:inline define:vars={{ canvasId, density, maxDistance, speed }}>
+<script is:inline>
   (() => {
-    const canvas = document.getElementById(canvasId);
+    const canvas =
+      document.currentScript?.previousElementSibling?.querySelector(
+        ".constellation-bg__canvas",
+      );
     if (!(canvas instanceof HTMLCanvasElement)) return;
 
     const ctx = canvas.getContext("2d", { alpha: true });
     if (!ctx) return;
 
-    const prefersReduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const density = Number(canvas.dataset.density ?? "1");
+    const maxDistance = Number(canvas.dataset.maxDistance ?? "140");
+    const speed = Number(canvas.dataset.speed ?? "0.22");
+    const prefersReduced = matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
     const dpr = () => Math.min(2, window.devicePixelRatio || 1);
 
     const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
@@ -61,7 +71,11 @@ const canvasId = `constellation-${Math.random().toString(36).slice(2)}`;
 
     const resolveInk = () => {
       const root = getComputedStyle(document.documentElement);
-      const fg = hexToRgb(root.getPropertyValue("--fg")) ?? { r: 17, g: 17, b: 17 };
+      const fg = hexToRgb(root.getPropertyValue("--fg")) ?? {
+        r: 17,
+        g: 17,
+        b: 17,
+      };
       const muted = hexToRgb(root.getPropertyValue("--muted")) ?? fg;
       return { fg, muted };
     };
@@ -95,7 +109,8 @@ const canvasId = `constellation-${Math.random().toString(36).slice(2)}`;
 
       const baseCount = Math.floor((state.w * state.h) / 16000);
       const count = clamp(Math.floor(baseCount * density), 40, 140);
-      while (state.particles.length < count) state.particles.push(makeParticle());
+      while (state.particles.length < count)
+        state.particles.push(makeParticle());
       while (state.particles.length > count) state.particles.pop();
     };
 
@@ -173,7 +188,7 @@ const canvasId = `constellation-${Math.random().toString(36).slice(2)}`;
       }
 
       for (const p of state.particles) {
-        const tw = (Math.sin((state.t * 0.02) + p.tw) + 1) / 2;
+        const tw = (Math.sin(state.t * 0.02 + p.tw) + 1) / 2;
         const r = p.r * (0.75 + tw * 0.7);
         const alpha = 0.22 + tw * 0.35;
         ctx.fillStyle = `rgba(${fg.r}, ${fg.g}, ${fg.b}, ${alpha})`;

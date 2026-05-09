@@ -84,7 +84,7 @@ function getGitHubRepository(href) {
   };
 }
 
-function createGitHubRepositoryCard(linkNode, repository) {
+function createGitHubRepositoryCard(repository) {
   const avatarSrc = `https://github.com/${repository.owner}.png?size=96`;
 
   return {
@@ -312,9 +312,7 @@ function transformNode(node) {
         );
 
         if (repository) {
-          return [
-            createGitHubRepositoryCard(meaningfulChildren[0], repository),
-          ];
+          return [createGitHubRepositoryCard(repository)];
         }
       }
 

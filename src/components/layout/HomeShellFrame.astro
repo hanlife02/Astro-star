@@ -1,11 +1,11 @@
 ﻿---
 import Icon from "../../components/ui/Icon.astro";
+import GithubIcon from "../../components/ui/icons/GithubIcon.astro";
 import RssIcon from "../../components/ui/icons/RssIcon.astro";
 import FloatingActionButton from "../../components/ui/FloatingActionButton.astro";
 import { isAlgoliaSiteSearchConfigured } from "../../config/search";
 import {
   AlignLeft,
-  Github,
   Monitor,
   Moon,
   Search,
@@ -198,7 +198,7 @@ const {
             aria-label="Visit GitHub profile"
             title="GitHub"
           >
-            <Icon svg={Github} />
+            <GithubIcon />
           </a>
         )
       }
