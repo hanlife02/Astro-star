@@ -67,11 +67,13 @@ const rssItems = [
 ].sort((a, b) => b.pubDate.getTime() - a.pubDate.getTime());
 
 export const GET: APIRoute = async ({ site }) => {
-  return rss({
+  const response = await rss({
     title: `${siteConfig.site.name} Feed`,
     description: siteConfig.profile.bio,
     site: site ?? siteConfig.site.url,
     items: rssItems,
     customData: "<language>zh-cn</language>",
   });
+  response.headers.set("cache-control", "public, max-age=300, s-maxage=3600");
+  return response;
 };
