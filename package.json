@@ -11,6 +11,8 @@
     "check": "astro check",
     "astro": "astro",
     "algolia:sync": "node --experimental-strip-types scripts/sync-algolia-index.ts",
+    "audit:assets": "node --experimental-strip-types scripts/audit-assets.ts",
+    "audit:content": "node --experimental-strip-types scripts/audit-content.ts",
     "migrate:content": "node scripts/migrate-legacy-content.mjs",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
