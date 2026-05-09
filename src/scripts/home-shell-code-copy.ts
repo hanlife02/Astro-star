@@ -2,7 +2,24 @@ type HomeShellCodeCopyWindow = Window & {
   __homeShellCodeCopyCleanup?: () => void;
 };
 
-const COPIED_LABEL_RESET_MS = 1600;
+const COPY_STATE_RESET_MS = 1600;
+
+const CODE_COPY_ICONS = {
+  idle: {
+    label: "Copy code block",
+    icon: `<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>`,
+  },
+  copied: {
+    label: "Code copied",
+    icon: `<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>`,
+  },
+  failed: {
+    label: "Copy failed",
+    icon: `<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>`,
+  },
+} as const;
+
+type CodeCopyState = keyof typeof CODE_COPY_ICONS;
 
 async function copyText(text: string) {
   if (!navigator.clipboard?.writeText) {
@@ -10,6 +27,14 @@ async function copyText(text: string) {
   }
 
   await navigator.clipboard.writeText(text);
+}
+
+function setCopyButtonState(button: HTMLButtonElement, state: CodeCopyState) {
+  const { label, icon } = CODE_COPY_ICONS[state];
+  button.dataset.copyState = state;
+  button.setAttribute("aria-label", label);
+  button.title = label;
+  button.innerHTML = icon;
 }
 
 export function initHomeShellCodeCopy() {
@@ -43,24 +68,23 @@ export function initHomeShellCodeCopy() {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "content-code-copy";
-    button.textContent = "Copy";
-    button.setAttribute("aria-label", "Copy code block");
+    setCopyButtonState(button, "idle");
 
     button.addEventListener(
       "click",
       async () => {
         try {
           await copyText(code.textContent ?? "");
-          button.textContent = "Copied";
+          setCopyButtonState(button, "copied");
           const timer = window.setTimeout(() => {
-            button.textContent = "Copy";
-          }, COPIED_LABEL_RESET_MS);
+            setCopyButtonState(button, "idle");
+          }, COPY_STATE_RESET_MS);
           resetTimers.push(timer);
         } catch {
-          button.textContent = "Failed";
+          setCopyButtonState(button, "failed");
           const timer = window.setTimeout(() => {
-            button.textContent = "Copy";
-          }, COPIED_LABEL_RESET_MS);
+            setCopyButtonState(button, "idle");
+          }, COPY_STATE_RESET_MS);
           resetTimers.push(timer);
         }
       },

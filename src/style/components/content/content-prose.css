@@ -525,7 +525,7 @@ html.content-image-lightbox-open {
 }
 
 .content-page-body pre:has(.content-code-copy) {
-  padding-top: calc(var(--content-code-padding-block) + 1.7rem);
+  padding-top: calc(var(--content-code-padding-block) + 1.45rem);
 }
 
 .content-page-body pre code {
@@ -540,13 +540,23 @@ html.content-image-lightbox-open {
   position: absolute;
   top: 0.55rem;
   right: 0.55rem;
-  padding: 0.22rem 0.48rem;
+  width: 1.7rem;
+  height: 1.7rem;
+  padding: 0;
   border: 1px solid color-mix(in srgb, var(--line) 16%, transparent);
   border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   color: color-mix(in srgb, var(--line) 72%, transparent);
   background: color-mix(in srgb, var(--line) 4%, transparent);
-  font: 600 0.68rem/1.2 var(--content-code-font-family);
   cursor: pointer;
+}
+
+.content-code-copy svg {
+  width: 0.88rem;
+  height: 0.88rem;
+  stroke-width: 2;
 }
 
 .content-code-copy:focus-visible {
