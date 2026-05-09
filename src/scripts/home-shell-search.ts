@@ -16,10 +16,9 @@ type SearchWindow = Window & {
 };
 
 const SITESEARCH_CONTAINER_SELECTOR = "#home-shell-search";
-const SITESEARCH_CSS_URL =
-  "https://unpkg.com/@algolia/sitesearch@latest/dist/search.min.css";
-const SITESEARCH_SCRIPT_URL =
-  "https://unpkg.com/@algolia/sitesearch@latest/dist/search.min.js";
+const SITESEARCH_VERSION = "1.0.14";
+const SITESEARCH_CSS_URL = `https://unpkg.com/@algolia/sitesearch@${SITESEARCH_VERSION}/dist/search.min.css`;
+const SITESEARCH_SCRIPT_URL = `https://unpkg.com/@algolia/sitesearch@${SITESEARCH_VERSION}/dist/search.min.js`;
 const WAIT_FOR_BUTTON_ATTEMPTS = 30;
 
 let pendingOpen: Promise<void> | undefined;

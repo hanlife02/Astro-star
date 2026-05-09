@@ -17,9 +17,9 @@ export const algoliaSiteSearchConfig = {
   apiKey: "70bc81eadf006b0f9b4bb5df1a2de464",
   indexName: "hanlife02_com_0rtmrfnd63_articles",
   attributes: {
-    primaryText: "url",
-    secondaryText: "headline",
-    tertiaryText: undefined,
+    primaryText: "headline",
+    secondaryText: "excerpt",
+    tertiaryText: "url",
     url: "url",
     image: undefined,
   },
