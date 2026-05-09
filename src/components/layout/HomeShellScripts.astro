@@ -10,7 +10,11 @@
       import { initHomeShellContentPageEntrance } from "../../scripts/home-shell-content-page-entrance";
       import { initHomeShellRouteTransitionLock } from "../../scripts/home-shell-route-transition-lock";
       import { initHomeShellSearch } from "../../scripts/home-shell-search";
-      import { initHomeShellWalineComments, initHomeShellWalinePageviews } from "../../scripts/home-shell-waline";
+      import {
+        cleanupHomeShellWalineComments,
+        initHomeShellWalineComments,
+        initHomeShellWalinePageviews,
+      } from "../../scripts/home-shell-waline";
       import { initHomeShellGitHubRepoCards } from "../../scripts/home-shell-github-repo-cards";
       import { initHomeShellContentImageLightbox } from "../../scripts/home-shell-content-image-lightbox";
 
@@ -37,6 +41,10 @@
 
       if (!browserWindow.__homeShellPageLoadBound) {
         document.addEventListener("astro:page-load", initHomeShell);
+        document.addEventListener(
+          "astro:before-swap",
+          cleanupHomeShellWalineComments,
+        );
         browserWindow.__homeShellPageLoadBound = true;
       }
 

@@ -12,6 +12,23 @@ const walineClientModule = import("@waline/client");
 const walinePageviewModule = import("@waline/client/pageview");
 const walineCommentModule = import("@waline/client/comment");
 
+export function cleanupHomeShellWalineComments() {
+  const browserWindow = window as HomeShellWalineWindow;
+  const cleanup = browserWindow.__homeShellWalineCommentsCleanup;
+  browserWindow.__homeShellWalineCommentsCleanup = undefined;
+
+  if (!cleanup) return;
+
+  try {
+    cleanup();
+  } catch (error) {
+    console.warn(
+      "[Waline] Failed to cleanup previous comments instance.",
+      error,
+    );
+  }
+}
+
 function getConfiguredWalineServerURL() {
   const browserWindow = window as HomeShellWalineWindow;
 
@@ -34,7 +51,7 @@ function getConfiguredWalineServerURL() {
 
 export async function initHomeShellWalineComments() {
   const browserWindow = window as HomeShellWalineWindow;
-  browserWindow.__homeShellWalineCommentsCleanup?.();
+  cleanupHomeShellWalineComments();
   const runId = (browserWindow.__homeShellWalineCommentsRunId ?? 0) + 1;
   browserWindow.__homeShellWalineCommentsRunId = runId;
 
@@ -91,7 +108,11 @@ export async function initHomeShellWalineComments() {
 
   browserWindow.__homeShellWalineCommentsCleanup = () => {
     instances.forEach((instance) => {
-      instance.destroy();
+      try {
+        instance.destroy();
+      } catch (error) {
+        console.warn("[Waline] Failed to destroy comments instance.", error);
+      }
     });
   };
 }
