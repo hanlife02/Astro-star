@@ -11,6 +11,7 @@
   import { initHomeShellContentPageEntrance } from "../../scripts/home-shell-content-page-entrance";
   import { initHomeShellRouteTransitionLock } from "../../scripts/home-shell-route-transition-lock";
   import { initHomeShellSearch } from "../../scripts/home-shell-search";
+  import { initHomeShellCodeCopy } from "../../scripts/home-shell-code-copy";
   import {
     cleanupHomeShellWalineComments,
     cleanupHomeShellWalinePageviews,
@@ -29,6 +30,7 @@
     "__homeShellMobileTocCleanup",
     "__homeShellMobileNavCleanup",
     "__homeShellDesktopSignatureNavCleanup",
+    "__homeShellCodeCopyCleanup",
   ] as const;
 
   type HomeShellBeforeSwapCleanupKey =
@@ -70,6 +72,7 @@
     initHomeShellContentPageEntrance();
     initHomeShellRouteTransitionLock();
     initHomeShellSearch();
+    initHomeShellCodeCopy();
     initHomeShellWalineComments();
     initHomeShellWalinePageviews();
     initHomeShellGitHubRepoCards();
