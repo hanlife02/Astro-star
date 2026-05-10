@@ -292,7 +292,7 @@ html:lang(zh-CN) .content-page--article .content-page-body {
   margin-bottom: 1rem;
 }
 
-.content-page--article .content-page-body .content-heading-original-h1 {
+.content-page--article .content-page-body h2 {
   color: var(--line);
   -webkit-text-stroke: 0;
   text-stroke: 0;
