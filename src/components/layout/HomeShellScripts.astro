@@ -13,6 +13,10 @@
   import { initHomeShellSearch } from "../../scripts/home-shell-search";
   import { initHomeShellCodeCopy } from "../../scripts/home-shell-code-copy";
   import {
+    cleanupHomeShellConstellationBackground,
+    initHomeShellConstellationBackground,
+  } from "../../scripts/home-shell-constellation-background";
+  import {
     cleanupHomeShellWalineComments,
     cleanupHomeShellWalinePageviews,
     initHomeShellWalineComments,
@@ -46,6 +50,7 @@
     cleanupHomeShellWalineComments();
     cleanupHomeShellWalinePageviews();
     cleanupHomeShellContentImageLightbox();
+    cleanupHomeShellConstellationBackground();
 
     HOME_SHELL_BEFORE_SWAP_CLEANUP_KEYS.forEach((cleanupKey) => {
       const cleanup = browserWindow[cleanupKey];
@@ -73,6 +78,7 @@
     initHomeShellRouteTransitionLock();
     initHomeShellSearch();
     initHomeShellCodeCopy();
+    initHomeShellConstellationBackground();
     initHomeShellWalineComments();
     initHomeShellWalinePageviews();
     initHomeShellGitHubRepoCards();
