@@ -14,12 +14,6 @@
   );
 }
 
-@supports (view-transition-name: none) {
-  .snow-bg {
-    view-transition-name: page-background;
-  }
-}
-
 .snow-bg::before {
   content: "";
   position: absolute;

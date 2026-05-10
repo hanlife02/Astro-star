@@ -79,8 +79,9 @@ const homeDescription = profile.intro.trim() || profile.bio.trim();
       alt={ownerName}
       width="1080"
       height="1080"
-      loading="eager"
+      loading="lazy"
       decoding="async"
+      fetchpriority="low"
     />
     <h1 class="profile-name home-enter-item">{ownerName}</h1>
     {

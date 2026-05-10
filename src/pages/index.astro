@@ -8,6 +8,8 @@ import { resolveContentSlug } from "../utils/content-slug";
 import { resolveContentTitle } from "../utils/content-title";
 import { getGitTimestamps } from "../utils/git-timestamps";
 
+export const prerender = true;
+
 const { profile } = site;
 const githubUsername = profile.githubUsername.trim();
 const bilibiliId = profile.bilibiliId.trim();

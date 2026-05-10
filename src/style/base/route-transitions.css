@@ -1,18 +1,12 @@
 :root {
-  --route-transition-duration: 320ms;
   --route-transition-exit-duration: 180ms;
   --route-transition-enter-duration: 280ms;
   --route-transition-enter-delay: 0ms;
-  --route-transition-background-duration: 320ms;
   --route-transition-ease: cubic-bezier(0.33, 1, 0.68, 1);
 }
 
-html[data-route-transitioning="true"] body {
-  pointer-events: none;
-}
-
 ::view-transition-group(*) {
-  animation-duration: var(--route-transition-background-duration);
+  animation-duration: var(--route-transition-enter-duration);
   animation-timing-function: var(--route-transition-ease);
 }
 
@@ -38,36 +32,6 @@ html[data-astro-transition="back"]::view-transition-old(*) {
 
 html[data-astro-transition="back"]::view-transition-new(*) {
   animation-name: route-soft-in;
-}
-
-::view-transition-old(page-background) {
-  animation: route-background-out var(--route-transition-background-duration)
-    var(--route-transition-ease) both;
-}
-
-::view-transition-new(page-background) {
-  animation: route-background-in var(--route-transition-background-duration)
-    var(--route-transition-ease) both;
-}
-
-::view-transition-old(site-header),
-::view-transition-old(site-footer) {
-  animation: route-chrome-out 180ms var(--route-transition-ease) both;
-}
-
-::view-transition-new(site-header),
-::view-transition-new(site-footer) {
-  animation: route-chrome-in 280ms var(--route-transition-ease) both;
-}
-
-::view-transition-old(primary-panel),
-::view-transition-old(secondary-panel) {
-  animation: route-panel-out 180ms var(--route-transition-ease) both;
-}
-
-::view-transition-new(primary-panel),
-::view-transition-new(secondary-panel) {
-  animation: route-panel-in 300ms var(--route-transition-ease) both;
 }
 
 html[data-astro-transition-fallback="old"] body {
@@ -103,86 +67,6 @@ html[data-astro-transition-fallback="new"] body {
   28% {
     opacity: 0.18;
     transform: scale(0.996);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes route-background-out {
-  0% {
-    opacity: 1;
-  }
-  58% {
-    opacity: 0.08;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-
-@keyframes route-background-in {
-  0% {
-    opacity: 0.001;
-  }
-  32% {
-    opacity: 0.72;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-@keyframes route-chrome-out {
-  0% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  72% {
-    opacity: 0;
-    transform: scale(0.998);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(0.998);
-  }
-}
-
-@keyframes route-chrome-in {
-  0% {
-    opacity: 0.001;
-    transform: scale(0.996);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes route-panel-out {
-  0% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  72% {
-    opacity: 0;
-    transform: scale(0.996);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(0.996);
-  }
-}
-
-@keyframes route-panel-in {
-  0% {
-    opacity: 0.001;
-    transform: scale(0.992);
-  }
-  26% {
-    opacity: 0.16;
-    transform: scale(0.995);
   }
   100% {
     opacity: 1;

@@ -4,11 +4,12 @@ import WalineComments from "../components/content/WalineComments.astro";
 import FriendLinksPanel from "../components/links/FriendLinksPanel.astro";
 import LostLinksPanel from "../components/links/LostLinksPanel.astro";
 import OwnerInfoCard from "../components/links/OwnerInfoCard.astro";
-import { WALINE_SERVER_URL } from "astro:env/server";
 import { friendLinks, linksPage, lostLinks } from "../config/links";
 import { site } from "../config/site";
 
-const walineServerURL = WALINE_SERVER_URL?.trim() || "";
+export const prerender = true;
+
+const walineServerURL = "";
 
 const tocItems = [
   { href: "#friends", label: linksPage.friendsTitle, depth: 2 as const },
