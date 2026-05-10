@@ -150,9 +150,9 @@ const imageUrl = new URL(
 const createdAtIso = createdAt?.toISOString() ?? "";
 const updatedAtIso = updatedAt?.toISOString() ?? "";
 const tocHeadings = headings
-  .filter((heading) => heading.depth >= 1 && heading.depth <= 3)
+  .filter((heading) => heading.depth >= 2 && heading.depth <= 3)
   .map((heading) => ({
-    depth: (heading.depth === 1 ? 2 : heading.depth) as 2 | 3,
+    depth: heading.depth as 2 | 3,
     slug: heading.slug,
     text: heading.text,
   }));
