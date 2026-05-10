@@ -1,7 +1,6 @@
 ---
 import DocumentPageShell from "../components/layout/DocumentPageShell.astro";
 import WalineComments from "../components/content/WalineComments.astro";
-import AppPanelCard from "../components/ui/AppPanelCard.astro";
 import { aboutPage } from "../config/about";
 import { site } from "../config/site";
 
@@ -10,9 +9,7 @@ export const prerender = true;
 const walineServerURL = "";
 const pageDescription = aboutPage.introParagraphs.join(" ");
 const tocItems = [
-  { href: "#intro", label: aboutPage.introTitle, depth: 2 as const },
-  { href: "#social", label: aboutPage.socialTitle, depth: 2 as const },
-  { href: "#tools", label: aboutPage.toolsTitle, depth: 2 as const },
+  { href: "#intro", label: aboutPage.title, depth: 2 as const },
   { href: "#timeline", label: aboutPage.timelineTitle, depth: 2 as const },
 ];
 ---
@@ -27,16 +24,10 @@ const tocItems = [
   tocTitle="Contents"
   tocItems={tocItems}
 >
-  <h1>{aboutPage.title}</h1>
+  <h1>About</h1>
 
-  <h2 id="intro">{aboutPage.introTitle}</h2>
+  <h2 id="intro">{aboutPage.title}</h2>
   {aboutPage.introParagraphs.map((paragraph) => <p>{paragraph}</p>)}
-
-  <h2 id="social">{aboutPage.socialTitle}</h2>
-  <AppPanelCard items={[...aboutPage.socialItems]} />
-
-  <h2 id="tools">{aboutPage.toolsTitle}</h2>
-  <AppPanelCard items={[...aboutPage.toolItems]} />
 
   <h2>{aboutPage.blogTitle}</h2>
   <h2 id="timeline">{aboutPage.timelineTitle}</h2>
