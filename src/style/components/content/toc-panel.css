@@ -3,9 +3,15 @@
   --content-toc-link-depth-1-size: clamp(15.5px, 14.7px + 0.28vw, 18.2px);
   --content-toc-link-depth-2-size: clamp(14.1px, 13.5px + 0.2vw, 15.8px);
   --content-toc-link-depth-3-size: clamp(13.1px, 12.7px + 0.16vw, 14.6px);
+  --content-toc-link-depth-4-size: clamp(12.5px, 12.2px + 0.12vw, 13.8px);
+  --content-toc-link-depth-5-size: clamp(12px, 11.8px + 0.1vw, 13px);
+  --content-toc-link-depth-6-size: clamp(11.6px, 11.4px + 0.08vw, 12.5px);
   --content-toc-link-depth-1-size-en: clamp(16px, 15.2px + 0.28vw, 18.4px);
   --content-toc-link-depth-2-size-en: clamp(14.4px, 13.9px + 0.2vw, 16px);
   --content-toc-link-depth-3-size-en: clamp(13.5px, 13.1px + 0.16vw, 14.8px);
+  --content-toc-link-depth-4-size-en: clamp(12.9px, 12.6px + 0.12vw, 14px);
+  --content-toc-link-depth-5-size-en: clamp(12.4px, 12.2px + 0.1vw, 13.4px);
+  --content-toc-link-depth-6-size-en: clamp(12px, 11.8px + 0.08vw, 12.9px);
   --content-toc-mobile-title-size: clamp(15px, 14.5px + 0.2vw, 16.5px);
   width: 100%;
   position: relative;
@@ -24,9 +30,15 @@ html:lang(zh-CN) .content-toc {
   --content-toc-link-depth-1-size: clamp(14.4px, 13.9px + 0.18vw, 16px);
   --content-toc-link-depth-2-size: clamp(13.4px, 13px + 0.14vw, 14.8px);
   --content-toc-link-depth-3-size: clamp(12.6px, 12.3px + 0.12vw, 13.8px);
+  --content-toc-link-depth-4-size: clamp(12.1px, 11.9px + 0.1vw, 13px);
+  --content-toc-link-depth-5-size: clamp(11.8px, 11.6px + 0.08vw, 12.5px);
+  --content-toc-link-depth-6-size: clamp(11.5px, 11.3px + 0.06vw, 12px);
   --content-toc-link-depth-1-size-en: clamp(15.9px, 15.4px + 0.18vw, 17.4px);
   --content-toc-link-depth-2-size-en: clamp(14.2px, 13.85px + 0.14vw, 15.2px);
   --content-toc-link-depth-3-size-en: clamp(13.4px, 13.1px + 0.12vw, 14.4px);
+  --content-toc-link-depth-4-size-en: clamp(12.9px, 12.7px + 0.1vw, 13.6px);
+  --content-toc-link-depth-5-size-en: clamp(12.5px, 12.3px + 0.08vw, 13px);
+  --content-toc-link-depth-6-size-en: clamp(12.2px, 12px + 0.06vw, 12.6px);
   --content-toc-mobile-title-size: clamp(14.5px, 14.2px + 0.12vw, 15.4px);
 }
 
@@ -53,9 +65,15 @@ html:lang(zh-CN) .content-toc {
     --content-toc-link-depth-1-size: clamp(15.9px, 14.2px + 0.9vw, 22.4px);
     --content-toc-link-depth-2-size: clamp(15.2px, 13.8px + 0.78vw, 20.8px);
     --content-toc-link-depth-3-size: clamp(14.4px, 13.3px + 0.58vw, 18.4px);
+    --content-toc-link-depth-4-size: clamp(13.4px, 12.8px + 0.38vw, 16.2px);
+    --content-toc-link-depth-5-size: clamp(12.8px, 12.4px + 0.24vw, 14.8px);
+    --content-toc-link-depth-6-size: clamp(12.2px, 12px + 0.18vw, 13.8px);
     --content-toc-link-depth-1-size-en: clamp(16.1px, 14.4px + 0.92vw, 22.6px);
     --content-toc-link-depth-2-size-en: clamp(15.3px, 13.95px + 0.8vw, 21px);
     --content-toc-link-depth-3-size-en: clamp(14.5px, 13.45px + 0.58vw, 18.6px);
+    --content-toc-link-depth-4-size-en: clamp(13.6px, 13px + 0.38vw, 16.4px);
+    --content-toc-link-depth-5-size-en: clamp(13px, 12.6px + 0.24vw, 15px);
+    --content-toc-link-depth-6-size-en: clamp(12.5px, 12.2px + 0.18vw, 14px);
     position: sticky;
     top: var(--layout-sticky-main-top);
     max-height: calc(100dvh - var(--layout-sticky-main-top) - var(--space));
@@ -80,9 +98,15 @@ html:lang(zh-CN) .content-toc {
     --content-toc-link-depth-1-size: clamp(14.5px, 13.7px + 0.34vw, 16.8px);
     --content-toc-link-depth-2-size: clamp(13.5px, 12.9px + 0.28vw, 15.3px);
     --content-toc-link-depth-3-size: clamp(12.7px, 12.25px + 0.22vw, 14.1px);
+    --content-toc-link-depth-4-size: clamp(12.2px, 11.95px + 0.16vw, 13.2px);
+    --content-toc-link-depth-5-size: clamp(11.8px, 11.6px + 0.12vw, 12.6px);
+    --content-toc-link-depth-6-size: clamp(11.5px, 11.35px + 0.08vw, 12.1px);
     --content-toc-link-depth-1-size-en: clamp(16px, 14.5px + 0.82vw, 21.4px);
     --content-toc-link-depth-2-size-en: clamp(15.2px, 14.05px + 0.68vw, 20px);
     --content-toc-link-depth-3-size-en: clamp(14.4px, 13.45px + 0.5vw, 17.8px);
+    --content-toc-link-depth-4-size-en: clamp(13.5px, 12.9px + 0.34vw, 16px);
+    --content-toc-link-depth-5-size-en: clamp(12.9px, 12.5px + 0.2vw, 14.5px);
+    --content-toc-link-depth-6-size-en: clamp(12.4px, 12.15px + 0.14vw, 13.5px);
   }
 }
 
@@ -119,6 +143,18 @@ html[data-js="true"]
 
 .content-toc-item--depth-3 {
   padding-left: 1.6rem;
+}
+
+.content-toc-item--depth-4 {
+  padding-left: 2.4rem;
+}
+
+.content-toc-item--depth-5 {
+  padding-left: 3.2rem;
+}
+
+.content-toc-item--depth-6 {
+  padding-left: 4rem;
 }
 
 html[data-js="true"]
@@ -201,6 +237,39 @@ html[data-js="true"]
 
 .content-toc-link--depth-3:lang(en) {
   font-size: var(--content-toc-link-depth-3-size-en);
+  letter-spacing: 0.01em;
+}
+
+.content-toc-link--depth-4 {
+  font-size: var(--content-toc-link-depth-4-size);
+  font-weight: 400;
+  opacity: inherit;
+}
+
+.content-toc-link--depth-4:lang(en) {
+  font-size: var(--content-toc-link-depth-4-size-en);
+  letter-spacing: 0.01em;
+}
+
+.content-toc-link--depth-5 {
+  font-size: var(--content-toc-link-depth-5-size);
+  font-weight: 400;
+  opacity: inherit;
+}
+
+.content-toc-link--depth-5:lang(en) {
+  font-size: var(--content-toc-link-depth-5-size-en);
+  letter-spacing: 0.01em;
+}
+
+.content-toc-link--depth-6 {
+  font-size: var(--content-toc-link-depth-6-size);
+  font-weight: 400;
+  opacity: inherit;
+}
+
+.content-toc-link--depth-6:lang(en) {
+  font-size: var(--content-toc-link-depth-6-size-en);
   letter-spacing: 0.01em;
 }
 
