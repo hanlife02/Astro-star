@@ -21,6 +21,7 @@ interface CachedPayload {
 }
 
 const CACHE_TTL = 1000 * 60 * 60 * 6;
+const GITHUB_FETCH_TIMEOUT = 8000;
 const repositoryCache = new Map<string, CachedPayload>();
 const REPOSITORY_PART_PATTERN = /^[A-Za-z0-9_.-]+$/;
 
@@ -108,6 +109,22 @@ function extractStars(html: string) {
   return parseStars(sidebarStars?.[1]);
 }
 
+async function fetchWithTimeout(url: string, init?: RequestInit) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => {
+    controller.abort();
+  }, GITHUB_FETCH_TIMEOUT);
+
+  try {
+    return await fetch(url, {
+      ...init,
+      signal: controller.signal,
+    });
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
 async function fetchFromGitHubApi(owner: string, repo: string) {
   const headers: Record<string, string> = {
     accept: "application/vnd.github+json",
@@ -118,42 +135,53 @@ async function fetchFromGitHubApi(owner: string, repo: string) {
     headers.authorization = `Bearer ${GITHUB_TOKEN}`;
   }
 
-  const response = await fetch(
-    `https://api.github.com/repos/${owner}/${repo}`,
-    {
-      headers,
-    },
-  );
+  try {
+    const response = await fetchWithTimeout(
+      `https://api.github.com/repos/${owner}/${repo}`,
+      {
+        headers,
+      },
+    );
 
-  if (!response.ok) return null;
+    if (!response.ok) return null;
 
-  const data = (await response.json()) as GitHubRepositoryApiResponse;
+    const data = (await response.json()) as GitHubRepositoryApiResponse;
 
-  return {
-    description: data.description?.trim() ?? "",
-    stars:
-      typeof data.stargazers_count === "number" ? data.stargazers_count : 0,
-    avatarUrl:
-      data.owner?.avatar_url ?? `https://github.com/${owner}.png?size=96`,
-  };
+    return {
+      description: data.description?.trim() ?? "",
+      stars:
+        typeof data.stargazers_count === "number" ? data.stargazers_count : 0,
+      avatarUrl:
+        data.owner?.avatar_url ?? `https://github.com/${owner}.png?size=96`,
+    };
+  } catch {
+    return null;
+  }
 }
 
 async function fetchFromGitHubHtml(owner: string, repo: string) {
-  const response = await fetch(`https://github.com/${owner}/${repo}`, {
-    headers: {
-      "user-agent": "Astro-star",
-    },
-  });
+  try {
+    const response = await fetchWithTimeout(
+      `https://github.com/${owner}/${repo}`,
+      {
+        headers: {
+          "user-agent": "Astro-star",
+        },
+      },
+    );
 
-  if (!response.ok) return null;
+    if (!response.ok) return null;
 
-  const html = await response.text();
+    const html = await response.text();
 
-  return {
-    description: extractAboutDescription(html),
-    stars: extractStars(html),
-    avatarUrl: `https://github.com/${owner}.png?size=96`,
-  };
+    return {
+      description: extractAboutDescription(html),
+      stars: extractStars(html),
+      avatarUrl: `https://github.com/${owner}.png?size=96`,
+    };
+  } catch {
+    return null;
+  }
 }
 
 export const GET: APIRoute = async ({ url }) => {
@@ -179,16 +207,26 @@ export const GET: APIRoute = async ({ url }) => {
     return jsonResponse(cachedPayload.payload);
   }
 
-  const apiPayload = GITHUB_TOKEN
-    ? await fetchFromGitHubApi(owner, repo)
-    : null;
-  const htmlPayload =
-    !apiPayload || !apiPayload.description || apiPayload.stars === 0
-      ? await fetchFromGitHubHtml(owner, repo)
-      : null;
+  const apiPayload = await fetchFromGitHubApi(owner, repo);
+  const htmlPayload = apiPayload
+    ? null
+    : await fetchFromGitHubHtml(owner, repo);
+
+  if (!apiPayload && !htmlPayload) {
+    return jsonResponse(
+      { error: "GitHub repository metadata unavailable." },
+      {
+        status: 502,
+        headers: {
+          "cache-control": "no-store",
+        },
+      },
+    );
+  }
+
   const payload = {
     description: apiPayload?.description || htmlPayload?.description || "",
-    stars: apiPayload?.stars || htmlPayload?.stars || 0,
+    stars: apiPayload?.stars ?? htmlPayload?.stars ?? 0,
     avatarUrl:
       apiPayload?.avatarUrl ||
       htmlPayload?.avatarUrl ||
