@@ -5,7 +5,6 @@ import sitemap from "@astrojs/sitemap";
 import node from "@astrojs/node";
 import rehypeKatex from "rehype-katex";
 import remarkMath from "remark-math";
-import { rehypeDemoteContentHeadings } from "./src/utils/rehype-demote-content-headings.js";
 import { rehypeFigureCaptions } from "./src/utils/rehype-figure-captions.js";
 import { mdxVoidHtmlPlugin } from "./src/utils/mdx-void-html.js";
 import { site } from "./src/config/site.ts";
@@ -34,11 +33,7 @@ export default defineConfig({
   integrations: [mdx(), sitemap()],
   markdown: {
     remarkPlugins: [remarkMath],
-    rehypePlugins: [
-      rehypeKatex,
-      rehypeFigureCaptions,
-      rehypeDemoteContentHeadings,
-    ],
+    rehypePlugins: [rehypeKatex, rehypeFigureCaptions],
   },
   vite: {
     plugins: [mdxVoidHtmlPlugin()],
