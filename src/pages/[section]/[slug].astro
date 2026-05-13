@@ -8,6 +8,10 @@ import { resolveContentDates } from "../../utils/content-dates";
 import { resolveContentDescription } from "../../utils/content-description";
 import { resolveContentImage } from "../../utils/content-image";
 import { resolveContentSlug } from "../../utils/content-slug";
+import {
+  formatContentDateTime,
+  toContentIsoString,
+} from "../../utils/content-time-zone";
 import { resolveContentTitle } from "../../utils/content-title";
 import { getGitTimestamps } from "../../utils/git-timestamps";
 
@@ -87,15 +91,7 @@ const { previousArticle, nextArticle } = getAdjacentArticles(
 const formatDateTime = (value: Date | null) => {
   if (!value || Number.isNaN(value.getTime())) return "Unknown";
 
-  return new Intl.DateTimeFormat("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: false,
-  }).format(value);
+  return formatContentDateTime(value);
 };
 
 const countWords = (source: string) => {
@@ -147,8 +143,8 @@ const imageUrl = new URL(
   ),
   site.site.url,
 ).toString();
-const createdAtIso = createdAt?.toISOString() ?? "";
-const updatedAtIso = updatedAt?.toISOString() ?? "";
+const createdAtIso = createdAt ? toContentIsoString(createdAt) : "";
+const updatedAtIso = updatedAt ? toContentIsoString(updatedAt) : "";
 const tocHeadings = headings
   .filter((heading) => heading.depth >= 1 && heading.depth <= 5)
   .map((heading) => ({

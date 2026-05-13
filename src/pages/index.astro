@@ -5,6 +5,11 @@ import { Mail } from "lucide-static";
 import { site } from "../config/site";
 import { resolveContentDates } from "../utils/content-dates";
 import { resolveContentSlug } from "../utils/content-slug";
+import {
+  getContentMonthDay,
+  getContentYear,
+  toContentIsoString,
+} from "../utils/content-time-zone";
 import { resolveContentTitle } from "../utils/content-title";
 import { getGitTimestamps } from "../utils/git-timestamps";
 
@@ -61,11 +66,15 @@ function buildLatestArticles(
     articles.push({
       title,
       href: `/${section}/${slug}/`,
-      pubDateIso: pubDate.toISOString(),
-      createdAtIso: createdAt?.toISOString() ?? pubDate.toISOString(),
-      updatedAtIso: updatedAt?.toISOString() ?? pubDate.toISOString(),
-      displayDate: `${pubDate.toISOString().slice(5, 7)}.${pubDate.toISOString().slice(8, 10)}`,
-      year: pubDate.toISOString().slice(0, 4),
+      pubDateIso: toContentIsoString(pubDate),
+      createdAtIso: createdAt
+        ? toContentIsoString(createdAt)
+        : toContentIsoString(pubDate),
+      updatedAtIso: updatedAt
+        ? toContentIsoString(updatedAt)
+        : toContentIsoString(pubDate),
+      displayDate: getContentMonthDay(pubDate),
+      year: getContentYear(pubDate),
       timestamp: pubDate.getTime(),
     });
   }

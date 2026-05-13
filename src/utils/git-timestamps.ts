@@ -1,6 +1,7 @@
 import { execFileSync } from "node:child_process";
 import { statSync } from "node:fs";
 import { resolve } from "node:path";
+import { CONTENT_TIME_ZONE } from "./content-time-zone";
 
 interface GitTimestamps {
   createdAt: Date | null;
@@ -59,9 +60,17 @@ export function getGitTimestamps(contentPath: string): GitTimestamps {
   try {
     const gitLog = execFileSync(
       "git",
-      ["log", "--follow", "--format=%aI", "--", absolutePath],
+      [
+        "log",
+        "--follow",
+        "--date=iso-strict-local",
+        "--format=%ad",
+        "--",
+        absolutePath,
+      ],
       {
         encoding: "utf8",
+        env: { ...process.env, TZ: CONTENT_TIME_ZONE },
       },
     );
     const timestamps = gitLog

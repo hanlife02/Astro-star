@@ -7,6 +7,7 @@ import {
   resolveContentSlug,
   slugifyCategoryLabel,
 } from "../utils/content-slug";
+import { formatContentDate } from "../utils/content-time-zone";
 import { site } from "../config/site";
 import { resolveContentTitle } from "../utils/content-title";
 import { getGitTimestamps } from "../utils/git-timestamps";
@@ -81,14 +82,6 @@ function getEntryPublishedAt(section: SectionKey, entry: ContentEntryMeta) {
   });
 
   return createdAt ?? updatedAt;
-}
-
-function formatContentDate(date: Date) {
-  return new Intl.DateTimeFormat("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "2-digit",
-  }).format(date);
 }
 
 function getEntryArticle(section: SectionKey, entry: ContentEntryMeta) {

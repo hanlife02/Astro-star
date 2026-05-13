@@ -10,6 +10,10 @@ import { algoliaSiteSearchConfig } from "../src/config/search.ts";
 import { site } from "../src/config/site.ts";
 import { resolveContentDates } from "../src/utils/content-dates.ts";
 import { resolveContentSlug } from "../src/utils/content-slug.ts";
+import {
+  CONTENT_TIME_ZONE,
+  toContentIsoString,
+} from "../src/utils/content-time-zone.ts";
 import { resolveContentTitle } from "../src/utils/content-title.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -276,10 +280,18 @@ function getGitTimestamps(filePath: string): TimestampEntry {
   try {
     const gitLog = execFileSync(
       "git",
-      ["log", "--follow", "--format=%aI", "--", filePath],
+      [
+        "log",
+        "--follow",
+        "--date=iso-strict-local",
+        "--format=%ad",
+        "--",
+        filePath,
+      ],
       {
         cwd: ROOT,
         encoding: "utf8",
+        env: { ...process.env, TZ: CONTENT_TIME_ZONE },
       },
     );
     const timestamps = gitLog
@@ -340,7 +352,9 @@ function buildRecords() {
           fitRecordSize({
             objectID: `${section}/${routeSlug}${chunks.length > 1 ? `#${index + 1}` : ""}`,
             content: chunk,
-            createdAt: dates.createdAt?.toISOString(),
+            createdAt: dates.createdAt
+              ? toContentIsoString(dates.createdAt)
+              : undefined,
             description,
             excerpt: excerpt(chunk),
             headline: title,
@@ -349,7 +363,9 @@ function buildRecords() {
             sourcePath,
             title,
             type,
-            updatedAt: dates.updatedAt?.toISOString(),
+            updatedAt: dates.updatedAt
+              ? toContentIsoString(dates.updatedAt)
+              : undefined,
             url,
           }),
         );

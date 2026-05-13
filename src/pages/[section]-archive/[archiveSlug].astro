@@ -7,6 +7,10 @@ import {
   resolveContentSlug,
   slugifyCategoryLabel,
 } from "../../utils/content-slug";
+import {
+  formatContentDate,
+  getContentYear,
+} from "../../utils/content-time-zone";
 import { getGitTimestamps } from "../../utils/git-timestamps";
 import { resolveContentTitle } from "../../utils/content-title";
 import { site } from "../../config/site";
@@ -144,14 +148,10 @@ const articles = collectionEntries
 
     return {
       createdAt: publishedAt,
-      createdLabel: new Intl.DateTimeFormat("en-US", {
-        year: "numeric",
-        month: "short",
-        day: "2-digit",
-      }).format(publishedAt),
+      createdLabel: formatContentDate(publishedAt),
       href: `/${section}/${routeSlug}/`,
       title,
-      year: publishedAt.toISOString().slice(0, 4),
+      year: getContentYear(publishedAt),
     } satisfies ArchiveArticleItem;
   })
   .filter((item): item is ArchiveArticleItem => item !== null)

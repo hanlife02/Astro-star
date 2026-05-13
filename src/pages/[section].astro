@@ -7,6 +7,11 @@ import {
   normalizeArchiveSlug as normalizeContentArchiveSlug,
   resolveContentSlug,
 } from "../utils/content-slug";
+import {
+  formatContentDate,
+  getContentYear,
+  toContentIsoString,
+} from "../utils/content-time-zone";
 import { site } from "../config/site";
 import { resolveContentTitle } from "../utils/content-title";
 import { getGitTimestamps } from "../utils/git-timestamps";
@@ -119,14 +124,6 @@ function getEntryPublishedAt(section: SectionKey, entry: ContentEntryMeta) {
   return createdAt ?? updatedAt;
 }
 
-function formatContentDate(date: Date) {
-  return new Intl.DateTimeFormat("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "2-digit",
-  }).format(date);
-}
-
 function getEntryArticle(section: SectionKey, entry: ContentEntryMeta) {
   const routeSlug = resolveContentSlug(entry.id, entry.data.routeSlug);
   const title = resolveContentTitle(entry.id, entry.data.title);
@@ -158,7 +155,7 @@ function getEntryArchiveArticle(section: SectionKey, entry: ContentEntryMeta) {
     createdLabel: formatContentDate(publishedAt),
     href: `/${section}/${routeSlug}/`,
     title,
-    year: publishedAt.toISOString().slice(0, 4),
+    year: getContentYear(publishedAt),
   } satisfies ArchiveArticleItem;
 }
 
@@ -243,7 +240,7 @@ const pageLabel =
       : basePageLabel;
 const activityEntries = usesArchivePage
   ? archiveArticles.map((article) => ({
-      date: article.createdAt.toISOString(),
+      date: toContentIsoString(article.createdAt),
     }))
   : [];
 const viewAllHref = `/${section}-archive/`;

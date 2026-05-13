@@ -2,6 +2,10 @@ import { execFileSync } from "node:child_process";
 import { readdirSync, statSync, writeFileSync, mkdirSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
+import {
+  CONTENT_TIME_ZONE,
+  toContentIsoString,
+} from "../src/utils/content-time-zone.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const CONTENT_DIR = join(ROOT, "src", "content");
@@ -30,8 +34,19 @@ function getGitTimestamps(filePath: string): TimestampEntry {
   try {
     const gitLog = execFileSync(
       "git",
-      ["log", "--follow", "--format=%aI", "--", filePath],
-      { cwd: ROOT, encoding: "utf8" },
+      [
+        "log",
+        "--follow",
+        "--date=iso-strict-local",
+        "--format=%ad",
+        "--",
+        filePath,
+      ],
+      {
+        cwd: ROOT,
+        encoding: "utf8",
+        env: { ...process.env, TZ: CONTENT_TIME_ZONE },
+      },
     );
     const timestamps = gitLog
       .split(/\r?\n/)
@@ -51,8 +66,8 @@ function getGitTimestamps(filePath: string): TimestampEntry {
   try {
     const stats = statSync(filePath);
     return {
-      createdAt: stats.birthtime.toISOString(),
-      updatedAt: stats.mtime.toISOString(),
+      createdAt: toContentIsoString(stats.birthtime),
+      updatedAt: toContentIsoString(stats.mtime),
     };
   } catch {
     return { createdAt: null, updatedAt: null };
