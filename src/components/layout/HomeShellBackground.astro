@@ -2,23 +2,50 @@
 import HomeBackground from "../background/HomeBackground.astro";
 import ConstellationBackground from "../background/ConstellationBackground.astro";
 import CodeRainBackground from "../background/CodeRainBackground.astro";
+import ContentBackground from "../background/ContentBackground.astro";
 import { site } from "../../config/site";
 
 interface Props {
   pathname: string;
-  background?: "home" | "code-rain" | "constellation";
+  background?: "home" | "code-rain" | "constellation" | "content";
 }
 
 const { pathname, background } = Astro.props as Props;
+const routeRoot = pathname.split("/").filter(Boolean)[0] || "";
+const contentBackgroundRoutes = [
+  "blog",
+  "note",
+  "project",
+  "blog-archive",
+  "note-archive",
+] as const;
+type ContentBackgroundRoute = (typeof contentBackgroundRoutes)[number];
+const contentBackgroundSection = contentBackgroundRoutes.includes(
+  routeRoot as ContentBackgroundRoute,
+)
+  ? (routeRoot as ContentBackgroundRoute)
+  : undefined;
 const resolvedBackground =
-  background ?? (pathname === "/about" ? "code-rain" : pathname === "/links" ? "constellation" : "home");
+  background ??
+  (pathname === "/about"
+    ? "code-rain"
+    : pathname === "/links"
+      ? "constellation"
+      : contentBackgroundSection
+        ? "content"
+        : "home");
 ---
 
 {
   resolvedBackground === "code-rain" ? (
-    <CodeRainBackground slot="background" keywords={site.site.codeRainKeywords} />
+    <CodeRainBackground
+      slot="background"
+      keywords={site.site.codeRainKeywords}
+    />
   ) : resolvedBackground === "constellation" ? (
     <ConstellationBackground slot="background" />
+  ) : resolvedBackground === "content" ? (
+    <ContentBackground slot="background" section={contentBackgroundSection} />
   ) : (
     <HomeBackground slot="background" mode="light" />
   )
