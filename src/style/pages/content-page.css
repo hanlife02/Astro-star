@@ -14,6 +14,53 @@
   align-self: stretch;
 }
 
+.content-back-link {
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 0 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.42rem;
+  color: color-mix(in srgb, var(--line) 72%, transparent);
+  font-size: clamp(0.82rem, 0.78rem + 0.12vw, 0.94rem);
+  line-height: 1.3;
+  text-decoration: none;
+  transform: translateX(0);
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.content-back-link-icon,
+.content-back-link-icon svg {
+  display: inline-flex;
+  width: 1rem;
+  height: 1rem;
+}
+
+.content-back-link-text {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+@media (hover: hover) {
+  .content-back-link:hover {
+    color: var(--line);
+    transform: translateX(-0.12rem);
+  }
+}
+
+.content-back-link:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--line) 30%, transparent);
+  outline-offset: 0.28rem;
+  color: var(--line);
+  transform: translateX(-0.12rem);
+}
+
+:is(.content-page--listing, .content-page--collection) .content-back-link {
+  margin-bottom: 0;
+}
+
 html[data-js="true"]
   .content-page[data-content-entrance-enabled="true"][data-page-entrance="ready"] {
   opacity: 0;

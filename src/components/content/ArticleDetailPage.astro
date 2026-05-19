@@ -94,9 +94,18 @@ const articleJsonLdText = JSON.stringify(articleJsonLd).replace(
   /</g,
   "\\u003c",
 );
+const sectionLabels: Record<string, string> = {
+  blog: "Blog",
+  note: "Note",
+  project: "Project",
+};
+const sectionLabel = sectionLabels[section] ?? section;
 ---
 
 <DocumentPageShell
+  backHref={`/${section}/`}
+  backLabel={`Back to ${sectionLabel}`}
+  backAriaLabel={`Back to ${sectionLabel} list`}
   variant="article"
   title={pageTitle}
   description={description || undefined}

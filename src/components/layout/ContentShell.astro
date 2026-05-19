@@ -1,9 +1,14 @@
 ﻿---
 import FooterMeta from "../common/FooterMeta.astro";
+import Icon from "../ui/Icon.astro";
 import Signature from "../home/signature.astro";
 import HomeLayout from "../../layouts/HomeLayout.astro";
+import { ArrowLeft } from "lucide-static";
 
 interface Props {
+  backAriaLabel?: string;
+  backHref?: string;
+  backLabel?: string;
   mainCol2Fr?: string;
   mainCol3Fr?: string;
   variant?: "default" | "article";
@@ -23,6 +28,9 @@ interface Props {
 }
 
 const {
+  backAriaLabel,
+  backHref,
+  backLabel,
   mainCol2Fr = "4fr",
   mainCol3Fr = "1.5fr",
   variant = "default",
@@ -68,6 +76,20 @@ const {
     data-page-entrance="entered"
   >
     <div class="content-page-body">
+      {
+        backHref && backLabel && (
+          <a
+            class="content-back-link"
+            href={backHref}
+            aria-label={backAriaLabel || backLabel}
+          >
+            <span class="content-back-link-icon" aria-hidden="true">
+              <Icon svg={ArrowLeft} />
+            </span>
+            <span class="content-back-link-text">{backLabel}</span>
+          </a>
+        )
+      }
       <slot />
     </div>
   </section>
