@@ -14,12 +14,24 @@
   font-size: clamp(0.82rem, 0.78rem + 0.12vw, 0.94rem);
   line-height: 1.3;
   text-decoration: none;
+  text-decoration-line: none;
   transform: translateX(0);
   transition:
     border-color 0.2s ease,
     background-color 0.2s ease,
     color 0.2s ease,
     transform 0.2s ease;
+}
+
+.content-page-body a.back-link-card,
+.content-page-body a.back-link-card:hover,
+.content-page-body a.back-link-card:focus-visible,
+.content-page-body a.back-link-card *,
+.content-page-body a.back-link-card:hover *,
+.content-page-body a.back-link-card:focus-visible * {
+  text-decoration: none;
+  text-decoration-line: none;
+  text-decoration-thickness: 0;
 }
 
 .back-link-card-icon,
