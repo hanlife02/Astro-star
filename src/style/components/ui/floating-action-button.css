@@ -29,6 +29,31 @@
   font-weight: 600;
   line-height: 1;
 }
+
+.floating-action-button--article-progress {
+  font-variant-numeric: tabular-nums;
+}
+
+.article-progress-fab-percent {
+  min-width: 2.1rem;
+  font-size: clamp(0.76rem, 0.72rem + 0.14vw, 0.86rem);
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+}
+
+.article-progress-fab-icon,
+.article-progress-fab-icon svg {
+  display: inline-flex;
+  width: 1.12rem;
+  height: 1.12rem;
+}
+
+.article-progress-fab-percent[hidden],
+.article-progress-fab-icon[hidden] {
+  display: none !important;
+}
+
 .floating-action-button[hidden] {
   display: none !important;
 }

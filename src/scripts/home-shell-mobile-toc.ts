@@ -29,9 +29,6 @@ export function initHomeShellMobileToc() {
     if (tocButton instanceof HTMLElement) {
       tocButton.hidden = true;
     }
-    if (fabStack instanceof HTMLElement) {
-      fabStack.hidden = true;
-    }
     return;
   }
 
@@ -50,9 +47,6 @@ export function initHomeShellMobileToc() {
     }
 
     tocButton.hidden = isDesktop;
-    if (fabStack instanceof HTMLElement) {
-      fabStack.hidden = isDesktop;
-    }
     tocButton.setAttribute(
       "aria-expanded",
       String(shell.classList.contains("is-mobile-toc-open")),
