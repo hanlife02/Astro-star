@@ -1,9 +1,8 @@
 ﻿---
 import FooterMeta from "../common/FooterMeta.astro";
-import Icon from "../ui/Icon.astro";
+import BackLinkCard from "../content/BackLinkCard.astro";
 import Signature from "../home/signature.astro";
 import HomeLayout from "../../layouts/HomeLayout.astro";
-import { ArrowLeft } from "lucide-static";
 
 interface Props {
   backAriaLabel?: string;
@@ -78,16 +77,11 @@ const {
     <div class="content-page-body">
       {
         backHref && backLabel && (
-          <a
-            class="content-back-link"
+          <BackLinkCard
             href={backHref}
-            aria-label={backAriaLabel || backLabel}
-          >
-            <span class="content-back-link-icon" aria-hidden="true">
-              <Icon svg={ArrowLeft} />
-            </span>
-            <span class="content-back-link-text">{backLabel}</span>
-          </a>
+            label={backLabel}
+            ariaLabel={backAriaLabel}
+          />
         )
       }
       <slot />

@@ -1,0 +1,20 @@
+---
+import Icon from "../ui/Icon.astro";
+import { ArrowLeft } from "lucide-static";
+import "../../style/components/content/back-link-card.css";
+
+interface Props {
+  ariaLabel?: string;
+  href: string;
+  label: string;
+}
+
+const { ariaLabel, href, label } = Astro.props as Props;
+---
+
+<a class="back-link-card" href={href} aria-label={ariaLabel || label}>
+  <span class="back-link-card-icon" aria-hidden="true">
+    <Icon svg={ArrowLeft} />
+  </span>
+  <span class="back-link-card-text">{label}</span>
+</a>
