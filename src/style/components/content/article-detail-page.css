@@ -114,6 +114,7 @@ html:lang(zh-CN) .content-page--article {
 .article-comments-thread {
   --waline-theme-color: var(--accent);
   --waline-color: var(--line);
+  --waline-black: #111111;
   --waline-light-grey: color-mix(in srgb, var(--line) 56%, transparent);
   --waline-dark-grey: color-mix(in srgb, var(--line) 82%, transparent);
   --waline-bg-color: transparent;
@@ -194,6 +195,10 @@ html:lang(zh-CN) .content-page--article {
   + div
   > p:first-child {
   display: inline;
+}
+
+:root[data-theme="dark"] .article-comments-thread .wl-btn.primary {
+  color: var(--waline-black);
 }
 
 .article-neighbors {
