@@ -9,6 +9,9 @@ interface TocItem {
 }
 
 interface Props {
+  backAriaLabel?: string;
+  backHref?: string;
+  backLabel?: string;
   title?: string;
   description?: string;
   canonicalUrl?: string;
@@ -25,6 +28,9 @@ interface Props {
 }
 
 const {
+  backAriaLabel,
+  backHref,
+  backLabel,
   title,
   description,
   canonicalUrl,
@@ -42,6 +48,9 @@ const {
 ---
 
 <ContentShell
+  backAriaLabel={backAriaLabel}
+  backHref={backHref}
+  backLabel={backLabel}
   variant="default"
   title={title}
   description={description}

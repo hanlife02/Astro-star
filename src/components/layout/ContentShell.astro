@@ -1,9 +1,13 @@
 ﻿---
 import FooterMeta from "../common/FooterMeta.astro";
+import BackLinkCard from "../content/BackLinkCard.astro";
 import Signature from "../home/signature.astro";
 import HomeLayout from "../../layouts/HomeLayout.astro";
 
 interface Props {
+  backAriaLabel?: string;
+  backHref?: string;
+  backLabel?: string;
   mainCol2Fr?: string;
   mainCol3Fr?: string;
   variant?: "default" | "article";
@@ -23,6 +27,9 @@ interface Props {
 }
 
 const {
+  backAriaLabel,
+  backHref,
+  backLabel,
   mainCol2Fr = "4fr",
   mainCol3Fr = "1.5fr",
   variant = "default",
@@ -68,6 +75,15 @@ const {
     data-page-entrance="entered"
   >
     <div class="content-page-body">
+      {
+        backHref && backLabel && (
+          <BackLinkCard
+            href={backHref}
+            label={backLabel}
+            ariaLabel={backAriaLabel}
+          />
+        )
+      }
       <slot />
     </div>
   </section>

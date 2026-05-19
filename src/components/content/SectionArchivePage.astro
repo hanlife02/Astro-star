@@ -22,6 +22,9 @@ interface Props {
   actionHref?: string;
   actionLabel?: string;
   activityEntries?: ArchiveActivityEntry[];
+  backAriaLabel?: string;
+  backHref?: string;
+  backLabel?: string;
   pageLabel: string;
   title?: string;
   description?: string;
@@ -33,6 +36,9 @@ const {
   actionHref,
   actionLabel,
   activityEntries = [],
+  backAriaLabel,
+  backHref,
+  backLabel,
   pageLabel,
   title,
   description,
@@ -42,6 +48,9 @@ const {
 ---
 
 <CollectionPageShell
+  backAriaLabel={backAriaLabel}
+  backHref={backHref}
+  backLabel={backLabel}
   title={title}
   description={description}
   ogTitle={ogTitle}

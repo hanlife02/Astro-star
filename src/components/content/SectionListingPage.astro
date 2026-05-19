@@ -14,6 +14,9 @@ interface SectionCategoryEntry {
 }
 
 interface Props {
+  backAriaLabel?: string;
+  backHref?: string;
+  backLabel?: string;
   categories: SectionCategoryEntry[];
   pageLabel: string;
   title?: string;
@@ -25,6 +28,9 @@ interface Props {
 }
 
 const {
+  backAriaLabel,
+  backHref,
+  backLabel,
   categories,
   pageLabel,
   title,
@@ -40,6 +46,9 @@ const toAnchorId = (value: string) =>
 ---
 
 <CollectionPageShell
+  backAriaLabel={backAriaLabel}
+  backHref={backHref}
+  backLabel={backLabel}
   title={title}
   description={description}
   ogTitle={ogTitle}

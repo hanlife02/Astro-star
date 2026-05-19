@@ -9,6 +9,9 @@ interface TocItem {
 }
 
 interface Props {
+  backAriaLabel?: string;
+  backHref?: string;
+  backLabel?: string;
   variant?: "default" | "article";
   background?: "home" | "code-rain" | "constellation" | "content";
   title?: string;
@@ -28,6 +31,9 @@ interface Props {
 }
 
 const {
+  backAriaLabel,
+  backHref,
+  backLabel,
   variant = "default",
   background,
   title,
@@ -48,6 +54,9 @@ const {
 ---
 
 <ContentShell
+  backAriaLabel={backAriaLabel}
+  backHref={backHref}
+  backLabel={backLabel}
   variant={variant}
   background={background}
   title={title}

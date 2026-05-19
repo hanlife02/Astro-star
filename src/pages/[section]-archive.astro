@@ -164,6 +164,9 @@ const seoDescription = `Browse Ethan's ${basePageLabel.toLowerCase()} categories
 ---
 
 <SectionListingPage
+  backHref={`/${section}/`}
+  backLabel={`Back to ${basePageLabel}`}
+  backAriaLabel={`Back to ${basePageLabel} list`}
   categories={categories}
   pageLabel={pageLabel}
   title={seoTitle}
