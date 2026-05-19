@@ -6,6 +6,7 @@ import FloatingActionButton from "../../components/ui/FloatingActionButton.astro
 import { isAlgoliaSiteSearchConfigured } from "../../config/search";
 import {
   AlignLeft,
+  ArrowUp,
   Monitor,
   Moon,
   Search,
@@ -152,7 +153,6 @@ const {
   <div
     class="floating-action-stack"
     aria-label="Page controls"
-    hidden
     data-home-shell-fab
   >
     <FloatingActionButton
@@ -161,6 +161,18 @@ const {
       iconSvg={TableOfContents}
       className="floating-action-button--toc"
     />
+    <FloatingActionButton
+      id="article-progress-fab"
+      label="Back to top"
+      className="floating-action-button--article-progress"
+    >
+      <span class="article-progress-fab-percent" data-article-progress-percent>
+        0%
+      </span>
+      <span class="article-progress-fab-icon" data-article-progress-icon hidden>
+        <Icon svg={ArrowUp} />
+      </span>
+    </FloatingActionButton>
   </div>
 
   {

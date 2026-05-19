@@ -666,7 +666,7 @@
 }
 
 @media (min-width: 56.25rem) {
-  .floating-action-stack {
+  .floating-action-button--toc {
     display: none;
   }
 }
