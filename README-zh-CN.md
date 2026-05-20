@@ -14,7 +14,6 @@
 
 [English](./README.md) · 简体中文
 
-<a href="https://hanlife02.com">🌐 在线预览</a> &nbsp;·&nbsp;
 <a href="./CONTRIBUTING.md">🤝 贡献指南</a> &nbsp;·&nbsp;
 <a href="https://github.com/hanlife02/Astro-star/issues">🐛 提交 Issue</a> &nbsp;·&nbsp;
 <a href="https://github.com/hanlife02/Astro-star/discussions">💬 参与讨论</a> &nbsp;·&nbsp;
@@ -78,7 +77,7 @@ Astro-star 最初是一个个人博客，现在希望慢慢变成一个可一起
 
 ## 预览
 
-> 🌐 在线预览：**<https://hanlife02.com>**
+> 发布前请替换模板占位内容，并配置你自己的站点域名。
 
 ### 首页（暗色）
 

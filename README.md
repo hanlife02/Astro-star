@@ -14,7 +14,6 @@
 
 English · [简体中文](./README-zh-CN.md)
 
-<a href="https://hanlife02.com">🌐 Live Demo</a> &nbsp;·&nbsp;
 <a href="./CONTRIBUTING.md">🤝 Contributing</a> &nbsp;·&nbsp;
 <a href="https://github.com/hanlife02/Astro-star/issues">🐛 Issues</a> &nbsp;·&nbsp;
 <a href="https://github.com/hanlife02/Astro-star/discussions">💬 Discussions</a> &nbsp;·&nbsp;
@@ -78,7 +77,7 @@ The project focuses on a small but important kind of community: independent webs
 
 ## Preview
 
-> 🌐 Live site: **<https://hanlife02.com>**
+> Replace the starter content and configure your own domain before publishing.
 
 ### Home (Dark)
 

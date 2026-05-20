@@ -1,0 +1,69 @@
+name: Sync main to Ethan
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: sync-main-to-ethan
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    if: github.repository == 'hanlife02/Astro-star'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check deployment PAT
+        env:
+          ACTIONS_PAT: ${{ secrets.ACTIONS_PAT }}
+        run: |
+          if [ -z "$ACTIONS_PAT" ]; then
+            echo "::error::Missing ACTIONS_PAT secret. Use a PAT so pushing Ethan can trigger the deploy workflow."
+            exit 1
+          fi
+
+      - name: Checkout Ethan
+        uses: actions/checkout@v5
+        with:
+          ref: Ethan
+          fetch-depth: 0
+          token: ${{ secrets.ACTIONS_PAT }}
+
+      - name: Merge main into Ethan while preserving personal content
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          set +e
+          git merge --no-commit --no-ff origin/main
+          merge_status=$?
+          set -e
+
+          personal_paths=(
+            docs
+            public/avatar.svg
+            public/figures
+            public/site-icon.svg
+            src/config
+            src/content
+          )
+
+          git checkout HEAD -- "${personal_paths[@]}"
+          git add "${personal_paths[@]}"
+
+          if [ "$merge_status" -ne 0 ]; then
+            remaining_conflicts="$(git diff --name-only --diff-filter=U)"
+            if [ -n "$remaining_conflicts" ]; then
+              echo "::error::Merge conflicts remain outside preserved personal paths."
+              echo "$remaining_conflicts"
+              exit 1
+            fi
+          fi
+
+          if git diff --cached --quiet; then
+            echo "No deploy-relevant template changes to sync."
+            exit 0
+          fi
+
+          git commit -m "chore(deploy): sync main template changes into Ethan"
+          git push origin Ethan
