@@ -48,8 +48,23 @@ jobs:
             src/content
           )
 
-          git checkout HEAD -- "${personal_paths[@]}"
-          git add "${personal_paths[@]}"
+          template_only_paths=(
+            docs/template-customization.md
+            src/content/blog/template/welcome-to-astro-star.mdx
+            src/content/note/thoughts/first-note.mdx
+            src/content/project/astro-star-template.mdx
+          )
+
+          personal_additions="$(mktemp)"
+          git diff --cached --name-only -z --diff-filter=A -- "${personal_paths[@]}" > "$personal_additions"
+          if [ -s "$personal_additions" ]; then
+            xargs -0 git rm -r --ignore-unmatch -- < "$personal_additions"
+          fi
+          rm -f "$personal_additions"
+
+          git restore --source=HEAD --staged --worktree -- "${personal_paths[@]}" 2>/dev/null || true
+          git clean -fd -- "${personal_paths[@]}"
+          git rm -r --ignore-unmatch -- "${template_only_paths[@]}"
 
           if [ "$merge_status" -ne 0 ]; then
             remaining_conflicts="$(git diff --name-only --diff-filter=U)"
