@@ -2,7 +2,7 @@ name: Build & Deploy
 
 on:
   push:
-    branches: [Ethan]
+    branches: [main, Ethan]
 
 concurrency:
   group: deploy-production
@@ -17,6 +17,9 @@ env:
 
 jobs:
   deploy:
+    if: >-
+      (github.repository == 'hanlife02/Astro-star' && github.ref_name == 'Ethan') ||
+      (github.repository != 'hanlife02/Astro-star' && github.ref_name == 'main')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
