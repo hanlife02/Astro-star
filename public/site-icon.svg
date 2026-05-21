@@ -5,20 +5,8 @@
  width="1254.000000pt" height="1254.000000pt" viewBox="0 0 1254.000000 1254.000000"
  preserveAspectRatio="xMidYMid meet">
 
-<style>
-  :root {
-    color: #000000;
-    color-scheme: light dark;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    :root {
-      color: #ffffff;
-    }
-  }
-</style>
 <g transform="translate(0.000000,1254.000000) scale(0.100000,-0.100000)"
-fill="currentColor" stroke="none">
+fill="#000000" stroke="none">
 <path d="M6156 10598 c-14 -35 -36 -90 -49 -123 l-23 -60 -55 -7 c-30 -3 -87
 -6 -126 -7 -55 -1 -73 -4 -73 -15 0 -8 43 -48 95 -90 52 -42 95 -80 95 -84 0
 -4 -14 -56 -30 -117 -33 -123 -35 -135 -19 -135 6 0 57 31 114 69 l102 69 107
