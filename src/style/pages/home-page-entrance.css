@@ -105,6 +105,8 @@ html[data-js="true"]
   }
 }
 
-:root[data-theme="dark"] .home-profile-sequence .profile-avatar[src="/avatar.svg"] {
+:root[data-theme="dark"]
+  .home-profile-sequence
+  .profile-avatar[src="/avatar.svg"] {
   filter: invert(1);
 }
