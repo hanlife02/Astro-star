@@ -53,10 +53,10 @@ export const friendLinks = [
     avatarSrc: "https://astro.build/favicon.svg",
   },
   {
-    name: "Markdown Guide",
-    description: "A practical reference for writing Markdown.",
-    href: "https://www.markdownguide.org/",
-    avatarSrc: "https://www.markdownguide.org/assets/images/favicon.png",
+    name: "Ethan",
+    description: "Don't stay awake for too long",
+    href: "https://hanlife02.com",
+    avatarSrc: "https://hanlife02.com/avatar.svg",
   },
 ] satisfies readonly FriendLinkItem[];
 
