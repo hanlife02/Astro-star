@@ -64,6 +64,10 @@ const socialImageUrl = new URL(
   imageUrl?.trim() || site.site.iconSrc,
   site.site.url,
 ).toString();
+const faviconSrc = site.site.iconSrc.trim() || "/site-icon.svg";
+const faviconHref = faviconSrc.includes("?")
+  ? faviconSrc
+  : `${faviconSrc}?v=20260521`;
 const openGraphType = ogType ?? "website";
 const openGraphLocale = "zh_CN";
 const twitterCardType = twitterCard ?? "summary_large_image";
@@ -159,7 +163,7 @@ const siteJsonLdText = JSON.stringify(siteJsonLd).replace(/</g, "\\u003c");
       crossorigin
     />
     <link rel="sitemap" href="/sitemap-index.xml" />
-    <link rel="icon" type="image/svg+xml" href={site.site.iconSrc} />
+    <link rel="icon" type="image/svg+xml" sizes="any" href={faviconHref} />
     <link
       rel="alternate"
       type="application/rss+xml"
