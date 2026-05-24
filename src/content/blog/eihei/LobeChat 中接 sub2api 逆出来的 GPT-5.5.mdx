@@ -1,0 +1,214 @@
+---
+routeSlug: fix-lobechat-gpt55-instructions-required
+title: LobeChat 中接 sub2api 逆出来的 GPT-5.5
+description: "LobeChat 接入 sub2api 逆出来的 GPT-5.5，遇到上游要求 instructions 的问题，分析链路结构和根因，并通过修改 LobeChat 前端静态产物的 OpenAI-compatible runtime 来修复。"
+type: 折腾🐦
+---
+
+# 前言
+
+最近用 sub2api 逆出来的 gpt-5.5 接入 lobechat，线路是 openai-sub2api-newapi-lobechat，全部透传，然而报错
+
+核心错误是：
+
+```text
+400 Instructions are required
+```
+
+真正的问题在 LobeChat 生成 Responses API 请求体时，没有把系统指令放到上游要求的顶层 `instructions` 字段里。
+
+# 链路结构
+
+实际调用链路是：
+
+```text
+LobeChat
+  -> chat.20050911.com
+  -> api.20050911.com
+  -> cpa.20050911.com
+  -> 最终上游 gpt-5.5
+```
+
+这里的关键不是模型名是否存在，而是协议格式是否一致：
+
+```text
+Chat Completions: /v1/chat/completions
+Responses API:   /v1/responses
+```
+
+`gpt-5.5` 这条上游链路现在可以走 `/v1/responses`，但它要求请求体里有顶层 `instructions`。
+
+# 根因
+
+LobeChat 的 OpenAI-compatible runtime 在 Responses API 模式下，会把聊天消息转换成：
+
+```json
+{
+  "model": "gpt-5.5",
+  "input": [...]
+}
+```
+
+但它没有稳定生成：
+
+```json
+{
+  "instructions": "..."
+}
+```
+
+官方 OpenAI Responses API 不一定要求每次都有 `instructions`，但这条上游 `gpt-5.5` 链路会要求它。因此最终上游返回：
+
+```text
+Instructions are required
+```
+
+换句话说，问题不是 Responses API 不能用，而是 LobeChat 发出的 Responses 请求体缺字段。
+
+# 修复方式
+
+修复点放在 LobeChat 前端静态产物里的 OpenAI-compatible runtime。
+
+需要改的是 `handleResponseAPIMode` 生成请求体的位置。原逻辑会把 `messages` 转为 `input`，然后调用：
+
+```text
+client.responses.create(...)
+```
+
+新增逻辑是：
+
+1. 从 `system` / `developer` messages 中提取文本
+2. 合并为顶层 `instructions`
+3. 如果模型是 `gpt-5.5` 且没有任何系统指令，就补一个中性的 fallback
+
+fallback 内容是：
+
+```text
+You are a helpful assistant.
+```
+
+最终 Responses 请求体变成类似这样：
+
+```json
+{
+  "model": "gpt-5.5",
+  "instructions": "You are a helpful assistant.",
+  "input": [...]
+}
+```
+
+`input`、`tools`、`reasoning`、`stream` 等原有字段保持不变。
+
+# 实际修改位置
+
+LobeChat 容器里有两份同名静态资源：
+
+```text
+/app/dist/desktop/assets/zhipu-6cIHtn7M.js
+/app/public/_spa/assets/zhipu-6cIHtn7M.js
+```
+
+第一次只改了 `dist/desktop`，但公开 URL 仍然返回旧文件。最后定位到真正对外服务的是：
+
+```text
+/app/public/_spa/assets/zhipu-6cIHtn7M.js
+```
+
+因此最终两处都同步成了新版本，并保留了旧文件备份：
+
+```text
+zhipu-6cIHtn7M.js.bak.20260524
+```
+
+公开资源校验结果：
+
+```text
+https://chat.20050911.com/_spa/assets/zhipu-6cIHtn7M.js
+size = 787432
+```
+
+并能搜到补丁标记：
+
+```text
+instructions:y
+You are a helpful assistant.
+let y=Array.isArray(a)?
+```
+
+同时对修改后的 JS 跑了语法检查：
+
+```text
+node --check zhipu-6cIHtn7M.js
+```
+
+通过。
+
+# 验证结果
+
+在 LobeChat 里直接使用：
+
+```text
+provider = openai
+model    = gpt-5.5
+```
+
+连续发送测试消息，回复正常返回 `OK`。
+
+浏览器侧确认这次消息使用的是：
+
+```text
+openai / gpt-5.5
+```
+
+NewAPI 日志里也能看到近期 `gpt-5.5` 请求走的是：
+
+```text
+请求路径: /v1/responses
+请求转换: 原生格式
+流状态: 正常
+```
+
+这说明最终修复不是退回 Chat Completions，而是让 Responses API 请求格式和上游要求匹配。
+
+# 会不会影响原来的 gpt-5.5？
+
+不会影响原来通过 API 透传使用 `gpt-5.5` 的正常路径。
+
+
+修改影响范围集中在 LobeChat 的 Responses API payload 构造逻辑：当 LobeChat 走 Responses API 时，会补齐顶层 `instructions`。
+
+Chat Completions 路径不受这个补丁影响。
+
+# 后续建议
+
+当前修复是对运行中 Docker 容器静态产物的热修复。它能解决线上问题，但不是最稳的长期方案。
+
+后续更好的做法是：
+
+```text
+把这段 instructions 兼容逻辑合入 LobeChat 源码
+或维护一个包含该补丁的自定义 LobeChat 镜像
+```
+
+否则 LobeChat 容器重建、镜像升级或重新部署后，静态产物补丁可能会丢失，需要重新应用。
+
+# 总结
+
+这次问题的本质是：
+
+```text
+Responses API 可以用
+上游也能透传
+但 LobeChat 发出的 Responses 请求体缺少上游要求的 instructions
+```
+
+最终修复是：
+
+```text
+继续使用 gpt-5.5
+继续走 /v1/responses
+取消额外模型映射
+在 LobeChat Responses payload 中补顶层 instructions
+```
+
+这样既保留了 Responses API 的能力，也不会把 Codex 或其他直接使用 `gpt-5.5` 的客户端带偏。
