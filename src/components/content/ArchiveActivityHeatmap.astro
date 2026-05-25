@@ -4,6 +4,9 @@ import "../../style/components/content/archive-activity-heatmap.css";
 
 interface ActivityEntry {
   date: string;
+  dateLabel?: string;
+  href?: string;
+  title?: string;
 }
 
 interface Props {
@@ -12,21 +15,32 @@ interface Props {
 }
 
 interface ActivityBucket {
+  articles: ActivityTooltipArticle[];
   count: number;
   key: string;
   level: number;
   title: string;
+  tooltipText: string;
   x: number;
 }
 
 interface ActivityMonth {
+  articles: ActivityTooltipArticle[];
   count: number;
   index: number;
   key: string;
   label: string;
   level: number;
   title: string;
+  tooltipText: string;
   x: number;
+}
+
+interface ActivityTooltipArticle {
+  dateLabel: string;
+  href?: string;
+  timestamp: number;
+  title: string;
 }
 
 interface ActivityYear {
@@ -85,15 +99,57 @@ function getBucketPosition(monthIndex: number, weekIndex: number) {
   return 4.5 + ((monthIndex + (weekIndex + 1) / 5) / 12) * 91;
 }
 
-const countsByDate = entries.reduce<Map<string, number>>((counts, entry) => {
-  const dateKey = getDateKey(entry.date);
-  if (!dateKey) return counts;
+function appendArticles<TKey>(
+  groups: Map<TKey, ActivityTooltipArticle[]>,
+  key: TKey,
+  articles: ActivityTooltipArticle[],
+) {
+  const currentArticles = groups.get(key);
 
-  counts.set(dateKey, (counts.get(dateKey) ?? 0) + 1);
-  return counts;
-}, new Map());
+  if (currentArticles) {
+    currentArticles.push(...articles);
+    return;
+  }
 
-const activeDateKeys = Array.from(countsByDate.keys()).sort();
+  groups.set(key, [...articles]);
+}
+
+function sortActivityArticles(articles: ActivityTooltipArticle[]) {
+  return articles
+    .slice()
+    .sort(
+      (a, b) =>
+        b.timestamp - a.timestamp || a.title.localeCompare(b.title, "en-US"),
+    );
+}
+
+function getTooltipText(title: string, articles: ActivityTooltipArticle[]) {
+  return [
+    title,
+    ...articles.map((article) => `${article.dateLabel} - ${article.title}`),
+  ].join("\n");
+}
+
+const articlesByDate = entries.reduce<Map<string, ActivityTooltipArticle[]>>(
+  (groups, entry) => {
+    const dateKey = getDateKey(entry.date);
+    if (!dateKey) return groups;
+
+    const timestamp = new Date(entry.date).getTime();
+    const article = {
+      dateLabel: entry.dateLabel?.trim() || dateKey,
+      href: entry.href?.trim() || undefined,
+      timestamp: Number.isNaN(timestamp) ? 0 : timestamp,
+      title: entry.title?.trim() || "Untitled",
+    } satisfies ActivityTooltipArticle;
+
+    appendArticles(groups, dateKey, [article]);
+    return groups;
+  },
+  new Map(),
+);
+
+const activeDateKeys = Array.from(articlesByDate.keys()).sort();
 const lastDate = activeDateKeys.at(-1)
   ? getUtcDate(activeDateKeys.at(-1) as string)
   : null;
@@ -111,11 +167,11 @@ const months: ActivityMonth[] = [];
 const years: ActivityYear[] = [];
 
 if (rangeStart && rangeEnd) {
-  const countsByBucket = new Map<string, number>();
-  const countsByMonth = new Map<number, number>();
+  const articlesByBucket = new Map<string, ActivityTooltipArticle[]>();
+  const articlesByMonth = new Map<number, ActivityTooltipArticle[]>();
 
   for (const key of activeDateKeys) {
-    const count = countsByDate.get(key) ?? 0;
+    const articles = articlesByDate.get(key) ?? [];
     const currentDate = getUtcDate(key);
     const monthIndex = getMonthIndex(currentDate, rangeStart);
 
@@ -123,12 +179,18 @@ if (rangeStart && rangeEnd) {
 
     const weekIndex = getWeekIndex(currentDate);
     const bucketKey = `${monthIndex}-${weekIndex}`;
-    countsByBucket.set(bucketKey, (countsByBucket.get(bucketKey) ?? 0) + count);
-    countsByMonth.set(monthIndex, (countsByMonth.get(monthIndex) ?? 0) + count);
+    appendArticles(articlesByBucket, bucketKey, articles);
+    appendArticles(articlesByMonth, monthIndex, articles);
   }
 
-  const maxCount = Math.max(...countsByBucket.values(), 1);
-  const maxMonthCount = Math.max(...countsByMonth.values(), 1);
+  const maxCount = Math.max(
+    ...Array.from(articlesByBucket.values(), (articles) => articles.length),
+    1,
+  );
+  const maxMonthCount = Math.max(
+    ...Array.from(articlesByMonth.values(), (articles) => articles.length),
+    1,
+  );
   let monthIndex = 0;
 
   for (
@@ -136,34 +198,44 @@ if (rangeStart && rangeEnd) {
     currentMonth.getTime() <= rangeEnd.getTime();
     currentMonth = addMonths(currentMonth, 1)
   ) {
-    const count = countsByMonth.get(monthIndex) ?? 0;
+    const monthArticles = sortActivityArticles(
+      articlesByMonth.get(monthIndex) ?? [],
+    );
+    const count = monthArticles.length;
+    const title = `${count} ${count === 1 ? "post" : "posts"} in ${monthFormatter.format(currentMonth)}`;
 
     months.push({
+      articles: monthArticles,
       count,
       index: monthIndex,
       key: currentMonth.toISOString().slice(0, 7),
       label: `${currentMonth.getUTCMonth() + 1}`,
       level: getLevel(count, maxMonthCount),
-      title: `${count} ${count === 1 ? "post" : "posts"} in ${monthFormatter.format(currentMonth)}`,
+      title,
+      tooltipText: getTooltipText(title, monthArticles),
       x: getMonthPosition(monthIndex),
     });
     monthIndex += 1;
   }
 
-  for (const [key, count] of countsByBucket.entries()) {
+  for (const [key, articles] of articlesByBucket.entries()) {
     const [monthIndexValue, weekIndexValue] = key
       .split("-")
       .map((value) => Number.parseInt(value, 10));
     const currentMonth = addMonths(rangeStart, monthIndexValue);
+    const bucketArticles = sortActivityArticles(articles);
+    const count = bucketArticles.length;
     const title = `${count} ${count === 1 ? "post" : "posts"} in week ${
       weekIndexValue + 1
     } of ${monthFormatter.format(currentMonth)}`;
 
     buckets.push({
+      articles: bucketArticles,
       count,
       key,
       level: getLevel(count, maxCount),
       title,
+      tooltipText: getTooltipText(title, bucketArticles),
       x: getBucketPosition(monthIndexValue, weekIndexValue),
     });
   }
@@ -194,28 +266,100 @@ if (rangeStart && rangeEnd) {
           <div class="archive-activity-timeline-line" aria-hidden="true" />
 
           {buckets.map((bucket) => (
-            <span
-              class="archive-activity-timeline-bar"
+            <div
+              class="archive-activity-timeline-bucket"
               data-level={bucket.level}
+              role="group"
               style={`--archive-activity-x: ${bucket.x.toFixed(3)}%;`}
-              title={bucket.title}
-              aria-label={bucket.title}
-            />
+              aria-label={bucket.tooltipText}
+              tabindex="0"
+            >
+              <span class="archive-activity-timeline-bar" aria-hidden="true" />
+              <div class="archive-activity-tooltip" role="tooltip">
+                <span class="archive-activity-tooltip-title">
+                  {bucket.title}
+                </span>
+                <ol class="archive-activity-tooltip-list">
+                  {bucket.articles.map((article) => (
+                    <li class="archive-activity-tooltip-item">
+                      {article.href ? (
+                        <a
+                          class="archive-activity-tooltip-link"
+                          href={article.href}
+                        >
+                          <span class="archive-activity-tooltip-date">
+                            {article.dateLabel}
+                          </span>
+                          <span class="archive-activity-tooltip-text">
+                            {article.title}
+                          </span>
+                        </a>
+                      ) : (
+                        <span class="archive-activity-tooltip-link">
+                          <span class="archive-activity-tooltip-date">
+                            {article.dateLabel}
+                          </span>
+                          <span class="archive-activity-tooltip-text">
+                            {article.title}
+                          </span>
+                        </span>
+                      )}
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            </div>
           ))}
 
           {months.map((month) => (
             <div
               class="archive-activity-timeline-month"
               data-month-index={month.index}
+              data-level={month.level}
               style={`--archive-activity-x: ${month.x.toFixed(3)}%;`}
+              aria-label={month.count > 0 ? month.tooltipText : undefined}
+              tabindex={month.count > 0 ? "0" : undefined}
             >
               {month.count > 0 && (
-                <span
-                  class="archive-activity-timeline-month-bar"
-                  data-level={month.level}
-                  title={month.title}
-                  aria-label={month.title}
-                />
+                <>
+                  <span
+                    class="archive-activity-timeline-month-bar"
+                    aria-hidden="true"
+                  />
+                  <div class="archive-activity-tooltip" role="tooltip">
+                    <span class="archive-activity-tooltip-title">
+                      {month.title}
+                    </span>
+                    <ol class="archive-activity-tooltip-list">
+                      {month.articles.map((article) => (
+                        <li class="archive-activity-tooltip-item">
+                          {article.href ? (
+                            <a
+                              class="archive-activity-tooltip-link"
+                              href={article.href}
+                            >
+                              <span class="archive-activity-tooltip-date">
+                                {article.dateLabel}
+                              </span>
+                              <span class="archive-activity-tooltip-text">
+                                {article.title}
+                              </span>
+                            </a>
+                          ) : (
+                            <span class="archive-activity-tooltip-link">
+                              <span class="archive-activity-tooltip-date">
+                                {article.dateLabel}
+                              </span>
+                              <span class="archive-activity-tooltip-text">
+                                {article.title}
+                              </span>
+                            </span>
+                          )}
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
+                </>
               )}
               <span class="archive-activity-timeline-dot" aria-hidden="true" />
               <span class="archive-activity-timeline-label">{month.label}</span>

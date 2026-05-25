@@ -335,8 +335,7 @@ html:lang(zh-CN) .content-page--article {
 
 .article-action-license-link {
   color: inherit;
-  text-decoration: underline;
-  text-underline-offset: 0.14em;
+  text-decoration: none;
 }
 
 .article-action-reward-grid {
