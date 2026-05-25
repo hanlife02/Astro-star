@@ -20,6 +20,7 @@ interface ActivityBucket {
   key: string;
   level: number;
   title: string;
+  tooltipAlign: ActivityTooltipAlign;
   tooltipText: string;
   x: number;
 }
@@ -32,9 +33,12 @@ interface ActivityMonth {
   label: string;
   level: number;
   title: string;
+  tooltipAlign: ActivityTooltipAlign;
   tooltipText: string;
   x: number;
 }
+
+type ActivityTooltipAlign = "center" | "end" | "start";
 
 interface ActivityTooltipArticle {
   dateLabel: string;
@@ -130,6 +134,12 @@ function getTooltipText(title: string, articles: ActivityTooltipArticle[]) {
   ].join("\n");
 }
 
+function getTooltipAlign(x: number): ActivityTooltipAlign {
+  if (x <= 18) return "start";
+  if (x >= 82) return "end";
+  return "center";
+}
+
 const articlesByDate = entries.reduce<Map<string, ActivityTooltipArticle[]>>(
   (groups, entry) => {
     const dateKey = getDateKey(entry.date);
@@ -203,6 +213,7 @@ if (rangeStart && rangeEnd) {
     );
     const count = monthArticles.length;
     const title = `${count} ${count === 1 ? "post" : "posts"} in ${monthFormatter.format(currentMonth)}`;
+    const x = getMonthPosition(monthIndex);
 
     months.push({
       articles: monthArticles,
@@ -212,8 +223,9 @@ if (rangeStart && rangeEnd) {
       label: `${currentMonth.getUTCMonth() + 1}`,
       level: getLevel(count, maxMonthCount),
       title,
+      tooltipAlign: getTooltipAlign(x),
       tooltipText: getTooltipText(title, monthArticles),
-      x: getMonthPosition(monthIndex),
+      x,
     });
     monthIndex += 1;
   }
@@ -228,6 +240,7 @@ if (rangeStart && rangeEnd) {
     const title = `${count} ${count === 1 ? "post" : "posts"} in week ${
       weekIndexValue + 1
     } of ${monthFormatter.format(currentMonth)}`;
+    const x = getBucketPosition(monthIndexValue, weekIndexValue);
 
     buckets.push({
       articles: bucketArticles,
@@ -235,8 +248,9 @@ if (rangeStart && rangeEnd) {
       key,
       level: getLevel(count, maxCount),
       title,
+      tooltipAlign: getTooltipAlign(x),
       tooltipText: getTooltipText(title, bucketArticles),
-      x: getBucketPosition(monthIndexValue, weekIndexValue),
+      x,
     });
   }
 
@@ -269,6 +283,7 @@ if (rangeStart && rangeEnd) {
             <div
               class="archive-activity-timeline-bucket"
               data-level={bucket.level}
+              data-tooltip-align={bucket.tooltipAlign}
               role="group"
               style={`--archive-activity-x: ${bucket.x.toFixed(3)}%;`}
               aria-label={bucket.tooltipText}
@@ -316,6 +331,7 @@ if (rangeStart && rangeEnd) {
               class="archive-activity-timeline-month"
               data-month-index={month.index}
               data-level={month.level}
+              data-tooltip-align={month.tooltipAlign}
               style={`--archive-activity-x: ${month.x.toFixed(3)}%;`}
               aria-label={month.count > 0 ? month.tooltipText : undefined}
               tabindex={month.count > 0 ? "0" : undefined}
