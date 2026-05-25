@@ -68,7 +68,7 @@ export function cleanupHomeShellWalinePageviews() {
   }
 }
 
-function getConfiguredWalineServerURL() {
+export function getConfiguredWalineServerURL() {
   const browserWindow = window as HomeShellWalineWindow;
 
   if (!browserWindow.__homeShellWalineConfigPromise) {

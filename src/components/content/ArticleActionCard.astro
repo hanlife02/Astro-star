@@ -1,0 +1,128 @@
+---
+import { CreativeCommons, Heart, HandCoins } from "lucide-static";
+import { site } from "../../config/site";
+import Icon from "../ui/Icon.astro";
+
+interface Props {
+  articleRoutePath: string;
+  walineServerURL?: string;
+}
+
+const { articleRoutePath, walineServerURL = "" } = Astro.props as Props;
+const { license, reward } = site.articleActions;
+const rewardItems = [
+  {
+    key: "wechat",
+    label: "微信",
+    src: reward.wechatQrSrc.trim(),
+  },
+  {
+    key: "alipay",
+    label: "支付宝",
+    src: reward.alipayQrSrc.trim(),
+  },
+].filter((item) => item.src);
+const hasReward = rewardItems.length > 0;
+const likeTitle = "点赞暂不可用";
+---
+
+<section
+  class="article-action-card"
+  aria-label="Article actions"
+  data-article-actions
+  data-waline-path={articleRoutePath}
+  data-waline-server-url={walineServerURL || undefined}
+>
+  <div class="article-action-toolbar" role="group" aria-label="Article actions">
+    <span class="article-action-item">
+      <button
+        class="article-action-icon-button article-action-icon-button--like"
+        type="button"
+        aria-label={likeTitle}
+        aria-pressed="false"
+        title={likeTitle}
+        data-article-like
+        disabled
+      >
+        <span class="article-action-icon article-action-icon--heart">
+          <Icon svg={Heart} />
+        </span>
+        <span class="article-action-like-count" data-article-like-count>—</span>
+      </button>
+    </span>
+
+    <span class="article-action-item article-action-item--license">
+      <a
+        class="article-action-icon-button article-action-icon-link"
+        href={license.href}
+        target="_blank"
+        rel="noreferrer"
+        aria-label={license.name}
+        aria-describedby="article-action-license-popover"
+        title={license.name}
+      >
+        <span class="article-action-icon">
+          <Icon svg={CreativeCommons} />
+        </span>
+      </a>
+
+      <span
+        class="article-action-popover article-action-popover--license"
+        id="article-action-license-popover"
+        role="tooltip"
+      >
+        <span class="article-action-license-text">
+          {license.statement}本文采用{" "}
+          <a
+            class="article-action-license-link"
+            href={license.href}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {license.name}
+          </a>{" "}
+          进行许可。
+        </span>
+      </span>
+    </span>
+
+    {
+      hasReward && (
+        <span class="article-action-item article-action-item--reward">
+          <button
+            class="article-action-icon-button"
+            type="button"
+            aria-label="赞赏"
+            aria-describedby="article-action-reward-popover"
+            title="赞赏"
+          >
+            <span class="article-action-icon">
+              <Icon svg={HandCoins} />
+            </span>
+          </button>
+
+          <span
+            class="article-action-popover article-action-popover--reward"
+            id="article-action-reward-popover"
+            role="tooltip"
+          >
+            <span class="article-action-reward-grid">
+              {rewardItems.map((item) => (
+                <span class="article-action-reward-item">
+                  <img
+                    class="article-action-reward-image"
+                    src={item.src}
+                    alt={`${item.label}赞赏二维码`}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <span class="article-action-reward-label">{item.label}</span>
+                </span>
+              ))}
+            </span>
+          </span>
+        </span>
+      )
+    }
+  </div>
+</section>

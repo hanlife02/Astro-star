@@ -29,6 +29,36 @@ function resolveCodeTimeId(profile = {}) {
   return uidMatch?.[1] ?? "";
 }
 
+const defaultArticleActions = {
+  license: {
+    name: "CC BY-NC-SA 4.0 - 非商业性使用 - 相同方式共享 4.0 国际",
+    href: "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+    statement:
+      "商业转载请联系站长获得授权，非商业转载请注明本文出处及文章链接，您可以自由地在任何媒体以任何形式复制和分发作品，也可以修改和创作，但是分发衍生作品时必须采用相同的许可协议。",
+  },
+  reward: {
+    wechatQrSrc: "",
+    alipayQrSrc: "",
+  },
+};
+
+function normalizeArticleActions(articleActions = {}) {
+  const input = articleActions ?? {};
+
+  return {
+    license: {
+      name: input.license?.name ?? defaultArticleActions.license.name,
+      href: input.license?.href ?? defaultArticleActions.license.href,
+      statement:
+        input.license?.statement ?? defaultArticleActions.license.statement,
+    },
+    reward: {
+      wechatQrSrc: input.reward?.wechatQrSrc ?? "",
+      alipayQrSrc: input.reward?.alipayQrSrc ?? "",
+    },
+  };
+}
+
 function normalizeSplitSiteConfig(input) {
   if (input?.profile && input?.site) {
     return {
@@ -58,6 +88,7 @@ function normalizeSplitSiteConfig(input) {
         codeRainKeywords: input.site.codeRainKeywords ?? [],
         nav: input.site.nav ?? [],
       },
+      articleActions: normalizeArticleActions(input.articleActions),
     };
   }
 
@@ -93,6 +124,7 @@ function normalizeSplitSiteConfig(input) {
       codeRainKeywords: legacyProfile.codeRainKeywords ?? [],
       nav: input?.nav ?? [],
     },
+    articleActions: normalizeArticleActions(input?.articleActions),
   };
 }
 
@@ -138,6 +170,7 @@ const packPaths = [
   "public/avatar.svg",
   "public/site-icon.svg",
   "public/figures",
+  "public/reward",
 ].filter((p) => existsSync(resolve(ROOT, p)));
 
 if (packPaths.length > 0) {
