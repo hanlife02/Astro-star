@@ -21,3 +21,81 @@ Astro-star supports content collections, MDX, RSS, a sitemap, project pages, not
 ## MDX example
 
 You can write Markdown as usual and add MDX components later if your site needs richer article blocks.
+
+## What this template includes
+
+Astro-star starts with the basic pieces a personal site usually needs. The home page introduces the author, the article sections collect long-form writing and notes, the project section gives tools and experiments their own place, and the links page keeps friend links away from the main reading flow.
+
+The goal is not to force every site into the same structure. It gives you a clean starting point with enough routing, metadata, and styling in place that you can replace the placeholder content first, then adjust the design once you know what kind of writing you publish most often.
+
+### Content collections
+
+Blog posts, notes, and projects live in Astro content collections. Each file has frontmatter for the route slug, title, description, creation date, and optional section-specific fields. Keeping this metadata close to the writing makes it easier to move content between machines and review changes in Git.
+
+If you prefer fewer sections, you can keep only blogs and notes. If you write a lot of project retrospectives, you can make projects more prominent. The template is intentionally small enough that those changes are usually just a few config and content edits.
+
+### Site configuration
+
+The site configuration controls names, links, navigation, comments, article actions, and visual defaults. Start by editing `src/config/site.ts`, then update `src/config/about.ts` and the content files. This keeps personal data separate from reusable layout code.
+
+When you maintain a private branch for your own site and keep `main` as a template, this split matters. Template updates can stay mostly generic, while personal content and deployment details remain isolated in your own branch.
+
+## Writing workflow
+
+For a new article, create an MDX file under `src/content/blog`. Choose a stable `routeSlug`, add a short description, and set `createdAt`. Then write in normal Markdown. The build process will collect the entry, generate archive pages, and include it in RSS.
+
+Use headings generously. A good article page benefits from a clear hierarchy because the right-side table of contents can show readers where they are and how much structure remains. Short articles do not need many levels, but longer tutorials and essays should have enough sections to make scanning useful.
+
+### Drafting locally
+
+Run the development server while drafting so you can catch layout problems early. Long titles, wide tables, repeated images, code blocks, and nested lists are the places where a layout usually needs adjustment. Preview those cases before publishing instead of only checking a short paragraph.
+
+If an article includes code, keep the examples compact and make sure the surrounding prose explains why the snippet exists. Code blocks should not push the copy button into the reading flow, and the syntax theme should match the current color mode.
+
+### Reviewing before publish
+
+Before publishing, check the generated article page, the archive page, and the RSS output. The article page tests typography and navigation. The archive page tests dates and categorization. RSS tests the metadata that feed readers will see.
+
+It is also worth opening the page on a narrow viewport. Mobile navigation, floating controls, long headings, and table of contents behavior can reveal problems that desktop screenshots miss.
+
+## Reading experience
+
+The layout is designed around repeated reading rather than a single landing page impression. The page shell keeps navigation predictable, the content column remains narrow enough for long paragraphs, and the side areas hold secondary controls without taking attention away from the article.
+
+Small motion is used to show affordances, not to decorate everything. Links can shift slightly, active items can become more visible, and popovers can appear near the element that triggered them. Large containers should stay stable so the page does not feel like it moves under the reader.
+
+### Table of contents
+
+The table of contents is most useful when the article has several sections. It highlights the active heading, keeps the current entry near the center when possible, and provides a compact progress indicator next to the list. When several headings are visible, the indicator grows to cover that range.
+
+This behavior is easiest to evaluate with a longer article. Scroll through this placeholder slowly and watch how the active item and progress marker react as headings enter and leave the viewport.
+
+### Article actions
+
+Article actions live near the end of the content. They keep lightweight interactions, license information, and optional reward QR codes close to the article without turning the footer into a dense block of controls.
+
+If a site does not use rewards, the reward control can remain disabled or hidden according to configuration. If license text is important for your writing, keep it visible through the action card instead of duplicating it in multiple places.
+
+## Deployment checklist
+
+Before deploying your own site, replace placeholder content, confirm the domain and canonical URL, verify RSS, and check that comments or analytics use your real service endpoints. A working local build is necessary, but it is not the same as a complete deployment review.
+
+Keep a short checklist in your project notes if you publish often. The same details come up repeatedly: missing images, stale dates, broken friend links, old config values, and pages that look correct on desktop but cramped on mobile.
+
+### Template branch
+
+If you use one branch as the reusable template and another branch for a personal deployment, keep private content and generated assets out of the template branch. This makes future template updates easier to merge and keeps the public starter clean.
+
+When you change shared layout code, test it against both generic placeholder content and your real content. Placeholder files catch simple regressions; real content catches the messy edge cases that templates rarely include by default.
+
+### Content branch
+
+The personal content branch can carry private configuration, custom images, reward QR codes, drafts, and site-specific copy. It should still inherit the same component and style improvements from the template branch whenever possible.
+
+That separation lets the template improve over time without forcing every personal content change back into the starter project.
+
+## Next steps
+
+After replacing this article, add a second or third real post so the archive pages and latest article timeline have meaningful data. A site with only one entry is useful for testing layout basics, but multiple entries reveal spacing, grouping, and hover behavior more clearly.
+
+You can then tune the visual style with confidence because the UI will be responding to real content instead of an empty skeleton.

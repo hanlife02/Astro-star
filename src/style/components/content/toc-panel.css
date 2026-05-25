@@ -54,6 +54,55 @@ html:lang(zh-CN) .content-toc {
   padding-left: 0.9rem;
 }
 
+.content-toc-list-frame {
+  position: relative;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.content-toc-progress {
+  --content-toc-progress-top: 0px;
+  --content-toc-progress-height: 0px;
+  --content-toc-progress-opacity: 0;
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  border-radius: 999px;
+  opacity: var(--content-toc-progress-opacity);
+  pointer-events: none;
+  transform: translateX(0);
+  transition:
+    opacity 0.18s ease,
+    transform 0.22s ease;
+}
+
+.content-toc-progress-track,
+.content-toc-progress-thumb {
+  position: absolute;
+  left: 0;
+  width: 2px;
+  border-radius: inherit;
+}
+
+.content-toc-progress-track {
+  top: 0;
+  bottom: 0;
+  background: color-mix(in srgb, var(--line) 10%, transparent);
+}
+
+.content-toc-progress-thumb {
+  top: var(--content-toc-progress-top);
+  height: var(--content-toc-progress-height);
+  min-height: 0.58rem;
+  background: color-mix(in srgb, var(--line) 72%, transparent);
+  transition:
+    top 0.18s cubic-bezier(0.22, 1, 0.36, 1),
+    height 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
 .content-toc a {
   color: color-mix(in srgb, var(--line) 58%, transparent);
   text-decoration: none;
@@ -80,6 +129,13 @@ html:lang(zh-CN) .content-toc {
     min-width: 0;
     overflow-x: hidden;
     overflow-y: hidden;
+  }
+
+  .content-toc-list-frame {
+    flex: 1;
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
   }
 
   .content-toc-list {
@@ -172,8 +228,11 @@ html[data-js="true"]
   .content-toc-empty,
 html[data-js="true"]
   .content-toc[data-content-entrance-enabled="true"][data-toc-entrance="entered"]
+  .content-toc-progress,
+html[data-js="true"]
+  .content-toc[data-content-entrance-enabled="true"][data-toc-entrance="entered"]
   .content-toc-scrollbar {
-  opacity: 1;
+  opacity: var(--content-toc-progress-opacity, 1);
   transform: translateX(0);
   transition:
     opacity 0.36s ease,
@@ -314,6 +373,9 @@ html[data-js="true"]
     .content-toc-empty,
   html[data-js="true"]
     .content-toc[data-content-entrance-enabled="true"][data-toc-entrance="ready"]
+    .content-toc-progress,
+  html[data-js="true"]
+    .content-toc[data-content-entrance-enabled="true"][data-toc-entrance="ready"]
     .content-toc-item,
   html[data-js="true"]
     .content-toc[data-content-entrance-enabled="true"][data-toc-entrance="entered"]
@@ -321,6 +383,9 @@ html[data-js="true"]
   html[data-js="true"]
     .content-toc[data-content-entrance-enabled="true"][data-toc-entrance="entered"]
     .content-toc-empty,
+  html[data-js="true"]
+    .content-toc[data-content-entrance-enabled="true"][data-toc-entrance="entered"]
+    .content-toc-progress,
   html[data-js="true"]
     .content-toc[data-content-entrance-enabled="true"][data-toc-entrance="entered"]
     .content-toc-item {
@@ -372,6 +437,14 @@ html[data-js="true"]
     border-bottom: 1px solid color-mix(in srgb, var(--line) 16%, transparent);
     font-size: var(--content-toc-mobile-title-size);
     line-height: 1.2;
+  }
+
+  .home-shell--has-mobile-toc.is-mobile-toc-open
+    .latest-area
+    > .content-toc
+    .content-toc-list-frame {
+    flex: 1;
+    min-height: 0;
   }
 
   .home-shell--has-mobile-toc.is-mobile-toc-open
