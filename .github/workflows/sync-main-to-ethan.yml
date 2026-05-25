@@ -43,6 +43,7 @@ jobs:
             docs
             public/avatar.svg
             public/figures
+            public/reward
             public/site-icon.svg
             src/config
             src/content
