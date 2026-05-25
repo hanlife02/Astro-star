@@ -272,10 +272,6 @@
 }
 
 @media (hover: hover) {
-  .latest-articles-panel:hover {
-    transform: translateY(-0.08rem);
-  }
-
   .latest-articles-item:hover .latest-articles-item-content {
     transform: translateX(0.14rem);
   }
