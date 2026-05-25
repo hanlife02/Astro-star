@@ -192,27 +192,37 @@
 }
 
 .archive-activity-tooltip {
+  --archive-activity-tooltip-offset-x: -50%;
   position: absolute;
   z-index: 20;
   left: 0;
   bottom: calc(var(--archive-activity-bar-height, 1rem) + 0.72rem);
   width: min(18rem, calc(100vw - 2rem));
   max-height: min(18rem, 70vh);
-  padding: 0.68rem 0.72rem;
+  padding: 0.56rem 0.68rem 0.52rem;
   border: 1px solid color-mix(in srgb, var(--line) 13%, transparent);
   border-radius: 0.5rem;
   color: color-mix(in srgb, var(--line) 76%, transparent);
+  font-size: 0;
   background: rgba(255, 255, 255, 0.96);
   box-shadow: 0 0.9rem 2rem rgba(17, 17, 17, 0.12);
   opacity: 0;
   overflow: auto;
   pointer-events: none;
-  transform: translate(-50%, 0.24rem);
+  transform: translate(var(--archive-activity-tooltip-offset-x), 0.24rem);
   transition:
     opacity 0.18s ease,
     transform 0.2s ease,
     visibility 0s linear 0.2s;
   visibility: hidden;
+}
+
+[data-tooltip-align="start"] > .archive-activity-tooltip {
+  --archive-activity-tooltip-offset-x: 0;
+}
+
+[data-tooltip-align="end"] > .archive-activity-tooltip {
+  --archive-activity-tooltip-offset-x: -100%;
 }
 
 .archive-activity-timeline-month .archive-activity-tooltip {
@@ -221,29 +231,38 @@
 
 .archive-activity-tooltip-title {
   display: block;
-  margin-bottom: 0.48rem;
+  margin-bottom: 0.34rem;
   color: var(--line);
   font-size: 0.78rem;
   font-weight: 600;
-  line-height: 1.25;
+  line-height: 1.2;
 }
 
 .archive-activity-tooltip-list {
   display: grid;
-  gap: 0.34rem;
+  gap: 0.24rem;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
+.content-page-body .archive-activity-tooltip-list {
+  margin: 0;
+  padding: 0;
+}
+
+.content-page-body .archive-activity-tooltip-item {
+  margin: 0;
+}
+
 .archive-activity-tooltip-link {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
-  gap: 0.48rem;
-  align-items: baseline;
+  gap: 0.44rem;
+  align-items: center;
   color: inherit;
   font-size: 0.82rem;
-  line-height: 1.35;
+  line-height: 1.28;
   text-decoration: none;
   text-decoration-line: none;
 }
@@ -289,7 +308,7 @@
   .archive-activity-timeline-month:hover .archive-activity-tooltip {
     opacity: 1;
     pointer-events: auto;
-    transform: translate(-50%, 0);
+    transform: translate(var(--archive-activity-tooltip-offset-x), 0);
     transition-delay: 0s;
     visibility: visible;
   }
@@ -299,7 +318,7 @@
 .archive-activity-timeline-month:focus-within .archive-activity-tooltip {
   opacity: 1;
   pointer-events: auto;
-  transform: translate(-50%, 0);
+  transform: translate(var(--archive-activity-tooltip-offset-x), 0);
   transition-delay: 0s;
   visibility: visible;
 }
