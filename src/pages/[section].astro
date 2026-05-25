@@ -241,6 +241,9 @@ const pageLabel =
 const activityEntries = usesArchivePage
   ? archiveArticles.map((article) => ({
       date: toContentIsoString(article.createdAt),
+      dateLabel: article.createdLabel,
+      href: article.href,
+      title: article.title,
     }))
   : [];
 const viewAllHref = `/${section}-archive/`;
