@@ -562,8 +562,16 @@ html.content-image-lightbox-open {
   -webkit-overflow-scrolling: touch;
 }
 
-.content-page-body pre:has(.content-code-copy) {
-  padding-top: calc(var(--content-code-padding-block) + 1.45rem);
+.content-page-body .astro-code,
+.content-page-body .astro-code span {
+  color: var(--shiki-light);
+  background-color: var(--shiki-light-bg);
+}
+
+:root[data-theme="dark"] .content-page-body .astro-code,
+:root[data-theme="dark"] .content-page-body .astro-code span {
+  color: var(--shiki-dark);
+  background-color: var(--shiki-dark-bg);
 }
 
 .content-page-body pre code {
@@ -575,21 +583,24 @@ html.content-image-lightbox-open {
 }
 
 .content-code-copy {
-  --btn-line: #f5f5f5;
+  --btn-line: var(--line);
   position: absolute;
   top: 0.55rem;
   right: 0.55rem;
   width: 1.7rem;
   height: 1.7rem;
   padding: 0;
-  border: 1px solid color-mix(in srgb, var(--btn-line) 16%, transparent);
+  border: 1px solid color-mix(in srgb, var(--btn-line) 14%, transparent);
   border-radius: 999px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: color-mix(in srgb, var(--btn-line) 72%, transparent);
-  background: color-mix(in srgb, var(--btn-line) 4%, transparent);
+  color: color-mix(in srgb, var(--btn-line) 64%, transparent);
+  background: color-mix(in srgb, Canvas 82%, transparent);
+  box-shadow: 0 0.35rem 0.9rem color-mix(in srgb, var(--btn-line) 10%, transparent);
   cursor: pointer;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .content-code-copy svg {
@@ -606,7 +617,7 @@ html.content-image-lightbox-open {
 @media (hover: hover) {
   .content-code-copy:hover {
     color: var(--btn-line);
-    background: color-mix(in srgb, var(--btn-line) 7%, transparent);
+    background: color-mix(in srgb, Canvas 92%, transparent);
   }
 }
 
