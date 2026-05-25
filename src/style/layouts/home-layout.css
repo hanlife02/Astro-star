@@ -360,25 +360,25 @@
 
 @media (hover: hover) {
   .theme-btn:hover,
-  .search-btn:hover,
-  .signature-collapse-trigger:hover {
+  .search-btn:hover {
     color: var(--line);
     transform: translateY(-0.08rem);
   }
 
+  .signature-collapse-trigger:hover,
   .hamburger:hover {
     color: var(--line);
   }
 }
 
 .theme-btn:focus-visible,
-.search-btn:focus-visible,
-.signature-collapse-trigger:focus-visible {
+.search-btn:focus-visible {
   outline: none;
   color: var(--line);
   transform: translateY(-0.08rem);
 }
 
+.signature-collapse-trigger:focus-visible,
 .hamburger:focus-visible {
   outline: none;
   color: var(--line);
