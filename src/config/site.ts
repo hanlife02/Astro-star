@@ -66,6 +66,18 @@ export const site = {
       },
     ],
   },
+  articleActions: {
+    license: {
+      name: "CC BY-NC-SA 4.0 - 非商业性使用 - 相同方式共享 4.0 国际",
+      href: "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+      statement:
+        "商业转载请联系站长获得授权，非商业转载请注明本文出处及文章链接，您可以自由地在任何媒体以任何形式复制和分发作品，也可以修改和创作，但是分发衍生作品时必须采用相同的许可协议。",
+    },
+    reward: {
+      wechatQrSrc: "/reward/wechat.png",
+      alipayQrSrc: "/reward/alipay.png",
+    },
+  },
 } as const;
 
 export type SiteConfig = typeof site;
