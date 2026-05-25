@@ -24,6 +24,7 @@ interface Props {
   tocClass?: string;
   contentAriaLabel: string;
   tocAriaLabel: string;
+  enableDocumentNavigation?: boolean;
 }
 
 const {
@@ -46,6 +47,7 @@ const {
   tocClass = "content-toc",
   contentAriaLabel,
   tocAriaLabel,
+  enableDocumentNavigation = false,
 } = Astro.props as Props;
 ---
 
@@ -71,6 +73,7 @@ const {
     class={contentClass}
     aria-label={contentAriaLabel}
     data-home-shell-content-page
+    data-document-navigation={enableDocumentNavigation ? "true" : undefined}
     data-content-entrance-enabled="true"
     data-page-entrance="entered"
   >

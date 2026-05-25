@@ -1,18 +1,18 @@
-const ARTICLE_PROGRESS_MIN_SCROLL_PX = 24;
+const DOCUMENT_PROGRESS_MIN_SCROLL_PX = 24;
 const SCROLL_DIRECTION_DELTA_PX = 4;
 const REDUCED_MOTION_MEDIA_QUERY = "(prefers-reduced-motion: reduce)";
 
-type HomeShellArticleProgressWindow = Window & {
-  __homeShellArticleProgressCleanup?: () => void;
+type HomeShellDocumentProgressWindow = Window & {
+  __homeShellDocumentProgressCleanup?: () => void;
 };
 
 function clampProgress(value: number) {
   return Math.min(100, Math.max(0, value));
 }
 
-export function initHomeShellArticleProgress() {
-  const browserWindow = window as HomeShellArticleProgressWindow;
-  browserWindow.__homeShellArticleProgressCleanup?.();
+export function initHomeShellDocumentProgress() {
+  const browserWindow = window as HomeShellDocumentProgressWindow;
+  browserWindow.__homeShellDocumentProgressCleanup?.();
 
   const controller = new AbortController();
   let animationFrame = 0;
@@ -23,14 +23,14 @@ export function initHomeShellArticleProgress() {
       window.cancelAnimationFrame(animationFrame);
     }
   };
-  browserWindow.__homeShellArticleProgressCleanup = cleanup;
+  browserWindow.__homeShellDocumentProgressCleanup = cleanup;
 
   const contentPage = document.querySelector(
-    "[data-home-shell-content-page].content-page--article",
+    "[data-home-shell-content-page][data-document-navigation='true']",
   );
-  const button = document.getElementById("article-progress-fab");
-  const percent = button?.querySelector("[data-article-progress-percent]");
-  const icon = button?.querySelector("[data-article-progress-icon]");
+  const button = document.getElementById("document-progress-fab");
+  const percent = button?.querySelector("[data-document-progress-percent]");
+  const icon = button?.querySelector("[data-document-progress-icon]");
   const motionMedia = window.matchMedia(REDUCED_MOTION_MEDIA_QUERY);
 
   if (
@@ -48,7 +48,7 @@ export function initHomeShellArticleProgress() {
   let lastScrollY = window.scrollY;
   let scrollDirection: "down" | "up" = "down";
 
-  const getArticleProgress = () => {
+  const getDocumentProgress = () => {
     const scrollY = window.scrollY;
     const viewportHeight = window.innerHeight;
     const pageHeight = document.documentElement.scrollHeight;
@@ -76,7 +76,7 @@ export function initHomeShellArticleProgress() {
     const showTopIcon = mode === "top";
     percent.hidden = showTopIcon;
     icon.hidden = !showTopIcon;
-    button.dataset.articleProgressMode = mode;
+    button.dataset.documentProgressMode = mode;
   };
 
   const syncProgressButton = () => {
@@ -89,10 +89,10 @@ export function initHomeShellArticleProgress() {
       lastScrollY = scrollY;
     }
 
-    const progress = getArticleProgress();
+    const progress = getDocumentProgress();
     percent.textContent = `${progress}%`;
 
-    const shouldShowButton = scrollY > ARTICLE_PROGRESS_MIN_SCROLL_PX;
+    const shouldShowButton = scrollY > DOCUMENT_PROGRESS_MIN_SCROLL_PX;
     button.hidden = !shouldShowButton;
 
     if (!shouldShowButton) {

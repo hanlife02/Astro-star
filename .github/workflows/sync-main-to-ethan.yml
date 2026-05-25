@@ -59,13 +59,13 @@ jobs:
           personal_additions="$(mktemp)"
           git diff --cached --name-only -z --diff-filter=A -- "${personal_paths[@]}" > "$personal_additions"
           if [ -s "$personal_additions" ]; then
-            xargs -0 git rm -r --ignore-unmatch -- < "$personal_additions"
+            xargs -0 git rm -rf --ignore-unmatch -- < "$personal_additions"
           fi
           rm -f "$personal_additions"
 
           git restore --source=HEAD --staged --worktree -- "${personal_paths[@]}" 2>/dev/null || true
           git clean -fd -- "${personal_paths[@]}"
-          git rm -r --ignore-unmatch -- "${template_only_paths[@]}"
+          git rm -rf --ignore-unmatch -- "${template_only_paths[@]}"
 
           if [ "$merge_status" -ne 0 ]; then
             remaining_conflicts="$(git diff --name-only --diff-filter=U)"

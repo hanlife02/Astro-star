@@ -25,6 +25,15 @@ const projectSchema = z.object({
   createdAt: z.string().min(1),
 });
 
+const pageSchema = z.object({
+  title: z.string().min(1),
+  description: z.string().optional(),
+  background: z
+    .enum(["home", "code-rain", "constellation", "content"])
+    .optional(),
+  tocTitle: z.string().optional(),
+});
+
 const blog = defineCollection({
   loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/blog" }),
   schema: baseContentSchema,
@@ -40,8 +49,14 @@ const project = defineCollection({
   schema: projectSchema,
 });
 
+const page = defineCollection({
+  loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/page" }),
+  schema: pageSchema,
+});
+
 export const collections = {
   blog,
   note,
   project,
+  page,
 };

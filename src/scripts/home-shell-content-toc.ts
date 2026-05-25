@@ -1,4 +1,5 @@
 type HeadingEntry = {
+  item: HTMLElement;
   link: HTMLAnchorElement;
   heading: HTMLElement;
 };
@@ -18,7 +19,12 @@ export function initHomeShellContentToc() {
 
   const controller = new AbortController();
   let observer: IntersectionObserver | null = null;
+  let progressFrame = 0;
   browserWindow.__homeShellContentTocCleanup = () => {
+    if (progressFrame > 0) {
+      window.cancelAnimationFrame(progressFrame);
+    }
+
     observer?.disconnect();
     controller.abort();
   };
@@ -26,6 +32,7 @@ export function initHomeShellContentToc() {
   const contentPage = document.querySelector("[data-home-shell-content-page]");
   const toc = document.querySelector("[data-home-shell-content-toc]");
   const tocList = toc?.querySelector(".content-toc-list");
+  const tocProgress = toc?.querySelector("[data-content-toc-progress]");
   const motionMedia = window.matchMedia(REDUCED_MOTION_MEDIA_QUERY);
 
   if (
@@ -36,7 +43,6 @@ export function initHomeShellContentToc() {
     return;
 
   let tocEntranceSettled = toc.dataset.tocEntrance !== "ready";
-
   const links = Array.from(tocList.querySelectorAll(".content-toc-link"));
   if (links.length === 0) return;
 
@@ -50,7 +56,10 @@ export function initHomeShellContentToc() {
       const heading = contentPage.querySelector(`#${CSS.escape(targetId)}`);
       if (!(heading instanceof HTMLElement)) return null;
 
-      return { link, heading };
+      const item = link.closest(".content-toc-item");
+      if (!(item instanceof HTMLElement)) return null;
+
+      return { item, link, heading };
     })
     .filter((entry): entry is HeadingEntry => entry !== null);
 
@@ -59,6 +68,16 @@ export function initHomeShellContentToc() {
   const visibleHeadingIds = new Set<string>();
   let activeEntry: HeadingEntry | null = null;
   let lastScrollY = window.scrollY;
+  const hasTocProgress = tocProgress instanceof HTMLElement;
+
+  const requestSyncTocProgress = () => {
+    if (!hasTocProgress || progressFrame > 0) return;
+
+    progressFrame = window.requestAnimationFrame(() => {
+      progressFrame = 0;
+      syncTocProgress();
+    });
+  };
 
   const getTocScrollContainer = () => {
     const tocListStyle = window.getComputedStyle(tocList);
@@ -70,14 +89,11 @@ export function initHomeShellContentToc() {
     entry: HeadingEntry,
     behavior: ScrollBehavior = "auto",
   ) => {
-    const activeItem = entry.link.closest(".content-toc-item");
-    if (!(activeItem instanceof HTMLElement)) return;
-
     const tocScrollContainer = getTocScrollContainer();
-    const itemTopInToc = activeItem.offsetTop;
+    const itemTopInToc = entry.item.offsetTop;
     const centeredTocTop =
       itemTopInToc -
-      (tocScrollContainer.clientHeight - activeItem.offsetHeight) / 2;
+      (tocScrollContainer.clientHeight - entry.item.offsetHeight) / 2;
     const maxTocScrollTop = Math.max(
       0,
       tocScrollContainer.scrollHeight - tocScrollContainer.clientHeight,
@@ -93,6 +109,65 @@ export function initHomeShellContentToc() {
       top: nextTocScrollTop,
       behavior,
     });
+  };
+
+  const clampProgressPosition = (value: number, max: number) =>
+    Math.min(Math.max(0, value), max);
+
+  const getViewportHeadingIndices = () => {
+    return headingEntries.reduce<number[]>((indices, entry, index) => {
+      const rect = entry.heading.getBoundingClientRect();
+      const isInViewport = rect.bottom >= 0 && rect.top <= window.innerHeight;
+
+      if (isInViewport) {
+        indices.push(index);
+      }
+
+      return indices;
+    }, []);
+  };
+
+  const getProgressIndices = () => {
+    const viewportIndices = getViewportHeadingIndices();
+    if (viewportIndices.length > 0) return viewportIndices;
+
+    const activeIndex = activeEntry ? headingEntries.indexOf(activeEntry) : -1;
+    return [activeIndex >= 0 ? activeIndex : 0];
+  };
+
+  const syncTocProgress = () => {
+    if (!hasTocProgress) return;
+
+    const indices = getProgressIndices();
+    const firstEntry = headingEntries[indices[0]];
+    const lastEntry = headingEntries[indices[indices.length - 1]];
+
+    if (!firstEntry || !lastEntry) {
+      tocProgress.style.setProperty("--content-toc-progress-opacity", "0");
+      return;
+    }
+
+    const listRect = tocList.getBoundingClientRect();
+    const firstRect = firstEntry.item.getBoundingClientRect();
+    const lastRect = lastEntry.item.getBoundingClientRect();
+    const listHeight = tocList.clientHeight;
+    const rawTop = firstRect.top - listRect.top;
+    const rawBottom = lastRect.bottom - listRect.top;
+    const maxTop = Math.max(0, listHeight - 8);
+    const top = clampProgressPosition(rawTop, maxTop);
+    const bottom = clampProgressPosition(rawBottom, listHeight);
+    const fallbackHeight = Math.max(8, firstEntry.item.offsetHeight);
+    const height =
+      bottom > top
+        ? Math.max(8, bottom - top)
+        : Math.min(fallbackHeight, Math.max(0, listHeight - top));
+
+    tocProgress.style.setProperty("--content-toc-progress-top", `${top}px`);
+    tocProgress.style.setProperty(
+      "--content-toc-progress-height",
+      `${Math.max(0, height)}px`,
+    );
+    tocProgress.style.setProperty("--content-toc-progress-opacity", "1");
   };
 
   const setActiveEntry = (
@@ -115,6 +190,7 @@ export function initHomeShellContentToc() {
     });
 
     centerActiveLink(nextEntry, behavior);
+    requestSyncTocProgress();
   };
 
   const getVisibleIndices = () => {
@@ -137,11 +213,13 @@ export function initHomeShellContentToc() {
         ? visibleIndices[visibleIndices.length - 1]
         : visibleIndices[0];
       setActiveEntry(headingEntries[nextIndex]);
+      requestSyncTocProgress();
       return;
     }
 
     if (window.scrollY <= PAGE_EDGE_THRESHOLD) {
       setActiveEntry(headingEntries[0]);
+      requestSyncTocProgress();
       return;
     }
 
@@ -149,7 +227,11 @@ export function initHomeShellContentToc() {
     const documentBottom = document.documentElement.scrollHeight;
     if (pageBottom >= documentBottom - PAGE_EDGE_THRESHOLD) {
       setActiveEntry(headingEntries[headingEntries.length - 1]);
+      requestSyncTocProgress();
+      return;
     }
+
+    requestSyncTocProgress();
   };
 
   const processObservedEntries = (entries: IntersectionObserverEntry[]) => {
@@ -216,9 +298,20 @@ export function initHomeShellContentToc() {
     () => {
       if (!tocEntranceSettled || !activeEntry) return;
       centerActiveLink(activeEntry);
+      requestSyncTocProgress();
     },
     { signal: controller.signal },
   );
+
+  window.addEventListener("scroll", requestSyncTocProgress, {
+    passive: true,
+    signal: controller.signal,
+  });
+
+  tocList.addEventListener("scroll", requestSyncTocProgress, {
+    passive: true,
+    signal: controller.signal,
+  });
 
   window.addEventListener(
     "load",
@@ -226,6 +319,7 @@ export function initHomeShellContentToc() {
       if (!tocEntranceSettled) return;
       processObservedEntries(tocObserver.takeRecords());
       syncActiveEntryFromVisibility();
+      requestSyncTocProgress();
     },
     { once: true, signal: controller.signal },
   );
@@ -236,6 +330,7 @@ export function initHomeShellContentToc() {
       tocEntranceSettled = true;
       processObservedEntries(tocObserver.takeRecords());
       syncActiveEntryFromVisibility();
+      requestSyncTocProgress();
     },
     { signal: controller.signal },
   );
@@ -243,5 +338,6 @@ export function initHomeShellContentToc() {
   if (tocEntranceSettled) {
     processObservedEntries(tocObserver.takeRecords());
     syncActiveEntryFromVisibility();
+    requestSyncTocProgress();
   }
 }

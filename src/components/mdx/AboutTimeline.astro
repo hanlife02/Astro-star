@@ -1,0 +1,19 @@
+---
+import { aboutPage } from "../../config/about";
+---
+
+{
+  aboutPage.timeline.map((year) => (
+    <>
+      <p>
+        <em>{year.label}</em>
+      </p>
+      {year.events.map((event) => (
+        <blockquote>
+          <p>{event}</p>
+        </blockquote>
+      ))}
+      {year.summary && <p>{year.summary}</p>}
+    </>
+  ))
+}
