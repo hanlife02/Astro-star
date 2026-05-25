@@ -162,14 +162,21 @@ const {
       className="floating-action-button--toc"
     />
     <FloatingActionButton
-      id="article-progress-fab"
+      id="document-progress-fab"
       label="Back to top"
-      className="floating-action-button--article-progress"
+      className="floating-action-button--document-progress"
     >
-      <span class="article-progress-fab-percent" data-article-progress-percent>
+      <span
+        class="document-progress-fab-percent"
+        data-document-progress-percent
+      >
         0%
       </span>
-      <span class="article-progress-fab-icon" data-article-progress-icon hidden>
+      <span
+        class="document-progress-fab-icon"
+        data-document-progress-icon
+        hidden
+      >
         <Icon svg={ArrowUp} />
       </span>
     </FloatingActionButton>

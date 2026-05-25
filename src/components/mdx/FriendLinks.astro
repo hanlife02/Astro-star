@@ -1,0 +1,8 @@
+---
+import FriendLinksPanel from "../links/FriendLinksPanel.astro";
+import { friendLinks } from "../../config/links";
+
+const shuffledFriendLinks = [...friendLinks].sort(() => Math.random() - 0.5);
+---
+
+<FriendLinksPanel items={shuffledFriendLinks} />

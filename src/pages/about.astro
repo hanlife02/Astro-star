@@ -1,52 +1,55 @@
 ---
-import DocumentPageShell from "../components/layout/DocumentPageShell.astro";
+import { getCollection, render } from "astro:content";
+import { WALINE_SERVER_URL } from "astro:env/server";
+import DocumentDetailPage from "../components/content/DocumentDetailPage.astro";
 import WalineComments from "../components/content/WalineComments.astro";
-import { aboutPage } from "../config/about";
 import { site } from "../config/site";
 
 export const prerender = true;
 
-const walineServerURL = "";
-const pageDescription = aboutPage.introParagraphs.join(" ");
-const tocItems = [
-  { href: "#intro", label: aboutPage.title, depth: 2 as const },
-  { href: "#blog", label: aboutPage.blogTitle, depth: 2 as const },
-  { href: "#timeline", label: aboutPage.timelineTitle, depth: 3 as const },
-];
+const pageEntry = (await getCollection("page")).find(
+  (entry) => entry.id === "about",
+);
+
+if (!pageEntry) {
+  return new Response(null, {
+    status: 404,
+    statusText: "Not found",
+  });
+}
+
+const { Content, headings } = await render(pageEntry);
+const title = pageEntry.data.title;
+const description = pageEntry.data.description || site.site.description;
+const pageRoutePath = "/about/";
+const canonicalUrl = new URL(pageRoutePath, site.site.url).toString();
+const walineServerURL = WALINE_SERVER_URL?.trim() || "";
+const tocHeadings = headings
+  .filter((heading) => heading.depth >= 1 && heading.depth <= 5)
+  .map((heading) => ({
+    depth: heading.depth as 1 | 2 | 3 | 4 | 5,
+    slug: heading.slug,
+    text: heading.text,
+  }));
 ---
 
-<DocumentPageShell
-  background="code-rain"
-  title={`${aboutPage.title} - ${site.site.name}`}
-  description={pageDescription}
-  ogTitle={aboutPage.title}
+<DocumentDetailPage
+  background={pageEntry.data.background ?? "code-rain"}
+  title={`${title} - ${site.site.name}`}
+  description={description}
+  canonicalUrl={canonicalUrl}
+  ogTitle={title}
+  ogType="website"
+  contentClass="content-page content-page--article"
   contentAriaLabel="About content"
   tocAriaLabel="About table of contents"
-  tocTitle="Contents"
-  tocItems={tocItems}
+  tocTitle={pageEntry.data.tocTitle}
+  tocHeadings={tocHeadings}
+  DocumentContent={Content}
 >
-  <h1>About</h1>
-
-  <h2 id="intro">{aboutPage.title}</h2>
-  {aboutPage.introParagraphs.map((paragraph) => <p>{paragraph}</p>)}
-
-  <h2 id="blog">{aboutPage.blogTitle}</h2>
-  <h3 id="timeline">{aboutPage.timelineTitle}</h3>
-  {
-    aboutPage.timeline.map((year) => (
-      <>
-        <p>
-          <em>{year.label}</em>
-        </p>
-        {year.events.map((event) => (
-          <blockquote>
-            <p>{event}</p>
-          </blockquote>
-        ))}
-        {year.summary && <p>{year.summary}</p>}
-      </>
-    ))
-  }
-
-  <WalineComments walineServerURL={walineServerURL} />
-</DocumentPageShell>
+  <WalineComments
+    slot="after-content"
+    articleRoutePath={pageRoutePath}
+    walineServerURL={walineServerURL}
+  />
+</DocumentDetailPage>

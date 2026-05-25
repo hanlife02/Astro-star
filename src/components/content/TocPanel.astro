@@ -11,15 +11,23 @@ interface Props {
   items: TocItem[];
   title?: string;
   emptyText?: string;
+  showProgress?: boolean;
 }
 
-const { items, title, emptyText = "The author is too lazy to write a title." } = Astro.props as Props;
+const {
+  items,
+  title,
+  emptyText = "The author is too lazy to write a title.",
+  showProgress = false,
+} = Astro.props as Props;
 
 const hasHanCharacters = /[\u3400-\u9fff\uf900-\ufaff]/u;
 const hasLatinCharacters = /[A-Za-z]/;
 
 function getTocItemLang(label: string) {
-  return hasLatinCharacters.test(label) && !hasHanCharacters.test(label) ? "en" : undefined;
+  return hasLatinCharacters.test(label) && !hasHanCharacters.test(label)
+    ? "en"
+    : undefined;
 }
 ---
 
@@ -28,7 +36,7 @@ function getTocItemLang(label: string) {
     <>
       {title && <p class="content-toc-title">{title}</p>}
       <div class="content-toc-list-frame">
-        <TocProgressBar />
+        {showProgress && <TocProgressBar />}
         <ol class="content-toc-list">
           {items.map((item) => (
             <li

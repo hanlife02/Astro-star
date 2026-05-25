@@ -1,46 +1,55 @@
 ---
-import DocumentPageShell from "../components/layout/DocumentPageShell.astro";
+import { getCollection, render } from "astro:content";
+import { WALINE_SERVER_URL } from "astro:env/server";
+import DocumentDetailPage from "../components/content/DocumentDetailPage.astro";
 import WalineComments from "../components/content/WalineComments.astro";
-import FriendLinksPanel from "../components/links/FriendLinksPanel.astro";
-import LostLinksPanel from "../components/links/LostLinksPanel.astro";
-import OwnerInfoCard from "../components/links/OwnerInfoCard.astro";
-import { friendLinks, linksPage, lostLinks } from "../config/links";
 import { site } from "../config/site";
 
 export const prerender = true;
 
-const walineServerURL = "";
+const pageEntry = (await getCollection("page")).find(
+  (entry) => entry.id === "links",
+);
 
-const tocItems = [
-  { href: "#friends", label: linksPage.friendsTitle, depth: 2 as const },
-  { href: "#lost", label: linksPage.lostTitle, depth: 2 as const },
-  { href: "#apply", label: linksPage.applyTitle, depth: 2 as const },
-];
+if (!pageEntry) {
+  return new Response(null, {
+    status: 404,
+    statusText: "Not found",
+  });
+}
+
+const { Content, headings } = await render(pageEntry);
+const title = pageEntry.data.title;
+const description = pageEntry.data.description || site.site.description;
+const pageRoutePath = "/links/";
+const canonicalUrl = new URL(pageRoutePath, site.site.url).toString();
+const walineServerURL = WALINE_SERVER_URL?.trim() || "";
+const tocHeadings = headings
+  .filter((heading) => heading.depth >= 1 && heading.depth <= 5)
+  .map((heading) => ({
+    depth: heading.depth as 1 | 2 | 3 | 4 | 5,
+    slug: heading.slug,
+    text: heading.text,
+  }));
 ---
 
-<DocumentPageShell
-  background="constellation"
-  title={`${linksPage.title} - ${site.site.name}`}
-  description={linksPage.intro}
-  ogTitle={linksPage.title}
-  contentClass="content-page content-page--links"
+<DocumentDetailPage
+  background={pageEntry.data.background ?? "constellation"}
+  title={`${title} - ${site.site.name}`}
+  description={description}
+  canonicalUrl={canonicalUrl}
+  ogTitle={title}
+  ogType="website"
+  contentClass="content-page content-page--article content-page--links"
   contentAriaLabel="Links content"
   tocAriaLabel="Links table of contents"
-  tocItems={tocItems}
+  tocTitle={pageEntry.data.tocTitle}
+  tocHeadings={tocHeadings}
+  DocumentContent={Content}
 >
-  <h1>{linksPage.title}</h1>
-  <p>{linksPage.intro}</p>
-
-  <h2 id="friends">{linksPage.friendsTitle}</h2>
-  <FriendLinksPanel items={[...friendLinks].sort(() => Math.random() - 0.5)} />
-
-  <h2 id="lost">{linksPage.lostTitle}</h2>
-  <LostLinksPanel items={lostLinks} title={linksPage.lostTitle} />
-
-  <h2 id="apply">{linksPage.applyTitle}</h2>
-  <p>Please apply in the format below and leave a comment.</p>
-  <OwnerInfoCard {...linksPage.applyOwner} />
-  {linksPage.applyRules.map((rule) => <p>{rule}</p>)}
-
-  <WalineComments walineServerURL={walineServerURL} />
-</DocumentPageShell>
+  <WalineComments
+    slot="after-content"
+    articleRoutePath={pageRoutePath}
+    walineServerURL={walineServerURL}
+  />
+</DocumentDetailPage>

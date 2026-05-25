@@ -30,11 +30,11 @@
   line-height: 1;
 }
 
-.floating-action-button--article-progress {
+.floating-action-button--document-progress {
   font-variant-numeric: tabular-nums;
 }
 
-.article-progress-fab-percent {
+.document-progress-fab-percent {
   min-width: 2.1rem;
   font-size: clamp(0.76rem, 0.72rem + 0.14vw, 0.86rem);
   font-weight: 700;
@@ -42,15 +42,15 @@
   text-align: center;
 }
 
-.article-progress-fab-icon,
-.article-progress-fab-icon svg {
+.document-progress-fab-icon,
+.document-progress-fab-icon svg {
   display: inline-flex;
   width: 1.12rem;
   height: 1.12rem;
 }
 
-.article-progress-fab-percent[hidden],
-.article-progress-fab-icon[hidden] {
+.document-progress-fab-percent[hidden],
+.document-progress-fab-icon[hidden] {
   display: none !important;
 }
 

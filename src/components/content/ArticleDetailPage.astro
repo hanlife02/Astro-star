@@ -1,5 +1,5 @@
 ---
-import DocumentPageShell from "../layout/DocumentPageShell.astro";
+import DocumentDetailPage from "./DocumentDetailPage.astro";
 import ArticleActionCard from "./ArticleActionCard.astro";
 import WalineComments from "./WalineComments.astro";
 
@@ -103,7 +103,7 @@ const sectionLabels: Record<string, string> = {
 const sectionLabel = sectionLabels[section] ?? section;
 ---
 
-<DocumentPageShell
+<DocumentDetailPage
   backHref={`/${section}/`}
   backLabel={`Back to ${sectionLabel}`}
   backAriaLabel={`Back to ${sectionLabel} list`}
@@ -119,11 +119,8 @@ const sectionLabel = sectionLabels[section] ?? section;
   contentClass="content-page content-page--article"
   contentAriaLabel={`${section} article content`}
   tocAriaLabel={`${section} table of contents`}
-  tocItems={tocHeadings.map((heading) => ({
-    href: `#${heading.slug}`,
-    label: heading.text,
-    depth: heading.depth,
-  }))}
+  tocHeadings={tocHeadings}
+  DocumentContent={ArticleContent}
 >
   <Fragment slot="head">
     <meta name="article:author" content={author} />
@@ -139,7 +136,7 @@ const sectionLabel = sectionLabels[section] ?? section;
     }
     <script is:inline type="application/ld+json" set:html={articleJsonLdText} />
   </Fragment>
-  <header class="article-content-header">
+  <header slot="before-content" class="article-content-header">
     <h1 class="article-content-title">{title}</h1>
     {description && <p class="article-content-description">{description}</p>}
     <div class="article-content-meta" aria-label="Article metadata">
@@ -181,40 +178,42 @@ const sectionLabel = sectionLabels[section] ?? section;
     </div>
   </header>
 
-  <ArticleContent />
+  <Fragment slot="after-content">
+    <ArticleActionCard
+      articleRoutePath={articleRoutePath}
+      walineServerURL={walineServerURL}
+    />
 
-  <ArticleActionCard
-    articleRoutePath={articleRoutePath}
-    walineServerURL={walineServerURL}
-  />
+    {
+      (previousArticle || nextArticle) && (
+        <nav class="article-neighbors" aria-label="Adjacent articles">
+          {previousArticle && (
+            <a
+              class="article-neighbor article-neighbor--previous"
+              href={previousArticle.href}
+            >
+              <span class="article-neighbor-label">Previous</span>
+              <span class="article-neighbor-title">
+                {previousArticle.title}
+              </span>
+            </a>
+          )}
+          {nextArticle && (
+            <a
+              class="article-neighbor article-neighbor--next"
+              href={nextArticle.href}
+            >
+              <span class="article-neighbor-label">Next</span>
+              <span class="article-neighbor-title">{nextArticle.title}</span>
+            </a>
+          )}
+        </nav>
+      )
+    }
 
-  {
-    (previousArticle || nextArticle) && (
-      <nav class="article-neighbors" aria-label="Adjacent articles">
-        {previousArticle && (
-          <a
-            class="article-neighbor article-neighbor--previous"
-            href={previousArticle.href}
-          >
-            <span class="article-neighbor-label">Previous</span>
-            <span class="article-neighbor-title">{previousArticle.title}</span>
-          </a>
-        )}
-        {nextArticle && (
-          <a
-            class="article-neighbor article-neighbor--next"
-            href={nextArticle.href}
-          >
-            <span class="article-neighbor-label">Next</span>
-            <span class="article-neighbor-title">{nextArticle.title}</span>
-          </a>
-        )}
-      </nav>
-    )
-  }
-
-  <WalineComments
-    articleRoutePath={articleRoutePath}
-    walineServerURL={walineServerURL}
-  />
-</DocumentPageShell>
+    <WalineComments
+      articleRoutePath={articleRoutePath}
+      walineServerURL={walineServerURL}
+    />
+  </Fragment>
+</DocumentDetailPage>

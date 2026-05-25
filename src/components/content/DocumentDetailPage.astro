@@ -1,11 +1,10 @@
 ---
-import ContentShell from "./ContentShell.astro";
-import TocPanel from "../content/TocPanel.astro";
+import DocumentPageShell from "../layout/DocumentPageShell.astro";
 
-interface TocItem {
-  href: string;
-  label: string;
-  depth?: 1 | 2 | 3 | 4 | 5 | 6;
+interface TocHeading {
+  depth: 1 | 2 | 3 | 4 | 5 | 6;
+  slug: string;
+  text: string;
 }
 
 interface Props {
@@ -26,8 +25,8 @@ interface Props {
   contentAriaLabel: string;
   tocAriaLabel: string;
   tocTitle?: string;
-  tocEmptyText?: string;
-  tocItems: TocItem[];
+  tocHeadings: TocHeading[];
+  DocumentContent: any;
   enableDocumentNavigation?: boolean;
 }
 
@@ -35,27 +34,27 @@ const {
   backAriaLabel,
   backHref,
   backLabel,
-  variant = "default",
-  background,
+  variant = "article",
+  background = "content",
   title,
   description,
   canonicalUrl,
   imageUrl,
   ogTitle,
-  ogType,
+  ogType = "website",
   twitterCard,
   includeKatexStyles,
-  contentClass = "content-page",
+  contentClass = "content-page content-page--article",
   contentAriaLabel,
   tocAriaLabel,
   tocTitle,
-  tocEmptyText,
-  tocItems,
-  enableDocumentNavigation = false,
+  tocHeadings,
+  DocumentContent,
+  enableDocumentNavigation = true,
 } = Astro.props as Props;
 ---
 
-<ContentShell
+<DocumentPageShell
   backAriaLabel={backAriaLabel}
   backHref={backHref}
   backLabel={backLabel}
@@ -72,16 +71,16 @@ const {
   contentClass={contentClass}
   contentAriaLabel={contentAriaLabel}
   tocAriaLabel={tocAriaLabel}
+  tocTitle={tocTitle}
   enableDocumentNavigation={enableDocumentNavigation}
+  tocItems={tocHeadings.map((heading) => ({
+    href: `#${heading.slug}`,
+    label: heading.text,
+    depth: heading.depth,
+  }))}
 >
   <slot name="head" slot="head" />
-  <slot />
-
-  <TocPanel
-    slot="toc"
-    title={tocTitle}
-    emptyText={tocEmptyText}
-    items={tocItems}
-    showProgress={enableDocumentNavigation}
-  />
-</ContentShell>
+  <slot name="before-content" />
+  <DocumentContent />
+  <slot name="after-content" />
+</DocumentPageShell>

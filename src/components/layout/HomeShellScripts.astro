@@ -11,7 +11,7 @@
   import { initHomeShellContentPageEntrance } from "../../scripts/home-shell-content-page-entrance";
   import { initHomeShellRouteTransitionLock } from "../../scripts/home-shell-route-transition-lock";
   import { initHomeShellSearch } from "../../scripts/home-shell-search";
-  import { initHomeShellArticleProgress } from "../../scripts/home-shell-article-progress";
+  import { initHomeShellDocumentProgress } from "../../scripts/home-shell-document-progress";
   import { initHomeShellCodeCopy } from "../../scripts/home-shell-code-copy";
   import {
     cleanupHomeShellArticleActions,
@@ -39,7 +39,7 @@
     "__homeShellMobileTocCleanup",
     "__homeShellMobileNavCleanup",
     "__homeShellDesktopSignatureNavCleanup",
-    "__homeShellArticleProgressCleanup",
+    "__homeShellDocumentProgressCleanup",
     "__homeShellCodeCopyCleanup",
   ] as const;
 
@@ -84,7 +84,7 @@
     initHomeShellContentPageEntrance();
     initHomeShellRouteTransitionLock();
     initHomeShellSearch();
-    initHomeShellArticleProgress();
+    initHomeShellDocumentProgress();
     initHomeShellCodeCopy();
     initHomeShellConstellationBackground();
     initHomeShellWalineComments();
