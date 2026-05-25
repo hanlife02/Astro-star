@@ -10,7 +10,8 @@ const walineServerURL = "";
 const pageDescription = aboutPage.introParagraphs.join(" ");
 const tocItems = [
   { href: "#intro", label: aboutPage.title, depth: 2 as const },
-  { href: "#timeline", label: aboutPage.timelineTitle, depth: 2 as const },
+  { href: "#blog", label: aboutPage.blogTitle, depth: 2 as const },
+  { href: "#timeline", label: aboutPage.timelineTitle, depth: 3 as const },
 ];
 ---
 
@@ -29,8 +30,8 @@ const tocItems = [
   <h2 id="intro">{aboutPage.title}</h2>
   {aboutPage.introParagraphs.map((paragraph) => <p>{paragraph}</p>)}
 
-  <h2>{aboutPage.blogTitle}</h2>
-  <h2 id="timeline">{aboutPage.timelineTitle}</h2>
+  <h2 id="blog">{aboutPage.blogTitle}</h2>
+  <h3 id="timeline">{aboutPage.timelineTitle}</h3>
   {
     aboutPage.timeline.map((year) => (
       <>
