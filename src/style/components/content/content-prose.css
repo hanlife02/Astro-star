@@ -597,7 +597,8 @@ html.content-image-lightbox-open {
   justify-content: center;
   color: color-mix(in srgb, var(--btn-line) 64%, transparent);
   background: color-mix(in srgb, Canvas 82%, transparent);
-  box-shadow: 0 0.35rem 0.9rem color-mix(in srgb, var(--btn-line) 10%, transparent);
+  box-shadow: 0 0.35rem 0.9rem
+    color-mix(in srgb, var(--btn-line) 10%, transparent);
   cursor: pointer;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
