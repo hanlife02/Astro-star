@@ -361,20 +361,27 @@
 @media (hover: hover) {
   .theme-btn:hover,
   .search-btn:hover,
-  .hamburger:hover,
   .signature-collapse-trigger:hover {
     color: var(--line);
     transform: translateY(-0.08rem);
+  }
+
+  .hamburger:hover {
+    color: var(--line);
   }
 }
 
 .theme-btn:focus-visible,
 .search-btn:focus-visible,
-.hamburger:focus-visible,
 .signature-collapse-trigger:focus-visible {
   outline: none;
   color: var(--line);
   transform: translateY(-0.08rem);
+}
+
+.hamburger:focus-visible {
+  outline: none;
+  color: var(--line);
 }
 
 .home-shell-search-root {
