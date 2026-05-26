@@ -27,6 +27,7 @@ jobs:
         uses: actions/checkout@v5
         with:
           fetch-depth: 0
+          token: ${{ secrets.ACTIONS_PAT || github.token }}
 
       # ── Source hash: skip build if nothing changed ──
       - name: Compute source hash
