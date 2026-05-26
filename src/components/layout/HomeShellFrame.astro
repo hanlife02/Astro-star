@@ -94,7 +94,9 @@ const {
             {
               foldedNavItems.map((item) => (
                 <li>
-                  <a href={item.href}>{item.label}</a>
+                  <a href={item.href} aria-label={item.label}>
+                    {item.label}
+                  </a>
                 </li>
               ))
             }
@@ -126,7 +128,9 @@ const {
               {
                 foldedNavItems.map((item) => (
                   <li>
-                    <a href={item.href}>{item.label}</a>
+                    <a href={item.href} aria-label={item.label}>
+                      {item.label}
+                    </a>
                   </li>
                 ))
               }

@@ -1,6 +1,9 @@
 name: Sync main to Ethan
 
 on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17,47 * * * *"
   push:
     branches: [main]
 
@@ -18,7 +21,7 @@ jobs:
           ACTIONS_PAT: ${{ secrets.ACTIONS_PAT }}
         run: |
           if [ -z "$ACTIONS_PAT" ]; then
-            echo "::error::Missing ACTIONS_PAT secret. Use a PAT so pushing Ethan can trigger the deploy workflow."
+            echo "::error::Missing ACTIONS_PAT secret. Use a PAT with repo and workflow scopes so pushing Ethan can trigger deploys and sync workflow file changes."
             exit 1
           fi
 
@@ -30,17 +33,27 @@ jobs:
           token: ${{ secrets.ACTIONS_PAT }}
 
       - name: Merge main into Ethan while preserving personal content
+        shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git fetch origin main
           set +e
-          git merge --no-commit --no-ff origin/main
+          git merge --no-commit --no-ff -s ours origin/main
           merge_status=$?
           set -e
 
+          if ! git rev-parse -q --verify MERGE_HEAD >/dev/null; then
+            if [ "$merge_status" -ne 0 ]; then
+              echo "::error::Merge failed before creating a merge state."
+              exit "$merge_status"
+            fi
+
+            echo "Ethan already includes main."
+            exit 0
+          fi
+
           personal_paths=(
-            docs
             public/avatar.svg
             public/figures
             public/reward
@@ -50,36 +63,27 @@ jobs:
           )
 
           template_only_paths=(
-            docs/template-customization.md
             src/content/blog/template/welcome-to-astro-star.mdx
             src/content/note/thoughts/first-note.mdx
             src/content/project/astro-star-template.mdx
           )
 
-          personal_additions="$(mktemp)"
-          git diff --cached --name-only -z --diff-filter=A -- "${personal_paths[@]}" > "$personal_additions"
-          if [ -s "$personal_additions" ]; then
-            xargs -0 git rm -rf --ignore-unmatch -- < "$personal_additions"
-          fi
-          rm -f "$personal_additions"
+          git read-tree --reset -u origin/main
 
-          git restore --source=HEAD --staged --worktree -- "${personal_paths[@]}" 2>/dev/null || true
-          git clean -fd -- "${personal_paths[@]}"
+          for personal_path in "${personal_paths[@]}"; do
+            if git cat-file -e "HEAD:$personal_path" 2>/dev/null; then
+              git restore --source=HEAD --staged --worktree -- "$personal_path"
+            else
+              git rm -rf --ignore-unmatch -- "$personal_path"
+            fi
+          done
+
           git rm -rf --ignore-unmatch -- "${template_only_paths[@]}"
 
-          if [ "$merge_status" -ne 0 ]; then
-            remaining_conflicts="$(git diff --name-only --diff-filter=U)"
-            if [ -n "$remaining_conflicts" ]; then
-              echo "::error::Merge conflicts remain outside preserved personal paths."
-              echo "$remaining_conflicts"
-              exit 1
-            fi
-          fi
-
           if git diff --cached --quiet; then
-            echo "No deploy-relevant template changes to sync."
-            exit 0
+            echo "No file changes after preserving personal content; recording merge ancestry."
           fi
 
-          git commit -m "chore(deploy): sync main template changes into Ethan"
+          git status --short
+          git commit --allow-empty -m "chore(deploy): sync main template changes into Ethan"
           git push origin Ethan
