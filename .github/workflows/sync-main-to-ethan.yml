@@ -1,6 +1,9 @@
 name: Sync main to Ethan
 
 on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17,47 * * * *"
   push:
     branches: [main]
 
@@ -18,7 +21,7 @@ jobs:
           ACTIONS_PAT: ${{ secrets.ACTIONS_PAT }}
         run: |
           if [ -z "$ACTIONS_PAT" ]; then
-            echo "::error::Missing ACTIONS_PAT secret. Use a PAT so pushing Ethan can trigger the deploy workflow."
+            echo "::error::Missing ACTIONS_PAT secret. Use a PAT with repo and workflow scopes so pushing Ethan can trigger deploys and sync workflow file changes."
             exit 1
           fi
 
@@ -38,6 +41,16 @@ jobs:
           git merge --no-commit --no-ff origin/main
           merge_status=$?
           set -e
+
+          if ! git rev-parse -q --verify MERGE_HEAD >/dev/null; then
+            if [ "$merge_status" -ne 0 ]; then
+              echo "::error::Merge failed before creating a merge state."
+              exit "$merge_status"
+            fi
+
+            echo "Ethan already includes main."
+            exit 0
+          fi
 
           personal_paths=(
             docs
@@ -67,19 +80,29 @@ jobs:
           git clean -fd -- "${personal_paths[@]}"
           git rm -rf --ignore-unmatch -- "${template_only_paths[@]}"
 
-          if [ "$merge_status" -ne 0 ]; then
-            remaining_conflicts="$(git diff --name-only --diff-filter=U)"
-            if [ -n "$remaining_conflicts" ]; then
-              echo "::error::Merge conflicts remain outside preserved personal paths."
-              echo "$remaining_conflicts"
-              exit 1
-            fi
+          remaining_conflicts="$(git diff --name-only --diff-filter=U)"
+          if [ -n "$remaining_conflicts" ]; then
+            echo "Resolving template-owned conflicts with main:"
+            echo "$remaining_conflicts"
+
+            while IFS= read -r conflict_path; do
+              case "$conflict_path" in
+                docs|docs/*|public/avatar.svg|public/figures|public/figures/*|public/reward|public/reward/*|public/site-icon.svg|src/config|src/config/*|src/content|src/content/*)
+                  echo "::error::Protected path conflict remained after restore: $conflict_path"
+                  exit 1
+                  ;;
+                *)
+                  git checkout --theirs -- "$conflict_path"
+                  git add -- "$conflict_path"
+                  ;;
+              esac
+            done <<< "$remaining_conflicts"
           fi
 
           if git diff --cached --quiet; then
-            echo "No deploy-relevant template changes to sync."
-            exit 0
+            echo "No file changes after preserving personal content; recording merge ancestry."
           fi
 
-          git commit -m "chore(deploy): sync main template changes into Ethan"
+          git status --short
+          git commit --allow-empty -m "chore(deploy): sync main template changes into Ethan"
           git push origin Ethan
