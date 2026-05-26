@@ -1,0 +1,45 @@
+---
+import DocumentPageShell from "../components/layout/DocumentPageShell.astro";
+import { site } from "../config/site";
+
+export const prerender = true;
+
+Astro.response.status = 404;
+
+const requestedPath = Astro.url.pathname;
+const pageTitle = `404 - ${site.site.name}`;
+const pageDescription = "The requested page could not be found.";
+---
+
+<DocumentPageShell
+  background="content"
+  title={pageTitle}
+  description={pageDescription}
+  canonicalUrl="/404/"
+  ogTitle="404"
+  ogType="website"
+  contentClass="content-page content-page--not-found"
+  contentAriaLabel="Not found content"
+  tocAriaLabel="Not found navigation"
+  tocEmptyText="No page found here."
+  tocItems={[]}
+>
+  <section class="not-found-page" aria-labelledby="not-found-title">
+    <p class="not-found-code">404</p>
+    <h1 id="not-found-title">Page not found</h1>
+    <p class="not-found-description">
+      The path you opened does not match any page on this site.
+    </p>
+    <p class="not-found-path">
+      <span>Requested path</span>
+      <code>{requestedPath}</code>
+    </p>
+    <nav class="not-found-actions" aria-label="Not found page actions">
+      <a class="not-found-action not-found-action--primary" href="/">Home</a>
+      <a class="not-found-action" href="/blog/">Blog</a>
+      <a class="not-found-action" href="/note/">Note</a>
+      <a class="not-found-action" href="/project/">Project</a>
+      <a class="not-found-action" href="/links/">Links</a>
+    </nav>
+  </section>
+</DocumentPageShell>
