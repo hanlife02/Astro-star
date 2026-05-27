@@ -2,6 +2,8 @@
 import DocumentDetailPage from "./DocumentDetailPage.astro";
 import ArticleActionCard from "./ArticleActionCard.astro";
 import WalineComments from "./WalineComments.astro";
+import Icon from "../ui/Icon.astro";
+import { ArrowLeft, ArrowRight } from "lucide-static";
 
 interface TocHeading {
   depth: 1 | 2 | 3 | 4 | 5 | 6;
@@ -191,8 +193,11 @@ const sectionLabel = sectionLabels[section] ?? section;
             <a
               class="article-neighbor article-neighbor--previous"
               href={previousArticle.href}
+              aria-label={`Previous article: ${previousArticle.title}`}
             >
-              <span class="article-neighbor-label">Previous</span>
+              <span class="article-neighbor-arrow" aria-hidden="true">
+                <Icon svg={ArrowLeft} />
+              </span>
               <span class="article-neighbor-title">
                 {previousArticle.title}
               </span>
@@ -202,9 +207,12 @@ const sectionLabel = sectionLabels[section] ?? section;
             <a
               class="article-neighbor article-neighbor--next"
               href={nextArticle.href}
+              aria-label={`Next article: ${nextArticle.title}`}
             >
-              <span class="article-neighbor-label">Next</span>
               <span class="article-neighbor-title">{nextArticle.title}</span>
+              <span class="article-neighbor-arrow" aria-hidden="true">
+                <Icon svg={ArrowRight} />
+              </span>
             </a>
           )}
         </nav>
