@@ -13,16 +13,22 @@ const { name, description, href, avatarSrc } = Astro.props as Props;
   rel="noreferrer"
   aria-label={`Visit ${name}`}
 >
-  <img
-    class="app-panel-item-icon"
-    src={avatarSrc}
-    alt=""
-    width="56"
-    height="56"
-    loading="lazy"
-    decoding="async"
+  <span
+    class="app-panel-item-icon friend-link-avatar-frame"
+    data-friend-link-avatar-frame="true"
     aria-hidden="true"
-  />
+  >
+    <img
+      class="friend-link-avatar"
+      data-friend-link-avatar="true"
+      src={avatarSrc}
+      alt=""
+      width="56"
+      height="56"
+      loading="lazy"
+      decoding="async"
+    />
+  </span>
 
   <span class="app-panel-item-copy">
     <span class="app-panel-item-name">{name}</span>

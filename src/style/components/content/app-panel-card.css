@@ -55,6 +55,65 @@
   flex-shrink: 0;
 }
 
+.friend-links-grid .friend-link-avatar-frame {
+  position: relative;
+  overflow: hidden;
+  background:
+    linear-gradient(
+      110deg,
+      transparent 0%,
+      color-mix(in srgb, var(--line) 6%, transparent) 38%,
+      transparent 68%
+    ),
+    color-mix(in srgb, var(--line) 5%, transparent);
+  background-size: 220% 100%;
+  line-height: 0;
+  animation: friend-link-avatar-placeholder-sheen 1.6s ease-in-out infinite;
+}
+
+.friend-links-grid .friend-link-avatar-frame[data-avatar-state="loaded"] {
+  background: transparent;
+  animation: none;
+}
+
+.friend-links-grid .friend-link-avatar {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  object-fit: cover;
+}
+
+html[data-js="true"] .friend-links-grid .friend-link-avatar {
+  opacity: 0;
+  transition: opacity 0.18s ease;
+}
+
+html[data-js="true"]
+  .friend-links-grid
+  .friend-link-avatar-frame[data-avatar-state="loaded"]
+  .friend-link-avatar {
+  opacity: 1;
+}
+
+html[data-js="true"]
+  .friend-links-grid
+  .friend-link-avatar-frame[data-avatar-state="error"]
+  .friend-link-avatar {
+  opacity: 0;
+  visibility: hidden;
+}
+
+@keyframes friend-link-avatar-placeholder-sheen {
+  from {
+    background-position: 160% 0;
+  }
+
+  to {
+    background-position: -60% 0;
+  }
+}
+
 .friend-links-grid .app-panel-item-copy {
   justify-content: center;
   gap: 0.18rem;
@@ -150,5 +209,15 @@
 
   .friend-links-grid {
     --friend-links-gap: 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .friend-links-grid .friend-link-avatar-frame {
+    animation: none;
+  }
+
+  html[data-js="true"] .friend-links-grid .friend-link-avatar {
+    transition: none;
   }
 }
