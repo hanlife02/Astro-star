@@ -28,6 +28,7 @@
     initHomeShellWalinePageviews,
   } from "../../scripts/home-shell-waline";
   import { initHomeShellGitHubRepoCards } from "../../scripts/home-shell-github-repo-cards";
+  import { initHomeShellFriendLinkAvatars } from "../../scripts/home-shell-friend-link-avatars";
   import {
     cleanupHomeShellContentImageLightbox,
     initHomeShellContentImageLightbox,
@@ -41,6 +42,7 @@
     "__homeShellDesktopSignatureNavCleanup",
     "__homeShellDocumentProgressCleanup",
     "__homeShellCodeCopyCleanup",
+    "__homeShellFriendLinkAvatarsCleanup",
   ] as const;
 
   type HomeShellBeforeSwapCleanupKey =
@@ -91,6 +93,7 @@
     initHomeShellWalinePageviews();
     initHomeShellArticleActions();
     initHomeShellGitHubRepoCards();
+    initHomeShellFriendLinkAvatars();
     initHomeShellContentImageLightbox();
   };
 
