@@ -1,9 +1,6 @@
 name: Sync main to Ethan
 
 on:
-  workflow_dispatch:
-  schedule:
-    - cron: "0 20 * * *"
   push:
     branches: [main]
 
