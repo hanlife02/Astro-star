@@ -31,6 +31,18 @@
   margin-inline: auto;
 }
 
+html[data-js="true"] .friend-links-grid[data-friend-links-state="loading"] {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+html[data-js="true"] .friend-links-grid[data-friend-links-state="ready"] {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 0.22s ease;
+}
+
 .friend-links-grid .app-panel-item,
 .friend-links-grid .app-panel-item--link {
   width: 100%;
