@@ -303,6 +303,16 @@ html:lang(zh-CN) .content-page--article .content-page-body {
   line-height: 1.18;
 }
 
+.content-page--about .content-page-body h1,
+.content-page--links .content-page-body h1 {
+  font-size: clamp(2rem, 1.8rem + 1vw, 3.5rem);
+  font-weight: 500;
+  line-height: 1.1;
+  color: transparent;
+  -webkit-text-stroke: 1.15px var(--line);
+  text-stroke: 1.15px var(--line);
+}
+
 .content-page--article .content-page-body h2 {
   font-size: clamp(1.5rem, 1.4rem + 0.3vw, 1.78rem);
   font-weight: 600;
@@ -578,6 +588,12 @@ html.content-image-lightbox-open {
   font-family: inherit;
   font-size: inherit;
   line-height: inherit;
+}
+
+.content-page-body .link-owner-info-code {
+  border: 1px solid var(--border-soft);
+  color: var(--line);
+  background: color-mix(in srgb, var(--line) 4%, transparent);
 }
 
 .content-code-copy {

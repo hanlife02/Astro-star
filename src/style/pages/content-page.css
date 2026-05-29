@@ -7,7 +7,6 @@
 @import "../components/content/not-found-page.css";
 @import "../components/content/app-panel-card.css";
 @import "../components/links/lost-links-panel.css";
-@import "../components/links/owner-info-card.css";
 
 .content-page {
   width: 100%;
