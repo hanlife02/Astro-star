@@ -11,44 +11,19 @@ export interface LostLinkItem {
   href: string;
 }
 
-export interface LinksPageConfig {
-  title: string;
-  intro: string;
-  friendsTitle: string;
-  lostTitle: string;
-  applyTitle: string;
-  applyOwner: {
-    name: string;
-    description: string;
-    href: string;
-    avatarSrc: string;
-  };
-  applyRules: readonly string[];
+export interface LinkApplyOwner {
+  name: string;
+  description: string;
+  href: string;
+  avatarSrc: string;
 }
 
-export const linksPage = {
-  title: "Links",
-  intro: "The order is random~",
-  friendsTitle: "Friends",
-  lostTitle: "Lost",
-  applyTitle: "Apply",
-  applyOwner: {
-    name: "Ethan",
-    description: "Don't stay awake for too long.",
-    href: "https://hanlife02.com",
-    avatarSrc: "https://hanlife02.com/avatar.svg",
-  },
-  applyRules: [
-    "Before applying, make sure your site already lists my link. If your application is approved and you later remove my link, I will remove yours and add your site to a blacklist.",
-    "If your site is unreachable for a long time, I may remove your link. You can apply again after your site is back online.",
-    "Your site must not contain political sensitivity, illegal content, or anything that violates applicable laws.",
-    "No excessive advertising, no malware, and no malicious scripts.",
-    "If you republish articles, you must cite the original source.",
-    "Your site must enable HTTPS globally.",
-    "You must use your own independent domain. Public subdomains or free domains are not accepted (e.g. github.io, vercel.app, eu.org, js.cool, .tk, .ml, .cf).",
-    "Commercial sites and non-personal sites are not accepted.",
-  ],
-} satisfies LinksPageConfig;
+export const linkApplyOwner = {
+  name: "Ethan",
+  description: "Don't stay awake for too long.",
+  href: "https://hanlife02.com",
+  avatarSrc: "https://hanlife02.com/avatar.svg",
+} satisfies LinkApplyOwner;
 
 export const friendLinks = [
   {
