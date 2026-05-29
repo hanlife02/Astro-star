@@ -14,7 +14,7 @@
   gap: 0.75rem;
   cursor: pointer;
   list-style: none;
-  padding: 0.95rem 1rem;
+  padding: 0.55rem 1rem;
   color: var(--line);
   font-size: 0.98rem;
   font-weight: 600;
@@ -44,14 +44,18 @@
   transform: rotate(135deg);
 }
 
-.lost-links-list {
+.lost-links-panel .lost-links-list {
   margin: 0;
-  padding: 0 1rem 1rem;
+  padding: 0 1rem 0.35rem;
   list-style: none;
 }
 
-.lost-links-item + .lost-links-item {
-  margin-top: 0.7rem;
+.lost-links-panel .lost-links-item {
+  margin-bottom: 0;
+}
+
+.lost-links-panel .lost-links-item + .lost-links-item {
+  margin-top: 0.35rem;
 }
 
 .lost-links-link {
@@ -83,9 +87,9 @@
   color: color-mix(in srgb, var(--line) 72%, transparent);
 }
 
-.lost-links-empty {
+.lost-links-panel .lost-links-empty {
   margin: 0;
-  padding: 0 1rem 1rem;
+  padding: 0 1rem 0.35rem;
   color: color-mix(in srgb, var(--line) 68%, transparent);
   font-size: 0.92rem;
   line-height: 1.6;

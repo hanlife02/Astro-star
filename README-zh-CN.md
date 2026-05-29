@@ -111,8 +111,8 @@ Astro-star 最初是一个个人博客，现在希望慢慢变成一个可一起
 ├── scripts/                # 配置迁移、索引同步和构建辅助脚本
 ├── src/
 │   ├── components/         # 可复用组件
-│   ├── config/             # 站点、关于页、友链和搜索配置
-│   ├── content/            # blog / note / project 内容集合
+│   ├── config/             # 站点、友链数据和搜索配置
+│   ├── content/            # blog / note / project / page 内容集合
 │   ├── layouts/            # 页面布局
 │   ├── pages/              # 路由页面和 API
 │   ├── scripts/            # 浏览器端交互脚本

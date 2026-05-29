@@ -1,6 +1,12 @@
 ---
-import OwnerInfoCard from "../links/OwnerInfoCard.astro";
-import { linksPage } from "../../config/links";
+import { linkApplyOwner } from "../../config/links";
+
+const ownerInfoText = [
+  `Name: ${linkApplyOwner.name}`,
+  `Desc: ${linkApplyOwner.description}`,
+  `Link: ${linkApplyOwner.href}`,
+  `Avatar: ${linkApplyOwner.avatarSrc}`,
+].join("\n");
 ---
 
-<OwnerInfoCard {...linksPage.applyOwner} />
+<pre class="link-owner-info-code"><code>{ownerInfoText}</code></pre>

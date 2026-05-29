@@ -1,6 +1,13 @@
 ---
 import LostLinksPanel from "../links/LostLinksPanel.astro";
-import { linksPage, lostLinks } from "../../config/links";
+import { lostLinks } from "../../config/links";
+
+interface Props {
+  title?: string;
+  emptyText?: string;
+}
+
+const { title = "Lost", emptyText } = Astro.props as Props;
 ---
 
-<LostLinksPanel items={lostLinks} title={linksPage.lostTitle} />
+<LostLinksPanel items={lostLinks} title={title} emptyText={emptyText} />

@@ -13,8 +13,7 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
 // --- 1. Import TS configs (requires --experimental-strip-types) ---
 const { site } = await import("../src/config/site.ts");
-const { aboutPage } = await import("../src/config/about.ts");
-const { linksPage, friendLinks, lostLinks } =
+const { linkApplyOwner, friendLinks, lostLinks } =
   await import("../src/config/links.ts");
 
 function resolveCodeTimeId(profile = {}) {
@@ -139,9 +138,8 @@ const normalizedSiteConfig = normalizeSplitSiteConfig(site);
 const config = {
   profile: normalizedSiteConfig.profile,
   site: normalizedSiteConfig.site,
-  about: aboutPage,
   links: {
-    page: linksPage,
+    applyOwner: linkApplyOwner,
     friendLinks,
     lostLinks,
   },
@@ -164,6 +162,7 @@ console.log("Written: src/data/user-config.example.json");
 
 // --- 5. Pack content & public assets into tar.gz ---
 const packPaths = [
+  "src/content/page",
   "src/content/blog",
   "src/content/note",
   "src/content/project",

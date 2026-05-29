@@ -44,6 +44,13 @@ const defaultArticleActions = {
   },
 };
 
+const defaultLinkApplyOwner = {
+  name: "Your Name",
+  description: "A short line about your site.",
+  href: "https://example.com",
+  avatarSrc: "/avatar.svg",
+};
+
 function normalizeArticleActions(articleActions = {}) {
   const input = articleActions ?? {};
 
@@ -135,6 +142,17 @@ function normalizeSplitSiteConfig(input) {
   };
 }
 
+function normalizeLinksConfig(input = {}) {
+  const links = input?.links ?? {};
+
+  return {
+    applyOwner:
+      links.applyOwner ?? links.page?.applyOwner ?? defaultLinkApplyOwner,
+    friendLinks: links.friendLinks ?? [],
+    lostLinks: links.lostLinks ?? [],
+  };
+}
+
 /** writeFileSync with automatic parent directory creation */
 function writeFileSyncSafe(filePath, data, encoding) {
   mkdirSync(dirname(filePath), { recursive: true });
@@ -151,44 +169,9 @@ writeFileSyncSafe(
 );
 console.log("Written: src/config/site.ts");
 
-// --- 3. Generate src/config/about.ts ---
-writeFileSyncSafe(
-  resolve(ROOT, "src/config/about.ts"),
-  [
-    `export interface AboutPanelItem {`,
-    `  icon: string;`,
-    `  name: string;`,
-    `  description: string;`,
-    `  href?: string;`,
-    `}`,
-    ``,
-    `export interface AboutTimelineYear {`,
-    `  label: string;`,
-    `  events: readonly string[];`,
-    `  summary?: string;`,
-    `}`,
-    ``,
-    `export interface AboutPageConfig {`,
-    `  title: string;`,
-    `  introTitle: string;`,
-    `  introParagraphs: readonly string[];`,
-    `  socialTitle: string;`,
-    `  socialItems: readonly AboutPanelItem[];`,
-    `  toolsTitle: string;`,
-    `  toolItems: readonly AboutPanelItem[];`,
-    `  blogTitle: string;`,
-    `  timelineTitle: string;`,
-    `  timeline: readonly AboutTimelineYear[];`,
-    `}`,
-    ``,
-    `export const aboutPage = ${toTS(config.about)} satisfies AboutPageConfig;`,
-    ``,
-  ].join("\n"),
-  "utf-8",
-);
-console.log("Written: src/config/about.ts");
+// --- 3. Generate src/config/links.ts ---
+const normalizedLinksConfig = normalizeLinksConfig(config);
 
-// --- 4. Generate src/config/links.ts ---
 writeFileSyncSafe(
   resolve(ROOT, "src/config/links.ts"),
   [
@@ -205,33 +188,25 @@ writeFileSyncSafe(
     `  href: string;`,
     `}`,
     ``,
-    `export interface LinksPageConfig {`,
-    `  title: string;`,
-    `  intro: string;`,
-    `  friendsTitle: string;`,
-    `  lostTitle: string;`,
-    `  applyTitle: string;`,
-    `  applyOwner: {`,
-    `    name: string;`,
-    `    description: string;`,
-    `    href: string;`,
-    `    avatarSrc: string;`,
-    `  };`,
-    `  applyRules: readonly string[];`,
+    `export interface LinkApplyOwner {`,
+    `  name: string;`,
+    `  description: string;`,
+    `  href: string;`,
+    `  avatarSrc: string;`,
     `}`,
     ``,
-    `export const linksPage = ${toTS(config.links.page)} satisfies LinksPageConfig;`,
+    `export const linkApplyOwner = ${toTS(normalizedLinksConfig.applyOwner)} satisfies LinkApplyOwner;`,
     ``,
-    `export const friendLinks = ${toTS(config.links.friendLinks)} satisfies readonly FriendLinkItem[];`,
+    `export const friendLinks = ${toTS(normalizedLinksConfig.friendLinks)} satisfies readonly FriendLinkItem[];`,
     ``,
-    `export const lostLinks = ${toTS(config.links.lostLinks)} satisfies readonly LostLinkItem[];`,
+    `export const lostLinks = ${toTS(normalizedLinksConfig.lostLinks)} satisfies readonly LostLinkItem[];`,
     ``,
   ].join("\n"),
   "utf-8",
 );
 console.log("Written: src/config/links.ts");
 
-// --- 5. Patch rss.xml.ts language ---
+// --- 4. Patch rss.xml.ts language ---
 const rssPath = resolve(ROOT, "src/pages/rss.xml.ts");
 const rssContent = readFileSync(rssPath, "utf-8");
 writeFileSyncSafe(
@@ -244,7 +219,7 @@ writeFileSyncSafe(
 );
 console.log("Written: src/pages/rss.xml.ts");
 
-// --- 6. Extract content archive ---
+// --- 5. Extract content archive ---
 const tarPath = resolve(ROOT, "src/data/user-content.tar.gz");
 if (existsSync(tarPath)) {
   await extractTarball({
@@ -257,10 +232,9 @@ if (existsSync(tarPath)) {
   console.log("No user-content.tar.gz found, skipping content restore.");
 }
 
-// --- 7. Format modified files with prettier ---
+// --- 6. Format modified files with prettier ---
 const filesToFormat = [
   "src/config/site.ts",
-  "src/config/about.ts",
   "src/config/links.ts",
   "src/pages/rss.xml.ts",
 ];

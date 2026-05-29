@@ -111,8 +111,8 @@ The project focuses on a small but important kind of community: independent webs
 ├── scripts/                # Config migration, index sync, and build helpers
 ├── src/
 │   ├── components/         # Reusable components
-│   ├── config/             # Site, about, links, and search config
-│   ├── content/            # blog / note / project content collections
+│   ├── config/             # Site, friend links, and search config
+│   ├── content/            # blog / note / project / page content collections
 │   ├── layouts/            # Page layouts
 │   ├── pages/              # Routes and API endpoints
 │   ├── scripts/            # Browser-side interaction scripts

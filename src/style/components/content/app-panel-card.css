@@ -28,7 +28,7 @@
     (var(--friend-link-card-max) * 3) + (var(--friend-links-gap) * 2)
   );
   min-width: 0;
-  margin-inline: auto;
+  margin: 0 auto clamp(1.25rem, 1rem + 0.65vw, 1.75rem);
 }
 
 html[data-js="true"] .friend-links-grid[data-friend-links-state="loading"] {

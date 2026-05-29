@@ -43,11 +43,12 @@ pnpm config:apply     # 从备份还原配置与内容
 ```
 src/
 ├── components/       # 可复用组件（纯展示，不含业务数据）
-├── config/           # 站点配置（site.ts, about.ts, links.ts）
+├── config/           # 站点配置与友链数据（site.ts, links.ts）
 ├── content/          # Content Collections（Markdown/MDX）
 │   ├── blog/         # 长篇博客
 │   ├── note/         # 短篇笔记
-│   └── project/      # 项目展示
+│   ├── project/      # 项目展示
+│   └── page/         # About / Links 等固定页面内容
 ├── layouts/          # 页面布局（BaseLayout, HomeLayout）
 ├── pages/            # 路由页面
 ├── style/            # 样式文件（按组件/布局/页面分目录）
