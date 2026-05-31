@@ -276,6 +276,80 @@ html:lang(zh-CN) .content-page--article .content-page-body {
   transition: color 0.2s ease;
 }
 
+.content-page--article
+  .content-page-body
+  > :where(p, ul, ol, blockquote, figcaption, table)
+  a:not([class]):not(:has(img)) {
+  display: inline-block;
+  color: color-mix(in srgb, var(--accent) 84%, var(--line) 16%);
+  font-weight: 600;
+  line-height: 1.35;
+  text-decoration: none;
+  transform-origin: center bottom;
+  transition:
+    color 0.18s ease,
+    transform 0.18s ease;
+}
+
+.content-page--article
+  .content-page-body
+  > :where(p, ul, ol, blockquote, figcaption, table)
+  a:not([class]):not(:has(img))::after {
+  content: "↗";
+  display: inline-block;
+  margin-left: 0.16em;
+  font-size: 0.76em;
+  line-height: 1;
+  vertical-align: 0.18em;
+  transition: transform 0.18s ease;
+}
+
+@media (hover: hover) {
+  .content-page--article
+    .content-page-body
+    > :where(p, ul, ol, blockquote, figcaption, table)
+    a:not([class]):not(:has(img)):hover {
+    color: var(--accent);
+    transform: scale(1.04);
+  }
+
+  .content-page--article
+    .content-page-body
+    > :where(p, ul, ol, blockquote, figcaption, table)
+    a:not([class]):not(:has(img)):hover::after {
+    transform: translate(0.08em, -0.12em);
+  }
+}
+
+.content-page--article
+  .content-page-body
+  > :where(p, ul, ol, blockquote, figcaption, table)
+  a:not([class]):not(:has(img)):focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 0.18em;
+  transform: scale(1.04);
+}
+
+.content-page--article
+  .content-page-body
+  > :where(p, ul, ol, blockquote, figcaption, table)
+  a:not([class]):not(:has(img)):focus-visible::after {
+  transform: translate(0.08em, -0.12em);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .content-page--article
+    .content-page-body
+    > :where(p, ul, ol, blockquote, figcaption, table)
+    a:not([class]):not(:has(img)),
+  .content-page--article
+    .content-page-body
+    > :where(p, ul, ol, blockquote, figcaption, table)
+    a:not([class]):not(:has(img))::after {
+    transition: none;
+  }
+}
+
 @media (hover: hover) {
   .content-page-body .content-repo-card:hover {
     border-color: color-mix(in srgb, var(--line) 28%, transparent);
