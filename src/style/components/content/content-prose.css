@@ -23,10 +23,6 @@
   --content-body-line-height: 1.78;
 }
 
-.content-page--article .content-page-body > p {
-  text-indent: 2em;
-}
-
 .content-page--article .content-page-body > p:has(> img + img) {
   text-indent: 0;
   display: flex;
