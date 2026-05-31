@@ -27,6 +27,7 @@ const projectSchema = z.object({
 
 const pageSchema = z.object({
   title: z.string().min(1),
+  heading: z.string().optional(),
   description: z.string().optional(),
   background: z
     .enum(["home", "code-rain", "constellation", "content"])
