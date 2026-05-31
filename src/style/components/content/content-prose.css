@@ -45,8 +45,25 @@
   text-stroke: 1.15px var(--line);
 }
 
-.content-page--article .content-page-body > .content-page-description {
-  margin: -0.2rem 0 clamp(1.2rem, 1rem + 0.55vw, 1.7rem);
+.content-page-header {
+  margin-bottom: clamp(1.2rem, 1rem + 0.55vw, 1.7rem);
+}
+
+.content-page-header::after {
+  content: "";
+  display: block;
+  width: clamp(2.2rem, 1.9rem + 0.85vw, 3.2rem);
+  height: 1px;
+  margin-top: clamp(0.85rem, 0.74rem + 0.36vw, 1.1rem);
+  background: color-mix(in srgb, var(--line) 42%, transparent);
+}
+
+.content-page-header .content-page-title {
+  margin-bottom: 1rem;
+}
+
+.content-page-header .content-page-description {
+  margin: -0.2rem 0 0;
   color: color-mix(in srgb, var(--line) 78%, transparent);
   font-size: var(--content-body-font-size);
   line-height: var(--content-body-line-height);

@@ -21,21 +21,31 @@ if (!pageEntry) {
 const { Content, headings } = await render(pageEntry);
 const title = pageEntry.data.title;
 const description = pageEntry.data.description || site.site.description;
+const contentTitle = pageEntry.data.heading || title;
+const contentTitleId = pageEntry.id;
 const pageRoutePath = "/about/";
 const canonicalUrl = new URL(pageRoutePath, site.site.url).toString();
 const walineServerURL = WALINE_SERVER_URL?.trim() || "";
-const tocHeadings = headings
-  .filter((heading) => heading.depth >= 1 && heading.depth <= 5)
-  .map((heading) => ({
-    depth: heading.depth as 1 | 2 | 3 | 4 | 5,
-    slug: heading.slug,
-    text: heading.text,
-  }));
+const tocHeadings = [
+  {
+    depth: 1 as const,
+    slug: contentTitleId,
+    text: contentTitle,
+  },
+  ...headings.filter((heading) => heading.depth >= 2 && heading.depth <= 5),
+].map((heading) => ({
+  depth: heading.depth as 1 | 2 | 3 | 4 | 5,
+  slug: heading.slug,
+  text: heading.text,
+}));
 ---
 
 <DocumentDetailPage
   background={pageEntry.data.background ?? "code-rain"}
   title={`${title} - ${site.site.name}`}
+  contentTitle={contentTitle}
+  contentTitleId={contentTitleId}
+  contentDescription={pageEntry.data.description}
   description={description}
   canonicalUrl={canonicalUrl}
   ogTitle={title}

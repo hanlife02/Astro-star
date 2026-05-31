@@ -14,6 +14,9 @@ interface Props {
   variant?: "default" | "article";
   background?: "home" | "code-rain" | "constellation" | "content";
   title?: string;
+  contentTitle?: string;
+  contentTitleId?: string;
+  contentDescription?: string;
   description?: string;
   canonicalUrl?: string;
   imageUrl?: string;
@@ -37,6 +40,9 @@ const {
   variant = "article",
   background = "content",
   title,
+  contentTitle,
+  contentTitleId,
+  contentDescription,
   description,
   canonicalUrl,
   imageUrl,
@@ -81,6 +87,20 @@ const {
 >
   <slot name="head" slot="head" />
   <slot name="before-content" />
+  {
+    (contentTitle || contentDescription) && (
+      <header class="content-page-header">
+        {contentTitle && (
+          <h1 id={contentTitleId} class="content-page-title">
+            {contentTitle}
+          </h1>
+        )}
+        {contentDescription && (
+          <p class="content-page-description">{contentDescription}</p>
+        )}
+      </header>
+    )
+  }
   <DocumentContent />
   <slot name="after-content" />
 </DocumentPageShell>
