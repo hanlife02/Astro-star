@@ -45,6 +45,14 @@
   text-stroke: 1.15px var(--line);
 }
 
+.content-page--article .content-page-body > .content-page-description {
+  margin: -0.2rem 0 clamp(1.2rem, 1rem + 0.55vw, 1.7rem);
+  color: color-mix(in srgb, var(--line) 78%, transparent);
+  font-size: var(--content-body-font-size);
+  line-height: var(--content-body-line-height);
+  text-indent: 0;
+}
+
 .content-page-body h2,
 .content-page-body h3 {
   color: var(--line);
