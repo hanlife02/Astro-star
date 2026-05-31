@@ -15,6 +15,7 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const { site } = await import("../src/config/site.ts");
 const { linkApplyOwner, friendLinks, lostLinks } =
   await import("../src/config/links.ts");
+const { socialLinks } = await import("../src/config/social.ts");
 
 function resolveCodeTimeId(profile = {}) {
   if (typeof profile.codetime === "string") return profile.codetime;
@@ -142,6 +143,9 @@ const config = {
     applyOwner: linkApplyOwner,
     friendLinks,
     lostLinks,
+  },
+  social: {
+    socialLinks,
   },
   rss: { language: rssLanguage },
 };

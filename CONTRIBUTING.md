@@ -43,7 +43,7 @@ pnpm config:apply     # 从备份还原配置与内容
 ```
 src/
 ├── components/       # 可复用组件（纯展示，不含业务数据）
-├── config/           # 站点配置与友链数据（site.ts, links.ts）
+├── config/           # 站点配置、社交链接与友链数据（site.ts, social.ts, links.ts）
 ├── content/          # Content Collections（Markdown/MDX）
 │   ├── blog/         # 长篇博客
 │   ├── note/         # 短篇笔记

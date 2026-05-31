@@ -51,6 +51,37 @@ const defaultLinkApplyOwner = {
   avatarSrc: "/avatar.svg",
 };
 
+const defaultSocialLinks = [
+  {
+    id: "mail",
+    icon: "mail",
+    name: "Mail",
+    href: "mailto:hello@example.com",
+    enabled: true,
+  },
+  {
+    id: "github",
+    icon: "github",
+    name: "GitHub",
+    href: "https://github.com/your-name",
+    enabled: true,
+  },
+  {
+    id: "bilibili",
+    icon: "bilibili",
+    name: "Bilibili",
+    href: "https://space.bilibili.com/000000",
+    enabled: true,
+  },
+  {
+    id: "telegram",
+    icon: "telegram",
+    name: "Telegram",
+    href: "https://t.me/your-name",
+    enabled: true,
+  },
+];
+
 function normalizeArticleActions(articleActions = {}) {
   const input = articleActions ?? {};
 
@@ -153,6 +184,22 @@ function normalizeLinksConfig(input = {}) {
   };
 }
 
+function normalizeSocialConfig(input = {}) {
+  const social = input?.social ?? {};
+  const socialLinks =
+    social.socialLinks ?? input?.socialLinks ?? defaultSocialLinks;
+
+  return {
+    socialLinks: socialLinks.map((item = {}) => ({
+      id: item.id ?? "",
+      icon: item.icon ?? item.id ?? "star",
+      name: item.name ?? item.id ?? "Link",
+      href: item.href ?? "",
+      enabled: item.enabled ?? true,
+    })),
+  };
+}
+
 /** writeFileSync with automatic parent directory creation */
 function writeFileSyncSafe(filePath, data, encoding) {
   mkdirSync(dirname(filePath), { recursive: true });
@@ -206,7 +253,28 @@ writeFileSyncSafe(
 );
 console.log("Written: src/config/links.ts");
 
-// --- 4. Patch rss.xml.ts language ---
+// --- 4. Generate src/config/social.ts ---
+const normalizedSocialConfig = normalizeSocialConfig(config);
+
+writeFileSyncSafe(
+  resolve(ROOT, "src/config/social.ts"),
+  [
+    `export interface SocialLinkItem {`,
+    `  id: string;`,
+    `  icon: string;`,
+    `  name: string;`,
+    `  href: string;`,
+    `  enabled: boolean;`,
+    `}`,
+    ``,
+    `export const socialLinks = ${toTS(normalizedSocialConfig.socialLinks)} satisfies readonly SocialLinkItem[];`,
+    ``,
+  ].join("\n"),
+  "utf-8",
+);
+console.log("Written: src/config/social.ts");
+
+// --- 5. Patch rss.xml.ts language ---
 const rssPath = resolve(ROOT, "src/pages/rss.xml.ts");
 const rssContent = readFileSync(rssPath, "utf-8");
 writeFileSyncSafe(
@@ -219,7 +287,7 @@ writeFileSyncSafe(
 );
 console.log("Written: src/pages/rss.xml.ts");
 
-// --- 5. Extract content archive ---
+// --- 6. Extract content archive ---
 const tarPath = resolve(ROOT, "src/data/user-content.tar.gz");
 if (existsSync(tarPath)) {
   await extractTarball({
@@ -232,10 +300,11 @@ if (existsSync(tarPath)) {
   console.log("No user-content.tar.gz found, skipping content restore.");
 }
 
-// --- 6. Format modified files with prettier ---
+// --- 7. Format modified files with prettier ---
 const filesToFormat = [
   "src/config/site.ts",
   "src/config/links.ts",
+  "src/config/social.ts",
   "src/pages/rss.xml.ts",
 ];
 try {

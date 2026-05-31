@@ -19,7 +19,7 @@
 }
 
 .content-page--article .content-page-body {
-  --content-body-font-size: clamp(15px, 14.2px + 0.18vw, 16.5px);
+  --content-body-font-size: clamp(15.8px, 15px + 0.2vw, 17.2px);
   --content-body-line-height: 1.78;
 }
 
@@ -245,8 +245,8 @@ html:lang(zh-CN) .content-page-body {
 }
 
 html:lang(zh-CN) .content-page--article .content-page-body {
-  --content-body-font-size: clamp(14.8px, 14.1px + 0.18vw, 16px);
-  --content-body-line-height: 1.76;
+  --content-body-font-size: clamp(15.5px, 14.8px + 0.18vw, 16.8px);
+  --content-body-line-height: 1.78;
 }
 
 .content-page-body a {

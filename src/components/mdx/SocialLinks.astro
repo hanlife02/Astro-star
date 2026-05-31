@@ -1,0 +1,46 @@
+---
+import AppPanelIcon from "../ui/icons/AppPanelIcon.astro";
+import { socialLinks, type SocialLinkItem } from "../../config/social";
+
+interface Props {
+  ids?: readonly string[];
+}
+
+const { ids } = Astro.props as Props;
+const allSocialLinks: readonly SocialLinkItem[] = socialLinks;
+const socialLinkMap = new Map(allSocialLinks.map((item) => [item.id, item]));
+const selectedLinks = Array.isArray(ids)
+  ? ids
+      .map((id) => socialLinkMap.get(id))
+      .filter((item): item is SocialLinkItem => Boolean(item))
+  : allSocialLinks.filter((item) => item.enabled);
+
+function isExternalLink(href: string) {
+  return /^https?:\/\//.test(href);
+}
+---
+
+{
+  selectedLinks.length > 0 && (
+    <nav class="social-links not-content" aria-label="Social links">
+      {selectedLinks.map((item) => {
+        const external = isExternalLink(item.href);
+
+        return (
+          <a
+            class="social-links-item"
+            href={item.href}
+            target={external ? "_blank" : undefined}
+            rel={external ? "noreferrer" : undefined}
+            aria-label={`Visit ${item.name}`}
+          >
+            <span class="social-links-icon" aria-hidden="true">
+              <AppPanelIcon name={item.icon} label={item.name} />
+            </span>
+            <span class="social-links-name">{item.name}</span>
+          </a>
+        );
+      })}
+    </nav>
+  )
+}
