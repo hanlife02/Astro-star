@@ -101,8 +101,7 @@
   margin-left: 0;
   padding-left: clamp(0.9rem, 0.78rem + 0.38vw, 1.2rem);
   color: color-mix(in srgb, var(--line) 88%, transparent);
-  font-family:
-    Georgia, "Times New Roman", "Songti SC", "Noto Serif SC", serif;
+  font-family: Georgia, "Times New Roman", "Songti SC", "Noto Serif SC", serif;
   font-size: clamp(1.03em, 1em + 0.18vw, 1.12em);
   font-style: italic;
   font-weight: 500;
