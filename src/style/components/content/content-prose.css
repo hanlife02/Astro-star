@@ -96,6 +96,42 @@
   line-height: var(--content-body-line-height);
 }
 
+.content-page-body blockquote {
+  position: relative;
+  margin-left: 0;
+  padding-left: clamp(0.9rem, 0.78rem + 0.38vw, 1.2rem);
+  color: color-mix(in srgb, var(--line) 88%, transparent);
+  font-family:
+    Georgia, "Times New Roman", "Songti SC", "Noto Serif SC", serif;
+  font-size: clamp(1.03em, 1em + 0.18vw, 1.12em);
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1.72;
+  letter-spacing: 0;
+}
+
+.content-page-body blockquote::before {
+  position: absolute;
+  top: 0.22em;
+  bottom: 0.22em;
+  left: 0;
+  width: clamp(4px, 0.2rem, 5px);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--line) 82%, transparent);
+  content: "";
+}
+
+.content-page-body blockquote :is(p, li) {
+  color: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+}
+
+.content-page-body blockquote > :last-child {
+  margin-bottom: 0;
+}
+
 .content-page-body .content-image-figure {
   display: flex;
   flex-direction: column;
