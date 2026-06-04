@@ -24,29 +24,51 @@ const {
 const hasHanCharacters = /[\u3400-\u9fff\uf900-\ufaff]/u;
 const hasLatinCharacters = /[A-Za-z]/;
 
+function normalizeTocItems(items: TocItem[]) {
+  if (items.length === 0) return [];
+
+  const depths = items.map((item) => item.depth ?? 2);
+  const minDepth = Math.min(...depths);
+
+  return items.map((item) => {
+    const depth = item.depth ?? minDepth;
+    const normalizedDepth = Math.min(
+      6,
+      Math.max(1, depth - minDepth + 1),
+    ) as TocItem["depth"];
+
+    return {
+      ...item,
+      depth: normalizedDepth,
+    };
+  });
+}
+
 function getTocItemLang(label: string) {
   return hasLatinCharacters.test(label) && !hasHanCharacters.test(label)
     ? "en"
     : undefined;
 }
+
+const normalizedItems = normalizeTocItems(items);
 ---
 
 {
-  items.length > 0 ? (
+  normalizedItems.length > 0 ? (
     <>
       {title && <p class="content-toc-title">{title}</p>}
       <div class="content-toc-list-frame">
         {showProgress && <TocProgressBar />}
         <ol class="content-toc-list">
-          {items.map((item) => (
+          {normalizedItems.map((item) => (
             <li
               class:list={[
                 "content-toc-item",
-                `content-toc-item--depth-${item.depth ?? 2}`,
+                `content-toc-item--depth-${item.depth}`,
               ]}
             >
               <a
-                class={`content-toc-link content-toc-link--depth-${item.depth ?? 2}`}
+                class={`content-toc-link content-toc-link--depth-${item.depth}`}
                 href={item.href}
                 lang={getTocItemLang(item.label)}
               >

@@ -25,6 +25,8 @@ interface Props {
   tocAriaLabel: string;
   tocItems: TocItem[];
   tocEmptyText?: string;
+  enableDocumentNavigation?: boolean;
+  showTocProgress?: boolean;
 }
 
 const {
@@ -44,6 +46,8 @@ const {
   tocAriaLabel,
   tocItems,
   tocEmptyText,
+  enableDocumentNavigation = false,
+  showTocProgress = true,
 } = Astro.props as Props;
 ---
 
@@ -63,8 +67,14 @@ const {
   tocClass={tocClass}
   contentAriaLabel={contentAriaLabel}
   tocAriaLabel={tocAriaLabel}
+  enableDocumentNavigation={enableDocumentNavigation}
 >
   <slot />
 
-  <TocPanel slot="toc" items={tocItems} emptyText={tocEmptyText} />
+  <TocPanel
+    slot="toc"
+    items={tocItems}
+    emptyText={tocEmptyText}
+    showProgress={showTocProgress}
+  />
 </ContentShell>
