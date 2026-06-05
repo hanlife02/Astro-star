@@ -13,6 +13,7 @@
   import { initHomeShellSearch } from "../../scripts/home-shell-search";
   import { initHomeShellDocumentProgress } from "../../scripts/home-shell-document-progress";
   import { initHomeShellCodeCopy } from "../../scripts/home-shell-code-copy";
+  import { initHomeShellContentFold } from "../../scripts/home-shell-content-fold";
   import {
     cleanupHomeShellArticleActions,
     initHomeShellArticleActions,
@@ -42,6 +43,7 @@
     "__homeShellDesktopSignatureNavCleanup",
     "__homeShellDocumentProgressCleanup",
     "__homeShellCodeCopyCleanup",
+    "__homeShellContentFoldCleanup",
     "__homeShellFriendLinkAvatarsCleanup",
   ] as const;
 
@@ -88,6 +90,7 @@
     initHomeShellSearch();
     initHomeShellDocumentProgress();
     initHomeShellCodeCopy();
+    initHomeShellContentFold();
     initHomeShellConstellationBackground();
     initHomeShellWalineComments();
     initHomeShellWalinePageviews();

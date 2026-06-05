@@ -91,6 +91,150 @@
   font-weight: 600;
 }
 
+.content-page-body .content-spoiler {
+  display: inline;
+  padding: 0.06em 0.28em;
+  border-radius: 0.28em;
+  background: color-mix(in srgb, var(--line) 80%, transparent);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  color: transparent;
+  cursor: help;
+  transition:
+    background-color 0.18s ease,
+    color 0.18s ease;
+}
+
+.content-page-body .content-spoiler:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--line) 38%, transparent);
+  outline-offset: 0.12em;
+}
+
+@media (hover: hover) {
+  .content-page-body .content-spoiler:hover {
+    background: color-mix(in srgb, var(--line) 7%, transparent);
+    color: var(--line);
+  }
+}
+
+.content-page-body .content-spoiler:focus-visible,
+.content-page-body .content-spoiler:active {
+  background: color-mix(in srgb, var(--line) 7%, transparent);
+  color: var(--line);
+}
+
+.content-page-body :is(del, s) {
+  color: color-mix(in srgb, var(--line) 42%, transparent);
+  text-decoration-color: color-mix(in srgb, var(--line) 36%, transparent);
+  text-decoration-thickness: 0.08em;
+  text-decoration-skip-ink: auto;
+}
+
+.content-page-body .content-fold {
+  --content-fold-corner-size: clamp(0.7rem, 0.62rem + 0.28vw, 0.95rem);
+  --content-fold-body-height: 0px;
+  position: relative;
+  margin: 0 0 1rem;
+  padding: clamp(0.72rem, 0.64rem + 0.3vw, 0.95rem)
+    clamp(0.88rem, 0.76rem + 0.42vw, 1.16rem);
+  color: var(--line);
+}
+
+.content-page-body .content-fold::before,
+.content-page-body .content-fold::after {
+  position: absolute;
+  width: var(--content-fold-corner-size);
+  height: var(--content-fold-corner-size);
+  pointer-events: none;
+  content: "";
+}
+
+.content-page-body .content-fold::before {
+  top: 0;
+  left: 0;
+  border-top: 1px solid color-mix(in srgb, var(--line) 48%, transparent);
+  border-left: 1px solid color-mix(in srgb, var(--line) 48%, transparent);
+}
+
+.content-page-body .content-fold::after {
+  right: 0;
+  bottom: 0;
+  border-right: 1px solid color-mix(in srgb, var(--line) 34%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--line) 34%, transparent);
+  transition: border-color 0.18s ease;
+}
+
+.content-page-body .content-fold[open]::after {
+  border-color: color-mix(in srgb, var(--line) 48%, transparent);
+}
+
+.content-page-body .content-fold-summary {
+  display: flex;
+  align-items: center;
+  gap: 0.48rem;
+  color: var(--line);
+  font-size: var(--content-body-font-size);
+  font-weight: inherit;
+  line-height: var(--content-body-line-height);
+  cursor: pointer;
+  list-style: none;
+  text-indent: 0;
+}
+
+.content-page-body .content-fold-summary::-webkit-details-marker {
+  display: none;
+}
+
+.content-page-body .content-fold-summary:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--line) 32%, transparent);
+  outline-offset: 0.18rem;
+}
+
+.content-page-body .content-fold-body {
+  height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition:
+    height 0.26s ease,
+    opacity 0.2s ease;
+}
+
+.content-page-body .content-fold[data-fold-ready="true"][open]
+  > .content-fold-body {
+  height: var(--content-fold-body-height);
+}
+
+.content-page-body
+  .content-fold[data-fold-ready="true"][open]:not([data-fold-state="closing"])
+  > .content-fold-body {
+  opacity: 1;
+}
+
+.content-page-body .content-fold:not([data-fold-ready="true"])[open]
+  > .content-fold-body {
+  height: auto;
+  opacity: 1;
+}
+
+.content-page-body .content-fold-body > :first-child {
+  margin-top: clamp(0.72rem, 0.64rem + 0.3vw, 0.92rem);
+}
+
+.content-page-body .content-fold-body > :last-child {
+  margin-bottom: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .content-page-body .content-fold::after,
+  .content-page-body .content-fold-body {
+    transition: none;
+  }
+
+  .content-page-body .content-fold[open] > .content-fold-body {
+    height: auto;
+  }
+}
+
 .content-page-body :is(blockquote, figcaption) {
   font-size: var(--content-body-font-size);
   line-height: var(--content-body-line-height);

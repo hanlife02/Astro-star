@@ -4,7 +4,9 @@ import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
 import node from "@astrojs/node";
 import rehypeKatex from "rehype-katex";
+import remarkDirective from "remark-directive";
 import remarkMath from "remark-math";
+import { remarkContentFormatDirectives } from "./src/utils/remark-content-format-directives.js";
 import { rehypeFigureCaptions } from "./src/utils/rehype-figure-captions.js";
 import { mdxVoidHtmlPlugin } from "./src/utils/mdx-void-html.js";
 import { site } from "./src/config/site.ts";
@@ -39,7 +41,11 @@ export default defineConfig({
       },
       defaultColor: false,
     },
-    remarkPlugins: [remarkMath],
+    remarkPlugins: [
+      remarkMath,
+      remarkDirective,
+      remarkContentFormatDirectives,
+    ],
     rehypePlugins: [rehypeKatex, rehypeFigureCaptions],
   },
   vite: {
