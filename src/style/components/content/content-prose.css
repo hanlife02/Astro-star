@@ -199,7 +199,8 @@
     opacity 0.2s ease;
 }
 
-.content-page-body .content-fold[data-fold-ready="true"][open]
+.content-page-body
+  .content-fold[data-fold-ready="true"][open]
   > .content-fold-body {
   height: var(--content-fold-body-height);
 }
@@ -210,7 +211,8 @@
   opacity: 1;
 }
 
-.content-page-body .content-fold:not([data-fold-ready="true"])[open]
+.content-page-body
+  .content-fold:not([data-fold-ready="true"])[open]
   > .content-fold-body {
   height: auto;
   opacity: 1;
