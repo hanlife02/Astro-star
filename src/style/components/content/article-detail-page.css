@@ -2,11 +2,11 @@
 }
 
 .content-page--article {
-  --article-title-size: clamp(1.82rem, 1.62rem + 0.64vw, 2.65rem);
+  --article-title-size: clamp(1.82rem, 1.52rem + 0.9vw, 2.95rem);
 }
 
 html:lang(zh-CN) .content-page--article {
-  --article-title-size: clamp(1.52rem, 1.4rem + 0.38vw, 2.05rem);
+  --article-title-size: clamp(1.56rem, 1.36rem + 0.6vw, 2.28rem);
 }
 
 .article-content-header {
@@ -44,7 +44,7 @@ html:lang(zh-CN) .content-page--article {
 .content-page-body .article-content-meta-line {
   margin: 0;
   color: color-mix(in srgb, var(--line) 68%, transparent);
-  font-size: clamp(0.78rem, 0.75rem + 0.1vw, 0.9rem);
+  font-size: var(--type-sm);
   font-style: italic;
   line-height: 1.25;
 }
@@ -83,7 +83,7 @@ html:lang(zh-CN) .content-page--article {
 .article-comments-title {
   margin: 0;
   color: var(--line);
-  font-size: clamp(1.2rem, 1.1rem + 0.45vw, 1.55rem);
+  font-size: var(--type-lg);
   font-weight: 600;
   line-height: 1.3;
 }
@@ -91,7 +91,7 @@ html:lang(zh-CN) .content-page--article {
 .article-comments-description {
   margin: 0;
   color: color-mix(in srgb, var(--line) 66%, transparent);
-  font-size: 0.92rem;
+  font-size: var(--type-sm);
   line-height: 1.6;
 }
 
@@ -101,7 +101,7 @@ html:lang(zh-CN) .content-page--article {
   border: 1px dashed color-mix(in srgb, var(--line) 18%, transparent);
   border-radius: var(--radius-md);
   color: color-mix(in srgb, var(--line) 72%, transparent);
-  font-size: 0.95rem;
+  font-size: var(--type-sm);
   line-height: 1.65;
   background: color-mix(in srgb, var(--line) 2.5%, transparent);
 }
@@ -296,7 +296,7 @@ html:lang(zh-CN) .content-page--article {
   justify-content: center;
   color: currentColor;
   background: color-mix(in srgb, var(--line) 7%, transparent);
-  font-size: clamp(0.58rem, 0.55rem + 0.08vw, 0.68rem);
+  font-size: 0.68rem;
   font-variant-numeric: tabular-nums;
   line-height: 1;
   pointer-events: none;
@@ -327,7 +327,7 @@ html:lang(zh-CN) .content-page--article {
 .article-action-license-text {
   margin: 0;
   display: block;
-  font-size: clamp(0.82rem, 0.79rem + 0.12vw, 0.92rem);
+  font-size: var(--type-sm);
   line-height: 1.7;
   font-family:
     "Iowan Old Style", "Palatino Linotype", "Songti SC", "Noto Serif SC", serif;
@@ -362,7 +362,7 @@ html:lang(zh-CN) .content-page--article {
 
 .article-action-reward-label {
   color: color-mix(in srgb, var(--line) 62%, transparent);
-  font-size: 0.82rem;
+  font-size: var(--type-xs);
   line-height: 1.3;
   text-align: center;
 }
@@ -480,7 +480,7 @@ html:lang(zh-CN) .content-page--article {
   overflow: hidden;
   min-width: 0;
   color: color-mix(in srgb, var(--line) 84%, transparent);
-  font-size: clamp(0.9rem, 0.86rem + 0.12vw, 1rem);
+  font-size: var(--type-sm);
   line-height: 1.45;
   text-decoration: none;
   text-decoration-line: none;

@@ -56,7 +56,7 @@
   min-width: 0;
   overflow: hidden;
   color: currentColor;
-  font-size: clamp(0.88rem, 0.84rem + 0.16vw, 0.98rem);
+  font-size: var(--type-sm);
   font-weight: 500;
   line-height: 1.25;
   text-overflow: ellipsis;

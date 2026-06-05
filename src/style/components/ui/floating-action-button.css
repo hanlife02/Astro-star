@@ -25,7 +25,7 @@
 }
 
 .floating-action-button-text {
-  font-size: 0.9rem;
+  font-size: var(--type-sm);
   font-weight: 600;
   line-height: 1;
 }
@@ -36,7 +36,7 @@
 
 .document-progress-fab-percent {
   min-width: 2.1rem;
-  font-size: clamp(0.76rem, 0.72rem + 0.14vw, 0.86rem);
+  font-size: var(--type-xs);
   font-weight: 700;
   line-height: 1;
   text-align: center;

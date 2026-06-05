@@ -15,7 +15,7 @@
   padding-bottom: 0.55rem;
   border-bottom: 1px solid var(--border-soft);
   color: var(--line);
-  font-size: clamp(1.05rem, 1rem + 0.3vw, 1.25rem);
+  font-size: var(--type-lg);
   font-weight: 600;
   line-height: 1.35;
 }
@@ -38,7 +38,7 @@
 
 :is(.archive-item-date, .collection-archive-date) {
   color: var(--text-muted);
-  font-size: 0.85rem;
+  font-size: var(--type-sm);
   line-height: 1.5;
   white-space: normal;
   overflow-wrap: anywhere;

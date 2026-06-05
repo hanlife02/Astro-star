@@ -1,12 +1,12 @@
 .content-toc {
-  --content-toc-title-size: clamp(18px, 17.2px + 0.34vw, 22.8px);
-  --content-toc-link-depth-1-size: clamp(14.4px, 13.9px + 0.18vw, 16px);
-  --content-toc-link-depth-2-size: clamp(13.4px, 13px + 0.14vw, 14.8px);
-  --content-toc-link-depth-3-size: clamp(12.6px, 12.3px + 0.12vw, 13.8px);
-  --content-toc-link-depth-4-size: clamp(12.1px, 11.9px + 0.1vw, 13px);
-  --content-toc-link-depth-5-size: clamp(11.8px, 11.6px + 0.08vw, 12.5px);
-  --content-toc-link-depth-6-size: clamp(11.5px, 11.3px + 0.06vw, 12px);
-  --content-toc-mobile-title-size: clamp(14.5px, 14.2px + 0.12vw, 15.4px);
+  --content-toc-title-size: var(--type-toc-title);
+  --content-toc-link-depth-1-size: var(--type-toc-depth-1);
+  --content-toc-link-depth-2-size: var(--type-toc-depth-2);
+  --content-toc-link-depth-3-size: var(--type-toc-depth-3);
+  --content-toc-link-depth-4-size: var(--type-toc-depth-4);
+  --content-toc-link-depth-5-size: var(--type-toc-depth-5);
+  --content-toc-link-depth-6-size: var(--type-toc-depth-6);
+  --content-toc-mobile-title-size: var(--type-toc-mobile-title);
   width: 100%;
   position: relative;
   height: auto;
@@ -87,13 +87,6 @@
 
 @media (min-width: 56.25rem) {
   .content-toc {
-    --content-toc-title-size: clamp(18.5px, 17px + 0.44vw, 24.5px);
-    --content-toc-link-depth-1-size: clamp(14.5px, 13.7px + 0.34vw, 16.8px);
-    --content-toc-link-depth-2-size: clamp(13.5px, 12.9px + 0.28vw, 15.3px);
-    --content-toc-link-depth-3-size: clamp(12.7px, 12.25px + 0.22vw, 14.1px);
-    --content-toc-link-depth-4-size: clamp(12.2px, 11.95px + 0.16vw, 13.2px);
-    --content-toc-link-depth-5-size: clamp(11.8px, 11.6px + 0.12vw, 12.6px);
-    --content-toc-link-depth-6-size: clamp(11.5px, 11.35px + 0.08vw, 12.1px);
     position: sticky;
     top: var(--layout-sticky-main-top);
     max-height: calc(100dvh - var(--layout-sticky-main-top) - var(--space));

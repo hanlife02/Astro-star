@@ -15,7 +15,7 @@
   margin: 0;
   color: color-mix(in srgb, var(--line) 42%, transparent);
   font-family: var(--content-code-font-family);
-  font-size: clamp(0.82rem, 0.78rem + 0.12vw, 0.92rem);
+  font-size: var(--type-sm);
   font-weight: 700;
   letter-spacing: 0;
   line-height: 1;
@@ -46,7 +46,7 @@
   align-items: center;
   gap: 0.8rem;
   color: color-mix(in srgb, var(--line) 52%, transparent);
-  font-size: clamp(0.78rem, 0.75rem + 0.1vw, 0.9rem);
+  font-size: var(--type-sm);
   line-height: 1.35;
   text-indent: 0;
 }
@@ -86,7 +86,7 @@
   align-items: center;
   justify-content: center;
   background: color-mix(in srgb, var(--line) 2.5%, transparent);
-  font-size: clamp(0.82rem, 0.79rem + 0.1vw, 0.92rem);
+  font-size: var(--type-sm);
   font-weight: 600;
   line-height: 1;
   white-space: nowrap;

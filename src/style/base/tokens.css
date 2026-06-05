@@ -46,6 +46,31 @@
   --text-muted: color-mix(in srgb, var(--line) 68%, transparent);
   --radius-md: 1rem;
   --font-size-base: clamp(0.9375rem, 1.35vw, 1.8rem);
+  --type-xs: clamp(12.5px, 0.62rem + 0.08vw, 15px);
+  --type-sm: clamp(14px, 0.72rem + 0.1vw, 17px);
+  --type-base: clamp(15.5px, 0.78rem + 0.12vw, 19px);
+  --type-md: clamp(17px, 0.9rem + 0.14vw, 21px);
+  --type-lg: clamp(20px, 1.05rem + 0.2vw, 26px);
+  --type-xl: clamp(26px, 1.35rem + 0.32vw, 36px);
+  --type-2xl: clamp(31px, 1.55rem + 0.42vw, 44px);
+  --type-content-body: clamp(17px, 15px + 0.18vw, 20px);
+  --type-content-body-zh: clamp(16.8px, 14.9px + 0.18vw, 19.5px);
+  --type-content-code: clamp(13.8px, 12.6px + 0.08vw, 15.8px);
+  --type-content-caption: clamp(14px, 13px + 0.08vw, 16.2px);
+  --type-content-h1: var(--type-2xl);
+  --type-content-h2: var(--type-xl);
+  --type-content-h3: 1.38rem;
+  --type-content-h4: 1.2rem;
+  --type-content-h5: 1.06rem;
+  --type-content-h6: 0.98rem;
+  --type-toc-title: 1.12rem;
+  --type-toc-depth-1: 0.96rem;
+  --type-toc-depth-2: 0.88rem;
+  --type-toc-depth-3: 0.82rem;
+  --type-toc-depth-4: 0.77rem;
+  --type-toc-depth-5: 0.73rem;
+  --type-toc-depth-6: 0.7rem;
+  --type-toc-mobile-title: 0.96rem;
   --shell-max: min(92vw, 112.5rem);
   --space: clamp(0.1rem, 0.2vw, 1.25rem);
   --header-main-gap: clamp(1.25rem, 1.4vw, 2.75rem);
@@ -173,7 +198,7 @@ body {
 .content-toc-title {
   margin: 0;
   color: var(--line);
-  font-size: clamp(20.5px, 18.6px + 0.68vw, 29.5px);
+  font-size: var(--type-toc-title);
   font-weight: 400;
   line-height: 1.15;
 }

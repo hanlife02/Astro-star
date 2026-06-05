@@ -206,7 +206,7 @@ html[data-js="true"]
 
 .friend-links-grid .app-panel-item-name {
   white-space: nowrap;
-  font-size: clamp(0.62rem, 0.49rem + 0.72vw, 0.98rem);
+  font-size: var(--type-sm);
   line-height: 1.28;
 }
 
@@ -215,7 +215,7 @@ html[data-js="true"]
   overflow: hidden;
   text-overflow: ellipsis;
   display: block;
-  font-size: 0.82rem;
+  font-size: var(--type-xs);
   font-weight: 400;
   line-height: 1.35;
 }
@@ -308,7 +308,7 @@ html[data-js="true"]
 .app-panel-item-name {
   overflow: hidden;
   color: var(--line);
-  font-size: clamp(0.98rem, 0.94rem + 0.18vw, 1.08rem);
+  font-size: var(--type-md);
   font-weight: 500;
   line-height: 1.35;
   text-overflow: ellipsis;
@@ -318,7 +318,7 @@ html[data-js="true"]
 .app-panel-item-description {
   overflow: hidden;
   color: color-mix(in srgb, var(--line) 72%, transparent);
-  font-size: 0.9rem;
+  font-size: var(--type-sm);
   line-height: 1.5;
   white-space: nowrap;
   text-overflow: ellipsis;

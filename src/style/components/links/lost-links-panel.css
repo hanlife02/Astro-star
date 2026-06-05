@@ -16,7 +16,7 @@
   list-style: none;
   padding: 0.55rem 1rem;
   color: var(--line);
-  font-size: 0.98rem;
+  font-size: var(--type-base);
   font-weight: 600;
   line-height: 1.35;
 }
@@ -91,7 +91,7 @@
   margin: 0;
   padding: 0 1rem 0.35rem;
   color: color-mix(in srgb, var(--line) 68%, transparent);
-  font-size: 0.92rem;
+  font-size: var(--type-sm);
   line-height: 1.6;
 }
 
