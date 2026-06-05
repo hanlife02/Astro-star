@@ -58,8 +58,7 @@ html[data-js="true"] .friend-links-grid[data-friend-links-state="ready"] {
   background-color: color-mix(in srgb, var(--line) 2.5%, transparent);
   min-height: 5rem;
   overflow: hidden;
-  transition:
-    background-color 0.2s ease;
+  transition: background-color 0.2s ease;
 }
 
 .friend-links-grid .app-panel-item--link::before {
@@ -341,5 +340,4 @@ html[data-js="true"]
   .friend-links-grid .friend-link-avatar-frame {
     animation: none;
   }
-
 }
