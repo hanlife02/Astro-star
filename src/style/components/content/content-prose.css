@@ -4,6 +4,7 @@
   --content-image-radius: clamp(0.75rem, 0.6rem + 0.5vw, 1rem);
   --content-body-font-size: inherit;
   --content-body-line-height: 1.8;
+  --content-text-color: var(--line);
   --content-code-font-family:
     ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
     "Courier New", monospace;
@@ -21,6 +22,10 @@
 .content-page--article .content-page-body {
   --content-body-font-size: clamp(15.8px, 15px + 0.2vw, 17.2px);
   --content-body-line-height: 1.78;
+}
+
+:root[data-theme="dark"] .content-page--article .content-page-body {
+  --content-text-color: color-mix(in srgb, var(--line) 78%, transparent);
 }
 
 .content-page--article .content-page-body > p:has(> img + img) {
@@ -81,7 +86,7 @@
 
 .content-page-body p,
 .content-page-body li {
-  color: var(--line);
+  color: var(--content-text-color);
   font-size: var(--content-body-font-size);
   line-height: var(--content-body-line-height);
 }
@@ -137,7 +142,7 @@
   margin: 0 0 1rem;
   padding: clamp(0.72rem, 0.64rem + 0.3vw, 0.95rem)
     clamp(0.88rem, 0.76rem + 0.42vw, 1.16rem);
-  color: var(--line);
+  color: var(--content-text-color);
 }
 
 .content-page-body .content-fold::before,
@@ -172,7 +177,7 @@
   display: flex;
   align-items: center;
   gap: 0.48rem;
-  color: var(--line);
+  color: inherit;
   font-size: var(--content-body-font-size);
   font-weight: inherit;
   line-height: var(--content-body-line-height);
@@ -246,7 +251,7 @@
   position: relative;
   margin-left: 0;
   padding-left: clamp(0.9rem, 0.78rem + 0.38vw, 1.2rem);
-  color: color-mix(in srgb, var(--line) 88%, transparent);
+  color: color-mix(in srgb, var(--content-text-color) 92%, transparent);
   font-family: Georgia, "Times New Roman", "Songti SC", "Noto Serif SC", serif;
   font-size: clamp(1.03em, 1em + 0.18vw, 1.12em);
   font-style: italic;
