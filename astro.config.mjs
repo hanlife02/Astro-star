@@ -41,11 +41,7 @@ export default defineConfig({
       },
       defaultColor: false,
     },
-    remarkPlugins: [
-      remarkMath,
-      remarkDirective,
-      remarkContentFormatDirectives,
-    ],
+    remarkPlugins: [remarkMath, remarkDirective, remarkContentFormatDirectives],
     rehypePlugins: [rehypeKatex, rehypeFigureCaptions],
   },
   vite: {

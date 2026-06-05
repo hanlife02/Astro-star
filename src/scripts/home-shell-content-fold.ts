@@ -15,7 +15,10 @@ function syncFoldHeight(fold: HTMLElement) {
   const body = getFoldBody(fold);
   if (!body) return;
 
-  fold.style.setProperty("--content-fold-body-height", `${body.scrollHeight}px`);
+  fold.style.setProperty(
+    "--content-fold-body-height",
+    `${body.scrollHeight}px`,
+  );
 }
 
 function setFoldOpen(fold: HTMLDetailsElement, open: boolean) {

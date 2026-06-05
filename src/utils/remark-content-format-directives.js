@@ -105,10 +105,7 @@ function applyFoldData(node) {
     label.data.hProperties = {
       class: "content-fold-summary",
     };
-    node.children = [
-      label,
-      createFoldBodyNode(node.children.slice(1)),
-    ];
+    node.children = [label, createFoldBodyNode(node.children.slice(1))];
     return;
   }
 
