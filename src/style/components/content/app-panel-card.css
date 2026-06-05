@@ -52,13 +52,52 @@ html[data-js="true"] .friend-links-grid[data-friend-links-state="ready"] {
   align-items: center;
   align-self: stretch;
   padding: 0.2rem 0.8rem;
+  position: relative;
   border-color: var(--border-soft);
   border-radius: var(--radius-md);
-  background: color-mix(in srgb, var(--line) 2.5%, transparent);
+  background-color: color-mix(in srgb, var(--line) 2.5%, transparent);
   min-height: 5rem;
+  overflow: hidden;
+  transition:
+    background-color 0.2s ease;
+}
+
+.friend-links-grid .app-panel-item--link::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, #000 34%, transparent) 0%,
+    color-mix(in srgb, #000 18%, transparent) 44%,
+    transparent 100%
+  );
+  opacity: 0.72;
+  pointer-events: none;
+}
+
+.friend-link-card-bg {
+  position: absolute;
+  inset-block: 50%;
+  inset-inline-start: clamp(-0.35rem, 4%, 1.2rem);
+  width: clamp(8.8rem, 66%, 13.6rem);
+  height: auto;
+  aspect-ratio: 1;
+  border-radius: 999px;
+  object-fit: cover;
+  opacity: 0.24;
+  filter: saturate(1.08) brightness(0.88);
+  pointer-events: none;
+  transform: translateY(-50%);
+  transition:
+    filter 0.22s ease,
+    opacity 0.24s ease;
 }
 
 .friend-links-grid .app-panel-item-icon {
+  position: relative;
+  z-index: 2;
   width: clamp(2.7rem, 2.58rem + 0.5vw, 3.05rem);
   height: clamp(2.7rem, 2.58rem + 0.5vw, 3.05rem);
   border-radius: 999px;
@@ -94,11 +133,15 @@ html[data-js="true"] .friend-links-grid[data-friend-links-state="ready"] {
   height: 100%;
   border-radius: inherit;
   object-fit: cover;
+  filter: saturate(0.96);
+  transition: filter 0.22s ease;
 }
 
 html[data-js="true"] .friend-links-grid .friend-link-avatar {
   opacity: 0;
-  transition: opacity 0.18s ease;
+  transition:
+    opacity 0.18s ease,
+    filter 0.22s ease;
 }
 
 html[data-js="true"]
@@ -116,6 +159,26 @@ html[data-js="true"]
   visibility: hidden;
 }
 
+.friend-link-avatar-mask {
+  position: absolute;
+  inset: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: inherit;
+  background: rgba(118, 118, 128, 0.76);
+  color: #ffffff;
+  opacity: 0;
+  transition: opacity 0.18s ease;
+}
+
+.friend-link-avatar-mask svg {
+  display: block;
+  width: 1.05rem;
+  height: 1.05rem;
+  stroke-width: 1.8;
+}
+
 @keyframes friend-link-avatar-placeholder-sheen {
   from {
     background-position: 160% 0;
@@ -127,6 +190,9 @@ html[data-js="true"]
 }
 
 .friend-links-grid .app-panel-item-copy {
+  position: relative;
+  z-index: 2;
+  flex: 1 1 auto;
   justify-content: center;
   gap: 0.18rem;
   min-height: 100%;
@@ -146,6 +212,44 @@ html[data-js="true"]
   font-size: 0.82rem;
   font-weight: 400;
   line-height: 1.35;
+}
+
+.friend-links-grid .app-panel-item--link:hover {
+  background-color: color-mix(in srgb, var(--line) 4.8%, transparent);
+}
+
+.friend-links-grid .app-panel-item--link:hover .friend-link-card-bg {
+  opacity: 0.3;
+  filter: saturate(1.14) brightness(0.82);
+}
+
+.friend-links-grid .app-panel-item--link:hover .friend-link-avatar {
+  filter: saturate(0.72) contrast(0.96);
+}
+
+.friend-links-grid .app-panel-item--link:hover .friend-link-avatar-mask {
+  opacity: 0.9;
+}
+
+.friend-links-grid .app-panel-item--link:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--line) 28%, transparent);
+  outline-offset: 0.2rem;
+  background-color: color-mix(in srgb, var(--line) 4.8%, transparent);
+}
+
+.friend-links-grid .app-panel-item--link:focus-visible .friend-link-card-bg {
+  opacity: 0.3;
+  filter: saturate(1.14) brightness(0.82);
+}
+
+.friend-links-grid
+  .app-panel-item--link:focus-visible
+  .friend-link-avatar-mask {
+  opacity: 0.9;
+}
+
+.friend-links-grid .app-panel-item--link:focus-visible .friend-link-avatar {
+  filter: saturate(0.72) contrast(0.96);
 }
 
 .app-panel-item,
@@ -225,11 +329,17 @@ html[data-js="true"]
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .friend-links-grid .app-panel-item,
+  .friend-links-grid .app-panel-item--link,
+  .friend-link-card-bg,
+  .friend-links-grid .friend-link-avatar,
+  html[data-js="true"] .friend-links-grid .friend-link-avatar,
+  .friend-link-avatar-mask {
+    transition: none;
+  }
+
   .friend-links-grid .friend-link-avatar-frame {
     animation: none;
   }
 
-  html[data-js="true"] .friend-links-grid .friend-link-avatar {
-    transition: none;
-  }
 }
