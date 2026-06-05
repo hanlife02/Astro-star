@@ -79,7 +79,7 @@ html[data-js="true"] .friend-links-grid[data-friend-links-state="ready"] {
 .friend-link-card-bg {
   position: absolute;
   inset-block: 50%;
-  inset-inline-start: clamp(-0.35rem, 4%, 1.2rem);
+  inset-inline-start: clamp(-2.2rem, -9%, -0.55rem);
   width: clamp(8.8rem, 66%, 13.6rem);
   height: auto;
   aspect-ratio: 1;
@@ -87,6 +87,13 @@ html[data-js="true"] .friend-links-grid[data-friend-links-state="ready"] {
   object-fit: cover;
   opacity: 0.24;
   filter: saturate(1.08) brightness(0.88);
+  mask-image: linear-gradient(90deg, #000 0%, #000 34%, transparent 82%);
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    #000 0%,
+    #000 34%,
+    transparent 82%
+  );
   pointer-events: none;
   transform: translateY(-50%);
   transition:
