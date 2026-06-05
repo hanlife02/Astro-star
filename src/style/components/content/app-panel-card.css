@@ -51,12 +51,12 @@ html[data-js="true"] .friend-links-grid[data-friend-links-state="ready"] {
   min-width: 0;
   align-items: center;
   align-self: stretch;
-  padding: 0.2rem 0.8rem;
+  padding: 0.1rem 0.8rem;
   position: relative;
   border-color: var(--border-soft);
   border-radius: var(--radius-md);
   background-color: color-mix(in srgb, var(--line) 2.5%, transparent);
-  min-height: 5rem;
+  min-height: 4.45rem;
   overflow: hidden;
   transition: background-color 0.2s ease;
 }
