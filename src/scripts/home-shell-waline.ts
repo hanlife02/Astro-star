@@ -17,6 +17,7 @@ let walineCommentModule:
   | undefined;
 
 const WALINE_COMMENTS_ROOT_MARGIN = "360px 0px";
+const WALINE_COMMENTS_LANG = "zh-CN";
 
 function loadWalineClientModule() {
   walineClientModule ??= import("@waline/client");
@@ -158,7 +159,7 @@ async function hydrateWalineComments(runId: number) {
       walineRoot.getAttribute("data-waline-server-url")?.trim() ||
       configuredServerURL;
     const path = walineRoot.getAttribute("data-waline-path")?.trim();
-    const lang = document.documentElement.lang === "zh-CN" ? "zh-CN" : "en";
+    const lang = WALINE_COMMENTS_LANG;
 
     if (!serverURL) {
       console.warn("[Waline] WALINE_SERVER_URL is not configured.");
