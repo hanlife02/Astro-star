@@ -112,7 +112,30 @@ html:lang(zh-CN) .content-page--article {
 }
 
 .article-comments-thread {
-  --waline-font-size: var(--type-sm);
+  --comment-font-size: 13px;
+  --comment-body-font-size: 14px;
+  --comment-nick-font-size: 12.8px;
+  --comment-meta-font-size: 10.8px;
+  --comment-child-body-font-size: 13px;
+  --comment-child-nick-font-size: 12px;
+  --comment-child-meta-font-size: 10px;
+  --comment-button-font-size: 11.6px;
+  --comment-action-font-size: 14.5px;
+  --comment-count-font-size: 13.5px;
+  --comment-thread-gap: 0.9rem;
+  --comment-panel-offset: 0.7rem;
+  --comment-editor-min-height: 6.25rem;
+  --comment-editor-margin: 0.55rem;
+  --comment-footer-margin: 0.45rem 0.65rem 0.65rem;
+  --comment-meta-head-margin: 0.65rem;
+  --comment-card-padding-start: 0.72rem;
+  --comment-card-padding-end: 0.78rem;
+  --comment-card-offset: 0.35rem;
+  --comment-avatar-gap: 0.65rem;
+  --comment-reply-indent: 0.72rem;
+  --comment-reply-card-padding-start: 0.54rem;
+  --comment-reply-card-padding-end: 0.48rem;
+  --waline-font-size: var(--comment-font-size);
   --waline-theme-color: var(--accent);
   --waline-active-color: color-mix(in srgb, var(--accent) 76%, transparent);
   --waline-color: var(--line);
@@ -127,11 +150,11 @@ html:lang(zh-CN) .content-page--article {
   --waline-disable-color: color-mix(in srgb, var(--line) 34%, transparent);
   --waline-info-bg-color: transparent;
   --waline-info-color: color-mix(in srgb, var(--line) 44%, transparent);
-  --waline-info-font-size: 0.68rem;
+  --waline-info-font-size: var(--comment-meta-font-size);
   --waline-text-color: color-mix(in srgb, var(--line) 70%, transparent);
   --waline-border: 1px solid var(--waline-border-color);
-  --waline-avatar-size: clamp(2.2rem, 1.95rem + 0.42vw, 2.55rem);
-  --waline-m-avatar-size: 2.1rem;
+  --waline-avatar-size: 2.15rem;
+  --waline-m-avatar-size: 1.9rem;
   color: color-mix(in srgb, var(--line) 72%, transparent);
 }
 
@@ -146,7 +169,7 @@ html:lang(zh-CN) .content-page--article {
 }
 
 .article-comments-thread .wl-comment {
-  margin-bottom: clamp(0.8rem, 0.68rem + 0.3vw, 1rem);
+  margin-bottom: var(--comment-thread-gap);
 }
 
 .article-comments-thread .wl-login-info {
@@ -156,7 +179,7 @@ html:lang(zh-CN) .content-page--article {
 
 .article-comments-thread .wl-login-nick {
   color: color-mix(in srgb, var(--line) 54%, transparent);
-  font-size: 0.68rem;
+  font-size: var(--comment-meta-font-size);
 }
 
 .article-comments-thread .wl-avatar,
@@ -169,7 +192,7 @@ html:lang(zh-CN) .content-page--article {
 }
 
 .article-comments-thread .wl-panel {
-  margin: 0 0 0 0.7rem;
+  margin: 0 0 0 var(--comment-panel-offset);
   border-color: color-mix(in srgb, var(--line) 11%, transparent);
   border-radius: 0.5rem;
   background: color-mix(in srgb, var(--line) 1.8%, transparent);
@@ -184,22 +207,22 @@ html:lang(zh-CN) .content-page--article {
   min-width: 2.4rem;
   padding: 0.62rem 0.35rem;
   color: color-mix(in srgb, var(--line) 44%, transparent);
-  font-size: 0.68rem;
+  font-size: var(--comment-meta-font-size);
 }
 
 .article-comments-thread .wl-header input {
   padding: 0.5rem 0.35rem;
   color: color-mix(in srgb, var(--line) 68%, transparent);
-  font-size: 0.72rem;
+  font-size: var(--comment-font-size);
 }
 
 .article-comments-thread .wl-editor {
-  min-height: clamp(5.8rem, 4.9rem + 1.6vw, 7.2rem);
-  margin: 0.55rem;
+  min-height: var(--comment-editor-min-height);
+  margin: var(--comment-editor-margin);
   border-radius: 0.42rem;
   color: color-mix(in srgb, var(--line) 72%, transparent);
-  font-size: 0.82rem;
-  line-height: 1.62;
+  font-size: var(--comment-body-font-size);
+  line-height: 1.58;
 }
 
 .article-comments-thread .wl-editor:focus,
@@ -208,17 +231,21 @@ html:lang(zh-CN) .content-page--article {
 }
 
 .article-comments-thread .wl-footer {
-  margin: 0.45rem 0.65rem 0.65rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.55rem;
+  align-items: center;
+  margin: var(--comment-footer-margin);
 }
 
 .article-comments-thread .wl-action {
   color: color-mix(in srgb, var(--line) 42%, transparent);
-  font-size: 0.95rem;
+  font-size: var(--comment-action-font-size);
 }
 
 .article-comments-thread .wl-info .wl-text-number {
   color: color-mix(in srgb, var(--line) 36%, transparent);
-  font-size: 0.68rem;
+  font-size: var(--comment-meta-font-size);
 }
 
 .article-comments-thread .wl-btn {
@@ -227,7 +254,7 @@ html:lang(zh-CN) .content-page--article {
   border-color: color-mix(in srgb, var(--line) 12%, transparent);
   border-radius: 999px;
   color: color-mix(in srgb, var(--line) 58%, transparent);
-  font-size: 0.72rem;
+  font-size: var(--comment-button-font-size);
   transition:
     border-color 0.18s ease,
     background 0.18s ease,
@@ -254,14 +281,19 @@ html:lang(zh-CN) .content-page--article {
 }
 
 .article-comments-thread .wl-meta-head {
-  margin-top: clamp(0.55rem, 0.48rem + 0.22vw, 0.75rem);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.85rem;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-top: var(--comment-meta-head-margin);
   padding: 0.2rem 0 0.35rem;
   border-bottom: 1px solid color-mix(in srgb, var(--line) 7%, transparent);
 }
 
 .article-comments-thread .wl-count {
   color: color-mix(in srgb, var(--line) 64%, transparent);
-  font-size: 0.86rem;
+  font-size: var(--comment-count-font-size);
   font-weight: 500;
 }
 
@@ -269,11 +301,13 @@ html:lang(zh-CN) .content-page--article {
   display: flex;
   flex-wrap: wrap;
   gap: 0.65rem;
+  margin: 0;
+  padding: 0;
 }
 
 .article-comments-thread .wl-sort li {
   color: color-mix(in srgb, var(--line) 36%, transparent);
-  font-size: 0.68rem;
+  font-size: var(--comment-meta-font-size);
 }
 
 .article-comments-thread .wl-sort li + li {
@@ -285,11 +319,11 @@ html:lang(zh-CN) .content-page--article {
 }
 
 .article-comments-thread .wl-card-item {
-  padding: 0.72rem 0 0.78rem;
+  padding: var(--comment-card-padding-start) 0 var(--comment-card-padding-end);
 }
 
 .article-comments-thread .wl-cards .wl-user {
-  margin-inline-end: 0.65rem;
+  margin-inline-end: var(--comment-avatar-gap);
 }
 
 .article-comments-thread .wl-card {
@@ -299,7 +333,7 @@ html:lang(zh-CN) .content-page--article {
 }
 
 .article-comments-thread .wl-card:first-child {
-  margin-inline-start: 0.35rem;
+  margin-inline-start: var(--comment-card-offset);
 }
 
 .article-comments-thread .wl-card .wl-head {
@@ -310,13 +344,13 @@ html:lang(zh-CN) .content-page--article {
 .article-comments-thread .wl-card .wl-head .wl-nick,
 .article-comments-thread .wl-card span.wl-nick {
   color: color-mix(in srgb, var(--line) 74%, transparent);
-  font-size: 0.82rem;
+  font-size: var(--comment-nick-font-size);
   font-weight: 500;
 }
 
 .article-comments-thread .wl-card .wl-time {
   color: color-mix(in srgb, var(--line) 38%, transparent);
-  font-size: 0.68rem;
+  font-size: var(--comment-meta-font-size);
 }
 
 .article-comments-thread .wl-card .wl-meta {
@@ -331,15 +365,15 @@ html:lang(zh-CN) .content-page--article {
   padding: 0;
   background: transparent;
   color: color-mix(in srgb, var(--line) 36%, transparent);
-  font-size: 0.66rem;
+  font-size: var(--comment-meta-font-size);
 }
 
 .article-comments-thread .wl-card .wl-content {
   margin-bottom: 0.55rem;
   padding-top: 0.52rem;
   color: color-mix(in srgb, var(--line) 70%, transparent);
-  font-size: 0.86rem;
-  line-height: 1.72;
+  font-size: var(--comment-body-font-size);
+  line-height: 1.64;
 }
 
 .article-comments-thread .wl-card .wl-content p {
@@ -364,24 +398,25 @@ html:lang(zh-CN) .content-page--article {
 
 .article-comments-thread .wl-card .wl-comment-status {
   color: color-mix(in srgb, var(--line) 34%, transparent);
-  font-size: 0.64rem;
+  font-size: var(--comment-child-meta-font-size);
 }
 
 .article-comments-thread .wl-card .wl-comment-status .wl-btn {
   padding: 0.24em 0.52em;
   border-radius: 0;
-  font-size: 0.64rem;
+  font-size: var(--comment-child-meta-font-size);
 }
 
 .article-comments-thread .wl-card .wl-quote {
   margin: 0.7rem 0 0;
-  padding: 0.16rem 0 0.08rem clamp(0.65rem, 0.56rem + 0.25vw, 0.82rem);
+  padding: 0.16rem 0 0.08rem var(--comment-reply-indent);
   border-inline-start: 1px solid color-mix(in srgb, var(--line) 14%, transparent);
 }
 
 .article-comments-thread .wl-card .wl-quote .wl-card-item {
   display: block;
-  padding: 0.54rem 0 0.48rem;
+  padding: var(--comment-reply-card-padding-start) 0
+    var(--comment-reply-card-padding-end);
 }
 
 .article-comments-thread .wl-card .wl-quote .wl-card-item + .wl-card-item {
@@ -413,13 +448,13 @@ html:lang(zh-CN) .content-page--article {
 .article-comments-thread .wl-card .wl-quote .wl-card span.wl-nick {
   margin-inline-end: 0;
   color: color-mix(in srgb, var(--line) 64%, transparent);
-  font-size: 0.76rem;
+  font-size: var(--comment-child-nick-font-size);
 }
 
 .article-comments-thread .wl-card .wl-quote .wl-card .wl-time {
   margin-inline-end: 0;
   color: color-mix(in srgb, var(--line) 34%, transparent);
-  font-size: 0.64rem;
+  font-size: var(--comment-child-meta-font-size);
 }
 
 .article-comments-thread .wl-card .wl-quote .wl-card > .wl-head .wl-comment-actions {
@@ -450,15 +485,15 @@ html:lang(zh-CN) .content-page--article {
 
 .article-comments-thread .wl-card .wl-quote .wl-card .wl-meta > span {
   color: color-mix(in srgb, var(--line) 28%, transparent);
-  font-size: 0.6rem;
+  font-size: var(--comment-child-meta-font-size);
 }
 
 .article-comments-thread .wl-card .wl-quote .wl-card .wl-content {
   margin-bottom: 0.36rem;
   padding-top: 0.34rem;
   color: color-mix(in srgb, var(--line) 64%, transparent);
-  font-size: 0.82rem;
-  line-height: 1.68;
+  font-size: var(--comment-child-body-font-size);
+  line-height: 1.62;
 }
 
 .article-comments-thread .wl-card .wl-quote .wl-card .wl-content .wl-reply-to {
@@ -477,13 +512,175 @@ html:lang(zh-CN) .content-page--article {
   border-inline-start: 0;
 }
 
+@media (min-width: 1280px) {
+  .article-comments-thread {
+    --comment-font-size: 13.4px;
+    --comment-body-font-size: 14.6px;
+    --comment-nick-font-size: 13.2px;
+    --comment-meta-font-size: 11px;
+    --comment-child-body-font-size: 13.4px;
+    --comment-child-nick-font-size: 12.4px;
+    --comment-child-meta-font-size: 10.2px;
+    --comment-button-font-size: 12px;
+    --comment-action-font-size: 15px;
+    --comment-count-font-size: 13.8px;
+    --comment-thread-gap: 0.98rem;
+    --comment-panel-offset: 0.75rem;
+    --comment-editor-min-height: 6.6rem;
+    --comment-meta-head-margin: 0.72rem;
+    --comment-card-padding-start: 0.78rem;
+    --comment-card-padding-end: 0.84rem;
+    --comment-avatar-gap: 0.72rem;
+    --comment-reply-indent: 0.82rem;
+    --waline-avatar-size: 2.25rem;
+    --waline-m-avatar-size: 2rem;
+  }
+}
+
+@media (max-width: 860px) {
+  .article-comments {
+    margin-top: 1.55rem;
+    padding-top: 0.8rem;
+  }
+
+  .article-comments-thread {
+    --comment-font-size: 12.6px;
+    --comment-body-font-size: 13.5px;
+    --comment-nick-font-size: 12.5px;
+    --comment-meta-font-size: 10.5px;
+    --comment-child-body-font-size: 12.8px;
+    --comment-child-nick-font-size: 11.8px;
+    --comment-child-meta-font-size: 9.9px;
+    --comment-button-font-size: 11.3px;
+    --comment-action-font-size: 14px;
+    --comment-count-font-size: 13.2px;
+    --comment-thread-gap: 0.8rem;
+    --comment-panel-offset: 0.6rem;
+    --comment-editor-min-height: 5.9rem;
+    --comment-footer-margin: 0.42rem 0.58rem 0.6rem;
+    --comment-meta-head-margin: 0.58rem;
+    --comment-card-padding-start: 0.66rem;
+    --comment-card-padding-end: 0.72rem;
+    --comment-card-offset: 0.28rem;
+    --comment-avatar-gap: 0.55rem;
+    --comment-reply-indent: 0.66rem;
+    --comment-reply-card-padding-start: 0.48rem;
+    --comment-reply-card-padding-end: 0.42rem;
+    --waline-avatar-size: 2rem;
+    --waline-m-avatar-size: 1.85rem;
+  }
+
+  .article-comments-thread .wl-meta-head {
+    gap: 0.3rem 0.72rem;
+  }
+}
+
 @media (max-width: 580px) {
-  .article-comments-thread .wl-card .wl-quote {
-    padding-inline-start: 0.58rem;
+  .article-comments-thread {
+    --comment-font-size: 12px;
+    --comment-body-font-size: 13px;
+    --comment-nick-font-size: 12.2px;
+    --comment-meta-font-size: 10px;
+    --comment-child-body-font-size: 12.4px;
+    --comment-child-nick-font-size: 11.5px;
+    --comment-child-meta-font-size: 9.8px;
+    --comment-button-font-size: 11px;
+    --comment-action-font-size: 13.5px;
+    --comment-count-font-size: 12.8px;
+    --comment-thread-gap: 0.72rem;
+    --comment-panel-offset: 0.5rem;
+    --comment-editor-min-height: 5.45rem;
+    --comment-editor-margin: 0.5rem;
+    --comment-footer-margin: 0.4rem 0.55rem 0.58rem;
+    --comment-meta-head-margin: 0.52rem;
+    --comment-card-padding-start: 0.62rem;
+    --comment-card-padding-end: 0.68rem;
+    --comment-card-offset: 0.18rem;
+    --comment-avatar-gap: 0.48rem;
+    --comment-reply-indent: 0.58rem;
+    --comment-reply-card-padding-start: 0.44rem;
+    --comment-reply-card-padding-end: 0.4rem;
+    --waline-avatar-size: 1.85rem;
+    --waline-m-avatar-size: 1.75rem;
+  }
+
+  .article-comments-thread .wl-meta-head {
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+
+  .article-comments-thread .wl-login-info {
+    max-width: 3.25rem;
+  }
+
+  .article-comments-thread .wl-panel {
+    margin-inline-start: 0.5rem;
+  }
+
+  .article-comments-thread .wl-info {
+    flex-basis: 100%;
   }
 
   .article-comments-thread .wl-card .wl-quote .wl-card .wl-meta {
     display: none;
+  }
+}
+
+@media (max-width: 420px) {
+  .article-comments {
+    margin-top: 1.35rem;
+    padding-top: 0.68rem;
+  }
+
+  .article-comments-thread {
+    --comment-font-size: 11.8px;
+    --comment-body-font-size: 12.8px;
+    --comment-nick-font-size: 12px;
+    --comment-meta-font-size: 9.8px;
+    --comment-child-body-font-size: 12px;
+    --comment-child-nick-font-size: 11.2px;
+    --comment-child-meta-font-size: 9.6px;
+    --comment-button-font-size: 10.8px;
+    --comment-action-font-size: 13px;
+    --comment-count-font-size: 12.4px;
+    --comment-panel-offset: 0;
+    --comment-editor-min-height: 5.15rem;
+    --comment-editor-margin: 0.45rem;
+    --comment-footer-margin: 0.36rem 0.48rem 0.52rem;
+    --comment-card-offset: 0;
+    --comment-avatar-gap: 0.38rem;
+    --comment-reply-indent: 0.5rem;
+    --comment-reply-card-padding-start: 0.4rem;
+    --comment-reply-card-padding-end: 0.36rem;
+    --waline-avatar-size: 1.68rem;
+    --waline-m-avatar-size: 1.6rem;
+  }
+
+  .article-comments-thread .wl-login-info {
+    display: none;
+  }
+
+  .article-comments-thread .wl-panel {
+    margin-inline-start: 0;
+    border-radius: 0.42rem;
+  }
+
+  .article-comments-thread .wl-header {
+    padding-inline: 0.3rem;
+  }
+
+  .article-comments-thread .wl-header label {
+    min-width: 2.1rem;
+    padding: 0.52rem 0.28rem;
+  }
+
+  .article-comments-thread .wl-header input {
+    min-width: 0;
+    padding: 0.46rem 0.28rem;
+  }
+
+  .article-comments-thread .wl-sort {
+    gap: 0.5rem;
   }
 }
 
@@ -499,7 +696,7 @@ html:lang(zh-CN) .content-page--article {
 .article-comments-thread .wl-rss span,
 .article-comments-thread .wl-power {
   color: color-mix(in srgb, var(--line) 34%, transparent);
-  font-size: 0.66rem;
+  font-size: var(--comment-meta-font-size);
 }
 
 .article-comments-thread .wl-power {
