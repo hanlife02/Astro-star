@@ -871,10 +871,43 @@ html.content-image-lightbox-open {
   line-height: inherit;
 }
 
-.content-page-body .link-owner-info-code {
-  border: 1px solid var(--border-soft);
-  color: var(--line);
-  background: color-mix(in srgb, var(--line) 4%, transparent);
+.content-page-body .link-owner-info {
+  display: grid;
+  gap: 0.32rem;
+  margin: 0 0 1rem;
+  padding: clamp(0.55rem, 0.5rem + 0.2vw, 0.7rem) 0
+    clamp(0.55rem, 0.5rem + 0.2vw, 0.7rem)
+    clamp(0.85rem, 0.74rem + 0.4vw, 1.12rem);
+  border-left: 2px solid color-mix(in srgb, var(--line) 44%, transparent);
+  color: var(--content-text-color);
+  font-size: var(--content-body-font-size);
+  line-height: 1.62;
+}
+
+.content-page-body .link-owner-info-row {
+  display: grid;
+  grid-template-columns: minmax(4.2rem, max-content) minmax(0, 1fr);
+  column-gap: 0.72rem;
+  align-items: baseline;
+}
+
+.content-page-body .link-owner-info dt {
+  color: color-mix(in srgb, var(--line) 62%, transparent);
+  font: inherit;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.content-page-body .link-owner-info dt::after {
+  content: ":";
+}
+
+.content-page-body .link-owner-info dd {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+  color: var(--content-text-color);
+  font: inherit;
 }
 
 .content-code-copy {
