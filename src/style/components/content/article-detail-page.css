@@ -112,29 +112,29 @@ html:lang(zh-CN) .content-page--article {
 }
 
 .article-comments-thread {
-  --comment-font-size: 13px;
-  --comment-body-font-size: 14px;
-  --comment-nick-font-size: 12.8px;
-  --comment-meta-font-size: 10.8px;
-  --comment-child-body-font-size: 13px;
-  --comment-child-nick-font-size: 12px;
-  --comment-child-meta-font-size: 10px;
-  --comment-button-font-size: 11.6px;
-  --comment-action-font-size: 14.5px;
-  --comment-count-font-size: 13.5px;
-  --comment-thread-gap: 0.9rem;
+  --comment-font-size: 13.5px;
+  --comment-body-font-size: 13.4px;
+  --comment-nick-font-size: 13.6px;
+  --comment-meta-font-size: 11.2px;
+  --comment-child-body-font-size: 12.7px;
+  --comment-child-nick-font-size: 12.8px;
+  --comment-child-meta-font-size: 10.8px;
+  --comment-button-font-size: 11.5px;
+  --comment-action-font-size: 14px;
+  --comment-count-font-size: 13.6px;
+  --comment-thread-gap: 1rem;
   --comment-panel-offset: 0.7rem;
   --comment-editor-min-height: 6.25rem;
   --comment-editor-margin: 0.55rem;
   --comment-footer-margin: 0.45rem 0.65rem 0.65rem;
   --comment-meta-head-margin: 0.65rem;
-  --comment-card-padding-start: 0.72rem;
-  --comment-card-padding-end: 0.78rem;
-  --comment-card-offset: 0.35rem;
-  --comment-avatar-gap: 0.65rem;
-  --comment-reply-indent: 0.72rem;
-  --comment-reply-card-padding-start: 0.54rem;
-  --comment-reply-card-padding-end: 0.48rem;
+  --comment-card-padding-start: 0.82rem;
+  --comment-card-padding-end: 0.86rem;
+  --comment-card-offset: 0.25rem;
+  --comment-avatar-gap: 0.72rem;
+  --comment-reply-indent: 0.82rem;
+  --comment-reply-card-padding-start: 0.56rem;
+  --comment-reply-card-padding-end: 0.52rem;
   --waline-font-size: var(--comment-font-size);
   --waline-theme-color: var(--accent);
   --waline-active-color: color-mix(in srgb, var(--accent) 76%, transparent);
@@ -153,8 +153,8 @@ html:lang(zh-CN) .content-page--article {
   --waline-info-font-size: var(--comment-meta-font-size);
   --waline-text-color: color-mix(in srgb, var(--line) 70%, transparent);
   --waline-border: 1px solid var(--waline-border-color);
-  --waline-avatar-size: 2.15rem;
-  --waline-m-avatar-size: 1.9rem;
+  --waline-avatar-size: 2.05rem;
+  --waline-m-avatar-size: 1.48rem;
   color: color-mix(in srgb, var(--line) 72%, transparent);
 }
 
@@ -185,8 +185,8 @@ html:lang(zh-CN) .content-page--article {
 .article-comments-thread .wl-avatar,
 .article-comments-thread .wl-cards .wl-user .wl-user-avatar {
   border-color: color-mix(in srgb, var(--line) 12%, transparent);
-  width: var(--waline-avatar-size);
-  height: var(--waline-avatar-size);
+  width: var(--avatar-size, var(--waline-avatar-size));
+  height: var(--avatar-size, var(--waline-avatar-size));
   object-fit: cover;
   box-shadow: none;
 }
@@ -319,14 +319,19 @@ html:lang(zh-CN) .content-page--article {
 }
 
 .article-comments-thread .wl-card-item {
+  align-items: flex-start;
   padding: var(--comment-card-padding-start) 0 var(--comment-card-padding-end);
 }
 
 .article-comments-thread .wl-cards .wl-user {
+  --avatar-size: var(--waline-avatar-size);
+  flex-shrink: 0;
+  margin-top: 0.12rem;
   margin-inline-end: var(--comment-avatar-gap);
 }
 
 .article-comments-thread .wl-card {
+  min-width: 0;
   padding-bottom: 0.72rem;
   border-bottom: 1px solid color-mix(in srgb, var(--line) 8%, transparent);
   border-radius: 0;
@@ -337,47 +342,77 @@ html:lang(zh-CN) .content-page--article {
 }
 
 .article-comments-thread .wl-card .wl-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 0.55rem;
+  align-items: center;
+  min-height: 1.35rem;
+  overflow: visible;
   color: color-mix(in srgb, var(--line) 58%, transparent);
-  line-height: 1.35;
+  line-height: 1.3;
 }
 
 .article-comments-thread .wl-card .wl-head .wl-nick,
 .article-comments-thread .wl-card span.wl-nick {
+  margin-inline-end: 0;
   color: color-mix(in srgb, var(--line) 74%, transparent);
   font-size: var(--comment-nick-font-size);
-  font-weight: 500;
+  font-weight: 600;
+  line-height: 1.25;
 }
 
 .article-comments-thread .wl-card .wl-time {
-  color: color-mix(in srgb, var(--line) 38%, transparent);
+  margin-inline-end: 0;
+  color: color-mix(in srgb, var(--line) 42%, transparent);
   font-size: var(--comment-meta-font-size);
+  line-height: 1.25;
 }
 
 .article-comments-thread .wl-card .wl-meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.24rem 0.42rem;
-  margin-top: 0.24rem;
+  gap: 0.22rem 0.45rem;
+  margin-top: 0.32rem;
+  line-height: 1.25;
 }
 
 .article-comments-thread .wl-card .wl-meta > span {
   margin-inline-end: 0;
   padding: 0;
   background: transparent;
-  color: color-mix(in srgb, var(--line) 36%, transparent);
+  color: color-mix(in srgb, var(--line) 40%, transparent);
   font-size: var(--comment-meta-font-size);
+  line-height: inherit;
 }
 
 .article-comments-thread .wl-card .wl-content {
-  margin-bottom: 0.55rem;
-  padding-top: 0.52rem;
+  margin-bottom: 0.5rem;
+  padding-top: 0.58rem;
   color: color-mix(in srgb, var(--line) 70%, transparent);
   font-size: var(--comment-body-font-size);
-  line-height: 1.64;
+  line-height: 1.68;
 }
 
 .article-comments-thread .wl-card .wl-content p {
+  margin: 0.28em 0;
   color: inherit;
+}
+
+.article-comments-thread .wl-card .wl-content > :first-child {
+  margin-top: 0;
+}
+
+.article-comments-thread .wl-card .wl-content > :last-child {
+  margin-bottom: 0;
+}
+
+.article-comments-thread .wl-card .wl-comment-actions {
+  float: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.16rem;
+  margin-inline-start: auto;
+  line-height: 1;
 }
 
 .article-comments-thread .wl-card > .wl-head .wl-comment-actions {
@@ -393,7 +428,11 @@ html:lang(zh-CN) .content-page--article {
 .article-comments-thread
   .wl-card
   :is(.wl-delete, .wl-like, .wl-reply, .wl-edit, .wl-rss) {
+  width: 1.35em;
+  height: 1.35em;
+  padding: 0;
   color: color-mix(in srgb, var(--line) 42%, transparent);
+  font-size: var(--comment-action-font-size);
 }
 
 .article-comments-thread .wl-card .wl-comment-status {
@@ -410,11 +449,13 @@ html:lang(zh-CN) .content-page--article {
 .article-comments-thread .wl-card .wl-quote {
   margin: 0.7rem 0 0;
   padding: 0.16rem 0 0.08rem var(--comment-reply-indent);
-  border-inline-start: 1px solid color-mix(in srgb, var(--line) 14%, transparent);
+  border-inline-start: 1px solid
+    color-mix(in srgb, var(--line) 14%, transparent);
 }
 
 .article-comments-thread .wl-card .wl-quote .wl-card-item {
-  display: block;
+  display: flex;
+  align-items: flex-start;
   padding: var(--comment-reply-card-padding-start) 0
     var(--comment-reply-card-padding-end);
 }
@@ -424,10 +465,20 @@ html:lang(zh-CN) .content-page--article {
 }
 
 .article-comments-thread .wl-card .wl-quote .wl-user {
-  display: none;
+  --avatar-size: var(--waline-m-avatar-size);
+  flex-shrink: 0;
+  margin-top: 0.08rem;
+  margin-inline-end: calc(var(--comment-avatar-gap) * 0.68);
+}
+
+.article-comments-thread .wl-card .wl-quote .wl-user .wl-user-avatar {
+  width: var(--avatar-size);
+  height: var(--avatar-size);
 }
 
 .article-comments-thread .wl-card .wl-quote .wl-card {
+  flex: 1;
+  min-width: 0;
   width: auto;
   padding-bottom: 0;
   border-bottom: 0;
@@ -440,24 +491,31 @@ html:lang(zh-CN) .content-page--article {
 .article-comments-thread .wl-card .wl-quote .wl-card .wl-head {
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.24rem 0.42rem;
+  align-items: center;
+  min-height: 1.2rem;
+  gap: 0.18rem 0.42rem;
 }
 
 .article-comments-thread .wl-card .wl-quote .wl-card .wl-head .wl-nick,
 .article-comments-thread .wl-card .wl-quote .wl-card span.wl-nick {
   margin-inline-end: 0;
-  color: color-mix(in srgb, var(--line) 64%, transparent);
+  color: color-mix(in srgb, var(--line) 68%, transparent);
   font-size: var(--comment-child-nick-font-size);
+  font-weight: 600;
 }
 
 .article-comments-thread .wl-card .wl-quote .wl-card .wl-time {
   margin-inline-end: 0;
-  color: color-mix(in srgb, var(--line) 34%, transparent);
+  color: color-mix(in srgb, var(--line) 38%, transparent);
   font-size: var(--comment-child-meta-font-size);
 }
 
-.article-comments-thread .wl-card .wl-quote .wl-card > .wl-head .wl-comment-actions {
+.article-comments-thread
+  .wl-card
+  .wl-quote
+  .wl-card
+  > .wl-head
+  .wl-comment-actions {
   margin-inline-start: auto;
   opacity: 0;
 }
@@ -478,22 +536,22 @@ html:lang(zh-CN) .content-page--article {
 }
 
 .article-comments-thread .wl-card .wl-quote .wl-card .wl-meta {
-  gap: 0.18rem 0.34rem;
-  margin-top: 0.18rem;
+  gap: 0.16rem 0.36rem;
+  margin-top: 0.24rem;
   opacity: 0.72;
 }
 
 .article-comments-thread .wl-card .wl-quote .wl-card .wl-meta > span {
-  color: color-mix(in srgb, var(--line) 28%, transparent);
+  color: color-mix(in srgb, var(--line) 34%, transparent);
   font-size: var(--comment-child-meta-font-size);
 }
 
 .article-comments-thread .wl-card .wl-quote .wl-card .wl-content {
-  margin-bottom: 0.36rem;
-  padding-top: 0.34rem;
-  color: color-mix(in srgb, var(--line) 64%, transparent);
+  margin-bottom: 0.34rem;
+  padding-top: 0.32rem;
+  color: color-mix(in srgb, var(--line) 66%, transparent);
   font-size: var(--comment-child-body-font-size);
-  line-height: 1.62;
+  line-height: 1.64;
 }
 
 .article-comments-thread .wl-card .wl-quote .wl-card .wl-content .wl-reply-to {
@@ -502,7 +560,13 @@ html:lang(zh-CN) .content-page--article {
   font-size: 0.92em;
 }
 
-.article-comments-thread .wl-card .wl-quote .wl-card .wl-content .wl-reply-to a {
+.article-comments-thread
+  .wl-card
+  .wl-quote
+  .wl-card
+  .wl-content
+  .wl-reply-to
+  a {
   color: inherit;
 }
 
@@ -514,26 +578,26 @@ html:lang(zh-CN) .content-page--article {
 
 @media (min-width: 1280px) {
   .article-comments-thread {
-    --comment-font-size: 13.4px;
-    --comment-body-font-size: 14.6px;
-    --comment-nick-font-size: 13.2px;
-    --comment-meta-font-size: 11px;
-    --comment-child-body-font-size: 13.4px;
-    --comment-child-nick-font-size: 12.4px;
-    --comment-child-meta-font-size: 10.2px;
+    --comment-font-size: 13.8px;
+    --comment-body-font-size: 13.9px;
+    --comment-nick-font-size: 14px;
+    --comment-meta-font-size: 11.4px;
+    --comment-child-body-font-size: 13px;
+    --comment-child-nick-font-size: 13px;
+    --comment-child-meta-font-size: 11px;
     --comment-button-font-size: 12px;
     --comment-action-font-size: 15px;
-    --comment-count-font-size: 13.8px;
-    --comment-thread-gap: 0.98rem;
+    --comment-count-font-size: 14px;
+    --comment-thread-gap: 1.08rem;
     --comment-panel-offset: 0.75rem;
     --comment-editor-min-height: 6.6rem;
     --comment-meta-head-margin: 0.72rem;
-    --comment-card-padding-start: 0.78rem;
-    --comment-card-padding-end: 0.84rem;
-    --comment-avatar-gap: 0.72rem;
-    --comment-reply-indent: 0.82rem;
-    --waline-avatar-size: 2.25rem;
-    --waline-m-avatar-size: 2rem;
+    --comment-card-padding-start: 0.9rem;
+    --comment-card-padding-end: 0.95rem;
+    --comment-avatar-gap: 0.78rem;
+    --comment-reply-indent: 0.88rem;
+    --waline-avatar-size: 2.16rem;
+    --waline-m-avatar-size: 1.56rem;
   }
 }
 
@@ -544,30 +608,30 @@ html:lang(zh-CN) .content-page--article {
   }
 
   .article-comments-thread {
-    --comment-font-size: 12.6px;
-    --comment-body-font-size: 13.5px;
-    --comment-nick-font-size: 12.5px;
-    --comment-meta-font-size: 10.5px;
-    --comment-child-body-font-size: 12.8px;
-    --comment-child-nick-font-size: 11.8px;
-    --comment-child-meta-font-size: 9.9px;
+    --comment-font-size: 13px;
+    --comment-body-font-size: 13px;
+    --comment-nick-font-size: 13.2px;
+    --comment-meta-font-size: 11px;
+    --comment-child-body-font-size: 12.4px;
+    --comment-child-nick-font-size: 12.5px;
+    --comment-child-meta-font-size: 10.5px;
     --comment-button-font-size: 11.3px;
     --comment-action-font-size: 14px;
-    --comment-count-font-size: 13.2px;
-    --comment-thread-gap: 0.8rem;
+    --comment-count-font-size: 13.4px;
+    --comment-thread-gap: 0.9rem;
     --comment-panel-offset: 0.6rem;
     --comment-editor-min-height: 5.9rem;
     --comment-footer-margin: 0.42rem 0.58rem 0.6rem;
     --comment-meta-head-margin: 0.58rem;
-    --comment-card-padding-start: 0.66rem;
-    --comment-card-padding-end: 0.72rem;
-    --comment-card-offset: 0.28rem;
-    --comment-avatar-gap: 0.55rem;
-    --comment-reply-indent: 0.66rem;
-    --comment-reply-card-padding-start: 0.48rem;
-    --comment-reply-card-padding-end: 0.42rem;
-    --waline-avatar-size: 2rem;
-    --waline-m-avatar-size: 1.85rem;
+    --comment-card-padding-start: 0.76rem;
+    --comment-card-padding-end: 0.78rem;
+    --comment-card-offset: 0.2rem;
+    --comment-avatar-gap: 0.62rem;
+    --comment-reply-indent: 0.68rem;
+    --comment-reply-card-padding-start: 0.5rem;
+    --comment-reply-card-padding-end: 0.46rem;
+    --waline-avatar-size: 1.92rem;
+    --waline-m-avatar-size: 1.38rem;
   }
 
   .article-comments-thread .wl-meta-head {
@@ -577,31 +641,31 @@ html:lang(zh-CN) .content-page--article {
 
 @media (max-width: 580px) {
   .article-comments-thread {
-    --comment-font-size: 12px;
-    --comment-body-font-size: 13px;
-    --comment-nick-font-size: 12.2px;
-    --comment-meta-font-size: 10px;
-    --comment-child-body-font-size: 12.4px;
-    --comment-child-nick-font-size: 11.5px;
-    --comment-child-meta-font-size: 9.8px;
+    --comment-font-size: 12.6px;
+    --comment-body-font-size: 12.6px;
+    --comment-nick-font-size: 12.8px;
+    --comment-meta-font-size: 10.6px;
+    --comment-child-body-font-size: 12px;
+    --comment-child-nick-font-size: 12px;
+    --comment-child-meta-font-size: 10.2px;
     --comment-button-font-size: 11px;
     --comment-action-font-size: 13.5px;
     --comment-count-font-size: 12.8px;
-    --comment-thread-gap: 0.72rem;
+    --comment-thread-gap: 0.8rem;
     --comment-panel-offset: 0.5rem;
     --comment-editor-min-height: 5.45rem;
     --comment-editor-margin: 0.5rem;
     --comment-footer-margin: 0.4rem 0.55rem 0.58rem;
     --comment-meta-head-margin: 0.52rem;
-    --comment-card-padding-start: 0.62rem;
-    --comment-card-padding-end: 0.68rem;
-    --comment-card-offset: 0.18rem;
-    --comment-avatar-gap: 0.48rem;
-    --comment-reply-indent: 0.58rem;
+    --comment-card-padding-start: 0.7rem;
+    --comment-card-padding-end: 0.72rem;
+    --comment-card-offset: 0.12rem;
+    --comment-avatar-gap: 0.54rem;
+    --comment-reply-indent: 0.56rem;
     --comment-reply-card-padding-start: 0.44rem;
     --comment-reply-card-padding-end: 0.4rem;
-    --waline-avatar-size: 1.85rem;
-    --waline-m-avatar-size: 1.75rem;
+    --waline-avatar-size: 1.72rem;
+    --waline-m-avatar-size: 1.24rem;
   }
 
   .article-comments-thread .wl-meta-head {
@@ -633,13 +697,13 @@ html:lang(zh-CN) .content-page--article {
   }
 
   .article-comments-thread {
-    --comment-font-size: 11.8px;
-    --comment-body-font-size: 12.8px;
-    --comment-nick-font-size: 12px;
-    --comment-meta-font-size: 9.8px;
-    --comment-child-body-font-size: 12px;
-    --comment-child-nick-font-size: 11.2px;
-    --comment-child-meta-font-size: 9.6px;
+    --comment-font-size: 12.2px;
+    --comment-body-font-size: 12.4px;
+    --comment-nick-font-size: 12.5px;
+    --comment-meta-font-size: 10.3px;
+    --comment-child-body-font-size: 11.7px;
+    --comment-child-nick-font-size: 11.8px;
+    --comment-child-meta-font-size: 10px;
     --comment-button-font-size: 10.8px;
     --comment-action-font-size: 13px;
     --comment-count-font-size: 12.4px;
@@ -648,12 +712,12 @@ html:lang(zh-CN) .content-page--article {
     --comment-editor-margin: 0.45rem;
     --comment-footer-margin: 0.36rem 0.48rem 0.52rem;
     --comment-card-offset: 0;
-    --comment-avatar-gap: 0.38rem;
-    --comment-reply-indent: 0.5rem;
+    --comment-avatar-gap: 0.46rem;
+    --comment-reply-indent: 0.44rem;
     --comment-reply-card-padding-start: 0.4rem;
     --comment-reply-card-padding-end: 0.36rem;
-    --waline-avatar-size: 1.68rem;
-    --waline-m-avatar-size: 1.6rem;
+    --waline-avatar-size: 1.58rem;
+    --waline-m-avatar-size: 1.12rem;
   }
 
   .article-comments-thread .wl-login-info {
