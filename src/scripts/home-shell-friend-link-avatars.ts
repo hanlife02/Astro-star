@@ -55,10 +55,7 @@ async function settleImage(image: HTMLImageElement, signal: AbortSignal) {
   syncAvatarState(image);
 }
 
-async function revealGridWhenReady(
-  grid: HTMLElement,
-  controller: AbortController,
-) {
+function revealGrid(grid: HTMLElement, controller: AbortController) {
   const images = Array.from(
     grid.querySelectorAll<HTMLImageElement>(AVATAR_SELECTOR),
   );
@@ -66,11 +63,14 @@ async function revealGridWhenReady(
   grid.dataset.friendLinksState = "loading";
   grid.setAttribute("aria-busy", "true");
 
-  await Promise.all(
-    images.map((image) => settleImage(image, controller.signal)),
-  );
+  images.forEach((image) => {
+    if (image.complete) {
+      syncAvatarState(image);
+      return;
+    }
 
-  if (controller.signal.aborted) return;
+    void settleImage(image, controller.signal);
+  });
 
   grid.dataset.friendLinksState = "ready";
   grid.setAttribute("aria-busy", "false");
@@ -95,6 +95,6 @@ export function initHomeShellFriendLinkAvatars() {
   };
 
   grids.forEach((grid) => {
-    void revealGridWhenReady(grid, controller);
+    revealGrid(grid, controller);
   });
 }
