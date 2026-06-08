@@ -248,7 +248,9 @@ export function initHomeShellConstellationBackground() {
       const borderSize =
         Number.parseFloat(
           cardStyle.getPropertyValue("--friend-link-glass-border-size"),
-        ) || Number.parseFloat(cardStyle.borderTopWidth) || 0;
+        ) ||
+        Number.parseFloat(cardStyle.borderTopWidth) ||
+        0;
       const fieldLeft = rect.left + borderSize - canvasRect.left;
       const fieldTop = rect.top + borderSize - canvasRect.top;
       const fieldRight = rect.right - borderSize - canvasRect.left;
@@ -372,10 +374,7 @@ export function initHomeShellConstellationBackground() {
       const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${fixed(width)}" height="${fixed(height)}" viewBox="0 0 ${fixed(width)} ${fixed(height)}"><filter id="b" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="3.2"/></filter><g filter="url(#b)">${lines.join("")}${points.join("")}</g></svg>`;
       const fieldBackground = svgBackground(svg);
 
-      card.style.setProperty(
-        "--friend-link-glass-field",
-        fieldBackground,
-      );
+      card.style.setProperty("--friend-link-glass-field", fieldBackground);
     }
   };
 
