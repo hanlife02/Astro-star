@@ -16,6 +16,15 @@
   --friend-links-gap: 0.9rem;
   --friend-link-card-min: 15rem;
   --friend-link-card-max: 19rem;
+  --friend-link-glass-border-size: 2px;
+  --friend-link-glass-fill: rgba(255, 255, 255, 0.52);
+  --friend-link-glass-shadow: 0 0.82rem 2rem rgba(17, 17, 17, 0.12);
+  --friend-link-glass-inner:
+    inset 0 1px 0 rgba(255, 255, 255, 0.66),
+    inset 1px 0 0 rgba(255, 255, 255, 0.28),
+    inset -1px 0 0 rgba(17, 17, 17, 0.08),
+    inset 0 -1px 0 rgba(17, 17, 17, 0.09),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.14);
   display: grid;
   grid-template-columns: repeat(
     auto-fit,
@@ -53,19 +62,32 @@ html[data-js="true"] .friend-links-grid[data-friend-links-state="ready"] {
   align-self: stretch;
   padding: 0.1rem 0.8rem;
   position: relative;
-  border-color: var(--border-soft);
-  border-radius: var(--radius-md);
-  background-color: color-mix(in srgb, var(--line) 2.5%, transparent);
+  border: var(--friend-link-glass-border-size) solid transparent;
+  border-radius: 1.1rem;
+  background-color: var(--friend-link-glass-fill);
+  background-image:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.72), transparent 32%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.25), transparent 58%);
+  background-clip: padding-box;
+  box-shadow:
+    var(--friend-link-glass-shadow),
+    var(--friend-link-glass-inner);
+  backdrop-filter: blur(22px) saturate(1.55);
+  -webkit-backdrop-filter: blur(22px) saturate(1.55);
   min-height: 4.45rem;
   overflow: hidden;
-  transition: background-color 0.2s ease;
+  transition:
+    border-color 0.22s ease,
+    background-color 0.22s ease,
+    box-shadow 0.22s ease;
 }
 
 .friend-links-grid .app-panel-item--link::before {
   content: "";
   position: absolute;
-  inset: 0;
+  inset: var(--friend-link-glass-border-size);
   z-index: 1;
+  border-radius: calc(1.1rem - var(--friend-link-glass-border-size));
   background: linear-gradient(
     90deg,
     color-mix(in srgb, #000 34%, transparent) 0%,
@@ -73,6 +95,30 @@ html[data-js="true"] .friend-links-grid[data-friend-links-state="ready"] {
     transparent 100%
   );
   opacity: 0.72;
+  pointer-events: none;
+  transition: opacity 0.22s ease;
+}
+
+.friend-links-grid .app-panel-item::after,
+.friend-links-grid .app-panel-item--link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  padding: var(--friend-link-glass-border-size);
+  border-radius: inherit;
+  background: rgba(255, 255, 255, 0.055);
+  backdrop-filter: blur(8px) saturate(1.85) contrast(1.04);
+  -webkit-backdrop-filter: blur(8px) saturate(1.85) contrast(1.04);
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  opacity: 0.95;
   pointer-events: none;
 }
 
@@ -220,42 +266,34 @@ html[data-js="true"]
   line-height: 1.35;
 }
 
-.friend-links-grid .app-panel-item--link:hover {
-  background-color: color-mix(in srgb, var(--line) 4.8%, transparent);
-}
-
-.friend-links-grid .app-panel-item--link:hover .friend-link-card-bg {
-  opacity: 0.3;
-  filter: saturate(1.14) brightness(0.82);
-}
-
-.friend-links-grid .app-panel-item--link:hover .friend-link-avatar {
-  filter: saturate(0.72) contrast(0.96);
-}
-
-.friend-links-grid .app-panel-item--link:hover .friend-link-avatar-mask {
-  opacity: 0.9;
-}
-
 .friend-links-grid .app-panel-item--link:focus-visible {
   outline: 2px solid color-mix(in srgb, var(--line) 28%, transparent);
   outline-offset: 0.2rem;
-  background-color: color-mix(in srgb, var(--line) 4.8%, transparent);
 }
 
-.friend-links-grid .app-panel-item--link:focus-visible .friend-link-card-bg {
-  opacity: 0.3;
-  filter: saturate(1.14) brightness(0.82);
+:root[data-theme="dark"] .friend-links-grid {
+  --friend-link-glass-fill: rgba(24, 26, 32, 0.5);
+  --friend-link-glass-shadow: 0 0.9rem 2.2rem rgba(0, 0, 0, 0.34);
+  --friend-link-glass-inner:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    inset 1px 0 0 rgba(255, 255, 255, 0.08),
+    inset -1px 0 0 rgba(0, 0, 0, 0.28),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.36),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05);
 }
 
-.friend-links-grid
-  .app-panel-item--link:focus-visible
-  .friend-link-avatar-mask {
-  opacity: 0.9;
+:root[data-theme="dark"] .friend-links-grid .app-panel-item,
+:root[data-theme="dark"] .friend-links-grid .app-panel-item--link {
+  background-image:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.18), transparent 34%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 58%);
 }
 
-.friend-links-grid .app-panel-item--link:focus-visible .friend-link-avatar {
-  filter: saturate(0.72) contrast(0.96);
+:root[data-theme="dark"] .friend-links-grid .app-panel-item::after,
+:root[data-theme="dark"] .friend-links-grid .app-panel-item--link::after {
+  background: rgba(255, 255, 255, 0.025);
+  backdrop-filter: blur(9px) saturate(1.65) contrast(1.08);
+  -webkit-backdrop-filter: blur(9px) saturate(1.65) contrast(1.08);
 }
 
 .app-panel-item,
