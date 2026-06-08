@@ -82,39 +82,58 @@
 
 .githeatmap-cell,
 .githeatmap-legend-cell {
+  --githeatmap-fill: var(--githeatmap-empty);
   border-radius: 2px;
-  background: var(--githeatmap-empty);
+  background-color: var(--githeatmap-fill);
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--line) 4%, transparent);
 }
 
 .githeatmap-cell {
   width: 100%;
   height: 100%;
+  transform-origin: center;
 }
 
 .githeatmap-cell[data-blank="true"] {
-  background: transparent;
+  --githeatmap-fill: transparent;
+  background-color: transparent;
   box-shadow: none;
 }
 
 .githeatmap-cell[data-level="1"],
 .githeatmap-legend-cell[data-level="1"] {
-  background: color-mix(in srgb, var(--githeatmap-active) 28%, transparent);
+  --githeatmap-fill: color-mix(
+    in srgb,
+    var(--githeatmap-active) 28%,
+    transparent
+  );
 }
 
 .githeatmap-cell[data-level="2"],
 .githeatmap-legend-cell[data-level="2"] {
-  background: color-mix(in srgb, var(--githeatmap-active) 46%, transparent);
+  --githeatmap-fill: color-mix(
+    in srgb,
+    var(--githeatmap-active) 46%,
+    transparent
+  );
 }
 
 .githeatmap-cell[data-level="3"],
 .githeatmap-legend-cell[data-level="3"] {
-  background: color-mix(in srgb, var(--githeatmap-active) 66%, transparent);
+  --githeatmap-fill: color-mix(
+    in srgb,
+    var(--githeatmap-active) 66%,
+    transparent
+  );
 }
 
 .githeatmap-cell[data-level="4"],
 .githeatmap-legend-cell[data-level="4"] {
-  background: color-mix(in srgb, var(--githeatmap-active) 88%, transparent);
+  --githeatmap-fill: color-mix(
+    in srgb,
+    var(--githeatmap-active) 88%,
+    transparent
+  );
 }
 
 .githeatmap-footer {
@@ -152,17 +171,45 @@
   opacity: 0.44;
 }
 
+@keyframes githeatmap-fill-sweep {
+  0% {
+    background-color: var(--githeatmap-empty);
+    opacity: 0.5;
+    transform: scale(0.72);
+  }
+
+  72% {
+    background-color: var(--githeatmap-fill);
+    opacity: 1;
+    transform: scale(1.08);
+  }
+
+  100% {
+    background-color: var(--githeatmap-fill);
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 @media (hover: hover) {
   .githeatmap-link:hover {
     opacity: 0.86;
-    transform: translateY(-0.08rem) scale(1.01);
+  }
+
+  .githeatmap-link:hover .githeatmap-cell:not([data-blank="true"]) {
+    animation: githeatmap-fill-sweep 0.34s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    animation-delay: var(--githeatmap-hover-delay, 0ms);
   }
 }
 
 .githeatmap-link:focus-visible {
   outline: none;
   opacity: 0.86;
-  transform: translateY(-0.08rem) scale(1.01);
+}
+
+.githeatmap-link:focus-visible .githeatmap-cell:not([data-blank="true"]) {
+  animation: githeatmap-fill-sweep 0.34s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: var(--githeatmap-hover-delay, 0ms);
 }
 
 @media (max-width: 30rem) {
@@ -190,5 +237,10 @@
   .githeatmap-link:hover,
   .githeatmap-link:focus-visible {
     transform: none;
+  }
+
+  .githeatmap-link:hover .githeatmap-cell,
+  .githeatmap-link:focus-visible .githeatmap-cell {
+    animation: none;
   }
 }

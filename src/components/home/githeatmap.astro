@@ -63,7 +63,7 @@ const legendLevels = [0, 1, 2, 3, 4];
               data-blank={day.isBlank ? "true" : undefined}
               style={`grid-column: ${day.weekIndex + 1}; grid-row: ${
                 day.dayIndex + 1
-              };`}
+              }; --githeatmap-hover-delay: ${day.weekIndex * 10}ms;`}
               aria-label={day.label || undefined}
               title={day.label || undefined}
             />
