@@ -19,18 +19,6 @@ if (!existsSync(jsonPath)) {
 const config = JSON.parse(readFileSync(jsonPath, "utf-8"));
 const toTS = (obj) => JSON.stringify(obj, null, 2);
 
-function resolveCodeTimeId(profile = {}) {
-  if (typeof profile.codetime === "string") return profile.codetime;
-
-  const legacyBadgeSrc =
-    typeof profile.codeTimeBadgeSrc === "string"
-      ? profile.codeTimeBadgeSrc
-      : "";
-  const uidMatch = legacyBadgeSrc.match(/uid(?:%3D|=)(\d+)/i);
-
-  return uidMatch?.[1] ?? "";
-}
-
 const defaultArticleActions = {
   license: {
     name: "CC BY-NC-SA 4.0 - 非商业性使用 - 相同方式共享 4.0 国际",
@@ -115,7 +103,6 @@ function normalizeSplitSiteConfig(input) {
         intro: input.profile.intro ?? "",
         bilibiliId: input.profile.bilibiliId ?? "",
         cloudMusicId: input.profile.cloudMusicId ?? "",
-        codetime: resolveCodeTimeId(input.profile),
         signatureSvg: input.profile.signatureSvg ?? "",
       },
       site: {
@@ -152,7 +139,6 @@ function normalizeSplitSiteConfig(input) {
       intro: legacyProfile.intro ?? "",
       bilibiliId: legacyProfile.bilibiliId ?? "",
       cloudMusicId: legacyProfile.cloudMusicId ?? "",
-      codetime: resolveCodeTimeId(legacyProfile),
       signatureSvg: legacyProfile.signatureSvg ?? "",
     },
     site: {

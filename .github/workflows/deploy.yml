@@ -97,7 +97,10 @@ jobs:
       - name: Deploy runtime env vars
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
-          echo "WALINE_SERVER_URL=${{ secrets.PUBLIC_WALINE_SERVER_URL }}" | \
+          {
+            echo "WALINE_SERVER_URL=${{ secrets.PUBLIC_WALINE_SERVER_URL }}"
+            echo "CODETIME_TOKEN=${{ secrets.CODETIME_TOKEN }}"
+          } | \
             ssh -i ~/.ssh/deploy_key -p ${{ env.SSH_PORT }} \
               ${{ env.SSH_USER }}@${{ secrets.SSH_HOST }} \
               "cat > ${{ env.DEPLOY_PATH }}/.env"

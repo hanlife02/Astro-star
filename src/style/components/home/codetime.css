@@ -1,26 +1,11 @@
 .codetime-link {
-  position: relative;
   display: block;
   width: 100%;
   max-width: 9.5rem;
   aspect-ratio: 168 / 20;
   min-height: 1.125rem;
   overflow: hidden;
-  border-radius: 999px;
-  background:
-    linear-gradient(
-      110deg,
-      transparent 0%,
-      color-mix(in srgb, var(--line) 6%, transparent) 38%,
-      transparent 68%
-    ),
-    color-mix(in srgb, var(--line) 5%, transparent);
-  background-size: 220% 100%;
   line-height: 0;
-  animation: codetime-placeholder-sheen 1.6s ease-in-out infinite;
-  transition:
-    opacity 0.18s ease,
-    transform 0.18s ease;
 }
 
 .codetime-link img {
@@ -31,42 +16,13 @@
   object-fit: contain;
 }
 
-@keyframes codetime-placeholder-sheen {
-  from {
-    background-position: 160% 0;
-  }
-
-  to {
-    background-position: -60% 0;
-  }
-}
-
-@media (hover: hover) {
-  .codetime-link:hover {
-    opacity: 0.86;
-    transform: translateY(-0.08rem) scale(1.02);
-  }
-}
-
 .codetime-link:focus-visible {
-  opacity: 0.86;
-  transform: translateY(-0.08rem) scale(1.02);
+  outline: 0.125rem solid currentColor;
+  outline-offset: 0.18rem;
 }
 
 @media (min-width: 48rem) {
   .codetime-link {
     max-width: 11rem;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .codetime-link {
-    animation: none;
-    transition: none;
-  }
-
-  .codetime-link:hover,
-  .codetime-link:focus-visible {
-    transform: none;
   }
 }
