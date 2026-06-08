@@ -17,14 +17,15 @@
   --friend-link-card-min: 15rem;
   --friend-link-card-max: 19rem;
   --friend-link-glass-border-size: 2px;
-  --friend-link-glass-fill: rgba(255, 255, 255, 0.52);
-  --friend-link-glass-shadow: 0 0.82rem 2rem rgba(17, 17, 17, 0.12);
+  --friend-link-glass-field: linear-gradient(transparent, transparent);
+  --friend-link-glass-fill: rgba(255, 255, 255, 0.26);
+  --friend-link-glass-shadow: 0 0.82rem 2rem rgba(17, 17, 17, 0.1);
   --friend-link-glass-inner:
-    inset 0 1px 0 rgba(255, 255, 255, 0.66),
-    inset 1px 0 0 rgba(255, 255, 255, 0.28),
-    inset -1px 0 0 rgba(17, 17, 17, 0.08),
-    inset 0 -1px 0 rgba(17, 17, 17, 0.09),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+    inset 0 1px 0 rgba(255, 255, 255, 0.38),
+    inset 1px 0 0 rgba(255, 255, 255, 0.16),
+    inset -1px 0 0 rgba(17, 17, 17, 0.06),
+    inset 0 -1px 0 rgba(17, 17, 17, 0.07),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08);
   display: grid;
   grid-template-columns: repeat(
     auto-fit,
@@ -66,14 +67,23 @@ html[data-js="true"] .friend-links-grid[data-friend-links-state="ready"] {
   border-radius: 1.1rem;
   background-color: var(--friend-link-glass-fill);
   background-image:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.72), transparent 32%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.25), transparent 58%);
+    linear-gradient(135deg, rgba(255, 255, 255, 0.22), transparent 32%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 58%);
+  background-position:
+    center,
+    center;
+  background-size:
+    auto,
+    auto;
+  background-repeat:
+    no-repeat,
+    no-repeat;
   background-clip: padding-box;
   box-shadow:
     var(--friend-link-glass-shadow),
     var(--friend-link-glass-inner);
-  backdrop-filter: blur(22px) saturate(1.55);
-  -webkit-backdrop-filter: blur(22px) saturate(1.55);
+  backdrop-filter: blur(32px) saturate(1.9) contrast(0.92);
+  -webkit-backdrop-filter: blur(32px) saturate(1.9) contrast(0.92);
   min-height: 4.45rem;
   overflow: hidden;
   transition:
@@ -88,13 +98,25 @@ html[data-js="true"] .friend-links-grid[data-friend-links-state="ready"] {
   inset: var(--friend-link-glass-border-size);
   z-index: 1;
   border-radius: calc(1.1rem - var(--friend-link-glass-border-size));
-  background: linear-gradient(
-    90deg,
-    color-mix(in srgb, #000 34%, transparent) 0%,
-    color-mix(in srgb, #000 18%, transparent) 44%,
-    transparent 100%
-  );
-  opacity: 0.72;
+  background:
+    var(--friend-link-glass-field),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.18), transparent 42%),
+    rgba(255, 255, 255, 0.28);
+  background-position:
+    center,
+    center,
+    center;
+  background-size:
+    100% 100%,
+    auto,
+    auto;
+  background-repeat:
+    no-repeat,
+    no-repeat,
+    no-repeat;
+  backdrop-filter: blur(38px) saturate(1.7) contrast(0.78);
+  -webkit-backdrop-filter: blur(38px) saturate(1.7) contrast(0.78);
+  opacity: 1;
   pointer-events: none;
   transition: opacity 0.22s ease;
 }
@@ -107,9 +129,9 @@ html[data-js="true"] .friend-links-grid[data-friend-links-state="ready"] {
   z-index: 1;
   padding: var(--friend-link-glass-border-size);
   border-radius: inherit;
-  background: rgba(255, 255, 255, 0.055);
-  backdrop-filter: blur(8px) saturate(1.85) contrast(1.04);
-  -webkit-backdrop-filter: blur(8px) saturate(1.85) contrast(1.04);
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(18px) saturate(2.2) contrast(1.02);
+  -webkit-backdrop-filter: blur(18px) saturate(2.2) contrast(1.02);
   mask:
     linear-gradient(#000 0 0) content-box,
     linear-gradient(#000 0 0);
@@ -272,28 +294,38 @@ html[data-js="true"]
 }
 
 :root[data-theme="dark"] .friend-links-grid {
-  --friend-link-glass-fill: rgba(24, 26, 32, 0.5);
+  --friend-link-glass-field: linear-gradient(transparent, transparent);
+  --friend-link-glass-fill: rgba(18, 20, 26, 0.34);
   --friend-link-glass-shadow: 0 0.9rem 2.2rem rgba(0, 0, 0, 0.34);
   --friend-link-glass-inner:
-    inset 0 1px 0 rgba(255, 255, 255, 0.18),
-    inset 1px 0 0 rgba(255, 255, 255, 0.08),
-    inset -1px 0 0 rgba(0, 0, 0, 0.28),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.36),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 1px 0 0 rgba(255, 255, 255, 0.05),
+    inset -1px 0 0 rgba(0, 0, 0, 0.22),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.28),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.035);
 }
 
 :root[data-theme="dark"] .friend-links-grid .app-panel-item,
 :root[data-theme="dark"] .friend-links-grid .app-panel-item--link {
   background-image:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.18), transparent 34%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 58%);
+    linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent 34%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 58%);
+}
+
+:root[data-theme="dark"] .friend-links-grid .app-panel-item--link::before {
+  background:
+    var(--friend-link-glass-field),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.06), transparent 42%),
+    rgba(12, 14, 18, 0.34);
+  backdrop-filter: blur(38px) saturate(1.55) contrast(0.82);
+  -webkit-backdrop-filter: blur(38px) saturate(1.55) contrast(0.82);
 }
 
 :root[data-theme="dark"] .friend-links-grid .app-panel-item::after,
 :root[data-theme="dark"] .friend-links-grid .app-panel-item--link::after {
   background: rgba(255, 255, 255, 0.025);
-  backdrop-filter: blur(9px) saturate(1.65) contrast(1.08);
-  -webkit-backdrop-filter: blur(9px) saturate(1.65) contrast(1.08);
+  backdrop-filter: blur(18px) saturate(1.8) contrast(1.02);
+  -webkit-backdrop-filter: blur(18px) saturate(1.8) contrast(1.02);
 }
 
 .app-panel-item,
