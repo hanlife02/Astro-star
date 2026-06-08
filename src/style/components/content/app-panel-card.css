@@ -314,11 +314,9 @@ html[data-js="true"]
   --friend-link-glass-fill: rgba(20, 22, 28, 0.74);
   --friend-link-glass-edge: rgba(255, 255, 255, 0.12);
   --friend-link-glass-shadow:
-    0 0.76rem 1.8rem rgba(0, 0, 0, 0.3),
-    0 0.14rem 0.4rem rgba(0, 0, 0, 0.22);
+    0 0.76rem 1.8rem rgba(0, 0, 0, 0.3), 0 0.14rem 0.4rem rgba(0, 0, 0, 0.22);
   --friend-link-glass-inner:
-    inset 0 1px 0 rgba(255, 255, 255, 0.16),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16), inset 0 -1px 0 rgba(0, 0, 0, 0.28),
     inset 0 0 0 1px rgba(255, 255, 255, 0.05);
 }
 
@@ -351,7 +349,9 @@ html[data-js="true"]
 }
 
 :root[data-theme="dark"] .friend-links-grid .app-panel-item--link:hover,
-:root[data-theme="dark"] .friend-links-grid .app-panel-item--link:focus-visible {
+:root[data-theme="dark"]
+  .friend-links-grid
+  .app-panel-item--link:focus-visible {
   --friend-link-glass-fill: rgba(24, 26, 32, 0.86);
   --friend-link-glass-edge: rgba(255, 255, 255, 0.18);
 }
