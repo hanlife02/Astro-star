@@ -27,6 +27,12 @@ export const linkApplyOwner = {
 
 export const friendLinks = [
   {
+    name: "ADreamLeft’s site",
+    description: "我剩下一个梦",
+    href: "https://www.adreamleft.site",
+    avatarSrc: "https://www.adreamleft.site/avatar.png",
+  },
+  {
     name: "静かな森",
     description: "致虚极，守静笃。",
     href: "https://innei.in",
