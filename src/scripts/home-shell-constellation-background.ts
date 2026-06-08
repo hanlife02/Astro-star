@@ -45,6 +45,7 @@ const REDUCED_MOTION_MEDIA_QUERY = "(prefers-reduced-motion: reduce)";
 const FRIEND_LINK_GLASS_LINE_MAX = 24;
 const FRIEND_LINK_GLASS_POINT_MAX = 10;
 const FRIEND_LINK_GLASS_OVERLAY_CLASS = "friend-link-glass-overlay";
+const FRIEND_LINK_GLASS_UPDATE_EVERY_FRAME = 4;
 
 const clamp = (n: number, a: number, b: number) => Math.max(a, Math.min(b, n));
 
@@ -139,6 +140,7 @@ export function initHomeShellConstellationBackground() {
     particles: ConstellationParticle[];
     raf: number;
     t: number;
+    glassT: number;
     pointer: { x: number; y: number; active: boolean };
   } = {
     w: 0,
@@ -146,6 +148,7 @@ export function initHomeShellConstellationBackground() {
     particles: [],
     raf: 0,
     t: 0,
+    glassT: 0,
     pointer: { x: -1, y: -1, active: false },
   };
 
@@ -391,23 +394,11 @@ export function initHomeShellConstellationBackground() {
     targetCtx.closePath();
   };
 
-  const drawFriendLinkGlassOverlay = () => {
-    if (!glassCtx || !glassGrid) return;
-
-    const gridRect = glassGrid.getBoundingClientRect();
-    const overlayWidth = Math.max(1, gridRect.width);
-    const overlayHeight = Math.max(1, gridRect.height);
-    glassCtx.clearRect(0, 0, overlayWidth, overlayHeight);
+  const clearFriendLinkOriginalConstellation = () => {
     if (friendLinkCards.length === 0) return;
 
     const canvasRect = canvas.getBoundingClientRect();
-    const canvasToGridX = canvasRect.left - gridRect.left;
-    const canvasToGridY = canvasRect.top - gridRect.top;
-    const { fg, muted } = ink;
     const viewportMargin = 80;
-
-    glassCtx.save();
-    glassCtx.filter = "blur(3.2px)";
 
     for (const card of friendLinkCards) {
       const rect = card.element.getBoundingClientRect();
@@ -423,18 +414,14 @@ export function initHomeShellConstellationBackground() {
       const { borderSize, radius } = card;
       const cardLeft = rect.left - canvasRect.left;
       const cardTop = rect.top - canvasRect.top;
-      const fieldLeft = rect.left + borderSize - canvasRect.left;
-      const fieldTop = rect.top + borderSize - canvasRect.top;
-      const fieldRight = rect.right - borderSize - canvasRect.left;
-      const fieldBottom = rect.bottom - borderSize - canvasRect.top;
-      const drawLeft = rect.left + borderSize - gridRect.left;
-      const drawTop = rect.top + borderSize - gridRect.top;
+      const cardRight = rect.right - canvasRect.left;
+      const cardBottom = rect.bottom - canvasRect.top;
 
       if (
-        fieldRight <= 0 ||
-        fieldBottom <= 0 ||
-        fieldLeft >= state.w ||
-        fieldTop >= state.h
+        cardRight <= 0 ||
+        cardBottom <= 0 ||
+        cardLeft >= state.w ||
+        cardTop >= state.h
       ) {
         continue;
       }
@@ -452,6 +439,54 @@ export function initHomeShellConstellationBackground() {
       ctx.fillStyle = "#000000";
       ctx.fill();
       ctx.restore();
+    }
+  };
+
+  const drawFriendLinkGlassOverlay = () => {
+    if (!glassCtx || !glassGrid) return;
+
+    const gridRect = glassGrid.getBoundingClientRect();
+    const overlayWidth = Math.max(1, gridRect.width);
+    const overlayHeight = Math.max(1, gridRect.height);
+    glassCtx.clearRect(0, 0, overlayWidth, overlayHeight);
+    if (friendLinkCards.length === 0) return;
+
+    const canvasRect = canvas.getBoundingClientRect();
+    const canvasToGridX = canvasRect.left - gridRect.left;
+    const canvasToGridY = canvasRect.top - gridRect.top;
+    const { fg, muted } = ink;
+    const viewportMargin = 80;
+
+    glassCtx.save();
+    glassCtx.filter = "blur(4.8px)";
+
+    for (const card of friendLinkCards) {
+      const rect = card.element.getBoundingClientRect();
+      if (
+        rect.bottom < -viewportMargin ||
+        rect.top > window.innerHeight + viewportMargin ||
+        rect.right < -viewportMargin ||
+        rect.left > window.innerWidth + viewportMargin
+      ) {
+        continue;
+      }
+
+      const { borderSize, radius } = card;
+      const fieldLeft = rect.left + borderSize - canvasRect.left;
+      const fieldTop = rect.top + borderSize - canvasRect.top;
+      const fieldRight = rect.right - borderSize - canvasRect.left;
+      const fieldBottom = rect.bottom - borderSize - canvasRect.top;
+      const drawLeft = rect.left + borderSize - gridRect.left;
+      const drawTop = rect.top + borderSize - gridRect.top;
+
+      if (
+        fieldRight <= 0 ||
+        fieldBottom <= 0 ||
+        fieldLeft >= state.w ||
+        fieldTop >= state.h
+      ) {
+        continue;
+      }
 
       const width = Math.max(1, fieldRight - fieldLeft);
       const height = Math.max(1, fieldBottom - fieldTop);
@@ -527,7 +562,11 @@ export function initHomeShellConstellationBackground() {
 
   const tick = () => {
     draw();
-    drawFriendLinkGlassOverlay();
+    clearFriendLinkOriginalConstellation();
+    state.glassT += 1;
+    if (state.glassT % FRIEND_LINK_GLASS_UPDATE_EVERY_FRAME === 0) {
+      drawFriendLinkGlassOverlay();
+    }
     state.raf = requestAnimationFrame(tick);
   };
 
@@ -553,7 +592,8 @@ export function initHomeShellConstellationBackground() {
   };
 
   const onScroll = () => {
-    if (prefersReduced) drawFriendLinkGlassOverlay();
+    drawFriendLinkGlassOverlay();
+    state.glassT = 0;
   };
 
   const onVisibility = () => {
