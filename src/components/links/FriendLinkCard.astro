@@ -20,7 +20,7 @@ const { name, description, href, avatarSrc } = Astro.props as Props;
     src={avatarSrc}
     alt=""
     aria-hidden="true"
-    loading="eager"
+    loading="lazy"
     decoding="async"
   />
 
@@ -36,7 +36,7 @@ const { name, description, href, avatarSrc } = Astro.props as Props;
       alt=""
       width="56"
       height="56"
-      loading="eager"
+      loading="lazy"
       decoding="async"
     />
     <span class="friend-link-avatar-mask" aria-hidden="true">

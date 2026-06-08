@@ -16,15 +16,16 @@
   --friend-links-gap: 0.9rem;
   --friend-link-card-min: 15rem;
   --friend-link-card-max: 19rem;
-  --friend-link-glass-border-size: 2px;
-  --friend-link-glass-fill: rgba(255, 255, 255, 0.26);
-  --friend-link-glass-shadow: 0 0.82rem 2rem rgba(17, 17, 17, 0.1);
+  --friend-link-glass-border-size: 1px;
+  --friend-link-glass-fill: color-mix(in srgb, var(--bg) 76%, transparent);
+  --friend-link-glass-edge: color-mix(in srgb, #ffffff 66%, transparent);
+  --friend-link-glass-shadow:
+    0 0.68rem 1.65rem rgba(17, 17, 17, 0.08),
+    0 0.14rem 0.36rem rgba(17, 17, 17, 0.06);
   --friend-link-glass-inner:
-    inset 0 1px 0 rgba(255, 255, 255, 0.38),
-    inset 1px 0 0 rgba(255, 255, 255, 0.16),
-    inset -1px 0 0 rgba(17, 17, 17, 0.06),
-    inset 0 -1px 0 rgba(17, 17, 17, 0.07),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(17, 17, 17, 0.08),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.18);
   display: grid;
   grid-template-columns: repeat(
     auto-fit,
@@ -39,16 +40,7 @@
   min-width: 0;
   margin: 0 auto clamp(1.25rem, 1rem + 0.65vw, 1.75rem);
   position: relative;
-}
-
-.friend-link-glass-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  display: block;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
+  isolation: isolate;
 }
 
 html[data-js="true"] .friend-links-grid[data-friend-links-state="loading"] {
@@ -74,12 +66,18 @@ html[data-js="true"] .friend-links-grid[data-friend-links-state="ready"] {
   padding: 0.1rem 0.8rem;
   position: relative;
   z-index: 1;
-  border: var(--friend-link-glass-border-size) solid transparent;
+  border: var(--friend-link-glass-border-size) solid
+    var(--friend-link-glass-edge);
   border-radius: 1.1rem;
   background-color: var(--friend-link-glass-fill);
   background-image:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.22), transparent 32%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 58%);
+    radial-gradient(
+      circle at 18% 12%,
+      rgba(255, 255, 255, 0.42),
+      transparent 30%
+    ),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.2), transparent 46%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.11), transparent 62%);
   background-position: center, center;
   background-size: auto, auto;
   background-repeat: no-repeat, no-repeat;
@@ -87,11 +85,15 @@ html[data-js="true"] .friend-links-grid[data-friend-links-state="ready"] {
   box-shadow: var(--friend-link-glass-shadow), var(--friend-link-glass-inner);
   min-height: 4.45rem;
   overflow: hidden;
-  contain: paint;
+  contain: layout paint style;
+  content-visibility: auto;
+  contain-intrinsic-size: 4.7rem;
+  transform: translateZ(0);
   transition:
     border-color 0.22s ease,
     background-color 0.22s ease,
-    box-shadow 0.22s ease;
+    box-shadow 0.22s ease,
+    transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .friend-links-grid .app-panel-item--link::before {
@@ -101,14 +103,22 @@ html[data-js="true"] .friend-links-grid[data-friend-links-state="ready"] {
   z-index: 1;
   border-radius: calc(1.1rem - var(--friend-link-glass-border-size));
   background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.18), transparent 42%),
-    rgba(255, 255, 255, 0.28);
-  background-position: center, center;
-  background-size: auto, auto;
-  background-repeat: no-repeat, no-repeat;
-  opacity: 1;
+    linear-gradient(
+      120deg,
+      rgba(255, 255, 255, 0.42) 0%,
+      rgba(255, 255, 255, 0.14) 28%,
+      transparent 58%
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--bg) 58%, transparent),
+      color-mix(in srgb, var(--bg) 24%, transparent)
+    );
+  opacity: 0.82;
   pointer-events: none;
-  transition: opacity 0.22s ease;
+  transition:
+    opacity 0.22s ease,
+    transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .friend-links-grid .app-panel-item::after,
@@ -119,7 +129,9 @@ html[data-js="true"] .friend-links-grid[data-friend-links-state="ready"] {
   z-index: 1;
   padding: var(--friend-link-glass-border-size);
   border-radius: inherit;
-  background: rgba(255, 255, 255, 0.04);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.58), transparent 42%),
+    linear-gradient(315deg, rgba(17, 17, 17, 0.1), transparent 46%);
   mask:
     linear-gradient(#000 0 0) content-box,
     linear-gradient(#000 0 0);
@@ -132,6 +144,23 @@ html[data-js="true"] .friend-links-grid[data-friend-links-state="ready"] {
   pointer-events: none;
 }
 
+.friend-links-grid .app-panel-item--link:hover,
+.friend-links-grid .app-panel-item--link:focus-visible {
+  --friend-link-glass-fill: color-mix(in srgb, var(--bg) 86%, transparent);
+  --friend-link-glass-edge: color-mix(in srgb, var(--line) 18%, #ffffff 48%);
+  box-shadow:
+    0 0.82rem 1.9rem rgba(17, 17, 17, 0.1),
+    0 0.16rem 0.44rem rgba(17, 17, 17, 0.08),
+    var(--friend-link-glass-inner);
+  transform: translate3d(0, -1px, 0);
+}
+
+.friend-links-grid .app-panel-item--link:hover::before,
+.friend-links-grid .app-panel-item--link:focus-visible::before {
+  opacity: 0.96;
+  transform: translate3d(0, -1px, 0);
+}
+
 .friend-link-card-bg {
   position: absolute;
   inset-block: 50%;
@@ -141,8 +170,8 @@ html[data-js="true"] .friend-links-grid[data-friend-links-state="ready"] {
   aspect-ratio: 1;
   border-radius: 999px;
   object-fit: cover;
-  opacity: 0.24;
-  filter: saturate(1.08) brightness(0.88);
+  opacity: 0.19;
+  filter: saturate(1.04) brightness(0.92);
   mask-image: linear-gradient(90deg, #000 0%, #000 34%, transparent 82%);
   -webkit-mask-image: linear-gradient(
     90deg,
@@ -282,31 +311,49 @@ html[data-js="true"]
 }
 
 :root[data-theme="dark"] .friend-links-grid {
-  --friend-link-glass-fill: rgba(18, 20, 26, 0.34);
-  --friend-link-glass-shadow: 0 0.9rem 2.2rem rgba(0, 0, 0, 0.34);
+  --friend-link-glass-fill: rgba(20, 22, 28, 0.74);
+  --friend-link-glass-edge: rgba(255, 255, 255, 0.12);
+  --friend-link-glass-shadow:
+    0 0.76rem 1.8rem rgba(0, 0, 0, 0.3),
+    0 0.14rem 0.4rem rgba(0, 0, 0, 0.22);
   --friend-link-glass-inner:
-    inset 0 1px 0 rgba(255, 255, 255, 0.12),
-    inset 1px 0 0 rgba(255, 255, 255, 0.05), inset -1px 0 0 rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
     inset 0 -1px 0 rgba(0, 0, 0, 0.28),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.035);
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05);
 }
 
 :root[data-theme="dark"] .friend-links-grid .app-panel-item,
 :root[data-theme="dark"] .friend-links-grid .app-panel-item--link {
   background-image:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent 34%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 58%);
+    radial-gradient(
+      circle at 18% 12%,
+      rgba(255, 255, 255, 0.16),
+      transparent 32%
+    ),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.09), transparent 48%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 62%);
 }
 
 :root[data-theme="dark"] .friend-links-grid .app-panel-item--link::before {
   background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.06), transparent 42%),
-    rgba(12, 14, 18, 0.34);
+    linear-gradient(
+      120deg,
+      rgba(255, 255, 255, 0.14) 0%,
+      rgba(255, 255, 255, 0.05) 30%,
+      transparent 58%
+    ),
+    linear-gradient(180deg, rgba(20, 22, 28, 0.48), rgba(20, 22, 28, 0.16));
 }
 
 :root[data-theme="dark"] .friend-links-grid .app-panel-item::after,
 :root[data-theme="dark"] .friend-links-grid .app-panel-item--link::after {
   background: rgba(255, 255, 255, 0.025);
+}
+
+:root[data-theme="dark"] .friend-links-grid .app-panel-item--link:hover,
+:root[data-theme="dark"] .friend-links-grid .app-panel-item--link:focus-visible {
+  --friend-link-glass-fill: rgba(24, 26, 32, 0.86);
+  --friend-link-glass-edge: rgba(255, 255, 255, 0.18);
 }
 
 .app-panel-item,
