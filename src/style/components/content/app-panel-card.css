@@ -17,7 +17,6 @@
   --friend-link-card-min: 15rem;
   --friend-link-card-max: 19rem;
   --friend-link-glass-border-size: 2px;
-  --friend-link-glass-field: linear-gradient(transparent, transparent);
   --friend-link-glass-fill: rgba(255, 255, 255, 0.26);
   --friend-link-glass-shadow: 0 0.82rem 2rem rgba(17, 17, 17, 0.1);
   --friend-link-glass-inner:
@@ -39,6 +38,17 @@
   );
   min-width: 0;
   margin: 0 auto clamp(1.25rem, 1rem + 0.65vw, 1.75rem);
+  position: relative;
+}
+
+.friend-link-glass-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
 }
 
 html[data-js="true"] .friend-links-grid[data-friend-links-state="loading"] {
@@ -63,6 +73,7 @@ html[data-js="true"] .friend-links-grid[data-friend-links-state="ready"] {
   align-self: stretch;
   padding: 0.1rem 0.8rem;
   position: relative;
+  z-index: 1;
   border: var(--friend-link-glass-border-size) solid transparent;
   border-radius: 1.1rem;
   background-color: var(--friend-link-glass-fill);
@@ -91,15 +102,11 @@ html[data-js="true"] .friend-links-grid[data-friend-links-state="ready"] {
   z-index: 1;
   border-radius: calc(1.1rem - var(--friend-link-glass-border-size));
   background:
-    var(--friend-link-glass-field),
     linear-gradient(135deg, rgba(255, 255, 255, 0.18), transparent 42%),
     rgba(255, 255, 255, 0.28);
-  background-position: center, center, center;
-  background-size:
-    100% 100%,
-    auto,
-    auto;
-  background-repeat: no-repeat, no-repeat, no-repeat;
+  background-position: center, center;
+  background-size: auto, auto;
+  background-repeat: no-repeat, no-repeat;
   backdrop-filter: blur(38px) saturate(1.7) contrast(0.78);
   -webkit-backdrop-filter: blur(38px) saturate(1.7) contrast(0.78);
   opacity: 1;
@@ -157,7 +164,7 @@ html[data-js="true"] .friend-links-grid[data-friend-links-state="ready"] {
 
 .friend-links-grid .app-panel-item-icon {
   position: relative;
-  z-index: 2;
+  z-index: 3;
   width: clamp(2.7rem, 2.58rem + 0.5vw, 3.05rem);
   height: clamp(2.7rem, 2.58rem + 0.5vw, 3.05rem);
   border-radius: 999px;
@@ -251,7 +258,7 @@ html[data-js="true"]
 
 .friend-links-grid .app-panel-item-copy {
   position: relative;
-  z-index: 2;
+  z-index: 3;
   flex: 1 1 auto;
   justify-content: center;
   gap: 0.18rem;
@@ -280,7 +287,6 @@ html[data-js="true"]
 }
 
 :root[data-theme="dark"] .friend-links-grid {
-  --friend-link-glass-field: linear-gradient(transparent, transparent);
   --friend-link-glass-fill: rgba(18, 20, 26, 0.34);
   --friend-link-glass-shadow: 0 0.9rem 2.2rem rgba(0, 0, 0, 0.34);
   --friend-link-glass-inner:
@@ -299,7 +305,6 @@ html[data-js="true"]
 
 :root[data-theme="dark"] .friend-links-grid .app-panel-item--link::before {
   background:
-    var(--friend-link-glass-field),
     linear-gradient(135deg, rgba(255, 255, 255, 0.06), transparent 42%),
     rgba(12, 14, 18, 0.34);
   backdrop-filter: blur(38px) saturate(1.55) contrast(0.82);
