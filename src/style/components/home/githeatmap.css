@@ -1,43 +1,155 @@
 .githeatmap-link {
+  --githeatmap-gap: clamp(2px, 0.22vw, 3px);
+  --githeatmap-empty: color-mix(in srgb, var(--line) 8%, transparent);
+  --githeatmap-active: var(--line);
   position: relative;
-  display: block;
+  display: grid;
+  gap: 0.42rem;
   width: 100%;
-  max-width: 20rem;
-  aspect-ratio: 663 / 104;
-  overflow: hidden;
-  border-radius: 0.35rem;
-  background:
-    linear-gradient(
-      110deg,
-      transparent 0%,
-      color-mix(in srgb, var(--line) 5%, transparent) 38%,
-      transparent 68%
-    ),
-    color-mix(in srgb, var(--line) 4%, transparent);
-  background-size: 220% 100%;
+  max-width: min(100%, 34rem);
+  padding: 0.42rem 0;
+  color: var(--line);
+  text-align: left;
   text-decoration: none;
-  line-height: 0;
-  animation: githeatmap-placeholder-sheen 1.8s ease-in-out infinite;
   transition:
     opacity 0.18s ease,
     transform 0.18s ease;
 }
 
-.githeatmap-image {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
+.githeatmap-summary {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  border: 0;
+  clip: rect(0 0 0 0);
+  overflow: hidden;
+  white-space: nowrap;
 }
 
-@keyframes githeatmap-placeholder-sheen {
-  from {
-    background-position: 160% 0;
-  }
+.githeatmap-count,
+.githeatmap-month,
+.githeatmap-footer,
+.githeatmap-legend {
+  letter-spacing: 0;
+}
 
-  to {
-    background-position: -60% 0;
-  }
+.githeatmap-count {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--text-muted);
+  font-size: clamp(0.64rem, 0.58rem + 0.16vw, 0.78rem);
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.githeatmap-calendar {
+  display: grid;
+  gap: 0.16rem;
+  min-width: 0;
+}
+
+.githeatmap-months {
+  display: grid;
+  grid-template-columns: repeat(var(--githeatmap-week-count, 53), 1fr);
+  height: 0.78rem;
+  line-height: 1;
+}
+
+.githeatmap-month {
+  display: block;
+  overflow: visible;
+  color: var(--text-muted);
+  font-size: clamp(0.55rem, 0.5rem + 0.16vw, 0.68rem);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.githeatmap-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--githeatmap-week-count, 53), 1fr);
+  grid-template-rows: repeat(7, 1fr);
+  gap: var(--githeatmap-gap);
+  width: 100%;
+  aspect-ratio: var(--githeatmap-week-count, 53) / 7;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.githeatmap-cell,
+.githeatmap-legend-cell {
+  border-radius: 2px;
+  background: var(--githeatmap-empty);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--line) 4%, transparent);
+}
+
+.githeatmap-cell {
+  width: 100%;
+  height: 100%;
+}
+
+.githeatmap-cell[data-blank="true"] {
+  background: transparent;
+  box-shadow: none;
+}
+
+.githeatmap-cell[data-level="1"],
+.githeatmap-legend-cell[data-level="1"] {
+  background: color-mix(in srgb, var(--githeatmap-active) 28%, transparent);
+}
+
+.githeatmap-cell[data-level="2"],
+.githeatmap-legend-cell[data-level="2"] {
+  background: color-mix(in srgb, var(--githeatmap-active) 46%, transparent);
+}
+
+.githeatmap-cell[data-level="3"],
+.githeatmap-legend-cell[data-level="3"] {
+  background: color-mix(in srgb, var(--githeatmap-active) 66%, transparent);
+}
+
+.githeatmap-cell[data-level="4"],
+.githeatmap-legend-cell[data-level="4"] {
+  background: color-mix(in srgb, var(--githeatmap-active) 88%, transparent);
+}
+
+.githeatmap-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  min-height: 0.78rem;
+  color: var(--text-muted);
+  font-size: clamp(0.55rem, 0.5rem + 0.16vw, 0.68rem);
+  line-height: 1;
+}
+
+.githeatmap-legend {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 0.34rem;
+}
+
+.githeatmap-legend-scale {
+  display: inline-grid;
+  grid-template-columns: repeat(5, 0.58rem);
+  gap: 0.12rem;
+}
+
+.githeatmap-legend-cell {
+  display: block;
+  width: 0.58rem;
+  height: 0.58rem;
+}
+
+.githeatmap-link[data-githeatmap-state="fallback"] .githeatmap-grid,
+.githeatmap-link[data-githeatmap-state="fallback"] .githeatmap-legend-scale {
+  opacity: 0.44;
 }
 
 @media (hover: hover) {
@@ -48,19 +160,30 @@
 }
 
 .githeatmap-link:focus-visible {
+  outline: none;
   opacity: 0.86;
   transform: translateY(-0.08rem) scale(1.01);
 }
 
+@media (max-width: 30rem) {
+  .githeatmap-link {
+    max-width: min(100%, 27rem);
+  }
+
+  .githeatmap-month:nth-child(even) {
+    visibility: hidden;
+  }
+}
+
 @media (min-width: 48rem) {
   .githeatmap-link {
-    max-width: 22rem;
+    --githeatmap-gap: 3px;
+    max-width: min(100%, 38rem);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .githeatmap-link {
-    animation: none;
     transition: none;
   }
 

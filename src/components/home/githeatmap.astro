@@ -1,28 +1,87 @@
 ---
 import { site } from "../../config/site";
+import {
+  createGitHubContributionHeatmapSkeleton,
+  getGitHubContributionHeatmap,
+} from "../../utils/github-contributions";
 import "../../style/components/home/githeatmap.css";
 
-const username = site.profile.githubUsername;
-const heatmapSrc = `https://ghchart.rshah.org/${encodeURIComponent(username)}`;
+const username = site.profile.githubUsername.trim();
+const fetchedHeatmap = username
+  ? await getGitHubContributionHeatmap(username)
+  : null;
+const heatmap = fetchedHeatmap ?? createGitHubContributionHeatmapSkeleton();
 const profileHref = `https://github.com/${encodeURIComponent(username)}`;
+const contributionSummary =
+  fetchedHeatmap && heatmap.total > 0
+    ? `${heatmap.total.toLocaleString("en-US")} contributions in the last year`
+    : "GitHub contribution heatmap";
+const compactContributionCount =
+  fetchedHeatmap && heatmap.total > 0
+    ? `${Intl.NumberFormat("en-US", {
+        maximumFractionDigits: 1,
+        notation: "compact",
+      })
+        .format(heatmap.total)
+        .toLowerCase()} contributions`
+    : "contributions";
+const heatmapStyle = `--githeatmap-week-count: ${heatmap.weekCount};`;
+const legendLevels = [0, 1, 2, 3, 4];
 ---
 
-<a
-  class="githeatmap-link"
-  href={profileHref}
-  target="_blank"
-  rel="noopener noreferrer"
-  aria-label={`View ${username}'s GitHub profile`}
->
-  <img
-    class="githeatmap-image"
-    src={heatmapSrc}
-    alt={`${username} GitHub contribution heatmap`}
-    width="663"
-    height="104"
-    loading="eager"
-    decoding="async"
-    fetchpriority="low"
-    referrerpolicy="no-referrer"
-  />
-</a>
+{
+  username && (
+    <a
+      class="githeatmap-link"
+      data-githeatmap-state={fetchedHeatmap ? "ready" : "fallback"}
+      href={profileHref}
+      target="_blank"
+      rel="noopener noreferrer"
+      style={heatmapStyle}
+      aria-label={`View ${username}'s GitHub profile: ${contributionSummary}`}
+    >
+      <span class="githeatmap-summary">{contributionSummary}</span>
+      <div class="githeatmap-calendar" aria-hidden="true">
+        <div class="githeatmap-months">
+          {heatmap.months.map((month) => (
+            <span
+              class="githeatmap-month"
+              style={`grid-column: ${month.weekIndex + 1};`}
+            >
+              {month.label}
+            </span>
+          ))}
+        </div>
+        <ol
+          class="githeatmap-grid"
+          aria-label={`${username} GitHub contributions from ${heatmap.rangeStart} to ${heatmap.rangeEnd}`}
+        >
+          {heatmap.days.map((day) => (
+            <li
+              class="githeatmap-cell"
+              data-level={day.level}
+              data-blank={day.isBlank ? "true" : undefined}
+              style={`grid-column: ${day.weekIndex + 1}; grid-row: ${
+                day.dayIndex + 1
+              };`}
+              aria-label={day.label || undefined}
+              title={day.label || undefined}
+            />
+          ))}
+        </ol>
+      </div>
+      <div class="githeatmap-footer" aria-hidden="true">
+        <span class="githeatmap-count">{compactContributionCount}</span>
+        <span class="githeatmap-legend">
+          <span class="githeatmap-legend-label">Less</span>
+          <span class="githeatmap-legend-scale">
+            {legendLevels.map((level) => (
+              <span class="githeatmap-legend-cell" data-level={level} />
+            ))}
+          </span>
+          <span class="githeatmap-legend-label">More</span>
+        </span>
+      </div>
+    </a>
+  )
+}
