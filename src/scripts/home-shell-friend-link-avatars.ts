@@ -14,66 +14,38 @@ function syncAvatarState(image: HTMLImageElement) {
     image.complete && image.naturalWidth > 0 ? "loaded" : "error";
 }
 
-async function decodeLoadedImage(image: HTMLImageElement) {
-  if (image.naturalWidth <= 0 || typeof image.decode !== "function") {
+function trackAvatarImage(image: HTMLImageElement, signal: AbortSignal) {
+  if (image.complete) {
+    syncAvatarState(image);
     return;
   }
 
-  try {
-    await image.decode();
-  } catch {
-    return;
-  }
+  const cleanup = () => {
+    image.removeEventListener("load", settle);
+    image.removeEventListener("error", settle);
+    signal.removeEventListener("abort", cleanup);
+  };
+  const settle = () => {
+    cleanup();
+    syncAvatarState(image);
+  };
+
+  image.addEventListener("load", settle);
+  image.addEventListener("error", settle);
+  signal.addEventListener("abort", cleanup, { once: true });
 }
 
-async function settleImage(image: HTMLImageElement, signal: AbortSignal) {
-  if (!signal.aborted && !image.complete) {
-    await new Promise<void>((resolve) => {
-      const cleanup = () => {
-        image.removeEventListener("load", settle);
-        image.removeEventListener("error", settle);
-        signal.removeEventListener("abort", abort);
-      };
-      const settle = () => {
-        cleanup();
-        resolve();
-      };
-      const abort = () => {
-        cleanup();
-        resolve();
-      };
-
-      image.addEventListener("load", settle);
-      image.addEventListener("error", settle);
-      signal.addEventListener("abort", abort, { once: true });
-    });
-  }
-
-  if (signal.aborted) return;
-
-  await decodeLoadedImage(image);
-  syncAvatarState(image);
-}
-
-async function revealGridWhenReady(
-  grid: HTMLElement,
-  controller: AbortController,
-) {
+function initGridAvatars(grid: HTMLElement, controller: AbortController) {
   const images = Array.from(
     grid.querySelectorAll<HTMLImageElement>(AVATAR_SELECTOR),
   );
 
-  grid.dataset.friendLinksState = "loading";
-  grid.setAttribute("aria-busy", "true");
-
-  await Promise.all(
-    images.map((image) => settleImage(image, controller.signal)),
-  );
-
-  if (controller.signal.aborted) return;
-
   grid.dataset.friendLinksState = "ready";
   grid.setAttribute("aria-busy", "false");
+
+  images.forEach((image) => {
+    trackAvatarImage(image, controller.signal);
+  });
 }
 
 export function initHomeShellFriendLinkAvatars() {
@@ -95,6 +67,6 @@ export function initHomeShellFriendLinkAvatars() {
   };
 
   grids.forEach((grid) => {
-    void revealGridWhenReady(grid, controller);
+    initGridAvatars(grid, controller);
   });
 }
