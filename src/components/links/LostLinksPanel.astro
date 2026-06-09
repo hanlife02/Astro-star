@@ -28,12 +28,7 @@ const {
           <ul class="lost-links-list" aria-label={title}>
             {items.map((item) => (
               <li class="lost-links-item">
-                <a
-                  class="lost-links-link"
-                  href={item.href}
-                  target="_blank"
-                  rel="noreferrer"
-                >
+                <span class="lost-links-row">
                   <span class="lost-links-name">{item.name}</span>
                   <span class="lost-links-divider" aria-hidden="true">
                     |
@@ -41,7 +36,7 @@ const {
                   <span class="lost-links-description">
                     {item.description}
                   </span>
-                </a>
+                </span>
               </li>
             ))}
           </ul>
