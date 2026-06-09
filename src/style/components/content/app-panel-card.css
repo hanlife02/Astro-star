@@ -112,6 +112,28 @@ html[data-js="true"] .friend-links-grid[data-friend-links-state="ready"] {
   pointer-events: none;
 }
 
+html[data-route-transitioning="true"]
+  .content-page--links
+  .friend-links-grid
+  .app-panel-item--link {
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  transform: none;
+  transition: none;
+}
+
+html[data-route-transitioning="true"]
+  .content-page--links
+  .friend-links-grid
+  .app-panel-item--link::before,
+html[data-route-transitioning="true"]
+  .content-page--links
+  .friend-links-grid
+  .app-panel-item--link::after {
+  opacity: 0;
+}
+
 .friend-link-card-bg {
   position: absolute;
   z-index: 0;

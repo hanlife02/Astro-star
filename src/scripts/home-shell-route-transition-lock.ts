@@ -18,6 +18,11 @@ type TransitionEventWithViewTransition = Event & {
 
 const ROUTE_TRANSITION_UNLOCK_TIMEOUT_MS = 900;
 const PANEL_TRANSITION_SCROLL_THRESHOLD_PX = 320;
+const LINKS_ROUTE_PATHNAME = "/links/";
+
+function normalizePathname(pathname: string) {
+  return pathname.endsWith("/") ? pathname : `${pathname}/`;
+}
 
 export function initHomeShellRouteTransitionLock() {
   const browserWindow = window as RouteTransitionWindow;
@@ -51,8 +56,21 @@ export function initHomeShellRouteTransitionLock() {
     );
   };
 
-  const updatePanelTransitionState = () => {
-    if (window.scrollY > PANEL_TRANSITION_SCROLL_THRESHOLD_PX) {
+  const isLinksRoute = (url: URL) =>
+    normalizePathname(url.pathname) === LINKS_ROUTE_PATHNAME;
+
+  const updatePanelTransitionState = (
+    targetLink?: HTMLAnchorElement | HTMLAreaElement | null,
+  ) => {
+    const targetUrl = targetLink
+      ? new URL(targetLink.href, window.location.href)
+      : undefined;
+
+    if (
+      window.scrollY > PANEL_TRANSITION_SCROLL_THRESHOLD_PX ||
+      isLinksRoute(new URL(window.location.href)) ||
+      (targetUrl && isLinksRoute(targetUrl))
+    ) {
       document.documentElement.dataset.disablePanelTransition = "true";
     } else {
       delete document.documentElement.dataset.disablePanelTransition;
@@ -101,11 +119,8 @@ export function initHomeShellRouteTransitionLock() {
   document.addEventListener(
     "click",
     (event) => {
-      if (
-        event.defaultPrevented ||
-        isModifiedClick(event) ||
-        !getRoutedLink(event)
-      )
+      const routedLink = getRoutedLink(event);
+      if (event.defaultPrevented || isModifiedClick(event) || !routedLink)
         return;
 
       if (document.documentElement.dataset.routeTransitioning === "true") {
@@ -114,7 +129,7 @@ export function initHomeShellRouteTransitionLock() {
         return;
       }
 
-      updatePanelTransitionState();
+      updatePanelTransitionState(routedLink);
       lockRouteTransition();
     },
     { capture: true },
@@ -138,6 +153,13 @@ export function initHomeShellRouteTransitionLock() {
       "data-route-swapping",
       "true",
     );
+
+    if (transitionEvent.newDocument?.querySelector(".content-page--links")) {
+      transitionEvent.newDocument.documentElement.setAttribute(
+        "data-disable-panel-transition",
+        "true",
+      );
+    }
 
     clearSwapTimer();
     browserWindow.__homeShellRouteTransitionSwapTimer = window.setTimeout(
