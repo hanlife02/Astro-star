@@ -72,6 +72,8 @@ html[data-js="true"] .friend-links-grid[data-friend-links-state="ready"] {
   backdrop-filter: blur(20px) saturate(1.25);
   -webkit-backdrop-filter: blur(20px) saturate(1.25);
   min-height: 4.45rem;
+  content-visibility: auto;
+  contain-intrinsic-size: 4.45rem;
   overflow: hidden;
   transition:
     background-color 0.2s ease,
