@@ -43,12 +43,7 @@ const resolvedBackground =
       keywords={site.site.codeRainKeywords}
     />
   ) : resolvedBackground === "constellation" ? (
-    <ConstellationBackground
-      slot="background"
-      density={0.64}
-      maxDistance={118}
-      speed={0.18}
-    />
+    <ConstellationBackground slot="background" />
   ) : resolvedBackground === "content" ? (
     <ContentBackground slot="background" section={contentBackgroundSection} />
   ) : (

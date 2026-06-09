@@ -79,7 +79,7 @@ export function initHomeShellConstellationBackground() {
   const canvas = document.querySelector(CONSTELLATION_CANVAS_SELECTOR);
   if (!(canvas instanceof HTMLCanvasElement)) return;
 
-  const ctx = canvas.getContext("2d", { alpha: true, desynchronized: true });
+  const ctx = canvas.getContext("2d", { alpha: true });
   if (!ctx) return;
 
   const browserWindow = window as HomeShellConstellationWindow;
@@ -239,10 +239,6 @@ export function initHomeShellConstellationBackground() {
     state.pointer.active = false;
   };
 
-  const onResize = () => {
-    resize();
-  };
-
   const onVisibility = () => {
     if (document.visibilityState === "hidden") stop();
     else if (!prefersReduced && !state.raf) tick();
@@ -256,7 +252,7 @@ export function initHomeShellConstellationBackground() {
 
   browserWindow.__homeShellConstellationBackgroundCleanup = cleanup;
 
-  window.addEventListener("resize", onResize, {
+  window.addEventListener("resize", resize, {
     passive: true,
     signal: controller.signal,
   });
@@ -271,6 +267,7 @@ export function initHomeShellConstellationBackground() {
     passive: true,
     signal: controller.signal,
   });
+
   resize();
   if (prefersReduced) draw();
   else tick();
