@@ -10,7 +10,7 @@
   margin-bottom: 0;
 }
 
-.lost-links-link {
+.lost-links-row {
   display: flex;
   align-items: baseline;
   gap: 0.4rem;
@@ -48,7 +48,7 @@
 }
 
 @media not all and (min-width: 40.001rem) {
-  .lost-links-link {
+  .lost-links-row {
     display: block;
   }
 
