@@ -68,7 +68,8 @@ function getStatusLabel(lastActiveAt?: number | null) {
 function renderStatusSvg(data: CodeTimePublicStatusResponse, theme: string) {
   const isDark = theme === "dark";
   const statusLabel = getStatusLabel(data.lastActiveAt);
-  const statusColor = statusLabel === "CURRENTLY CODING" ? ACTIVE_COLOR : "#94a3b8";
+  const statusColor =
+    statusLabel === "CURRENTLY CODING" ? ACTIVE_COLOR : "#94a3b8";
   const background = isDark ? "#0b0d10" : "#ffffff";
   const border = isDark ? "#262b33" : "#e5e7eb";
   const text = isDark ? "#f3f4f6" : "#111827";
@@ -133,7 +134,11 @@ export const GET: APIRoute = async ({ url }) => {
     const theme = url.searchParams.get("theme") ?? "light";
     const normalizedTheme = VALID_THEMES.has(theme) ? theme : "light";
 
-    return statusResponse(await getCodeTimeUserId(token), token, normalizedTheme);
+    return statusResponse(
+      await getCodeTimeUserId(token),
+      token,
+      normalizedTheme,
+    );
   } catch {
     return emptyCodeTimeResponse();
   }
