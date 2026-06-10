@@ -32,9 +32,25 @@
   }
 }
 
-.profile-avatar {
+.profile-avatar-wrap {
+  position: relative;
+  z-index: 2;
   width: var(--avatar-size);
   height: var(--avatar-size);
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  isolation: isolate;
+}
+
+.profile-avatar-wrap:hover {
+  z-index: 30;
+}
+
+.profile-avatar {
+  width: 100%;
+  height: 100%;
   display: block;
   flex: 0 0 auto;
   aspect-ratio: 1 / 1;
@@ -43,6 +59,61 @@
   overflow: hidden;
   border: clamp(0.0625rem, 0.08vw, 0.1rem) solid var(--line-soft);
   border-radius: 50%;
+  transition:
+    border-color 0.2s ease,
+    transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.profile-codetime-popover {
+  position: absolute;
+  top: calc(100% + clamp(0.55rem, 1vw, 0.85rem));
+  left: 50%;
+  z-index: 20;
+  width: min(20rem, calc(100vw - 2rem));
+  padding: 0.28rem;
+  border: 1px solid color-mix(in srgb, var(--line) 12%, transparent);
+  border-radius: 0.7rem;
+  background: color-mix(in srgb, canvas 78%, transparent);
+  box-shadow:
+    0 1rem 2.8rem color-mix(in srgb, var(--line) 14%, transparent),
+    0 0 0 1px color-mix(in srgb, canvas 68%, transparent) inset;
+  line-height: 0;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -0.2rem) scale(0.98);
+  transform-origin: top center;
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+:root[data-theme="dark"] .profile-codetime-popover {
+  background: color-mix(in srgb, #050505 82%, transparent);
+  box-shadow:
+    0 1rem 2.8rem rgb(0 0 0 / 0.42),
+    0 0 0 1px rgb(255 255 255 / 0.06) inset;
+}
+
+.profile-codetime-popover::before {
+  position: absolute;
+  top: -0.35rem;
+  left: 50%;
+  width: 0.65rem;
+  height: 0.65rem;
+  border-top: 1px solid color-mix(in srgb, var(--line) 12%, transparent);
+  border-left: 1px solid color-mix(in srgb, var(--line) 12%, transparent);
+  background: inherit;
+  content: "";
+  transform: translateX(-50%) rotate(45deg);
+}
+
+.profile-codetime-status {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 0.55rem;
 }
 
 .profile-name {
@@ -94,9 +165,14 @@
 }
 
 @media (hover: hover) {
-  .profile-avatar:hover {
+  .profile-avatar-wrap:hover .profile-avatar {
     transform: scale(1.02);
     border-color: var(--line);
+  }
+
+  .profile-avatar-wrap:hover .profile-codetime-popover {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
   }
 
   .profile-link:hover {
@@ -118,10 +194,13 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .profile-avatar,
+  .profile-codetime-popover,
   .profile-link svg {
     transition: none;
   }
 
+  .profile-avatar-wrap:hover .profile-avatar,
   .profile-link:hover svg,
   .profile-link:focus-visible svg {
     transform: none;

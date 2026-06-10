@@ -1,11 +1,15 @@
-function hideCodeTimeBadge(image: HTMLImageElement) {
-  image.closest<HTMLElement>("[data-codetime-metric]")?.remove();
+type CodeTimeWindow = Window & {
+  __homeShellCodeTimeCleanup?: () => void;
+};
+
+function hideCodeTimeElement(image: HTMLImageElement, closestSelector: string) {
+  image.closest<HTMLElement>(closestSelector)?.remove();
 }
 
-function settleCodeTimeBadge(image: HTMLImageElement) {
+function settleCodeTimeImage(image: HTMLImageElement, closestSelector: string) {
   const settle = () => {
     if (image.naturalWidth <= 0) {
-      hideCodeTimeBadge(image);
+      hideCodeTimeElement(image, closestSelector);
     }
   };
 
@@ -18,11 +22,54 @@ function settleCodeTimeBadge(image: HTMLImageElement) {
   image.addEventListener("error", settle, { once: true });
 }
 
+function syncCodeTimeStatusTheme(image: HTMLImageElement) {
+  const theme =
+    document.documentElement.dataset.theme === "dark" ? "dark" : "light";
+  const url = new URL(
+    image.getAttribute("src") ?? image.src,
+    window.location.href,
+  );
+
+  if (url.searchParams.get("theme") === theme) return;
+
+  url.searchParams.set("theme", theme);
+  image.src = `${url.pathname}${url.search}`;
+}
+
 export function initHomeShellCodeTime() {
-  const image = document.querySelector<HTMLImageElement>(
+  const browserWindow = window as CodeTimeWindow;
+  browserWindow.__homeShellCodeTimeCleanup?.();
+
+  const badgeImage = document.querySelector<HTMLImageElement>(
     "[data-codetime-badge]",
   );
-  if (!image) return;
+  const statusImage = document.querySelector<HTMLImageElement>(
+    "[data-codetime-status]",
+  );
 
-  settleCodeTimeBadge(image);
+  if (badgeImage) {
+    settleCodeTimeImage(badgeImage, "[data-codetime-metric]");
+  }
+
+  if (statusImage) {
+    syncCodeTimeStatusTheme(statusImage);
+    settleCodeTimeImage(statusImage, "[data-codetime-status-popover]");
+
+    const themeObserver = new MutationObserver(() => {
+      if (statusImage.isConnected) {
+        syncCodeTimeStatusTheme(statusImage);
+      }
+    });
+
+    themeObserver.observe(document.documentElement, {
+      attributeFilter: ["data-theme"],
+      attributes: true,
+    });
+
+    browserWindow.__homeShellCodeTimeCleanup = () => {
+      themeObserver.disconnect();
+    };
+  } else {
+    browserWindow.__homeShellCodeTimeCleanup = undefined;
+  }
 }

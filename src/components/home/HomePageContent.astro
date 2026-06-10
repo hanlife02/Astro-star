@@ -73,16 +73,39 @@ const homeDescription = profile.intro.trim() || profile.bio.trim();
     class="profile-card home-profile-sequence"
     aria-label="Profile section"
   >
-    <img
-      class="profile-avatar home-enter-item"
-      src={profile.avatarSrc}
-      alt={ownerName}
-      width="1080"
-      height="1080"
-      loading="lazy"
-      decoding="async"
-      fetchpriority="low"
-    />
+    <span
+      class="profile-avatar-wrap home-enter-item"
+      data-codetime-status-root
+    >
+      <img
+        class="profile-avatar"
+        src={profile.avatarSrc}
+        alt={ownerName}
+        width="1080"
+        height="1080"
+        loading="lazy"
+        decoding="async"
+        fetchpriority="low"
+      />
+      <span
+        class="profile-codetime-popover"
+        aria-hidden="true"
+        data-codetime-status-popover
+      >
+        <img
+          class="profile-codetime-status"
+          src="/api/codetime-status.svg"
+          alt=""
+          width="380"
+          height="116"
+          loading="lazy"
+          decoding="async"
+          fetchpriority="low"
+          referrerpolicy="no-referrer"
+          data-codetime-status
+        />
+      </span>
+    </span>
     <h1 class="profile-name home-enter-item">{ownerName}</h1>
     {
       profileLinks.length > 0 && (
