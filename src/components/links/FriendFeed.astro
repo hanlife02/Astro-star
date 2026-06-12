@@ -1,0 +1,107 @@
+---
+import { ChevronDown, ChevronUp } from "lucide-static";
+import { friendLinks } from "../../config/links";
+import { getFriendFeedEntries } from "../../utils/friend-feed";
+import Icon from "../ui/Icon.astro";
+
+interface Props {
+  emptyText?: string;
+  initialCount?: number;
+  lessLabel?: string;
+  moreLabel?: string;
+  perFeedLimit?: number;
+  revealCount?: number;
+  totalLimit?: number;
+}
+
+const {
+  emptyText = "No recent friend posts found.",
+  initialCount = 5,
+  lessLabel = "Less posts",
+  moreLabel = "More posts",
+  perFeedLimit = 24,
+  revealCount = 5,
+  totalLimit = 48,
+} = Astro.props as Props;
+const entries = await getFriendFeedEntries(friendLinks, {
+  perFeedLimit,
+  totalLimit,
+});
+const hasMoreEntries = entries.length > initialCount;
+---
+
+<section
+  class="friend-feed not-content"
+  data-friend-feed="true"
+  aria-label="Friend feed"
+>
+  {
+    entries.length > 0 ? (
+      <>
+        <ol
+          class="friend-feed-list"
+          data-friend-feed-list="true"
+          data-friend-feed-initial-count={initialCount}
+          data-friend-feed-reveal-count={revealCount}
+          data-friend-feed-visible-count={initialCount}
+        >
+          {entries.map((entry, index) => (
+            <li
+              class="friend-feed-item"
+              aria-hidden={index >= initialCount ? "true" : undefined}
+              data-friend-feed-item="true"
+              data-friend-feed-hidden={
+                index >= initialCount ? "true" : undefined
+              }
+            >
+              <a
+                class="friend-feed-link"
+                href={entry.href}
+                tabindex={index >= initialCount ? "-1" : undefined}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <span class="friend-feed-copy">
+                  <span class="friend-feed-author">{entry.authorName}</span>
+                  <span class="friend-feed-separator" aria-hidden="true">
+                    -
+                  </span>
+                  <span class="friend-feed-title">{entry.title}</span>
+                </span>
+                <span class="friend-feed-link-arrow" aria-hidden="true" />
+              </a>
+            </li>
+          ))}
+        </ol>
+
+        {hasMoreEntries && (
+          <div class="friend-feed-actions" aria-label="Friend feed controls">
+            <button
+              class="friend-feed-control"
+              type="button"
+              data-friend-feed-more="true"
+            >
+              <span>{moreLabel}</span>
+              <span class="friend-feed-control-icon" aria-hidden="true">
+                <Icon svg={ChevronDown} />
+              </span>
+            </button>
+            <button
+              class="friend-feed-control"
+              type="button"
+              data-friend-feed-less="true"
+              hidden
+            >
+              <span>{lessLabel}</span>
+              <span class="friend-feed-control-icon" aria-hidden="true">
+                <Icon svg={ChevronUp} />
+              </span>
+            </button>
+          </div>
+        )}
+      </>
+    ) : (
+      <p class="friend-feed-empty">{emptyText}</p>
+    )
+  }
+</section>

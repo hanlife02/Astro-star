@@ -1,0 +1,229 @@
+.friend-feed {
+  display: grid;
+  gap: 0.65rem;
+  margin: 0 0 clamp(1.2rem, 1rem + 0.7vw, 1.8rem);
+}
+
+.friend-feed-list {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.friend-feed-item {
+  min-width: 0;
+  max-height: 5rem;
+  margin-block-end: 0.5rem;
+  overflow: hidden;
+  opacity: 1;
+  transition:
+    max-height 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+    margin-block-end 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.2s ease;
+}
+
+.friend-feed-item[data-friend-feed-hidden="true"] {
+  max-height: 0;
+  margin-block-end: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.friend-feed-item:last-child {
+  margin-block-end: 0;
+}
+
+.content-page-body .friend-feed-link,
+.content-page-body .friend-feed-link:hover,
+.content-page-body .friend-feed-link:focus-visible,
+.content-page-body .friend-feed-link * {
+  text-decoration: none;
+}
+
+.friend-feed-link {
+  display: flex;
+  gap: 0.72rem;
+  align-items: center;
+  min-width: 0;
+  min-height: 0;
+  padding: 0.68rem 0.82rem;
+  border: 1px solid color-mix(in srgb, var(--line) 10%, transparent);
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, Canvas 52%, transparent);
+  color: var(--line);
+  transition:
+    border-color 0.18s ease,
+    background-color 0.18s ease;
+}
+
+.friend-feed-copy {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: baseline;
+  gap: 0.38rem;
+  min-width: 0;
+  transition: transform 0.18s ease;
+}
+
+.friend-feed-author,
+.friend-feed-separator,
+.friend-feed-title {
+  display: block;
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.friend-feed-author {
+  flex: 0 0 auto;
+  color: color-mix(in srgb, var(--line) 58%, transparent);
+  font-size: var(--type-sm);
+  line-height: 1.35;
+}
+
+.friend-feed-separator {
+  flex: 0 0 auto;
+  color: color-mix(in srgb, var(--line) 42%, transparent);
+  font-size: var(--type-xs);
+  line-height: 1.35;
+}
+
+.friend-feed-title {
+  flex: 1 1 auto;
+  overflow: hidden;
+  color: var(--line);
+  font-size: var(--type-sm);
+  font-weight: 500;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+}
+
+.friend-feed-link-arrow {
+  position: relative;
+  display: block;
+  flex: 0 0 0.72rem;
+  width: 0.72rem;
+  height: 0.72rem;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-0.32rem);
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease;
+}
+
+.friend-feed-link-arrow::before,
+.friend-feed-link-arrow::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 50%;
+}
+
+.friend-feed-link-arrow::before {
+  width: 0.72rem;
+  height: 1px;
+  background: currentColor;
+  transform: translateY(-50%);
+}
+
+.friend-feed-link-arrow::after {
+  width: 0.36rem;
+  height: 0.36rem;
+  border-top: 1px solid currentColor;
+  border-right: 1px solid currentColor;
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.friend-feed-link:hover,
+.friend-feed-link:focus-visible {
+  border-color: color-mix(in srgb, var(--line) 18%, transparent);
+  background: color-mix(in srgb, var(--line) 5%, Canvas);
+}
+
+.friend-feed-link:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--line) 28%, transparent);
+  outline-offset: 0.18rem;
+}
+
+.friend-feed-link:hover .friend-feed-copy,
+.friend-feed-link:focus-visible .friend-feed-copy {
+  transform: translateX(0.14rem);
+}
+
+.friend-feed-link:hover .friend-feed-link-arrow,
+.friend-feed-link:focus-visible .friend-feed-link-arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.friend-feed-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
+
+.friend-feed-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.38rem;
+  width: fit-content;
+  padding: 0.2rem 0;
+  border: 0;
+  color: color-mix(in srgb, var(--line) 68%, transparent);
+  background: transparent;
+  font-size: var(--type-xs);
+  font-family: inherit;
+  line-height: 1;
+  cursor: pointer;
+  user-select: none;
+}
+
+.friend-feed-control[hidden] {
+  display: none;
+}
+
+.friend-feed-control-icon,
+.friend-feed-control-icon svg {
+  display: inline-flex;
+  width: 0.88rem;
+  height: 0.88rem;
+}
+
+.friend-feed-control-icon {
+  transition: transform 0.18s ease;
+}
+
+.friend-feed-control:hover,
+.friend-feed-control:focus-visible {
+  color: var(--line);
+}
+
+.friend-feed-empty {
+  margin: 0;
+  color: color-mix(in srgb, var(--line) 62%, transparent);
+  font-size: var(--type-sm);
+  line-height: 1.55;
+}
+
+:root[data-theme="dark"] .friend-feed-link {
+  background: color-mix(in srgb, var(--line) 5%, transparent);
+}
+
+@media (max-width: 38rem) {
+  .friend-feed-copy {
+    gap: 0.3rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .friend-feed-item,
+  .friend-feed-link,
+  .friend-feed-copy,
+  .friend-feed-link-arrow,
+  .friend-feed-control-icon {
+    transition: none;
+  }
+}

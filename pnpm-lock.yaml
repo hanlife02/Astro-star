@@ -28,6 +28,9 @@ importers:
       "@astrojs/sitemap":
         specifier: ^3.6.0
         version: 3.7.0
+      "@rowanmanning/feed-parser":
+        specifier: ^2.1.2
+        version: 2.1.2
       "@waline/client":
         specifier: ^3.13.0
         version: 3.13.0(typescript@5.9.3)
