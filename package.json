@@ -1,7 +1,7 @@
 {
   "name": "Astro-star",
   "type": "module",
-  "version": "0.13.1",
+  "version": "0.14.0",
   "packageManager": "pnpm@10.30.3",
   "scripts": {
     "predev": "node --experimental-strip-types scripts/generate-git-timestamps.ts",
@@ -34,6 +34,7 @@
   },
   "dependencies": {
     "@ascorbic/feed-loader": "^2.0.1",
+    "@rowanmanning/feed-parser": "^2.1.2",
     "@astrojs/check": "^0.9.6",
     "@astrojs/markdown-remark": "^6.3.10",
     "@astrojs/mdx": "^4.3.4",

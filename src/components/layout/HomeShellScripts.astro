@@ -30,6 +30,7 @@
   } from "../../scripts/home-shell-waline";
   import { initHomeShellGitHubRepoCards } from "../../scripts/home-shell-github-repo-cards";
   import { initHomeShellFriendLinkAvatars } from "../../scripts/home-shell-friend-link-avatars";
+  import { initHomeShellFriendFeed } from "../../scripts/home-shell-friend-feed";
   import { initHomeShellCodeTime } from "../../scripts/home-shell-codetime";
   import {
     cleanupHomeShellContentImageLightbox,
@@ -46,6 +47,7 @@
     "__homeShellCodeCopyCleanup",
     "__homeShellContentFoldCleanup",
     "__homeShellFriendLinkAvatarsCleanup",
+    "__homeShellFriendFeedCleanup",
     "__homeShellCodeTimeCleanup",
   ] as const;
 
@@ -99,6 +101,7 @@
     initHomeShellArticleActions();
     initHomeShellGitHubRepoCards();
     initHomeShellFriendLinkAvatars();
+    initHomeShellFriendFeed();
     initHomeShellCodeTime();
     initHomeShellContentImageLightbox();
   };

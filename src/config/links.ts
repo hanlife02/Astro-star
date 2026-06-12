@@ -19,24 +19,18 @@ export interface LinkApplyOwner {
 }
 
 export const linkApplyOwner = {
-  name: "Your Name",
-  description: "A short line about your site.",
-  href: "https://example.com",
-  avatarSrc: "/avatar.svg",
+  name: "Ethan",
+  description: "Don't stay awake for too long.",
+  href: "https://hanlife02.com",
+  avatarSrc: "https://hanlife02.com/avatar.svg",
 } satisfies LinkApplyOwner;
 
 export const friendLinks = [
   {
-    name: "Astro",
-    description: "The web framework for content-driven websites.",
-    href: "https://astro.build/",
-    avatarSrc: "https://astro.build/favicon.svg",
-  },
-  {
-    name: "Example Friend",
-    description: "Replace this entry with a real friend link.",
-    href: "https://example.com",
-    avatarSrc: "/avatar.svg",
+    name: "Ethan",
+    description: "Astro-star template user's personal site.",
+    href: "https://hanlife02.com",
+    avatarSrc: "https://hanlife02.com/avatar.svg",
   },
 ] satisfies readonly FriendLinkItem[];
 
