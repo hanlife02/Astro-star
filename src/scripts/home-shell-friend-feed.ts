@@ -93,7 +93,7 @@ export function initHomeShellFriendFeed() {
     );
     const nextVisibleCount = moreButton
       ? currentVisibleCount + revealCount
-      : Math.max(initialCount, currentVisibleCount - revealCount);
+      : initialCount;
 
     list.dataset.friendFeedVisibleCount = String(nextVisibleCount);
     syncFriendFeedList(list);

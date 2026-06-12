@@ -28,6 +28,15 @@ const entries = await getFriendFeedEntries(friendLinks, {
   totalLimit,
 });
 const hasMoreEntries = entries.length > initialCount;
+
+function toDateParts(date: Date | null) {
+  if (!date) return null;
+
+  return {
+    datetime: date.toISOString(),
+    label: date.toISOString().slice(0, 10),
+  };
+}
 ---
 
 <section
@@ -45,33 +54,50 @@ const hasMoreEntries = entries.length > initialCount;
           data-friend-feed-reveal-count={revealCount}
           data-friend-feed-visible-count={initialCount}
         >
-          {entries.map((entry, index) => (
-            <li
-              class="friend-feed-item"
-              aria-hidden={index >= initialCount ? "true" : undefined}
-              data-friend-feed-item="true"
-              data-friend-feed-hidden={
-                index >= initialCount ? "true" : undefined
-              }
-            >
-              <a
-                class="friend-feed-link"
-                href={entry.href}
-                tabindex={index >= initialCount ? "-1" : undefined}
-                target="_blank"
-                rel="noreferrer"
+          {entries.map((entry, index) => {
+            const dateParts = toDateParts(entry.publishedAt);
+
+            return (
+              <li
+                class="friend-feed-item"
+                aria-hidden={index >= initialCount ? "true" : undefined}
+                data-friend-feed-item="true"
+                data-friend-feed-hidden={
+                  index >= initialCount ? "true" : undefined
+                }
               >
-                <span class="friend-feed-copy">
-                  <span class="friend-feed-author">{entry.authorName}</span>
-                  <span class="friend-feed-separator" aria-hidden="true">
-                    -
+                <a
+                  class="friend-feed-link"
+                  href={entry.href}
+                  tabindex={index >= initialCount ? "-1" : undefined}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <span class="friend-feed-copy">
+                    <span class="friend-feed-author">{entry.authorName}</span>
+                    <span class="friend-feed-separator" aria-hidden="true">
+                      -
+                    </span>
+                    <span class="friend-feed-title-group">
+                      <span class="friend-feed-title">{entry.title}</span>
+                      <span
+                        class="friend-feed-link-arrow"
+                        aria-hidden="true"
+                      />
+                    </span>
                   </span>
-                  <span class="friend-feed-title">{entry.title}</span>
-                </span>
-                <span class="friend-feed-link-arrow" aria-hidden="true" />
-              </a>
-            </li>
-          ))}
+                  {dateParts && (
+                    <time
+                      class="friend-feed-date"
+                      datetime={dateParts.datetime}
+                    >
+                      {dateParts.label}
+                    </time>
+                  )}
+                </a>
+              </li>
+            );
+          })}
         </ol>
 
         {hasMoreEntries && (
