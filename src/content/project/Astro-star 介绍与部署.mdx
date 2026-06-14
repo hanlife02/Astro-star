@@ -10,6 +10,7 @@ tags:
   - Astro-star
   - project
 ---
+
 # 前言
 
 ## 我搭建博客的起源
@@ -30,53 +31,64 @@ tags:
 
 ## 页面预览
 
-> 好看才会让人想用的，对吧？ 
+> 好看才会让人想用的，对吧？
 
 **你可以在 [https://hanlife02.com](https://hanlife02.com) 预览**
 
-![[CleanShot 2026-06-14 at 23.29.44@2x.png]] ![[CleanShot 2026-06-14 at 23.37.52@2x.png]]
+![Astro-star 首页暗色预览](/figures/106-Astro-star-介绍与部署-首页-暗色.png) ![Astro-star 首页亮色预览](/figures/107-Astro-star-介绍与部署-首页-亮色.png)
 
 ## 设计
 
 ### 文章特殊语法渲染
 
 采用 `md` 或 `mdx` 文件，方便快速启动，后续会逐步添加新的样式在本文章更新～
+
 #### GitHub repo 链接
+
 ```mdx
 [touying-ethan](https://github.com/hanlife02/touying-ethan)
 ```
 
-![[CleanShot 2026-06-14 at 23.40.27@2x.png]]
+![GitHub repo 链接渲染效果](/figures/108-Astro-star-介绍与部署-GitHub-repo-card.png)
+
 #### 折叠信息
 
 点击会展开/折叠，默认折叠/展开
+
 ```mdx
 :::fold[Click to expand]
 Hidden content can include paragraphs, lists, and code blocks.
 :::
 ```
+
 ```mdx
 :::fold[Open by default]{open=true}
 This fold starts open, so the bottom-right corner is already placed at the end of the full content area.
 :::
 ```
-![[CleanShot 2026-06-14 at 23.52.13.gif]]
+
+![折叠信息交互效果](/figures/109-Astro-star-介绍与部署-折叠信息.gif)
+
 #### 涂抹文字
 
 ```mdx
 Hover to reveal ||this hidden inline note|| while reading.
 ```
-![[CleanShot 2026-06-14 at 23.53.03 1.gif]]
+
+![涂抹文字交互效果](/figures/110-Astro-star-介绍与部署-涂抹文字.gif)
 
 #### 横线划除
+
 ```mdx
 ~~muted deleted text~~
 ```
-![[CleanShot 2026-06-14 at 23.55.37@2x 2.png]]
+
+![删除线渲染效果](/figures/111-Astro-star-介绍与部署-删除线.png)
 
 ### 自动记录时间
 
 从 git lo g 里自动获取文章的创建日期和更新日期，也支持覆盖此时间自定义。
+
 ### Hover 样式
 
 我设计了很多 Hover 的样式，为了让页面更有交互感，更加生动，减少生硬。你可以打开网站自行探索。
@@ -89,12 +101,15 @@ Hover to reveal ||this hidden inline note|| while reading.
 - **pnpm 10.30.x**
 - **Git**
 - PM2
+
 ## 两种部署方式
 
 你可以直接从源码[手动部署](#手动部署)，也可以采用 [GitHub Actions 自动部署](#github-actions-自动部署)，作者更推荐后者。
+
 ### 手动部署
 
 #### 克隆源码到服务器并安装依赖
+
 ```shell
 ssh username@host
 
@@ -103,6 +118,7 @@ cd Astro-star
 
 pnpm install
 ```
+
 #### 修改配置和文章
 
 参考[配置与文章](#配置与文章)
@@ -150,9 +166,11 @@ pnpm dev
 ```text
 http://localhost:4321
 ```
+
 #### 配置反向代理和 SSL 证书
 
 参考[反向代理](#反向代理) 和 [SSL 证书配置](#ssl-证书)
+
 ### GitHub Actions 自动部署
 
 #### fork repo 并克隆源码到本地
@@ -161,9 +179,11 @@ http://localhost:4321
 # 'your-github-username'修改为你的github用户名,或者你可以直接在fork后的repo里找到地址
 git clone https://github.com/your-github-username/Astro-star.git
 ```
+
 #### 在 repo 里添加 Secrets
 
 参考 [GitHub Actions 自动部署环境变量](#github-actions-自动部署环境变量)
+
 #### 本地修改配置和内容
 
 参考[配置](#配置)和[文章内容](#文章内容)
@@ -175,11 +195,13 @@ git add .
 git commit -m "build my blog"
 git push
 ```
+
 Actions 执行完成后即顺利部署
 
 #### 配置反向代理和 SSL 证书
 
 参考[反向代理](#反向代理) 和 [SSL 证书配置](#ssl-证书)
+
 ### 配置与文章
 
 #### 环境变量
@@ -211,31 +233,31 @@ ALGOLIA_ADMIN_API_KEY=xxxxxxxxxxxxxxxx
 
 最少需要配置 SSH 连接相关 Secret：
 
-| Secret            | 是否必填 | 说明                                                      |
-| ----------------- | ---- | ------------------------------------------------------- |
-| `SSH_HOST`        | 必填   | 服务器公网 IP 或域名。                                           |
-| `SSH_PRIVATE_KEY` | 必填   | 用于登录服务器的私钥内容。对应公钥需要提前加入服务器用户的 `~/.ssh/authorized_keys`。 |
-| `SSH_USER`        | 可选   | SSH 用户名，默认是 `ubuntu`。                                   |
-| `SSH_PORT`        | 可选   | SSH 端口，默认是 `22`。                                        |
-| `DEPLOY_PATH`     | 可选   | 服务器部署目录，默认是 `~/Astro-star`。(确保 SSH 用户拥有正确权限)            |
-| `PM2_APP_NAME`    | 可选   | PM2 应用名，默认是 `Astro-star`。                               |
-| `APP_PORT`        | 可选   | 站点运行端口，默认是 `4321`。                                      |
+| Secret            | 是否必填 | 说明                                                                                  |
+| ----------------- | -------- | ------------------------------------------------------------------------------------- |
+| `SSH_HOST`        | 必填     | 服务器公网 IP 或域名。                                                                |
+| `SSH_PRIVATE_KEY` | 必填     | 用于登录服务器的私钥内容。对应公钥需要提前加入服务器用户的 `~/.ssh/authorized_keys`。 |
+| `SSH_USER`        | 可选     | SSH 用户名，默认是 `ubuntu`。                                                         |
+| `SSH_PORT`        | 可选     | SSH 端口，默认是 `22`。                                                               |
+| `DEPLOY_PATH`     | 可选     | 服务器部署目录，默认是 `~/Astro-star`。(确保 SSH 用户拥有正确权限)                    |
+| `PM2_APP_NAME`    | 可选     | PM2 应用名，默认是 `Astro-star`。                                                     |
+| `APP_PORT`        | 可选     | 站点运行端口，默认是 `4321`。                                                         |
 
 站点运行时变量也放在 Repository Secrets 中。Actions 部署时会在服务器的 `DEPLOY_PATH/.env` 写入这些值：
 
-| Secret                     | 写入服务器变量             | 说明                                     |
-| -------------------------- | ------------------- | -------------------------------------- |
-| `PUBLIC_WALINE_SERVER_URL` | `WALINE_SERVER_URL` | Waline 评论服务地址；不使用评论可以不填。               |
+| Secret                     | 写入服务器变量      | 说明                                                                       |
+| -------------------------- | ------------------- | -------------------------------------------------------------------------- |
+| `PUBLIC_WALINE_SERVER_URL` | `WALINE_SERVER_URL` | Waline 评论服务地址；不使用评论可以不填。                                  |
 | `GITHUB_TOKEN`             | `GITHUB_TOKEN`      | GitHub API token；用于 GitHub 仓库卡片、贡献数据等接口，避免匿名请求限流。 |
-| `CODETIME_TOKEN`           | `CODETIME_TOKEN`    | CodeTime 徽章接口 token；不使用 CodeTime 可以不填。 |
+| `CODETIME_TOKEN`           | `CODETIME_TOKEN`    | CodeTime 徽章接口 token；不使用 CodeTime 可以不填。                        |
 
 注意：只在 GitHub Secrets 中添加 `GITHUB_TOKEN` 还不够，workflow 还需要在 `Deploy runtime env vars` 步骤里把它写入服务器的 `.env`。如果生产环境不需要 GitHub 仓库卡片或贡献数据，可以不配置。
 
 Algolia 搜索索引同步是可选步骤。配置后，Actions 会在构建后运行 `pnpm run algolia:sync`：
 
-| Secret | 说明 |
-| --- | --- |
-| `ALGOLIA_WRITE_API_KEY` | Algolia 写入索引用的 key。 |
+| Secret                  | 说明                                                 |
+| ----------------------- | ---------------------------------------------------- |
+| `ALGOLIA_WRITE_API_KEY` | Algolia 写入索引用的 key。                           |
 | `ALGOLIA_ADMIN_API_KEY` | Algolia 管理 key；用于清理已经删除文章对应的旧记录。 |
 
 #### 配置
@@ -364,6 +386,7 @@ pnpm build
 ### 反向代理
 
 待施工
+
 ### SSL 证书
 
 待施工
