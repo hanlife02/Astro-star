@@ -10,6 +10,7 @@ const baseContentSchema = z
     image: z.string().optional(),
     createdAt: z.string().optional(),
     updatedAt: z.string().optional(),
+    published: z.boolean().optional(),
     type: z.string().optional(),
     projectUrl: z.string().optional(),
     docUrl: z.string().optional(),
@@ -23,6 +24,7 @@ const projectSchema = z.object({
   description: z.string().min(1),
   image: z.string().optional(),
   createdAt: z.string().min(1),
+  published: z.boolean().optional(),
 });
 
 const pageSchema = z.object({

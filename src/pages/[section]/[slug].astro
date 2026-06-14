@@ -13,6 +13,7 @@ import {
   toContentIsoString,
 } from "../../utils/content-time-zone";
 import { resolveContentTitle } from "../../utils/content-title";
+import { isPublishedContentEntry } from "../../utils/content-visibility";
 import { getGitTimestamps } from "../../utils/git-timestamps";
 
 const validSections = ["blog", "note", "project"] as const;
@@ -24,7 +25,9 @@ export async function getStaticPaths() {
   const sections = ["blog", "note", "project"] as const;
   const sectionEntries = await Promise.all(
     sections.map(async (section) => {
-      const entries = await getCollection(section);
+      const entries = (await getCollection(section)).filter(
+        isPublishedContentEntry,
+      );
 
       return entries.map((entry) => ({
         params: {
@@ -48,7 +51,9 @@ if (!section || !slug || !validSections.includes(section as SectionKey)) {
 }
 
 const sectionKey = section as SectionKey;
-const collectionEntries = await getCollection(sectionKey);
+const collectionEntries = (await getCollection(sectionKey)).filter(
+  isPublishedContentEntry,
+);
 const articleEntry = collectionEntries.find(
   (entry) => resolveContentSlug(entry.id, entry.data.routeSlug) === slug,
 );
