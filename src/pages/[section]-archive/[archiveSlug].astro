@@ -13,6 +13,7 @@ import {
 } from "../../utils/content-time-zone";
 import { getGitTimestamps } from "../../utils/git-timestamps";
 import { resolveContentTitle } from "../../utils/content-title";
+import { isPublishedContentEntry } from "../../utils/content-visibility";
 import { site } from "../../config/site";
 
 interface ContentEntryMeta {
@@ -88,7 +89,7 @@ export async function getStaticPaths() {
       sections.map(async (section) => {
         const collectionEntries = (await getCollection(
           section,
-        )) as ContentEntryMeta[];
+        )).filter(isPublishedContentEntry) as ContentEntryMeta[];
 
         return collectionEntries.map((entry) => ({
           archiveSlug: getStaticArchiveSlugFromEntry(section, entry),
@@ -125,7 +126,7 @@ if (!section || !(section in sectionBaseLabels) || !archiveSlug) {
 const sectionKey = section as SectionKey;
 const collectionEntries = (await getCollection(
   sectionKey,
-)) as ContentEntryMeta[];
+)).filter(isPublishedContentEntry) as ContentEntryMeta[];
 
 const articles = collectionEntries
   .map((entry) => {

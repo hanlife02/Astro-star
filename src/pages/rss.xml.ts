@@ -6,6 +6,7 @@ import { resolveContentDescription } from "../utils/content-description";
 import { resolveContentDates } from "../utils/content-dates";
 import { resolveContentSlug } from "../utils/content-slug";
 import { resolveContentTitle } from "../utils/content-title";
+import { isPublishedContentEntry } from "../utils/content-visibility";
 import { getGitTimestamps } from "../utils/git-timestamps";
 
 interface RssItem {
@@ -56,9 +57,15 @@ function buildRssItems(
   return items;
 }
 
-const blogEntries = await getCollection("blog");
-const noteEntries = await getCollection("note");
-const projectEntries = await getCollection("project");
+const blogEntries = (await getCollection("blog")).filter(
+  isPublishedContentEntry,
+);
+const noteEntries = (await getCollection("note")).filter(
+  isPublishedContentEntry,
+);
+const projectEntries = (await getCollection("project")).filter(
+  isPublishedContentEntry,
+);
 
 const rssItems = [
   ...buildRssItems(blogEntries, "blog"),

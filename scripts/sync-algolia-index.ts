@@ -15,6 +15,7 @@ import {
   toContentIsoString,
 } from "../src/utils/content-time-zone.ts";
 import { resolveContentTitle } from "../src/utils/content-title.ts";
+import { isPublishedFrontmatter } from "../src/utils/content-visibility.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const CONTENT_DIR = join(ROOT, "src", "content");
@@ -30,6 +31,7 @@ interface Frontmatter {
   archiveSlug?: string;
   createdAt?: string;
   description?: string;
+  published?: boolean;
   routeSlug?: string | number;
   title?: string;
   type?: string;
@@ -79,7 +81,7 @@ function collectFiles(dir: string): string[] {
   return files;
 }
 
-function parseFrontmatterValue(value: string): string | number {
+function parseFrontmatterValue(value: string): string | number | boolean {
   const trimmed = value.trim();
   const quoted = trimmed.match(/^(['"])(.*)\1$/);
 
@@ -89,6 +91,10 @@ function parseFrontmatterValue(value: string): string | number {
 
   if (/^-?\d+$/.test(trimmed)) {
     return Number(trimmed);
+  }
+
+  if (/^(true|false)$/i.test(trimmed)) {
+    return trimmed.toLowerCase() === "true";
   }
 
   return trimmed;
@@ -331,6 +337,8 @@ function buildRecords() {
     for (const filePath of collectFiles(sectionDir)) {
       const source = readFileSync(filePath, "utf8");
       const { frontmatter, body } = parseFrontmatter(source);
+      if (!isPublishedFrontmatter(frontmatter)) continue;
+
       const entryId = relative(sectionDir, filePath).replace(/\\/g, "/");
       const sourcePath = relative(ROOT, filePath).replace(/\\/g, "/");
       const routeSlug = resolveContentSlug(entryId, frontmatter.routeSlug);

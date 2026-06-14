@@ -10,6 +10,7 @@ import {
 import { formatContentDate } from "../utils/content-time-zone";
 import { site } from "../config/site";
 import { resolveContentTitle } from "../utils/content-title";
+import { isPublishedContentEntry } from "../utils/content-visibility";
 import { getGitTimestamps } from "../utils/git-timestamps";
 
 interface ContentEntryMeta {
@@ -121,7 +122,7 @@ if (!section || !(section in sectionLabels)) {
 const sectionKey = section as SectionKey;
 const collectionEntries = (await getCollection(
   sectionKey,
-)) as ContentEntryMeta[];
+)).filter(isPublishedContentEntry) as ContentEntryMeta[];
 
 const categories = collectionEntries
   .reduce<SectionCategoryEntry[]>((entries, entry) => {

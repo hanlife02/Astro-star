@@ -3,6 +3,7 @@ import { resolveContentDates } from "./content-dates";
 import { getGitTimestamps } from "./git-timestamps";
 import { resolveContentSlug } from "./content-slug";
 import { resolveContentTitle } from "./content-title";
+import { isPublishedContentEntry } from "./content-visibility";
 
 type SectionKey = "blog" | "note" | "project";
 type SectionEntry = CollectionEntry<SectionKey>;
@@ -22,6 +23,7 @@ const adjacentArticlesCache = new Map<SectionKey, DatedArticleEntry[]>();
 
 function buildDatedEntries(section: SectionKey, entries: SectionEntry[]) {
   return entries
+    .filter(isPublishedContentEntry)
     .map((entry) => {
       const entrySlug = resolveContentSlug(entry.id, entry.data.routeSlug);
       const entryContentPath =
