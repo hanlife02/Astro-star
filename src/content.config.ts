@@ -12,21 +12,12 @@ const baseContentSchema = z
     updatedAt: z.string().optional(),
     published: z.boolean().optional(),
     type: z.string().optional(),
-    projectUrl: z.string().optional(),
-    docUrl: z.string().optional(),
-    avatar: z.string().optional(),
   })
   .passthrough();
 
-const projectSchema = z.object({
-  routeSlug: z.string().min(1),
-  title: z.string().min(1),
-  description: z.string().min(1),
-  image: z.string().optional(),
-  createdAt: z.string().optional(),
+const projectSchema = baseContentSchema.extend({
   projectUrl: z.string().optional(),
   docUrl: z.string().optional(),
-  published: z.boolean().optional(),
 });
 
 const pageSchema = z.object({
