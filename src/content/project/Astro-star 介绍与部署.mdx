@@ -1,0 +1,369 @@
+---
+routeSlug: astro-star
+title: Astro-star 介绍与部署
+createdAt: 2026-06-14 23:05:26
+updatedAt: 2026-06-15 01:10:15
+type: Project
+description: 介绍 Astro-star 博客主题的内容与部署
+tags:
+  - blog
+  - Astro-star
+  - project
+---
+# 前言
+
+## 我搭建博客的起源
+
+:::fold[你或许~~不~~想了解这些事情]
+设计和建设，对我有着致命的吸引力，我热衷于好看的事物，也喜欢设计好看的事物，所以玩游戏也是建造派。而对一个网站的设计和建设，同样令我着迷。
+
+我在大一快结束的时候，刷到了某学长的博客，顿时被其主题的优雅和美丽吸引，萌生拥有自己博客的想法，最终花了一周时间才部署上。
+
+但是在前一个博客主题作者的逐步优化下，我越来越觉得它不符合我的审美，所以也产生尝试自己搭建博客的想法，在大三上学期开始学习 Astro，一边学习前端知识一边借助 AI 帮忙搭建这款主题 **Astro-star**
+:::
+
+## repo 地址
+
+[Astro-star](https://github.com/hanlife02/Astro-star)
+
+# 主题内容
+
+## 页面预览
+
+> 好看才会让人想用的，对吧？ 
+
+**你可以在 [https://hanlife02.com](https://hanlife02.com) 预览**
+
+![[CleanShot 2026-06-14 at 23.29.44@2x.png]] ![[CleanShot 2026-06-14 at 23.37.52@2x.png]]
+
+## 设计
+
+### 文章特殊语法渲染
+
+采用 `md` 或 `mdx` 文件，方便快速启动，后续会逐步添加新的样式在本文章更新～
+#### GitHub repo 链接
+```mdx
+[touying-ethan](https://github.com/hanlife02/touying-ethan)
+```
+
+![[CleanShot 2026-06-14 at 23.40.27@2x.png]]
+#### 折叠信息
+
+点击会展开/折叠，默认折叠/展开
+```mdx
+:::fold[Click to expand]
+Hidden content can include paragraphs, lists, and code blocks.
+:::
+```
+```mdx
+:::fold[Open by default]{open=true}
+This fold starts open, so the bottom-right corner is already placed at the end of the full content area.
+:::
+```
+![[CleanShot 2026-06-14 at 23.52.13.gif]]
+#### 涂抹文字
+
+```mdx
+Hover to reveal ||this hidden inline note|| while reading.
+```
+![[CleanShot 2026-06-14 at 23.53.03 1.gif]]
+
+#### 横线划除
+```mdx
+~~muted deleted text~~
+```
+![[CleanShot 2026-06-14 at 23.55.37@2x 2.png]]
+
+### 自动记录时间
+
+从 git lo g 里自动获取文章的创建日期和更新日期，也支持覆盖此时间自定义。
+### Hover 样式
+
+我设计了很多 Hover 的样式，为了让页面更有交互感，更加生动，减少生硬。你可以打开网站自行探索。
+
+# 部署
+
+## 环境准备
+
+- **Node.js >= 22**
+- **pnpm 10.30.x**
+- **Git**
+- PM2
+## 两种部署方式
+
+你可以直接从源码[手动部署](#手动部署)，也可以采用 [GitHub Actions 自动部署](#github-actions-自动部署)，作者更推荐后者。
+### 手动部署
+
+#### 克隆源码到服务器并安装依赖
+```shell
+ssh username@host
+
+git clone https://github.com/hanlife02/Astro-star.git
+cd Astro-star
+
+pnpm install
+```
+#### 修改配置和文章
+
+参考[配置与文章](#配置与文章)
+
+#### 手动运行
+
+安装依赖和修改配置后，可以先在服务器上做一次检查和构建：
+
+```shell
+pnpm check
+pnpm build
+```
+
+构建成功后，Astro 会在 `dist/` 下生成服务端入口。本项目已经提供 `ecosystem.config.cjs`，可以直接用 PM2 启动：
+
+```shell
+pm2 start ecosystem.config.cjs
+pm2 save
+```
+
+默认端口是 `4321`。如果想换端口，可以在启动前指定 `PORT`：
+
+```shell
+PORT=3000 pm2 start ecosystem.config.cjs
+pm2 save
+```
+
+常用运维命令：
+
+```shell
+pm2 status
+pm2 logs Blog
+pm2 restart Blog
+pm2 stop Blog
+```
+
+如果只是本地临时预览，不需要 PM2，可以使用：
+
+```shell
+pnpm dev
+```
+
+开发服务默认地址通常是：
+
+```text
+http://localhost:4321
+```
+#### 配置反向代理和 SSL 证书
+
+参考[反向代理](#反向代理) 和 [SSL 证书配置](#ssl-证书)
+### GitHub Actions 自动部署
+
+#### fork repo 并克隆源码到本地
+
+```shell
+# 'your-github-username'修改为你的github用户名,或者你可以直接在fork后的repo里找到地址
+git clone https://github.com/your-github-username/Astro-star.git
+```
+#### 在 repo 里添加 Secrets
+
+参考 [GitHub Actions 自动部署环境变量](#github-actions-自动部署环境变量)
+#### 本地修改配置和内容
+
+参考[配置](#配置)和[文章内容](#文章内容)
+
+#### push 到 fork 后的 repo
+
+```shell
+git add .
+git commit -m "build my blog"
+git push
+```
+Actions 执行完成后即顺利部署
+
+#### 配置反向代理和 SSL 证书
+
+参考[反向代理](#反向代理) 和 [SSL 证书配置](#ssl-证书)
+### 配置与文章
+
+#### 环境变量
+
+##### 手动部署环境变量
+
+如果只是本地预览，环境变量可以先不填；如果要部署成正式站点，建议在项目根目录创建 `.env`，按需填写下面这些变量
+
+```dotenv
+# Waline 评论服务地址；不填时评论入口会隐藏或不可用
+WALINE_SERVER_URL=https://comment.example.com
+
+# GitHub API token；用于 GitHub 仓库卡片、贡献数据等接口，避免匿名请求限流
+GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxx
+
+# CodeTime token；用于 CodeTime 徽章接口
+CODETIME_TOKEN=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+
+# Algolia 索引同步用；只有运行 pnpm algolia:sync 时才需要
+ALGOLIA_WRITE_API_KEY=xxxxxxxxxxxxxxxx
+ALGOLIA_ADMIN_API_KEY=xxxxxxxxxxxxxxxx
+```
+
+注意不要把真实密钥提交到公开仓库。`.env` 只放在服务器或自己的私有分支里。
+
+##### GitHub Actions 自动部署环境变量
+
+自动部署使用 GitHub Actions 的 Repository Secrets。进入 fork 后的仓库：`Settings -> Secrets and variables -> Actions -> New repository secret`，按需添加下面这些 Secret。
+
+最少需要配置 SSH 连接相关 Secret：
+
+| Secret            | 是否必填 | 说明                                                      |
+| ----------------- | ---- | ------------------------------------------------------- |
+| `SSH_HOST`        | 必填   | 服务器公网 IP 或域名。                                           |
+| `SSH_PRIVATE_KEY` | 必填   | 用于登录服务器的私钥内容。对应公钥需要提前加入服务器用户的 `~/.ssh/authorized_keys`。 |
+| `SSH_USER`        | 可选   | SSH 用户名，默认是 `ubuntu`。                                   |
+| `SSH_PORT`        | 可选   | SSH 端口，默认是 `22`。                                        |
+| `DEPLOY_PATH`     | 可选   | 服务器部署目录，默认是 `~/Astro-star`。(确保 SSH 用户拥有正确权限)            |
+| `PM2_APP_NAME`    | 可选   | PM2 应用名，默认是 `Astro-star`。                               |
+| `APP_PORT`        | 可选   | 站点运行端口，默认是 `4321`。                                      |
+
+站点运行时变量也放在 Repository Secrets 中。Actions 部署时会在服务器的 `DEPLOY_PATH/.env` 写入这些值：
+
+| Secret                     | 写入服务器变量             | 说明                                     |
+| -------------------------- | ------------------- | -------------------------------------- |
+| `PUBLIC_WALINE_SERVER_URL` | `WALINE_SERVER_URL` | Waline 评论服务地址；不使用评论可以不填。               |
+| `GITHUB_TOKEN`             | `GITHUB_TOKEN`      | GitHub API token；用于 GitHub 仓库卡片、贡献数据等接口，避免匿名请求限流。 |
+| `CODETIME_TOKEN`           | `CODETIME_TOKEN`    | CodeTime 徽章接口 token；不使用 CodeTime 可以不填。 |
+
+注意：只在 GitHub Secrets 中添加 `GITHUB_TOKEN` 还不够，workflow 还需要在 `Deploy runtime env vars` 步骤里把它写入服务器的 `.env`。如果生产环境不需要 GitHub 仓库卡片或贡献数据，可以不配置。
+
+Algolia 搜索索引同步是可选步骤。配置后，Actions 会在构建后运行 `pnpm run algolia:sync`：
+
+| Secret | 说明 |
+| --- | --- |
+| `ALGOLIA_WRITE_API_KEY` | Algolia 写入索引用的 key。 |
+| `ALGOLIA_ADMIN_API_KEY` | Algolia 管理 key；用于清理已经删除文章对应的旧记录。 |
+
+#### 配置
+
+站点的主要配置集中在 `src/config/` 目录。新用户通常先改这四个文件：
+
+- `src/config/site.ts`：站点名、域名、描述、头像、作者信息、导航、备案信息、版权协议、打赏二维码。
+- `src/config/social.ts`：邮箱、GitHub、Bilibili、Telegram 等社交链接。把不用的链接设置为 `enabled: false`，或者直接替换为自己的地址。
+- `src/config/links.ts`：友链页信息，包括站长自己的友链申请信息、友链列表和失联链接列表。
+- `src/config/search.ts`：Algolia 站内搜索配置。不使用 Algolia 时保持空字符串即可。
+
+最先要确认的是 `site.site.url`，它会作为 Astro 的 `site` 配置参与 canonical URL、RSS、sitemap 等生成。正式部署前应改成自己的域名，例如：
+
+```ts
+export const site = {
+  profile: {
+    name: "Your Name",
+    email: "hello@example.com",
+    githubUsername: "your-name",
+    avatarSrc: "/avatar.svg",
+    bio: "A short line about you.",
+  },
+  site: {
+    name: "Your Site Name",
+    url: "https://example.com",
+    description: "A short description for your personal site.",
+    iconSrc: "/site-icon.svg",
+  },
+};
+```
+
+本地静态资源放在 `public/` 下，引用时从根路径开始写。例如头像放在 `public/avatar.svg`，配置里写 `/avatar.svg`；文章图片可以放在 `public/figures/`，在 Markdown 中写 `/figures/image-name.png`。
+
+#### 文章内容
+
+文章和页面内容集中在 `src/content/` 目录，支持 `.md` 和 `.mdx`：
+
+- `src/content/blog/`：博客文章。
+- `src/content/note/`：短笔记、想法、阅读记录。
+- `src/content/project/`：项目展示页。
+- `src/content/page/`：固定页面，例如 about 和 links。
+
+博客、笔记和项目都可以按文件夹分类，例如：
+
+```text
+src/content/blog/template/welcome-to-astro-star.mdx
+src/content/note/thoughts/first-note.mdx
+src/content/project/astro-star-template.mdx
+```
+
+内容条目的 frontmatter 都可以省略，省略后会使用文件路径、文件名、正文内容或 Git 时间等信息兜底；但为了 URL、列表页和 SEO 更稳定，建议主动填写。
+
+博客或笔记示例：
+
+```mdx
+---
+routeSlug: "my-first-post"
+title: "My First Post"
+description: "A short summary shown in list pages and metadata."
+createdAt: "2026-06-15 23:05:26"
+updatedAt: "2026-06-15 23:30:00"
+type: "Blog"
+published: true
+---
+
+# My First Post
+
+Write your article here.
+```
+
+项目示例：
+
+```mdx
+---
+routeSlug: "my-project"
+title: "My Project"
+description: "A short project description."
+createdAt: "2026-06-15 23:05:26"
+projectUrl: "https://github.com/your-name/my-project"
+docUrl: "https://example.com/docs"
+published: true
+---
+
+# My Project
+
+Write your project introduction here.
+```
+
+常用字段说明：
+
+- `routeSlug`：URL 使用的稳定短名，建议只用英文、小写和连字符。
+- `title`：文章、笔记或项目标题。
+- `description`：摘要，会用于列表页和 SEO 信息。
+- `createdAt`：创建时间，省略时会优先从 Git 记录读取创建时间，再回退到文件系统时间；需要手动覆盖时再显式填写，格式示例：`"2026-06-15 23:05:26"`。
+- `updatedAt`：更新时间。省略时同样会从 Git 记录或文件系统时间回退；格式示例：`"2026-06-15 23:30:00"`。
+- `type`：文章分类或标签性质的展示字段。
+- `projectUrl`：项目地址，仅项目页会展示为 GitHub 圆形图标链接。
+- `docUrl`：项目文档地址，仅项目页会展示为文档圆形图标链接。
+- `image`：社交分享图/SEO 图，通常写 `/figures/xxx.png`。
+- `published`：设置为 `false` 时可作为草稿隐藏。
+
+固定页面放在 `src/content/page/`，常见字段如下：
+
+```mdx
+---
+title: About Me
+heading: About
+description: This page introduces me and this site.
+background: code-rain
+---
+
+## About Me
+
+Write your page content here.
+```
+
+写完配置和文章后，建议运行：
+
+```shell
+pnpm check
+pnpm build
+```
+
+如果构建失败，优先检查 frontmatter 字段是否缺失、日期是否写成字符串、图片路径是否存在，以及 MDX 语法是否闭合。
+
+### 反向代理
+
+待施工
+### SSL 证书
+
+待施工
