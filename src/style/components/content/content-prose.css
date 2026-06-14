@@ -673,13 +673,13 @@ html:lang(zh-CN) .content-page--article .content-page-body {
   max-width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
-  border: 1px solid color-mix(in srgb, var(--line) 14%, transparent);
-  border-radius: clamp(10px, 9px + 0.26vw, 14px);
+  border: 1px solid color-mix(in srgb, var(--line) 24%, transparent);
+  border-radius: clamp(8px, 7px + 0.2vw, 11px);
   border-spacing: 0;
   background: color-mix(in srgb, var(--paper) 94%, var(--line) 6%);
   box-shadow: 0 0.8rem 1.8rem color-mix(in srgb, var(--line) 7%, transparent);
-  font-size: clamp(0.88rem, 0.84rem + 0.1vw, 0.96rem);
-  line-height: 1.62;
+  font-size: clamp(0.86rem, 0.82rem + 0.08vw, 0.94rem);
+  line-height: 1.5;
   text-indent: 0;
   -webkit-overflow-scrolling: touch;
 }
@@ -689,15 +689,15 @@ html:lang(zh-CN) .content-page--article .content-page-body {
 }
 
 .content-page-body :is(th, td) {
-  min-width: clamp(8rem, 18vw, 14rem);
-  max-width: min(34rem, 68vw);
-  padding: clamp(0.58rem, 0.52rem + 0.22vw, 0.76rem)
-    clamp(0.72rem, 0.64rem + 0.32vw, 0.96rem);
-  border-right: 1px solid color-mix(in srgb, var(--line) 12%, transparent);
-  border-bottom: 1px solid color-mix(in srgb, var(--line) 12%, transparent);
+  min-width: clamp(4.5rem, 10vw, 8rem);
+  max-width: min(24rem, 58vw);
+  padding: clamp(0.38rem, 0.34rem + 0.12vw, 0.48rem)
+    clamp(0.5rem, 0.46rem + 0.16vw, 0.64rem);
+  border-right: 1px solid color-mix(in srgb, var(--line) 22%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--line) 22%, transparent);
   color: var(--content-text-color);
-  text-align: left;
-  vertical-align: top;
+  text-align: center;
+  vertical-align: middle;
   overflow-wrap: anywhere;
 }
 
@@ -724,7 +724,7 @@ html:lang(zh-CN) .content-page--article .content-page-body {
 }
 
 :root[data-theme="dark"] .content-page-body table {
-  border-color: color-mix(in srgb, var(--line) 18%, transparent);
+  border-color: color-mix(in srgb, var(--line) 28%, transparent);
   background: color-mix(in srgb, var(--paper) 88%, var(--line) 12%);
   box-shadow: 0 0.8rem 1.8rem color-mix(in srgb, #000 24%, transparent);
 }
