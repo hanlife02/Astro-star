@@ -52,15 +52,28 @@ export function initHomeShellCodeCopy() {
 
   const controller = new AbortController();
   const resetTimers: number[] = [];
+  const initializedBlocks: HTMLElement[] = [];
+  const copyButtons: HTMLButtonElement[] = [];
   browserWindow.__homeShellCodeCopyCleanup = () => {
     resetTimers.forEach((timer) => {
       window.clearTimeout(timer);
+    });
+    copyButtons.forEach((button) => {
+      button.remove();
+    });
+    initializedBlocks.forEach((block) => {
+      delete block.dataset.codeCopyInitialized;
     });
     controller.abort();
   };
 
   codeBlocks.forEach((block) => {
-    if (block.dataset.codeCopyInitialized === "true") return;
+    block
+      .querySelectorAll<HTMLButtonElement>(":scope > .content-code-copy")
+      .forEach((button) => {
+        button.remove();
+      });
+    delete block.dataset.codeCopyInitialized;
 
     const code = block.querySelector("code");
     if (!(code instanceof HTMLElement)) return;
@@ -93,5 +106,7 @@ export function initHomeShellCodeCopy() {
 
     block.dataset.codeCopyInitialized = "true";
     block.append(button);
+    initializedBlocks.push(block);
+    copyButtons.push(button);
   });
 }
