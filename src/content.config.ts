@@ -23,7 +23,7 @@ const projectSchema = z.object({
   title: z.string().min(1),
   description: z.string().min(1),
   image: z.string().optional(),
-  createdAt: z.string().min(1),
+  createdAt: z.string().optional(),
   published: z.boolean().optional(),
 });
 
