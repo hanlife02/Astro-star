@@ -3,7 +3,8 @@ import DocumentDetailPage from "./DocumentDetailPage.astro";
 import ArticleActionCard from "./ArticleActionCard.astro";
 import WalineComments from "./WalineComments.astro";
 import Icon from "../ui/Icon.astro";
-import { ArrowLeft, ArrowRight } from "lucide-static";
+import GithubIcon from "../ui/icons/GithubIcon.astro";
+import { ArrowLeft, ArrowRight, BookOpen } from "lucide-static";
 
 interface TocHeading {
   depth: 1 | 2 | 3 | 4 | 5 | 6;
@@ -35,6 +36,8 @@ interface Props {
   ArticleContent: any;
   canonicalUrl?: string;
   imageUrl?: string;
+  projectUrl?: string;
+  docUrl?: string;
   siteName?: string;
   includeKatexStyles?: boolean;
 }
@@ -58,6 +61,8 @@ const {
   ArticleContent,
   canonicalUrl = "",
   imageUrl = "",
+  projectUrl = "",
+  docUrl = "",
   siteName = "",
   includeKatexStyles = false,
 } = Astro.props as Props;
@@ -103,6 +108,13 @@ const sectionLabels: Record<string, string> = {
   project: "Project",
 };
 const sectionLabel = sectionLabels[section] ?? section;
+const projectLinks = [
+  projectUrl ? { href: projectUrl, label: "Project", kind: "github" } : null,
+  docUrl ? { href: docUrl, label: "Docs", kind: "docs" } : null,
+].filter(
+  (item): item is { href: string; label: string; kind: "github" | "docs" } =>
+    Boolean(item),
+);
 ---
 
 <DocumentDetailPage
@@ -178,6 +190,31 @@ const sectionLabel = sectionLabels[section] ?? section;
         >
       </p>
     </div>
+    {
+      projectLinks.length > 0 && (
+        <nav class="article-project-links" aria-label="Project links">
+          {projectLinks.map((link) => (
+            <a
+              class:list={[
+                "article-project-link",
+                `article-project-link--${link.kind}`,
+              ]}
+              href={link.href}
+              aria-label={link.label}
+              title={link.label}
+            >
+              <span class="article-project-link-icon" aria-hidden="true">
+                {link.kind === "github" ? (
+                  <GithubIcon />
+                ) : (
+                  <Icon svg={BookOpen} />
+                )}
+              </span>
+            </a>
+          ))}
+        </nav>
+      )
+    }
   </header>
 
   <Fragment slot="after-content">
