@@ -667,6 +667,72 @@ html:lang(zh-CN) .content-page--article .content-page-body {
   margin-bottom: 0;
 }
 
+.content-page-body table {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  border: 1px solid color-mix(in srgb, var(--line) 14%, transparent);
+  border-radius: clamp(10px, 9px + 0.26vw, 14px);
+  border-spacing: 0;
+  background: color-mix(in srgb, var(--paper) 94%, var(--line) 6%);
+  box-shadow: 0 0.8rem 1.8rem color-mix(in srgb, var(--line) 7%, transparent);
+  font-size: clamp(0.88rem, 0.84rem + 0.1vw, 0.96rem);
+  line-height: 1.62;
+  text-indent: 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+.content-page-body thead {
+  background: color-mix(in srgb, var(--line) 6.5%, transparent);
+}
+
+.content-page-body :is(th, td) {
+  min-width: clamp(8rem, 18vw, 14rem);
+  max-width: min(34rem, 68vw);
+  padding: clamp(0.58rem, 0.52rem + 0.22vw, 0.76rem)
+    clamp(0.72rem, 0.64rem + 0.32vw, 0.96rem);
+  border-right: 1px solid color-mix(in srgb, var(--line) 12%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--line) 12%, transparent);
+  color: var(--content-text-color);
+  text-align: left;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+
+.content-page-body :is(th, td):last-child {
+  border-right: 0;
+}
+
+.content-page-body tbody tr:last-child :is(th, td) {
+  border-bottom: 0;
+}
+
+.content-page-body th {
+  color: var(--line);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.content-page-body td {
+  font-weight: 400;
+}
+
+.content-page-body td code {
+  white-space: nowrap;
+}
+
+:root[data-theme="dark"] .content-page-body table {
+  border-color: color-mix(in srgb, var(--line) 18%, transparent);
+  background: color-mix(in srgb, var(--paper) 88%, var(--line) 12%);
+  box-shadow: 0 0.8rem 1.8rem color-mix(in srgb, #000 24%, transparent);
+}
+
+:root[data-theme="dark"] .content-page-body thead {
+  background: color-mix(in srgb, var(--line) 9%, transparent);
+}
+
 .content-page-body img {
   max-width: 100%;
   height: auto;
