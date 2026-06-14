@@ -75,6 +75,14 @@ const description = resolveContentDescription(
 );
 const articleType =
   (articleEntry.data as { type?: string }).type?.trim() || "Uncategorized";
+const projectUrl =
+  sectionKey === "project"
+    ? (articleEntry.data as { projectUrl?: string }).projectUrl?.trim() || ""
+    : "";
+const docUrl =
+  sectionKey === "project"
+    ? (articleEntry.data as { docUrl?: string }).docUrl?.trim() || ""
+    : "";
 const author = site.profile.name;
 const walineServerURL = WALINE_SERVER_URL?.trim() || "";
 const articleRoutePath = `/${section}/${slug}/`;
@@ -178,6 +186,8 @@ const tocHeadings = headings
   ArticleContent={Content}
   canonicalUrl={canonicalUrl}
   imageUrl={imageUrl}
+  projectUrl={projectUrl}
+  docUrl={docUrl}
   siteName={site.site.name}
   includeKatexStyles={includeKatexStyles}
 />

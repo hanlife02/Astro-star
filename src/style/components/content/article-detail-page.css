@@ -67,6 +67,54 @@ html:lang(zh-CN) .content-page--article {
   color: color-mix(in srgb, var(--line) 36%, transparent);
 }
 
+.article-project-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.42rem;
+  margin-top: 0.22rem;
+}
+
+.content-page-body .article-project-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid color-mix(in srgb, var(--line) 16%, transparent);
+  border-radius: 999px;
+  color: color-mix(in srgb, var(--line) 82%, transparent);
+  text-decoration: none;
+  background: color-mix(in srgb, var(--line) 3%, transparent);
+  transition:
+    border-color 0.18s ease,
+    background-color 0.18s ease,
+    color 0.18s ease,
+    transform 0.18s ease;
+}
+
+.article-project-link-icon,
+.article-project-link-icon svg {
+  display: inline-flex;
+  flex: 0 0 auto;
+  width: 1rem;
+  height: 1rem;
+}
+
+.content-page-body .article-project-link:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--line) 30%, transparent);
+  outline-offset: 0.18rem;
+  color: var(--line);
+}
+
+@media (hover: hover) {
+  .content-page-body .article-project-link:hover {
+    border-color: color-mix(in srgb, var(--line) 24%, transparent);
+    background: color-mix(in srgb, var(--line) 5.5%, transparent);
+    color: var(--line);
+    transform: translateY(-0.04rem);
+  }
+}
+
 .article-comments {
   margin-top: clamp(1.65rem, 1.35rem + 0.75vw, 2.1rem);
   padding-top: clamp(0.85rem, 0.72rem + 0.35vw, 1.1rem);
