@@ -8,6 +8,7 @@ const CONTENT_TOC_REFRESH_EVENT = "content-toc:refresh";
 const ACTIVE_HEADING_ROOT_MARGIN = "-18% 0px -55% 0px";
 const PAGE_EDGE_THRESHOLD = 4;
 const REDUCED_MOTION_MEDIA_QUERY = "(prefers-reduced-motion: reduce)";
+const MANUAL_TOC_SCROLL_SETTLE_MS = 900;
 
 type HomeShellContentTocWindow = Window & {
   __homeShellContentTocCleanup?: () => void;
@@ -68,6 +69,7 @@ export function initHomeShellContentToc() {
   const visibleHeadingIds = new Set<string>();
   let activeEntry: HeadingEntry | null = null;
   let lastScrollY = window.scrollY;
+  let manualTocScrollUntil = 0;
   const hasTocProgress = tocProgress instanceof HTMLElement;
 
   const requestSyncTocProgress = () => {
@@ -85,10 +87,21 @@ export function initHomeShellContentToc() {
     return overflowY === "auto" || overflowY === "scroll" ? tocList : toc;
   };
 
+  const markManualTocScroll = () => {
+    manualTocScrollUntil =
+      window.performance.now() + MANUAL_TOC_SCROLL_SETTLE_MS;
+  };
+
+  const isManualTocScrollSettling = () =>
+    window.performance.now() < manualTocScrollUntil;
+
   const centerActiveLink = (
     entry: HeadingEntry,
     behavior: ScrollBehavior = "auto",
+    force = false,
   ) => {
+    if (!force && isManualTocScrollSettling()) return;
+
     const tocScrollContainer = getTocScrollContainer();
     const itemTopInToc = entry.item.offsetTop;
     const centeredTocTop =
@@ -173,6 +186,7 @@ export function initHomeShellContentToc() {
   const setActiveEntry = (
     nextEntry: HeadingEntry,
     behavior: ScrollBehavior = "auto",
+    forceCenter = false,
   ) => {
     if (activeEntry === nextEntry) return;
 
@@ -189,7 +203,7 @@ export function initHomeShellContentToc() {
       }
     });
 
-    centerActiveLink(nextEntry, behavior);
+    centerActiveLink(nextEntry, behavior, forceCenter);
     requestSyncTocProgress();
   };
 
@@ -271,7 +285,7 @@ export function initHomeShellContentToc() {
   const initialEntry =
     headingEntries.find((entry) => entry.heading.id === initialHash) ??
     headingEntries[0];
-  setActiveEntry(initialEntry);
+  setActiveEntry(initialEntry, "auto", true);
 
   headingEntries.forEach((entry) => {
     entry.link.addEventListener(
@@ -287,7 +301,7 @@ export function initHomeShellContentToc() {
           history.replaceState(null, "", `#${entry.heading.id}`);
         }
 
-        setActiveEntry(entry);
+        setActiveEntry(entry, "auto", true);
       },
       { signal: controller.signal },
     );
@@ -309,6 +323,26 @@ export function initHomeShellContentToc() {
   });
 
   tocList.addEventListener("scroll", requestSyncTocProgress, {
+    passive: true,
+    signal: controller.signal,
+  });
+
+  tocList.addEventListener("wheel", markManualTocScroll, {
+    passive: true,
+    signal: controller.signal,
+  });
+
+  tocList.addEventListener("touchstart", markManualTocScroll, {
+    passive: true,
+    signal: controller.signal,
+  });
+
+  tocList.addEventListener("touchmove", markManualTocScroll, {
+    passive: true,
+    signal: controller.signal,
+  });
+
+  tocList.addEventListener("pointerdown", markManualTocScroll, {
     passive: true,
     signal: controller.signal,
   });
