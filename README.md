@@ -16,8 +16,7 @@ English · [简体中文](./README-zh-CN.md)
 
 <a href="./CONTRIBUTING.md">🤝 Contributing</a> &nbsp;·&nbsp;
 <a href="https://github.com/hanlife02/Astro-star/issues">🐛 Issues</a> &nbsp;·&nbsp;
-<a href="https://github.com/hanlife02/Astro-star/discussions">💬 Discussions</a> &nbsp;·&nbsp;
-<a href="https://hanlife02.github.io/Astro-star-docs/">📖 Docs</a>
+<a href="https://hanlife02.com/project/astro-star">📖 Docs</a>
 
 </div>
 
@@ -31,7 +30,6 @@ English · [简体中文](./README-zh-CN.md)
   - [Introduction and Deployment](#introduction-and-deployment)
   - [Build Together](#build-together)
   - [Tech Stack](#tech-stack)
-  - [Star History](#star-history)
   - [Sites Using This Theme](#sites-using-this-theme)
   - [Discussion and Exchange](#discussion-and-exchange)
   - [License](#license)
@@ -98,16 +96,6 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for the core rules. The most important 
 
 </div>
 
-## Star History
-
-<a href="https://star-history.com/#hanlife02/Astro-star&Date">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=hanlife02/Astro-star&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=hanlife02/Astro-star&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=hanlife02/Astro-star&type=Date" />
- </picture>
-</a>
-
 ## Sites Using This Theme
 
 Welcome to use this theme for your personal site! Submit a PR to add your site to the list.
@@ -123,6 +111,14 @@ Welcome to participate in discussions, feedback issues, and feature suggestions 
 ## License
 
 Astro-star is open-source under the [Apache License 2.0](./LICENSE).
+
+<a href="https://www.star-history.com/?repos=hanlife02%2FAstro-star&type=date&legend=top-left">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=hanlife02/Astro-star&type=date&theme=dark&legend=top-left" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=hanlife02/Astro-star&type=date&legend=top-left" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=hanlife02/Astro-star&type=date&legend=top-left" />
+ </picture>
+</a>
 
 ---
 

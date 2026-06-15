@@ -16,8 +16,7 @@
 
 <a href="./CONTRIBUTING.md">🤝 贡献指南</a> &nbsp;·&nbsp;
 <a href="https://github.com/hanlife02/Astro-star/issues">🐛 提交 Issue</a> &nbsp;·&nbsp;
-<a href="https://github.com/hanlife02/Astro-star/discussions">💬 参与讨论</a> &nbsp;·&nbsp;
-<a href="https://hanlife02.github.io/Astro-star-docs/">📖 文档</a>
+<a href="https://hanlife02.com/project/astro-star">📖 文档</a>
 
 </div>
 
@@ -31,7 +30,6 @@
   - [介绍与部署](#介绍与部署)
   - [一起建设](#一起建设)
   - [技术栈](#技术栈)
-  - [Star History](#star-history)
   - [使用本主题的网站列表](#使用本主题的网站列表)
   - [交流讨论](#交流讨论)
   - [许可证](#许可证)
@@ -98,16 +96,6 @@ pnpm build
 
 </div>
 
-## Star History
-
-<a href="https://star-history.com/#hanlife02/Astro-star&Date">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=hanlife02/Astro-star&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=hanlife02/Astro-star&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=hanlife02/Astro-star&type=Date" />
- </picture>
-</a>
-
 ## 使用本主题的网站列表
 
 欢迎使用本主题搭建你的个人站点！提交 PR 将你的站点加入列表。
@@ -123,6 +111,14 @@ pnpm build
 ## 许可证
 
 Astro-star 使用 [Apache License 2.0](./LICENSE) 开源。
+
+<a href="https://www.star-history.com/?repos=hanlife02%2FAstro-star&type=date&legend=top-left">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=hanlife02/Astro-star&type=date&theme=dark&legend=top-left" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=hanlife02/Astro-star&type=date&legend=top-left" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=hanlife02/Astro-star&type=date&legend=top-left" />
+ </picture>
+</a>
 
 ---
 
