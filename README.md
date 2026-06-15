@@ -23,85 +23,18 @@ English · [简体中文](./README-zh-CN.md)
 
 ---
 
-## Discussion and Exchange
-
-Welcome to participate in discussions, feedback issues, and feature suggestions in the [LINUX DO](https://linux.do) community.
-
 ## Table of Contents
 
 - [Astro-star](#astro-star)
-  - [Discussion and Exchange](#discussion-and-exchange)
   - [Table of Contents](#table-of-contents)
-  - [What Is This](#what-is-this)
-  - [Highlights](#highlights)
-  - [Preview](#preview)
-    - [Home (Dark)](#home-dark)
-    - [Home (Light)](#home-light)
-    - [Blog](#blog)
-    - [Blog Categories](#blog-categories)
-    - [Content](#content)
-    - [Friend Links](#friend-links)
   - [Project Map](#project-map)
+  - [Introduction and Deployment](#introduction-and-deployment)
   - [Build Together](#build-together)
   - [Tech Stack](#tech-stack)
   - [Star History](#star-history)
+  - [Sites Using This Theme](#sites-using-this-theme)
+  - [Discussion and Exchange](#discussion-and-exchange)
   - [License](#license)
-
-## What Is This
-
-Astro-star started as a personal blog and is now moving toward a community-shaped personal site theme. You can fork it as your own homepage, or bring back your fixes, components, migration notes, deployment experience, and design ideas so the next person has an easier path.
-
-The project focuses on a small but important kind of community: independent websites that are connected by writing, notes, projects, RSS, comments, friend links, and open-source collaboration.
-
-| If you are             | Start here                                                                                 |
-| ---------------------- | ------------------------------------------------------------------------------------------ |
-| Building your own site | Fork the repository, replace the personal configuration and content, then deploy your blog |
-| Customizing a theme    | Reuse the layouts, routes, content collections, and design tokens                          |
-| Contributing           | Fix bugs, improve docs, polish mobile views, or add reusable components                    |
-| Looking for discussion | Open an Issue with ideas, screenshots, design feedback, or usage questions                 |
-
-## Highlights
-
-| Feature              | Description                                                                        |
-| -------------------- | ---------------------------------------------------------------------------------- |
-| Astro SSR            | Uses `@astrojs/node` standalone output, suitable for deployment on your own server |
-| Content collections  | `blog`, `note`, and `project` are powered by Astro Content Collections             |
-| Fixed site routes    | Home, About, Blog, Note, Project, and Links are built in                           |
-| Theme switching      | Supports light, dark, and system modes with cookies for stable first paint         |
-| MDX writing          | Supports MDX, math, KaTeX, figure captions, and custom content components          |
-| Comments and links   | Includes Waline comments and a friend links page with application notes            |
-| Search and feeds     | Optional Algolia site search, RSS, Sitemap, and robots.txt are included            |
-| GitHub repo cards    | Content pages can display GitHub repository metadata and star counts               |
-| Config migration     | Extract and restore site config, content, avatars, and article images              |
-| Automated deployment | GitHub Actions builds, rsync + SSH deploys, and PM2 manages the process            |
-
-## Preview
-
-> Replace the starter content and configure your own domain before publishing.
-
-### Home (Dark)
-
-![Home Dark](figures/Home.png)
-
-### Home (Light)
-
-![Home Light](figures/Home-light.png)
-
-### Blog
-
-![Blog](figures/Blog.png)
-
-### Blog Categories
-
-![Blog Categories](figures/Blog-Categories.png)
-
-### Content
-
-![Content](figures/Content.png)
-
-### Friend Links
-
-![Links](figures/Links.png)
 
 ## Project Map
 
@@ -134,17 +67,13 @@ Top-level routes:
 | `/project` | Projects     |
 | `/links`   | Friend links |
 
+## Introduction and Deployment
+
+See [Introduction and Deployment of Astro-star](https://hanlife02.com/project/astro-star/).
+
 ## Build Together
 
 Small contributions are welcome. A clear Issue, a mobile screenshot, a reproducible bug, a more ergonomic component, or a short setup note can all make this theme easier to maintain and reuse.
-
-| Type             | Good contributions                                                    |
-| ---------------- | --------------------------------------------------------------------- |
-| Bug              | Build failures, layout glitches, route issues, dark-mode problems     |
-| UX polish        | Mobile layout, accessibility, interaction details, loading states     |
-| Theme capability | New components, content cards, archive views, link display patterns   |
-| Documentation    | Setup guides, deployment notes, configuration docs, migration stories |
-| Integrations     | Search, comments, feeds, analytics, and more deployment platforms     |
 
 Before opening a PR, it is recommended to run:
 
@@ -178,6 +107,18 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for the core rules. The most important 
    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=hanlife02/Astro-star&type=Date" />
  </picture>
 </a>
+
+## Sites Using This Theme
+
+Welcome to use this theme for your personal site! Submit a PR to add your site to the list.
+
+| Avatar                                                    | Site                           | Description                    |
+| --------------------------------------------------------- | ------------------------------ | ------------------------------ |
+| <img src="https://github.com/hanlife02.png" width="50" /> | [Ethan](https://hanlife02.com) | Don't stay awake for too long. |
+
+## Discussion and Exchange
+
+Welcome to participate in discussions, feedback issues, and feature suggestions in the [LINUX DO](https://linux.do) community.
 
 ## License
 
