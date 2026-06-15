@@ -5,6 +5,7 @@ import BilibiliIcon from "./BilibiliIcon.astro";
 import CloudMusicIcon from "./CloudMusicIcon.astro";
 import FigmaIcon from "./FigmaIcon.astro";
 import GithubIcon from "./GithubIcon.astro";
+import InstagramIcon from "./InstagramIcon.astro";
 import Iterm2Icon from "./Iterm2Icon.astro";
 import MailIcon from "./MailIcon.astro";
 import NotionIcon from "./NotionIcon.astro";
@@ -48,6 +49,8 @@ const customIconAliases: Record<string, string> = {
   figma: "figma",
   gh: "github",
   github: "github",
+  instagram: "instagram",
+  ins: "instagram",
   iterm: "iterm2",
   iterm2: "iterm2",
   mail: "mail",
@@ -105,6 +108,8 @@ const fallbackText = name.slice(0, 3).toUpperCase();
     <CloudMusicIcon />
   ) : customIconKey === "github" ? (
     <GithubIcon />
+  ) : customIconKey === "instagram" ? (
+    <InstagramIcon />
   ) : customIconKey === "figma" ? (
     <FigmaIcon />
   ) : customIconKey === "iterm2" ? (

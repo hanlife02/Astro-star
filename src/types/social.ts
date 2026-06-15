@@ -1,4 +1,9 @@
-export type SocialLinkId = "mail" | "github" | "bilibili" | "telegram";
+export type SocialLinkId =
+  | "mail"
+  | "github"
+  | "bilibili"
+  | "telegram"
+  | "instagram";
 
 export interface SocialLinkItem {
   id: SocialLinkId;
