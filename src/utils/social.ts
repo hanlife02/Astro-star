@@ -8,14 +8,15 @@ const socialLinkMap = new Map<SocialLinkId, SocialLinkItem>(
 export function getSocialLinks(ids: readonly SocialLinkId[]) {
   return ids
     .map((id) => socialLinkMap.get(id))
-    .filter(
-      (item): item is SocialLinkItem =>
-        Boolean(item?.enabled && item.href.trim()),
+    .filter((item): item is SocialLinkItem =>
+      Boolean(item?.enabled && item.href.trim()),
     );
 }
 
 export function getEnabledSocialLinks() {
-  return socialLinks.filter((item) => item.enabled && Boolean(item.href.trim()));
+  return socialLinks.filter(
+    (item) => item.enabled && Boolean(item.href.trim()),
+  );
 }
 
 export function getSocialLink(id: SocialLinkId) {
