@@ -1,44 +1,18 @@
 ---
-import AppPanelIcon from "../ui/icons/AppPanelIcon.astro";
 import { socialDisplay } from "../../config/social";
 import type { SocialLinkId } from "../../types/social";
 import { getSocialLinks } from "../../utils/social";
+import LinkCardGroup from "../content/LinkCardGroup.astro";
 
 interface Props {
   ids?: readonly SocialLinkId[];
+  title?: string;
 }
 
-const { ids } = Astro.props as Props;
+const { ids, title = "Social" } = Astro.props as Props;
 const selectedLinks = getSocialLinks(
   Array.isArray(ids) ? ids : socialDisplay.about,
 );
-
-function isExternalLink(href: string) {
-  return /^https?:\/\//.test(href);
-}
 ---
 
-{
-  selectedLinks.length > 0 && (
-    <nav class="social-links not-content" aria-label="Social links">
-      {selectedLinks.map((item) => {
-        const external = isExternalLink(item.href);
-
-        return (
-          <a
-            class="social-links-item"
-            href={item.href}
-            target={external ? "_blank" : undefined}
-            rel={external ? "noreferrer" : undefined}
-            aria-label={`Visit ${item.name}`}
-          >
-            <span class="social-links-icon" aria-hidden="true">
-              <AppPanelIcon name={item.icon} label={item.name} />
-            </span>
-            <span class="social-links-name">{item.name}</span>
-          </a>
-        );
-      })}
-    </nav>
-  )
-}
+<LinkCardGroup title={title} items={selectedLinks} ariaLabel="Social links" />

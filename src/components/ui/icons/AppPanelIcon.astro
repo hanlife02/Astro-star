@@ -7,7 +7,6 @@ import FigmaIcon from "./FigmaIcon.astro";
 import GithubIcon from "./GithubIcon.astro";
 import Iterm2Icon from "./Iterm2Icon.astro";
 import MailIcon from "./MailIcon.astro";
-import NetEaseMusicIcon from "./NetEaseMusicIcon.astro";
 import NotionIcon from "./NotionIcon.astro";
 import RaycastIcon from "./RaycastIcon.astro";
 import RssIcon from "./RssIcon.astro";
@@ -103,7 +102,7 @@ const fallbackText = name.slice(0, 3).toUpperCase();
   ) : customIconKey === "cloud-music" ? (
     <CloudMusicIcon />
   ) : customIconKey === "netease-music" ? (
-    <NetEaseMusicIcon />
+    <CloudMusicIcon />
   ) : customIconKey === "github" ? (
     <GithubIcon />
   ) : customIconKey === "figma" ? (

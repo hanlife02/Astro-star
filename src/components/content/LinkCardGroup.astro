@@ -1,0 +1,53 @@
+---
+import AppPanelIcon from "../ui/icons/AppPanelIcon.astro";
+
+interface LinkCardGroupItem {
+  icon: string;
+  name: string;
+  href: string;
+  ariaLabel?: string;
+}
+
+interface Props {
+  title: string;
+  items: readonly LinkCardGroupItem[];
+  ariaLabel?: string;
+}
+
+const { title, items, ariaLabel } = Astro.props as Props;
+const normalizedTitle = title.trim();
+const groupTitle = normalizedTitle || "Links";
+const listAriaLabel = ariaLabel?.trim() || `${groupTitle} links`;
+
+function isExternalLink(href: string) {
+  return /^https?:\/\//.test(href);
+}
+---
+
+{
+  items.length > 0 && (
+    <section class="link-card-group not-content" aria-label={groupTitle}>
+      <div class="link-card-group-title">{groupTitle}</div>
+      <nav class="link-card-group-list" aria-label={listAriaLabel}>
+        {items.map((item) => {
+          const external = isExternalLink(item.href);
+
+          return (
+            <a
+              class="link-card-group-item"
+              href={item.href}
+              target={external ? "_blank" : undefined}
+              rel={external ? "noreferrer" : undefined}
+              aria-label={item.ariaLabel || `Visit ${item.name}`}
+            >
+              <span class="link-card-group-icon" aria-hidden="true">
+                <AppPanelIcon name={item.icon} label={item.name} />
+              </span>
+              <span class="link-card-group-name">{item.name}</span>
+            </a>
+          );
+        })}
+      </nav>
+    </section>
+  )
+}
