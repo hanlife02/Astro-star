@@ -1,4 +1,4 @@
-import { parseContentLocalDateString } from "./content-time-zone";
+import { parseContentLocalDateString } from "./content-time-zone.ts";
 
 interface DateFallbacks {
   createdAt: Date | null;
