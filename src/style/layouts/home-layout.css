@@ -74,7 +74,7 @@
 .signature-collapse {
   position: relative;
   z-index: 7;
-  width: var(--menu-trigger-width);
+  width: 100%;
   min-height: var(--menu-trigger-height);
 }
 
@@ -119,7 +119,7 @@
   top: 100%;
   left: 0;
   z-index: 3;
-  width: var(--nav-flyout-min);
+  width: 100%;
   padding: 0.4rem 0;
   opacity: 0;
   visibility: hidden;
@@ -162,8 +162,9 @@
 }
 
 .signature-collapse-links a {
-  display: block;
-  width: 100%;
+  display: inline-block;
+  width: auto;
+  max-width: 100%;
   padding: 1.2rem 0.8rem;
   color: var(--line-soft);
   text-decoration: none;
