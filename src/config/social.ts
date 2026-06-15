@@ -33,9 +33,17 @@ export const socialLinks: readonly SocialLinkItem[] = [
     handle: "hanlife02",
     enabled: true,
   },
+  {
+    id: "instagram",
+    icon: "instagram",
+    name: "Instagram",
+    href: "https://www.instagram.com/hanlife02/",
+    handle: "hanlife02",
+    enabled: true,
+  },
 ] satisfies readonly SocialLinkItem[];
 
 export const socialDisplay = {
-  home: ["github", "mail"],
+  home: ["github", "mail", "telegram", "instagram"],
   about: ["mail", "github", "bilibili", "telegram"],
 } as const satisfies Record<string, readonly SocialLinkId[]>;
