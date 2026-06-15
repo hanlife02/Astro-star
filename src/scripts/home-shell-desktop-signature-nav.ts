@@ -25,11 +25,24 @@ export function initHomeShellDesktopSignatureNav() {
   const signatureCollapseTrigger = signatureCollapse.querySelector(
     ".signature-collapse-trigger",
   );
+  const signatureCollapsePanel = signatureCollapse.querySelector(
+    ".signature-collapse-panel",
+  );
   const desktopNavMedia = window.matchMedia(HOME_SHELL_DESKTOP_MEDIA_QUERY);
+
+  const syncDesktopSignatureCollapseHitArea = () => {
+    if (!(signatureCollapsePanel instanceof HTMLElement)) return;
+
+    signatureCollapse.style.setProperty(
+      "--signature-collapse-panel-hit-height",
+      `${signatureCollapsePanel.scrollHeight}px`,
+    );
+  };
 
   const syncDesktopSignatureCollapse = () => {
     window.clearTimeout(signatureCollapseCloseTimer);
     delete signatureCollapse.dataset.panelState;
+    syncDesktopSignatureCollapseHitArea();
 
     if (desktopNavMedia.matches && signatureCollapse.open) {
       signatureCollapse.open = false;
@@ -59,6 +72,9 @@ export function initHomeShellDesktopSignatureNav() {
   desktopNavMedia.addEventListener("change", syncDesktopSignatureCollapse, {
     signal: controller.signal,
   });
+  window.addEventListener("resize", syncDesktopSignatureCollapseHitArea, {
+    signal: controller.signal,
+  });
 
   signatureCollapseTrigger?.addEventListener(
     "click",
@@ -79,7 +95,14 @@ export function initHomeShellDesktopSignatureNav() {
 
   signatureCollapse.addEventListener(
     "mouseleave",
-    () => {
+    (event) => {
+      const relatedTarget = event.relatedTarget;
+      if (
+        relatedTarget instanceof Node &&
+        signatureCollapse.contains(relatedTarget)
+      )
+        return;
+
       closeDesktopSignatureCollapse();
     },
     { signal: controller.signal },

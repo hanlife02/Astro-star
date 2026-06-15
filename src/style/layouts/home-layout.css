@@ -73,7 +73,20 @@
 
 .signature-collapse {
   position: relative;
-  width: fit-content;
+  z-index: 7;
+  width: max(var(--menu-trigger-width), var(--nav-flyout-min));
+  min-height: var(--menu-trigger-height);
+}
+
+.signature-collapse::before {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 2;
+  width: 100%;
+  height: var(--signature-collapse-panel-hit-height, 0px);
+  pointer-events: auto;
 }
 
 .signature-collapse-trigger {
@@ -106,7 +119,7 @@
   top: 100%;
   left: 0;
   z-index: 3;
-  min-width: var(--nav-flyout-min);
+  width: 100%;
   padding: 0.4rem 0;
   opacity: 0;
   visibility: hidden;
@@ -149,7 +162,8 @@
 }
 
 .signature-collapse-links a {
-  display: inline-block;
+  display: block;
+  width: 100%;
   padding: 1.2rem 0.8rem;
   color: var(--line-soft);
   text-decoration: none;
@@ -424,6 +438,8 @@
 
 .side-nav-area {
   display: none;
+  position: relative;
+  z-index: 7;
   min-height: 0;
   height: auto;
   max-height: none;
