@@ -146,8 +146,8 @@
 }
 
 .profile-link {
-  width: clamp(1.75rem, 1.7vw, 2.2rem);
-  height: clamp(1.75rem, 1.7vw, 2.2rem);
+  width: clamp(2.05rem, 1.95vw, 2.55rem);
+  height: clamp(2.05rem, 1.95vw, 2.55rem);
   border-radius: 999px;
   display: inline-flex;
   align-items: center;
@@ -158,8 +158,8 @@
 }
 
 .profile-link svg {
-  width: clamp(0.95rem, 1.2vw, 1.2rem);
-  height: clamp(0.95rem, 1.2vw, 1.2rem);
+  width: clamp(1.22rem, 1.38vw, 1.52rem);
+  height: clamp(1.22rem, 1.38vw, 1.52rem);
   transform-origin: center;
   transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
 }

@@ -4,9 +4,8 @@ import CodeTime from "./CodeTime.astro";
 import GitHeatmap from "./githeatmap.astro";
 import Signature from "./signature.astro";
 import FooterMeta from "../common/FooterMeta.astro";
-import Icon from "../ui/Icon.astro";
-import BilibiliIcon from "../ui/icons/BilibiliIcon.astro";
-import NetEaseMusicIcon from "../ui/icons/NetEaseMusicIcon.astro";
+import AppPanelIcon from "../ui/icons/AppPanelIcon.astro";
+import type { SocialLinkItem } from "../../types/social";
 import "../../style/components/home/profile.css";
 import "../../style/components/home/latest-articles.css";
 import "../../style/components/home/home-page-content.css";
@@ -16,14 +15,6 @@ interface ProfileData {
   avatarSrc: string;
   bio: string;
   intro: string;
-}
-
-interface ProfileLinkItem {
-  key: string;
-  label: string;
-  href: string;
-  icon?: any;
-  external: boolean;
 }
 
 interface LatestArticleItem {
@@ -45,7 +36,7 @@ interface LatestTimelineGroup {
 interface Props {
   profile: ProfileData;
   ownerName: string;
-  profileLinks: ProfileLinkItem[];
+  profileLinks: SocialLinkItem[];
   latestBlogTimelineGroups: LatestTimelineGroup[];
   latestNoteTimelineGroups: LatestTimelineGroup[];
   latestAnimationOrderMap: Map<string, number>;
@@ -60,6 +51,10 @@ const {
   latestAnimationOrderMap,
 } = Astro.props as Props;
 const homeDescription = profile.intro.trim() || profile.bio.trim();
+
+function isExternalLink(href: string) {
+  return /^https?:\/\//.test(href);
+}
 ---
 
 <HomeLayout
@@ -114,15 +109,11 @@ const homeDescription = profile.intro.trim() || profile.bio.trim();
             <a
               class="profile-link home-enter-item"
               href={item.href}
-              target={item.external ? "_blank" : undefined}
-              rel={item.external ? "noreferrer" : undefined}
-              aria-label={item.label}
+              target={isExternalLink(item.href) ? "_blank" : undefined}
+              rel={isExternalLink(item.href) ? "noreferrer" : undefined}
+              aria-label={item.name}
             >
-              {item.key === "bilibili" ? <BilibiliIcon /> : null}
-              {item.key === "cloud-music" ? <NetEaseMusicIcon /> : null}
-              {item.key !== "bilibili" && item.key !== "cloud-music" ? (
-                <Icon svg={item.icon} />
-              ) : null}
+              <AppPanelIcon name={item.icon} label={item.name} />
             </a>
           ))}
         </nav>

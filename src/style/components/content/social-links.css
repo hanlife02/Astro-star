@@ -1,29 +1,75 @@
 .social-links {
+  --social-link-card-radius: var(--radius-md);
+  --social-link-card-border: linear-gradient(
+    115deg,
+    rgba(255, 255, 255, 0.64) 0%,
+    rgba(255, 255, 255, 0.34) 46%,
+    rgba(255, 255, 255, 0.12) 100%
+  );
+  --social-link-card-glass: rgba(255, 255, 255, 0.22);
+  --social-link-card-tint: rgba(255, 255, 255, 0.08);
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 0.5rem;
+  gap: 0.62rem;
   margin: 0.25rem 0 1rem;
-  padding: 0.55rem;
-  border: 1px solid var(--border-soft);
-  border-radius: var(--radius-md);
-  background: transparent;
+  padding: 0;
 }
 
 .social-links-item {
+  position: relative;
+  isolation: isolate;
   min-width: 0;
-  min-height: 3rem;
+  min-height: 3.2rem;
   display: flex;
   align-items: center;
-  gap: 0.68rem;
-  padding: 0.45rem 0.58rem;
+  gap: 0.66rem;
+  padding: 0.48rem 0.76rem;
   border: 1px solid transparent;
-  border-radius: calc(var(--radius-md) - 0.1rem);
+  border-radius: var(--social-link-card-radius);
   color: var(--line);
-  background: transparent;
+  background: var(--social-link-card-glass);
+  box-shadow:
+    0 1px 24px -1px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(20px) saturate(1.25);
+  -webkit-backdrop-filter: blur(20px) saturate(1.25);
+  overflow: hidden;
   text-decoration: none;
   transition:
-    background-color 0.16s ease,
-    border-color 0.16s ease;
+    background-color 0.2s ease,
+    box-shadow 0.22s ease,
+    transform 0.22s ease;
+}
+
+.social-links-item::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  padding: 1px;
+  border-radius: inherit;
+  background: var(--social-link-card-border);
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  opacity: 0.92;
+  pointer-events: none;
+}
+
+.social-links-item::after {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  z-index: 1;
+  border-radius: calc(var(--social-link-card-radius) - 1px);
+  background: var(--social-link-card-tint);
+  opacity: 0.78;
+  pointer-events: none;
 }
 
 .content-page-body .social-links-item,
@@ -34,25 +80,46 @@
 
 .social-links-item:hover,
 .social-links-item:focus-visible {
-  border-color: var(--border-soft);
-  background: color-mix(in srgb, var(--line) 5.5%, transparent);
+  background-color: color-mix(in srgb, #fff 8%, transparent);
+  box-shadow:
+    0 1px 28px -1px rgba(0, 0, 0, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+.social-links-item:hover::before,
+.social-links-item:focus-visible::before {
+  opacity: 1;
+}
+
+.social-links-item:hover::after,
+.social-links-item:focus-visible::after {
+  opacity: 0.86;
+}
+
+.social-links-item:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--line) 28%, transparent);
+  outline-offset: 0.2rem;
 }
 
 .social-links-icon {
-  width: 2.2rem;
-  height: 2.2rem;
+  position: relative;
+  z-index: 2;
+  width: 1.82rem;
+  height: 1.82rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   flex: 0 0 auto;
-  border-radius: calc(var(--radius-sm) + 0.1rem);
   color: currentColor;
-  background: color-mix(in srgb, var(--line) 4.5%, transparent);
-  font-size: 1.24rem;
+  background: transparent;
+  font-size: 1.22rem;
   line-height: 1;
 }
 
 .social-links-name {
+  position: relative;
+  z-index: 2;
   min-width: 0;
   overflow: hidden;
   color: currentColor;
@@ -72,5 +139,11 @@
 @media (prefers-reduced-motion: reduce) {
   .social-links-item {
     transition: none;
+    transform: none;
   }
+}
+
+:root[data-theme="dark"] .social-links {
+  --social-link-card-glass: rgba(255, 255, 255, 0.09);
+  --social-link-card-tint: rgba(255, 255, 255, 0.04);
 }

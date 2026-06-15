@@ -1,19 +1,17 @@
 ---
 import AppPanelIcon from "../ui/icons/AppPanelIcon.astro";
-import { socialLinks, type SocialLinkItem } from "../../config/social";
+import { socialDisplay } from "../../config/social";
+import type { SocialLinkId } from "../../types/social";
+import { getSocialLinks } from "../../utils/social";
 
 interface Props {
-  ids?: readonly string[];
+  ids?: readonly SocialLinkId[];
 }
 
 const { ids } = Astro.props as Props;
-const allSocialLinks: readonly SocialLinkItem[] = socialLinks;
-const socialLinkMap = new Map(allSocialLinks.map((item) => [item.id, item]));
-const selectedLinks = Array.isArray(ids)
-  ? ids
-      .map((id) => socialLinkMap.get(id))
-      .filter((item): item is SocialLinkItem => Boolean(item))
-  : allSocialLinks.filter((item) => item.enabled);
+const selectedLinks = getSocialLinks(
+  Array.isArray(ids) ? ids : socialDisplay.about,
+);
 
 function isExternalLink(href: string) {
   return /^https?:\/\//.test(href);

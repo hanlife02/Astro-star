@@ -1,6 +1,7 @@
 ---
 import { ClientRouter } from "astro:transitions";
 import { site } from "../config/site";
+import { getEnabledSocialLinks, getSocialLink } from "../utils/social";
 import katexStylesheetUrl from "katex/dist/katex.min.css?url";
 import "../style/base/route-transitions.css";
 
@@ -76,21 +77,10 @@ const initialTheme = "light";
 const siteUrl = new URL("/", site.site.url).toString();
 const personId = `${siteUrl}#person`;
 const websiteId = `${siteUrl}#website`;
-const profileEmail = site.profile.email.trim();
-const githubUsername = site.profile.githubUsername.trim();
-const bilibiliId = site.profile.bilibiliId.trim();
-const cloudMusicId = site.profile.cloudMusicId.trim();
-const sameAs = [
-  githubUsername
-    ? `https://github.com/${encodeURIComponent(githubUsername)}`
-    : "",
-  bilibiliId
-    ? `https://space.bilibili.com/${encodeURIComponent(bilibiliId)}`
-    : "",
-  cloudMusicId
-    ? `https://music.163.com/#/user/home?id=${encodeURIComponent(cloudMusicId)}`
-    : "",
-].filter(Boolean);
+const profileEmail = getSocialLink("mail")?.handle?.trim() ?? "";
+const sameAs = getEnabledSocialLinks()
+  .map((item) => item.href)
+  .filter((href) => /^https?:\/\//.test(href));
 const siteJsonLd = {
   "@context": "https://schema.org",
   "@graph": [

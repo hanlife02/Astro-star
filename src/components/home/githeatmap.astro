@@ -1,17 +1,19 @@
 ---
-import { site } from "../../config/site";
+import { getSocialLink } from "../../utils/social";
 import {
   createGitHubContributionHeatmapSkeleton,
   getGitHubContributionHeatmap,
 } from "../../utils/github-contributions";
 import "../../style/components/home/githeatmap.css";
 
-const username = site.profile.githubUsername.trim();
+const githubSocial = getSocialLink("github");
+const username = githubSocial?.handle?.trim() ?? "";
 const fetchedHeatmap = username
   ? await getGitHubContributionHeatmap(username)
   : null;
 const heatmap = fetchedHeatmap ?? createGitHubContributionHeatmapSkeleton();
-const profileHref = `https://github.com/${encodeURIComponent(username)}`;
+const profileHref =
+  githubSocial?.href ?? `https://github.com/${encodeURIComponent(username)}`;
 const contributionSummary =
   fetchedHeatmap && heatmap.total > 0
     ? `${heatmap.total.toLocaleString("en-US")} contributions in the last year`

@@ -7,6 +7,7 @@ import "../style/base/tokens.css";
 import "../style/pages/content-page.css";
 import "../style/layouts/home-layout.css";
 import { site } from "../config/site";
+import { getSocialLink } from "../utils/social";
 
 interface Props {
   mainCol2Fr?: string;
@@ -42,10 +43,7 @@ const pathSegments = pathname.split("/").filter(Boolean);
 const shellVariant =
   variant ?? (pathSegments.length > 1 ? "article" : "default");
 const foldedNavItems = site.site.nav;
-const githubUsername = site.profile.githubUsername.trim();
-const githubHref = githubUsername
-  ? `https://github.com/${encodeURIComponent(githubUsername)}`
-  : "";
+const githubHref = getSocialLink("github")?.href ?? "";
 const shellStyle = [
   mainCol2Fr ? `--main-col-2-fr: ${mainCol2Fr}` : "",
   mainCol3Fr ? `--main-col-3-fr: ${mainCol3Fr}` : "",

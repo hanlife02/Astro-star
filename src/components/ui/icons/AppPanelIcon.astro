@@ -7,11 +7,13 @@ import FigmaIcon from "./FigmaIcon.astro";
 import GithubIcon from "./GithubIcon.astro";
 import Iterm2Icon from "./Iterm2Icon.astro";
 import MailIcon from "./MailIcon.astro";
+import NetEaseMusicIcon from "./NetEaseMusicIcon.astro";
 import NotionIcon from "./NotionIcon.astro";
 import RaycastIcon from "./RaycastIcon.astro";
 import RssIcon from "./RssIcon.astro";
 import StarIcon from "./StarIcon.astro";
 import TailscaleIcon from "./TailscaleIcon.astro";
+import TelegramIcon from "./TelegramIcon.astro";
 import ThunderbirdIcon from "./ThunderbirdIcon.astro";
 import VscodeIcon from "./VscodeIcon.astro";
 import ZoteroIcon from "./ZoteroIcon.astro";
@@ -35,47 +37,39 @@ interface Props {
 const { name = "", label } = Astro.props;
 const normalizedName = name.trim().toLowerCase();
 
-const customIconKey =
-  normalizedName === "arc"
-    ? "arc"
-    : normalizedName === "bilibili"
-      ? "bilibili"
-      : normalizedName === "cloudmusic" ||
-          normalizedName === "cloud-music" ||
-          normalizedName === "cloud music" ||
-          normalizedName === "netease" ||
-          normalizedName === "netease-music" ||
-          normalizedName === "netease music"
-        ? "cloud-music"
-        : normalizedName === "github" || normalizedName === "gh"
-          ? "github"
-          : normalizedName === "figma" || normalizedName === "fg"
-            ? "figma"
-            : normalizedName === "iterm2" || normalizedName === "iterm"
-              ? "iterm2"
-              : normalizedName === "mail" ||
-                  normalizedName === "email" ||
-                  normalizedName === "@"
-                ? "mail"
-                : normalizedName === "notion"
-                  ? "notion"
-                  : normalizedName === "raycast"
-                    ? "raycast"
-                    : normalizedName === "rss"
-                      ? "rss"
-                      : normalizedName === "star"
-                        ? "star"
-                        : normalizedName === "tailscale"
-                          ? "tailscale"
-                          : normalizedName === "thunderbird"
-                            ? "thunderbird"
-                            : normalizedName === "vscode" ||
-                                normalizedName === "vs code" ||
-                                normalizedName === "vs"
-                              ? "vscode"
-                              : normalizedName === "zotero"
-                                ? "zotero"
-                                : "";
+const customIconAliases: Record<string, string> = {
+  "@": "mail",
+  arc: "arc",
+  bilibili: "bilibili",
+  "cloud music": "cloud-music",
+  "cloud-music": "cloud-music",
+  cloudmusic: "cloud-music",
+  email: "mail",
+  fg: "figma",
+  figma: "figma",
+  gh: "github",
+  github: "github",
+  iterm: "iterm2",
+  iterm2: "iterm2",
+  mail: "mail",
+  netease: "netease-music",
+  "netease music": "netease-music",
+  "netease-music": "netease-music",
+  notion: "notion",
+  raycast: "raycast",
+  rss: "rss",
+  star: "star",
+  tailscale: "tailscale",
+  telegram: "telegram",
+  tg: "telegram",
+  thunderbird: "thunderbird",
+  vs: "vscode",
+  "vs code": "vscode",
+  vscode: "vscode",
+  zotero: "zotero",
+};
+
+const customIconKey = customIconAliases[normalizedName] ?? "";
 
 const lucideIconMap: Record<string, string> = {
   as: Rocket,
@@ -91,8 +85,6 @@ const lucideIconMap: Record<string, string> = {
   project: Blocks,
   send: Send,
   sparkles: Sparkles,
-  tg: Send,
-  telegram: Send,
   tool: Wrench,
   tools: Wrench,
   work: Hammer,
@@ -110,6 +102,8 @@ const fallbackText = name.slice(0, 3).toUpperCase();
     <BilibiliIcon />
   ) : customIconKey === "cloud-music" ? (
     <CloudMusicIcon />
+  ) : customIconKey === "netease-music" ? (
+    <NetEaseMusicIcon />
   ) : customIconKey === "github" ? (
     <GithubIcon />
   ) : customIconKey === "figma" ? (
@@ -128,6 +122,8 @@ const fallbackText = name.slice(0, 3).toUpperCase();
     <StarIcon />
   ) : customIconKey === "tailscale" ? (
     <TailscaleIcon />
+  ) : customIconKey === "telegram" ? (
+    <TelegramIcon />
   ) : customIconKey === "thunderbird" ? (
     <ThunderbirdIcon />
   ) : customIconKey === "vscode" ? (
