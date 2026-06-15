@@ -5,6 +5,7 @@ background: code-rain
 ---
 
 import SocialLinks from "../../components/about/SocialLinks.astro";
+import { aboutPage } from "../../config/about";
 
 ## 我是谁
 
@@ -95,7 +96,7 @@ import SocialLinks from "../../components/about/SocialLinks.astro";
 
 您可以通过以下渠道与我联系:
 
-<SocialLinks ids={["mail", "github", "bilibili", "telegram"]} />
+<SocialLinks title={aboutPage.socialTitle} ids={aboutPage.socialIds} />
 
 ## 博客时间线
 

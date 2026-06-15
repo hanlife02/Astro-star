@@ -1,3 +1,5 @@
+import type { SocialLinkId } from "../types/social";
+
 export interface AboutPanelItem {
   icon: string;
   name: string;
@@ -16,7 +18,7 @@ export interface AboutPageConfig {
   introTitle: string;
   introParagraphs: readonly string[];
   socialTitle: string;
-  socialItems: readonly AboutPanelItem[];
+  socialIds: readonly SocialLinkId[];
   toolsTitle: string;
   toolItems: readonly AboutPanelItem[];
   blogTitle: string;
@@ -32,32 +34,7 @@ export const aboutPage = {
     "I enjoy learning how to code during my leisure time, and I am very interested in the AI4S field.",
   ],
   socialTitle: "Social",
-  socialItems: [
-    {
-      icon: "GH",
-      name: "GitHub",
-      description: "Code hub",
-      href: "https://github.com/",
-    },
-    {
-      icon: "@",
-      name: "Email",
-      description: "Direct contact",
-      href: "mailto:hello@example.com",
-    },
-    {
-      icon: "RSS",
-      name: "RSS",
-      description: "Feed updates",
-      href: "/rss.xml",
-    },
-    {
-      icon: "TG",
-      name: "Telegram",
-      description: "Quick chat",
-      href: "https://telegram.org/",
-    },
-  ],
+  socialIds: ["mail", "github", "bilibili", "telegram"],
   toolsTitle: "Tools",
   toolItems: [
     {
