@@ -117,72 +117,100 @@ html:lang(zh-CN) .content-page--article {
 
 .article-comments {
   margin-top: clamp(1.65rem, 1.35rem + 0.75vw, 2.1rem);
-  padding-top: clamp(0.85rem, 0.72rem + 0.35vw, 1.1rem);
-  border-top: 1px solid color-mix(in srgb, var(--line) 10%, transparent);
+  padding-top: clamp(1rem, 0.84rem + 0.45vw, 1.32rem);
+  border-top: 1px solid color-mix(in srgb, var(--line) 14%, transparent);
 }
 
 .article-comments-header {
-  margin: 0 0 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
+  margin: 0 0 clamp(1rem, 0.88rem + 0.35vw, 1.28rem);
+  display: grid;
+  grid-template-columns: auto minmax(1.8rem, 1fr);
+  gap: 0.36rem 0.72rem;
+  align-items: end;
 }
 
-.article-comments-title {
-  margin: 0;
-  color: var(--line);
-  font-size: var(--type-lg);
-  font-weight: 600;
-  line-height: 1.3;
+.article-comments-header::after {
+  content: "";
+  height: 1px;
+  margin-bottom: 0.34rem;
+  background: color-mix(in srgb, var(--line) 34%, transparent);
 }
 
-.article-comments-description {
+.content-page--article .content-page-body .article-comments-title {
   margin: 0;
+  color: transparent;
+  font-size: clamp(1.45rem, 1.18rem + 0.55vw, 2.05rem);
+  font-weight: 400;
+  line-height: 1.04;
+  -webkit-text-stroke: 0.8px var(--line);
+  text-stroke: 0.8px var(--line);
+}
+
+.content-page--article .content-page-body .article-comments-description {
+  margin: 0;
+  grid-column: 1 / -1;
   color: color-mix(in srgb, var(--line) 66%, transparent);
   font-size: var(--type-sm);
   line-height: 1.6;
 }
 
-.article-comments-empty {
+.content-page--article .content-page-body .article-comments-empty {
   margin: 0;
-  padding: 1rem 1.1rem;
-  border: 1px dashed color-mix(in srgb, var(--line) 18%, transparent);
-  border-radius: var(--radius-md);
+  padding: 0.78rem 0 0.78rem 0.86rem;
+  border: 0;
+  border-left: 1px solid color-mix(in srgb, var(--line) 24%, transparent);
+  border-radius: 0;
   color: color-mix(in srgb, var(--line) 72%, transparent);
   font-size: var(--type-sm);
   line-height: 1.65;
-  background: color-mix(in srgb, var(--line) 2.5%, transparent);
+  background: transparent;
 }
 
-.article-comments-empty code {
+.content-page--article .content-page-body .article-comments-empty code {
   font: inherit;
   color: var(--line);
 }
 
 .article-comments-thread {
-  --comment-font-size: 13.5px;
-  --comment-body-font-size: 13.4px;
-  --comment-nick-font-size: 13.6px;
+  --comment-font-size: 13.2px;
+  --comment-body-font-size: 13.2px;
+  --comment-nick-font-size: 13.3px;
   --comment-meta-font-size: 11.2px;
-  --comment-child-body-font-size: 12.7px;
-  --comment-child-nick-font-size: 12.8px;
-  --comment-child-meta-font-size: 10.8px;
-  --comment-button-font-size: 11.5px;
-  --comment-action-font-size: 14px;
-  --comment-count-font-size: 13.6px;
-  --comment-thread-gap: 1rem;
-  --comment-panel-offset: 0.7rem;
-  --comment-editor-min-height: 6.25rem;
-  --comment-editor-margin: 0.55rem;
-  --comment-footer-margin: 0.45rem 0.65rem 0.65rem;
-  --comment-meta-head-margin: 0.65rem;
-  --comment-card-padding-start: 0.82rem;
-  --comment-card-padding-end: 0.86rem;
-  --comment-card-offset: 0.25rem;
-  --comment-avatar-gap: 0.72rem;
-  --comment-reply-indent: 0.82rem;
-  --comment-reply-card-padding-start: 0.56rem;
-  --comment-reply-card-padding-end: 0.52rem;
+  --comment-child-body-font-size: 13px;
+  --comment-child-nick-font-size: 13.1px;
+  --comment-child-meta-font-size: 11px;
+  --comment-button-font-size: 11.4px;
+  --comment-action-font-size: 13px;
+  --comment-count-font-size: 13.2px;
+  --comment-thread-gap: 0.68rem;
+  --comment-panel-offset: 0.55rem;
+  --comment-editor-min-height: 5.65rem;
+  --comment-editor-margin: 0.46rem;
+  --comment-footer-margin: 0.36rem 0.55rem 0.55rem;
+  --comment-meta-head-margin: 0.5rem;
+  --comment-card-padding-start: 0.58rem;
+  --comment-card-padding-end: 0.62rem;
+  --comment-card-offset: 0.16rem;
+  --comment-avatar-gap: 0.62rem;
+  --comment-reply-indent: 0.62rem;
+  --comment-reply-card-padding-start: 0.34rem;
+  --comment-reply-card-padding-end: 0.3rem;
+  --comment-paper: #ffffff;
+  --comment-surface: color-mix(
+    in srgb,
+    var(--comment-paper) 86%,
+    var(--line) 2%
+  );
+  --comment-surface-quiet: color-mix(
+    in srgb,
+    var(--comment-paper) 92%,
+    var(--line) 1.5%
+  );
+  --comment-surface-hover: color-mix(
+    in srgb,
+    var(--comment-paper) 82%,
+    var(--line) 5%
+  );
   --waline-font-size: var(--comment-font-size);
   --waline-theme-color: var(--accent);
   --waline-active-color: color-mix(in srgb, var(--accent) 76%, transparent);
@@ -191,10 +219,14 @@ html:lang(zh-CN) .content-page--article {
   --waline-light-grey: color-mix(in srgb, var(--line) 42%, transparent);
   --waline-dark-grey: color-mix(in srgb, var(--line) 72%, transparent);
   --waline-bg-color: transparent;
-  --waline-bg-color-light: color-mix(in srgb, var(--line) 2%, transparent);
-  --waline-bg-color-hover: color-mix(in srgb, var(--line) 4%, transparent);
+  --waline-bg-color-light: var(--comment-surface-quiet);
+  --waline-bg-color-hover: var(--comment-surface-hover);
   --waline-border-color: color-mix(in srgb, var(--line) 10%, transparent);
-  --waline-disable-bg-color: color-mix(in srgb, var(--line) 3%, transparent);
+  --waline-disable-bg-color: color-mix(
+    in srgb,
+    var(--comment-paper) 90%,
+    var(--line) 4%
+  );
   --waline-disable-color: color-mix(in srgb, var(--line) 34%, transparent);
   --waline-info-bg-color: transparent;
   --waline-info-color: color-mix(in srgb, var(--line) 44%, transparent);
@@ -203,17 +235,225 @@ html:lang(zh-CN) .content-page--article {
   --waline-border: 1px solid var(--waline-border-color);
   --waline-avatar-size: 2.05rem;
   --waline-m-avatar-size: 1.48rem;
+  color-scheme: light;
   color: color-mix(in srgb, var(--line) 72%, transparent);
+}
+
+:root[data-theme="dark"] .article-comments-thread {
+  --comment-paper: #000000;
+  color-scheme: dark;
 }
 
 .article-comments-thread[data-waline] *,
 .article-comments-thread [data-waline] * {
-  line-height: 1.58;
+  line-height: 1.5;
 }
 
 .article-comments-thread[data-waline] p,
 .article-comments-thread [data-waline] p {
   color: color-mix(in srgb, var(--line) 70%, transparent);
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.article-comments-thread [data-waline] a {
+  color: color-mix(in srgb, var(--line) 84%, transparent);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--line) 22%, transparent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+
+.article-comments-thread [data-waline] a:hover,
+.article-comments-thread [data-waline] a:focus-visible {
+  color: var(--line);
+  text-decoration-color: color-mix(in srgb, var(--line) 42%, transparent);
+}
+
+.article-comments-thread [data-waline] :is(h1, h2, h3, h4, h5, h6) {
+  margin: 0.64em 0 0.28em;
+  color: color-mix(in srgb, var(--line) 82%, transparent);
+  font-weight: 700;
+  line-height: 1.26;
+}
+
+.article-comments-thread [data-waline] h1 {
+  font-size: 1.2em;
+}
+
+.article-comments-thread [data-waline] h2 {
+  font-size: 1.14em;
+}
+
+.article-comments-thread [data-waline] h3 {
+  font-size: 1.08em;
+}
+
+.article-comments-thread [data-waline] :is(h4, h5, h6) {
+  font-size: 1.02em;
+}
+
+.article-comments-thread [data-waline] :is(ol, ul) {
+  margin: 0.34rem 0 0.42rem 1.16rem;
+  padding: 0;
+}
+
+.article-comments-thread [data-waline] li {
+  padding-inline-start: 0.08rem;
+}
+
+.article-comments-thread [data-waline] li + li {
+  margin-top: 0.14rem;
+}
+
+.article-comments-thread [data-waline] li > :first-child {
+  margin-top: 0;
+}
+
+.article-comments-thread [data-waline] li > :last-child {
+  margin-bottom: 0;
+}
+
+.article-comments-thread [data-waline] li:has(> input[type="checkbox"]) {
+  list-style: none;
+}
+
+.article-comments-thread [data-waline] input[type="checkbox"] {
+  width: 0.95em;
+  height: 0.95em;
+  margin: 0 0.36em 0 -1.14rem;
+  vertical-align: -0.14em;
+  accent-color: color-mix(in srgb, var(--line) 66%, transparent);
+}
+
+.article-comments-thread [data-waline] table {
+  display: block;
+  max-width: 100%;
+  margin: 0.5rem 0;
+  overflow-x: auto;
+  border-collapse: collapse;
+  border-spacing: 0;
+  font-size: 0.95em;
+  -webkit-overflow-scrolling: touch;
+}
+
+.article-comments-thread [data-waline] :is(th, td) {
+  padding: 0.34rem 0.46rem;
+  border: 1px solid color-mix(in srgb, var(--line) 12%, transparent);
+  text-align: start;
+  vertical-align: top;
+}
+
+.article-comments-thread [data-waline] th {
+  background: color-mix(in srgb, var(--comment-paper) 86%, var(--line) 6%);
+  color: color-mix(in srgb, var(--line) 78%, transparent);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.article-comments-thread [data-waline] td {
+  color: color-mix(in srgb, var(--line) 66%, transparent);
+}
+
+.article-comments-thread
+  [data-waline]
+  img:not(.wl-emoji):not(.vemoji):not(.wl-user-avatar) {
+  display: block;
+  max-width: 100%;
+  max-height: min(22rem, 55vh);
+  margin: 0.5rem 0;
+  border-radius: 0.4rem;
+  object-fit: contain;
+}
+
+.article-comments-thread [data-waline] code,
+.article-comments-thread [data-waline] pre {
+  border-radius: 0.32rem;
+  background: color-mix(in srgb, var(--comment-paper) 84%, var(--line) 8%);
+  color: color-mix(in srgb, var(--line) 76%, transparent);
+  font-family: var(--content-code-font-family);
+  font-size: 0.9em;
+}
+
+.article-comments-thread [data-waline] pre {
+  border: 1px solid color-mix(in srgb, var(--line) 10%, transparent);
+}
+
+.article-comments-thread [data-waline] blockquote {
+  margin: 0.55rem 0;
+  padding: 0.12rem 0 0.12rem 0.72rem;
+  border-inline-start: 1px solid
+    color-mix(in srgb, var(--line) 22%, transparent);
+  color: color-mix(in srgb, var(--line) 58%, transparent);
+}
+
+.article-comments-thread [data-waline] .article-comment-alert {
+  --comment-alert-accent: color-mix(in srgb, var(--line) 46%, transparent);
+  margin: 0.58rem 0;
+  padding: 0.5rem 0.66rem 0.52rem 0.72rem;
+  border: 1px solid
+    color-mix(in srgb, var(--comment-alert-accent) 32%, transparent);
+  border-inline-start-width: 0.2rem;
+  border-inline-start-color: var(--comment-alert-accent);
+  border-radius: 0.42rem;
+  background: color-mix(
+    in srgb,
+    var(--comment-paper) 90%,
+    var(--comment-alert-accent) 8%
+  );
+  color: color-mix(in srgb, var(--line) 68%, transparent);
+}
+
+.article-comments-thread [data-waline] .article-comment-alert--note {
+  --comment-alert-accent: #1f6feb;
+}
+
+.article-comments-thread [data-waline] .article-comment-alert--tip {
+  --comment-alert-accent: #2da44e;
+}
+
+.article-comments-thread [data-waline] .article-comment-alert--important {
+  --comment-alert-accent: #8250df;
+}
+
+.article-comments-thread [data-waline] .article-comment-alert--warning {
+  --comment-alert-accent: #bf8700;
+}
+
+.article-comments-thread [data-waline] .article-comment-alert--caution {
+  --comment-alert-accent: #cf222e;
+}
+
+.article-comments-thread [data-waline] .article-comment-alert-label {
+  margin-bottom: 0.22rem;
+  color: var(--comment-alert-accent);
+  font-weight: 700;
+  line-height: 1.28;
+}
+
+.article-comments-thread [data-waline] .article-comment-alert > :last-child {
+  margin-bottom: 0;
+}
+
+.article-comments-thread .article-comment-tikz {
+  display: block;
+  max-width: 100%;
+  margin: 0.46rem 0;
+  padding: 0.44rem;
+  overflow: auto hidden;
+  border: 1px solid color-mix(in srgb, var(--line) 10%, transparent);
+  border-radius: 0.38rem;
+  background: var(--comment-surface-quiet);
+}
+
+.article-comments-thread .article-comment-tikz > div {
+  max-width: 100%;
+}
+
+.article-comments-thread .article-comment-tikz svg {
+  display: block;
+  max-width: min(100%, 28rem);
+  height: auto;
 }
 
 .article-comments-thread .wl-comment {
@@ -222,7 +462,7 @@ html:lang(zh-CN) .content-page--article {
 
 .article-comments-thread .wl-login-info {
   max-width: 3.8rem;
-  margin-top: 0.35rem;
+  margin-top: 0.22rem;
 }
 
 .article-comments-thread .wl-login-nick {
@@ -241,14 +481,20 @@ html:lang(zh-CN) .content-page--article {
 
 .article-comments-thread .wl-panel {
   margin: 0 0 0 var(--comment-panel-offset);
-  border-color: color-mix(in srgb, var(--line) 11%, transparent);
+  border-color: color-mix(in srgb, var(--line) 14%, transparent);
   border-radius: 0.5rem;
-  background: color-mix(in srgb, var(--line) 1.8%, transparent);
+  background: var(--comment-surface);
+  box-shadow: inset 0 1px 0
+    color-mix(in srgb, var(--comment-paper) 70%, transparent);
 }
 
 .article-comments-thread .wl-header {
   padding: 0 0.38rem;
-  border-bottom: 1px solid color-mix(in srgb, var(--line) 8%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--line) 10%, transparent);
+}
+
+.article-comments-thread .wl-header-item:not(:last-child) {
+  border-color: color-mix(in srgb, var(--line) 10%, transparent);
 }
 
 .article-comments-thread .wl-header label {
@@ -262,6 +508,7 @@ html:lang(zh-CN) .content-page--article {
   padding: 0.5rem 0.35rem;
   color: color-mix(in srgb, var(--line) 68%, transparent);
   font-size: var(--comment-font-size);
+  background: transparent;
 }
 
 .article-comments-thread .wl-editor {
@@ -271,17 +518,25 @@ html:lang(zh-CN) .content-page--article {
   color: color-mix(in srgb, var(--line) 72%, transparent);
   font-size: var(--comment-body-font-size);
   line-height: 1.58;
+  background: color-mix(in srgb, var(--comment-paper) 97%, var(--line) 3%);
 }
 
 .article-comments-thread .wl-editor:focus,
 .article-comments-thread .wl-input:focus {
-  background: color-mix(in srgb, var(--line) 3.5%, transparent);
+  outline: 1px solid color-mix(in srgb, var(--line) 20%, transparent);
+  outline-offset: 0;
+  background: color-mix(in srgb, var(--comment-paper) 94%, var(--line) 6%);
+}
+
+.article-comments-thread .wl-input::placeholder,
+.article-comments-thread .wl-editor::placeholder {
+  color: color-mix(in srgb, var(--line) 34%, transparent);
 }
 
 .article-comments-thread .wl-footer {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem 0.55rem;
+  gap: 0.34rem 0.5rem;
   align-items: center;
   margin: var(--comment-footer-margin);
 }
@@ -289,6 +544,12 @@ html:lang(zh-CN) .content-page--article {
 .article-comments-thread .wl-action {
   color: color-mix(in srgb, var(--line) 42%, transparent);
   font-size: var(--comment-action-font-size);
+}
+
+.article-comments-thread .wl-action:hover,
+.article-comments-thread .wl-action:focus-visible,
+.article-comments-thread .wl-action.active {
+  color: var(--line);
 }
 
 .article-comments-thread .wl-info .wl-text-number {
@@ -307,6 +568,11 @@ html:lang(zh-CN) .content-page--article {
     border-color 0.18s ease,
     background 0.18s ease,
     color 0.18s ease;
+}
+
+.article-comments-thread .wl-btn:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--line) 28%, transparent);
+  outline-offset: 0.14rem;
 }
 
 .article-comments-thread .wl-btn.primary {
@@ -331,11 +597,11 @@ html:lang(zh-CN) .content-page--article {
 .article-comments-thread .wl-meta-head {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.35rem 0.85rem;
+  gap: 0.28rem 0.72rem;
   align-items: baseline;
   justify-content: space-between;
   margin-top: var(--comment-meta-head-margin);
-  padding: 0.2rem 0 0.35rem;
+  padding: 0.14rem 0 0.28rem;
   border-bottom: 1px solid color-mix(in srgb, var(--line) 7%, transparent);
 }
 
@@ -348,12 +614,13 @@ html:lang(zh-CN) .content-page--article {
 .article-comments-thread .wl-sort {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.65rem;
+  gap: 0.52rem;
   margin: 0;
   padding: 0;
 }
 
 .article-comments-thread .wl-sort li {
+  position: relative;
   color: color-mix(in srgb, var(--line) 36%, transparent);
   font-size: var(--comment-meta-font-size);
 }
@@ -366,6 +633,16 @@ html:lang(zh-CN) .content-page--article {
   color: color-mix(in srgb, var(--line) 64%, transparent);
 }
 
+.article-comments-thread .wl-sort li.active::after {
+  position: absolute;
+  right: 0;
+  bottom: -0.18rem;
+  left: 0;
+  height: 1px;
+  background: color-mix(in srgb, var(--line) 34%, transparent);
+  content: "";
+}
+
 .article-comments-thread .wl-card-item {
   align-items: flex-start;
   padding: var(--comment-card-padding-start) 0 var(--comment-card-padding-end);
@@ -374,13 +651,13 @@ html:lang(zh-CN) .content-page--article {
 .article-comments-thread .wl-cards .wl-user {
   --avatar-size: var(--waline-avatar-size);
   flex-shrink: 0;
-  margin-top: 0.12rem;
+  margin-top: 0.08rem;
   margin-inline-end: var(--comment-avatar-gap);
 }
 
 .article-comments-thread .wl-card {
   min-width: 0;
-  padding-bottom: 0.72rem;
+  padding-bottom: 0.5rem;
   border-bottom: 1px solid color-mix(in srgb, var(--line) 8%, transparent);
   border-radius: 0;
 }
@@ -392,12 +669,12 @@ html:lang(zh-CN) .content-page--article {
 .article-comments-thread .wl-card .wl-head {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.2rem 0.55rem;
+  gap: 0.16rem 0.46rem;
   align-items: center;
-  min-height: 1.35rem;
+  min-height: 1.18rem;
   overflow: visible;
   color: color-mix(in srgb, var(--line) 58%, transparent);
-  line-height: 1.3;
+  line-height: 1.25;
 }
 
 .article-comments-thread .wl-card .wl-head .wl-nick,
@@ -407,6 +684,16 @@ html:lang(zh-CN) .content-page--article {
   font-size: var(--comment-nick-font-size);
   font-weight: 600;
   line-height: 1.25;
+}
+
+.article-comments-thread .wl-card .wl-badge {
+  margin-inline-end: 0;
+  padding: 0.04rem 0.28rem;
+  border-color: color-mix(in srgb, var(--line) 20%, transparent);
+  border-radius: 999px;
+  color: color-mix(in srgb, var(--line) 54%, transparent);
+  font-size: var(--comment-child-meta-font-size);
+  line-height: 1.35;
 }
 
 .article-comments-thread .wl-card .wl-time {
@@ -419,8 +706,8 @@ html:lang(zh-CN) .content-page--article {
 .article-comments-thread .wl-card .wl-meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.22rem 0.45rem;
-  margin-top: 0.32rem;
+  gap: 0.16rem 0.38rem;
+  margin-top: 0.2rem;
   line-height: 1.25;
 }
 
@@ -434,16 +721,28 @@ html:lang(zh-CN) .content-page--article {
 }
 
 .article-comments-thread .wl-card .wl-content {
-  margin-bottom: 0.5rem;
-  padding-top: 0.58rem;
+  margin-bottom: 0.34rem;
+  padding-top: 0.34rem;
   color: color-mix(in srgb, var(--line) 70%, transparent);
   font-size: var(--comment-body-font-size);
-  line-height: 1.68;
+  line-height: 1.56;
 }
 
 .article-comments-thread .wl-card .wl-content p {
-  margin: 0.28em 0;
+  margin: 0.18em 0;
   color: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.article-comments-thread .wl-card .wl-warning {
+  margin-top: 0.62rem;
+  padding: 0.48rem 0.68rem;
+  border-color: color-mix(in srgb, var(--line) 16%, transparent);
+  border-radius: 0.38rem;
+  background: var(--comment-surface-quiet);
+  color: color-mix(in srgb, var(--line) 54%, transparent);
+  font-size: var(--comment-meta-font-size);
 }
 
 .article-comments-thread .wl-card .wl-content > :first-child {
@@ -458,7 +757,7 @@ html:lang(zh-CN) .content-page--article {
   float: none;
   display: inline-flex;
   align-items: center;
-  gap: 0.16rem;
+  gap: 0.12rem;
   margin-inline-start: auto;
   line-height: 1;
 }
@@ -476,8 +775,8 @@ html:lang(zh-CN) .content-page--article {
 .article-comments-thread
   .wl-card
   :is(.wl-delete, .wl-like, .wl-reply, .wl-edit, .wl-rss) {
-  width: 1.35em;
-  height: 1.35em;
+  width: 1.25em;
+  height: 1.25em;
   padding: 0;
   color: color-mix(in srgb, var(--line) 42%, transparent);
   font-size: var(--comment-action-font-size);
@@ -495,8 +794,8 @@ html:lang(zh-CN) .content-page--article {
 }
 
 .article-comments-thread .wl-card .wl-quote {
-  margin: 0.7rem 0 0;
-  padding: 0.16rem 0 0.08rem var(--comment-reply-indent);
+  margin: 0.42rem 0 0;
+  padding: 0.08rem 0 0.02rem var(--comment-reply-indent);
   border-inline-start: 1px solid
     color-mix(in srgb, var(--line) 14%, transparent);
 }
@@ -509,14 +808,14 @@ html:lang(zh-CN) .content-page--article {
 }
 
 .article-comments-thread .wl-card .wl-quote .wl-card-item + .wl-card-item {
-  margin-top: 0.08rem;
+  margin-top: 0.03rem;
 }
 
 .article-comments-thread .wl-card .wl-quote .wl-user {
   --avatar-size: var(--waline-m-avatar-size);
   flex-shrink: 0;
-  margin-top: 0.08rem;
-  margin-inline-end: calc(var(--comment-avatar-gap) * 0.68);
+  margin-top: 0.04rem;
+  margin-inline-end: calc(var(--comment-avatar-gap) * 0.72);
 }
 
 .article-comments-thread .wl-card .wl-quote .wl-user .wl-user-avatar {
@@ -540,8 +839,8 @@ html:lang(zh-CN) .content-page--article {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  min-height: 1.2rem;
-  gap: 0.18rem 0.42rem;
+  min-height: 1.1rem;
+  gap: 0.14rem 0.36rem;
 }
 
 .article-comments-thread .wl-card .wl-quote .wl-card .wl-head .wl-nick,
@@ -584,8 +883,8 @@ html:lang(zh-CN) .content-page--article {
 }
 
 .article-comments-thread .wl-card .wl-quote .wl-card .wl-meta {
-  gap: 0.16rem 0.36rem;
-  margin-top: 0.24rem;
+  gap: 0.12rem 0.3rem;
+  margin-top: 0.16rem;
   opacity: 0.72;
 }
 
@@ -595,17 +894,18 @@ html:lang(zh-CN) .content-page--article {
 }
 
 .article-comments-thread .wl-card .wl-quote .wl-card .wl-content {
-  margin-bottom: 0.34rem;
-  padding-top: 0.32rem;
+  margin-bottom: 0.24rem;
+  padding-top: 0.2rem;
   color: color-mix(in srgb, var(--line) 66%, transparent);
   font-size: var(--comment-child-body-font-size);
-  line-height: 1.64;
+  line-height: 1.52;
 }
 
 .article-comments-thread .wl-card .wl-quote .wl-card .wl-content .wl-reply-to {
-  margin: 0 0.3em 0 0;
-  color: color-mix(in srgb, var(--line) 40%, transparent);
-  font-size: 0.92em;
+  margin: 0 0.24em 0 0;
+  color: color-mix(in srgb, var(--line) 52%, transparent);
+  font-size: 1em;
+  line-height: inherit;
 }
 
 .article-comments-thread
@@ -619,33 +919,49 @@ html:lang(zh-CN) .content-page--article {
 }
 
 .article-comments-thread .wl-card .wl-quote .wl-quote {
-  margin-top: 0.44rem;
+  margin-top: 0.28rem;
   padding: 0;
   border-inline-start: 0;
 }
 
+.article-comments-thread .wl-empty,
+.article-comments-thread .wl-loading,
+.article-comments-thread .wl-operation {
+  padding: 0.86rem 0;
+  color: color-mix(in srgb, var(--line) 42%, transparent);
+  font-size: var(--comment-meta-font-size);
+}
+
+.article-comments-thread .wl-loading svg {
+  color: color-mix(in srgb, var(--line) 54%, transparent);
+}
+
+.article-comments-thread .wl-operation .wl-btn {
+  margin: 0.42rem 0;
+}
+
 @media (min-width: 1280px) {
   .article-comments-thread {
-    --comment-font-size: 13.8px;
-    --comment-body-font-size: 13.9px;
-    --comment-nick-font-size: 14px;
-    --comment-meta-font-size: 11.4px;
-    --comment-child-body-font-size: 13px;
-    --comment-child-nick-font-size: 13px;
-    --comment-child-meta-font-size: 11px;
-    --comment-button-font-size: 12px;
-    --comment-action-font-size: 15px;
-    --comment-count-font-size: 14px;
-    --comment-thread-gap: 1.08rem;
-    --comment-panel-offset: 0.75rem;
-    --comment-editor-min-height: 6.6rem;
-    --comment-meta-head-margin: 0.72rem;
-    --comment-card-padding-start: 0.9rem;
-    --comment-card-padding-end: 0.95rem;
-    --comment-avatar-gap: 0.78rem;
-    --comment-reply-indent: 0.88rem;
-    --waline-avatar-size: 2.16rem;
-    --waline-m-avatar-size: 1.56rem;
+    --comment-font-size: 13.4px;
+    --comment-body-font-size: 13.45px;
+    --comment-nick-font-size: 13.55px;
+    --comment-meta-font-size: 11.35px;
+    --comment-child-body-font-size: 13.2px;
+    --comment-child-nick-font-size: 13.3px;
+    --comment-child-meta-font-size: 11.1px;
+    --comment-button-font-size: 11.6px;
+    --comment-action-font-size: 13.4px;
+    --comment-count-font-size: 13.45px;
+    --comment-thread-gap: 0.74rem;
+    --comment-panel-offset: 0.58rem;
+    --comment-editor-min-height: 5.85rem;
+    --comment-meta-head-margin: 0.55rem;
+    --comment-card-padding-start: 0.62rem;
+    --comment-card-padding-end: 0.68rem;
+    --comment-avatar-gap: 0.66rem;
+    --comment-reply-indent: 0.66rem;
+    --waline-avatar-size: 1.98rem;
+    --waline-m-avatar-size: 1.42rem;
   }
 }
 
@@ -658,28 +974,28 @@ html:lang(zh-CN) .content-page--article {
   .article-comments-thread {
     --comment-font-size: 13px;
     --comment-body-font-size: 13px;
-    --comment-nick-font-size: 13.2px;
+    --comment-nick-font-size: 13.1px;
     --comment-meta-font-size: 11px;
-    --comment-child-body-font-size: 12.4px;
-    --comment-child-nick-font-size: 12.5px;
-    --comment-child-meta-font-size: 10.5px;
-    --comment-button-font-size: 11.3px;
-    --comment-action-font-size: 14px;
-    --comment-count-font-size: 13.4px;
-    --comment-thread-gap: 0.9rem;
-    --comment-panel-offset: 0.6rem;
-    --comment-editor-min-height: 5.9rem;
-    --comment-footer-margin: 0.42rem 0.58rem 0.6rem;
-    --comment-meta-head-margin: 0.58rem;
-    --comment-card-padding-start: 0.76rem;
-    --comment-card-padding-end: 0.78rem;
-    --comment-card-offset: 0.2rem;
-    --comment-avatar-gap: 0.62rem;
-    --comment-reply-indent: 0.68rem;
-    --comment-reply-card-padding-start: 0.5rem;
-    --comment-reply-card-padding-end: 0.46rem;
-    --waline-avatar-size: 1.92rem;
-    --waline-m-avatar-size: 1.38rem;
+    --comment-child-body-font-size: 12.8px;
+    --comment-child-nick-font-size: 12.9px;
+    --comment-child-meta-font-size: 10.8px;
+    --comment-button-font-size: 11.2px;
+    --comment-action-font-size: 12.8px;
+    --comment-count-font-size: 13px;
+    --comment-thread-gap: 0.62rem;
+    --comment-panel-offset: 0.48rem;
+    --comment-editor-min-height: 5.35rem;
+    --comment-footer-margin: 0.34rem 0.5rem 0.5rem;
+    --comment-meta-head-margin: 0.46rem;
+    --comment-card-padding-start: 0.54rem;
+    --comment-card-padding-end: 0.58rem;
+    --comment-card-offset: 0.12rem;
+    --comment-avatar-gap: 0.56rem;
+    --comment-reply-indent: 0.56rem;
+    --comment-reply-card-padding-start: 0.32rem;
+    --comment-reply-card-padding-end: 0.28rem;
+    --waline-avatar-size: 1.76rem;
+    --waline-m-avatar-size: 1.28rem;
   }
 
   .article-comments-thread .wl-meta-head {
@@ -689,31 +1005,31 @@ html:lang(zh-CN) .content-page--article {
 
 @media (max-width: 580px) {
   .article-comments-thread {
-    --comment-font-size: 12.6px;
-    --comment-body-font-size: 12.6px;
+    --comment-font-size: 12.7px;
+    --comment-body-font-size: 12.7px;
     --comment-nick-font-size: 12.8px;
-    --comment-meta-font-size: 10.6px;
-    --comment-child-body-font-size: 12px;
-    --comment-child-nick-font-size: 12px;
-    --comment-child-meta-font-size: 10.2px;
-    --comment-button-font-size: 11px;
-    --comment-action-font-size: 13.5px;
-    --comment-count-font-size: 12.8px;
-    --comment-thread-gap: 0.8rem;
-    --comment-panel-offset: 0.5rem;
-    --comment-editor-min-height: 5.45rem;
-    --comment-editor-margin: 0.5rem;
-    --comment-footer-margin: 0.4rem 0.55rem 0.58rem;
-    --comment-meta-head-margin: 0.52rem;
-    --comment-card-padding-start: 0.7rem;
-    --comment-card-padding-end: 0.72rem;
-    --comment-card-offset: 0.12rem;
-    --comment-avatar-gap: 0.54rem;
-    --comment-reply-indent: 0.56rem;
-    --comment-reply-card-padding-start: 0.44rem;
-    --comment-reply-card-padding-end: 0.4rem;
-    --waline-avatar-size: 1.72rem;
-    --waline-m-avatar-size: 1.24rem;
+    --comment-meta-font-size: 10.7px;
+    --comment-child-body-font-size: 12.5px;
+    --comment-child-nick-font-size: 12.6px;
+    --comment-child-meta-font-size: 10.5px;
+    --comment-button-font-size: 10.9px;
+    --comment-action-font-size: 12.5px;
+    --comment-count-font-size: 12.7px;
+    --comment-thread-gap: 0.56rem;
+    --comment-panel-offset: 0.38rem;
+    --comment-editor-min-height: 5.1rem;
+    --comment-editor-margin: 0.42rem;
+    --comment-footer-margin: 0.32rem 0.46rem 0.46rem;
+    --comment-meta-head-margin: 0.42rem;
+    --comment-card-padding-start: 0.48rem;
+    --comment-card-padding-end: 0.52rem;
+    --comment-card-offset: 0.08rem;
+    --comment-avatar-gap: 0.48rem;
+    --comment-reply-indent: 0.48rem;
+    --comment-reply-card-padding-start: 0.28rem;
+    --comment-reply-card-padding-end: 0.24rem;
+    --waline-avatar-size: 1.58rem;
+    --waline-m-avatar-size: 1.16rem;
   }
 
   .article-comments-thread .wl-meta-head {
@@ -744,28 +1060,43 @@ html:lang(zh-CN) .content-page--article {
     padding-top: 0.68rem;
   }
 
+  .article-comments-header {
+    grid-template-columns: 1fr;
+    gap: 0.28rem;
+  }
+
+  .article-comments-header::after {
+    grid-row: 2;
+    width: 2.4rem;
+    margin: 0;
+  }
+
+  .article-comments-description {
+    grid-row: 3;
+  }
+
   .article-comments-thread {
-    --comment-font-size: 12.2px;
+    --comment-font-size: 12.4px;
     --comment-body-font-size: 12.4px;
     --comment-nick-font-size: 12.5px;
-    --comment-meta-font-size: 10.3px;
-    --comment-child-body-font-size: 11.7px;
-    --comment-child-nick-font-size: 11.8px;
-    --comment-child-meta-font-size: 10px;
-    --comment-button-font-size: 10.8px;
-    --comment-action-font-size: 13px;
+    --comment-meta-font-size: 10.5px;
+    --comment-child-body-font-size: 12.2px;
+    --comment-child-nick-font-size: 12.3px;
+    --comment-child-meta-font-size: 10.3px;
+    --comment-button-font-size: 10.7px;
+    --comment-action-font-size: 12.2px;
     --comment-count-font-size: 12.4px;
     --comment-panel-offset: 0;
-    --comment-editor-min-height: 5.15rem;
-    --comment-editor-margin: 0.45rem;
-    --comment-footer-margin: 0.36rem 0.48rem 0.52rem;
+    --comment-editor-min-height: 4.9rem;
+    --comment-editor-margin: 0.38rem;
+    --comment-footer-margin: 0.3rem 0.42rem 0.42rem;
     --comment-card-offset: 0;
-    --comment-avatar-gap: 0.46rem;
-    --comment-reply-indent: 0.44rem;
-    --comment-reply-card-padding-start: 0.4rem;
-    --comment-reply-card-padding-end: 0.36rem;
-    --waline-avatar-size: 1.58rem;
-    --waline-m-avatar-size: 1.12rem;
+    --comment-avatar-gap: 0.42rem;
+    --comment-reply-indent: 0.4rem;
+    --comment-reply-card-padding-start: 0.24rem;
+    --comment-reply-card-padding-end: 0.22rem;
+    --waline-avatar-size: 1.46rem;
+    --waline-m-avatar-size: 1.08rem;
   }
 
   .article-comments-thread .wl-login-info {
@@ -832,7 +1163,11 @@ html:lang(zh-CN) .content-page--article {
   float: none;
   display: inline-flex;
   align-items: baseline;
-  margin: 0 0.38em 0 0;
+  margin: 0 0.24em 0 0;
+  color: color-mix(in srgb, var(--line) 52%, transparent);
+  font-size: 1em;
+  line-height: inherit;
+  vertical-align: baseline;
 }
 
 .article-comments-thread .wl-card .wl-content > .wl-reply-to + div {
@@ -864,6 +1199,29 @@ html:lang(zh-CN) .content-page--article {
   + div
   > p:first-child {
   display: inline;
+}
+
+.content-page--article
+  .content-page-body
+  .article-comments-thread
+  .wl-card
+  .wl-content
+  :is(p, li, blockquote) {
+  color: inherit;
+  font: inherit;
+  line-height: inherit;
+}
+
+.content-page--article
+  .content-page-body
+  .article-comments-thread
+  .wl-card
+  .wl-content
+  > .wl-reply-to
+  + div
+  > p {
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 :root[data-theme="dark"] .article-comments-thread .wl-btn.primary {
