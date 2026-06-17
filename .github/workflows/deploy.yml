@@ -65,6 +65,9 @@ jobs:
 
       - name: Build
         if: steps.cache.outputs.cache-hit != 'true'
+        env:
+          WALINE_SERVER_URL: ${{ secrets.WALINE_SERVER_URL || secrets.PUBLIC_WALINE_SERVER_URL || vars.WALINE_SERVER_URL || vars.PUBLIC_WALINE_SERVER_URL }}
+          PUBLIC_WALINE_SERVER_URL: ${{ secrets.PUBLIC_WALINE_SERVER_URL || secrets.WALINE_SERVER_URL || vars.PUBLIC_WALINE_SERVER_URL || vars.WALINE_SERVER_URL }}
         run: pnpm build
 
       - name: Sync Algolia index
@@ -98,7 +101,8 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
           {
-            echo "WALINE_SERVER_URL=${{ secrets.PUBLIC_WALINE_SERVER_URL }}"
+            echo "WALINE_SERVER_URL=${{ secrets.WALINE_SERVER_URL || secrets.PUBLIC_WALINE_SERVER_URL || vars.WALINE_SERVER_URL || vars.PUBLIC_WALINE_SERVER_URL }}"
+            echo "PUBLIC_WALINE_SERVER_URL=${{ secrets.PUBLIC_WALINE_SERVER_URL || secrets.WALINE_SERVER_URL || vars.PUBLIC_WALINE_SERVER_URL || vars.WALINE_SERVER_URL }}"
             echo "CODETIME_TOKEN=${{ secrets.CODETIME_TOKEN }}"
           } | \
             ssh -i ~/.ssh/deploy_key -p ${{ env.SSH_PORT }} \

@@ -1,5 +1,6 @@
 ---
 import "@waline/client/waline.css";
+import { WALINE_SERVER_URL_ENV_LABEL } from "../../utils/waline-server-url";
 
 interface Props {
   articleRoutePath?: string;
@@ -45,7 +46,7 @@ const articleRoutePath = normalizeWalinePath(
     ) : (
       <p class="article-comments-empty">
         Comments are temporarily unavailable because{" "}
-        <code>WALINE_SERVER_URL</code> is not configured.
+        <code>{WALINE_SERVER_URL_ENV_LABEL}</code> is not configured.
       </p>
     )
   }

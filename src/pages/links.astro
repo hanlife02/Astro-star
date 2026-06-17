@@ -1,9 +1,9 @@
 ---
 import { getCollection, render } from "astro:content";
-import { WALINE_SERVER_URL } from "astro:env/server";
 import DocumentDetailPage from "../components/content/DocumentDetailPage.astro";
 import WalineComments from "../components/content/WalineComments.astro";
 import { site } from "../config/site";
+import { getWalineServerURL } from "../utils/waline-server-url";
 
 export const prerender = true;
 
@@ -25,7 +25,7 @@ const contentTitle = pageEntry.data.heading || title;
 const contentTitleId = pageEntry.id;
 const pageRoutePath = "/links/";
 const canonicalUrl = new URL(pageRoutePath, site.site.url).toString();
-const walineServerURL = WALINE_SERVER_URL?.trim() || "";
+const walineServerURL = getWalineServerURL();
 const tocHeadings = [
   {
     depth: 1 as const,

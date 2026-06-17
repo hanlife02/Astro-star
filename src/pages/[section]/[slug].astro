@@ -1,7 +1,6 @@
 ---
 import { getCollection, render } from "astro:content";
 import ArticleDetailPage from "../../components/content/ArticleDetailPage.astro";
-import { WALINE_SERVER_URL } from "astro:env/server";
 import { site } from "../../config/site";
 import { getAdjacentArticles } from "../../utils/adjacent-articles";
 import { resolveContentDates } from "../../utils/content-dates";
@@ -15,6 +14,7 @@ import {
 import { resolveContentTitle } from "../../utils/content-title";
 import { isPublishedContentEntry } from "../../utils/content-visibility";
 import { getGitTimestamps } from "../../utils/git-timestamps";
+import { getWalineServerURL } from "../../utils/waline-server-url";
 
 const validSections = ["blog", "note", "project"] as const;
 type SectionKey = (typeof validSections)[number];
@@ -84,7 +84,7 @@ const docUrl =
     ? (articleEntry.data as { docUrl?: string }).docUrl?.trim() || ""
     : "";
 const author = site.profile.name;
-const walineServerURL = WALINE_SERVER_URL?.trim() || "";
+const walineServerURL = getWalineServerURL();
 const articleRoutePath = `/${section}/${slug}/`;
 const contentPath =
   articleEntry.filePath ?? `src/content/${section}/${articleEntry.id}.mdx`;

@@ -26,6 +26,11 @@ export default defineConfig({
         access: "secret",
         optional: true,
       }),
+      PUBLIC_WALINE_SERVER_URL: envField.string({
+        context: "server",
+        access: "public",
+        optional: true,
+      }),
       GITHUB_TOKEN: envField.string({
         context: "server",
         access: "secret",
