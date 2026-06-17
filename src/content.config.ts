@@ -2,18 +2,16 @@ import { defineCollection } from "astro:content";
 import { glob } from "astro/loaders";
 import { z } from "astro/zod";
 
-const baseContentSchema = z
-  .object({
-    routeSlug: z.union([z.string(), z.number()]).optional(),
-    title: z.string().optional(),
-    description: z.string().optional(),
-    image: z.string().optional(),
-    createdAt: z.string().optional(),
-    updatedAt: z.string().optional(),
-    published: z.boolean().optional(),
-    type: z.string().optional(),
-  })
-  .passthrough();
+const baseContentSchema = z.looseObject({
+  routeSlug: z.union([z.string(), z.number()]).optional(),
+  title: z.string().optional(),
+  description: z.string().optional(),
+  image: z.string().optional(),
+  createdAt: z.string().optional(),
+  updatedAt: z.string().optional(),
+  published: z.boolean().optional(),
+  type: z.string().optional(),
+});
 
 const projectSchema = baseContentSchema.extend({
   projectUrl: z.string().optional(),

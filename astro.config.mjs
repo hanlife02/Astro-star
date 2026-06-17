@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig, envField } from "astro/config";
 import mdx from "@astrojs/mdx";
+import { unified } from "@astrojs/markdown-remark";
 import sitemap from "@astrojs/sitemap";
 import node from "@astrojs/node";
 import rehypeKatex from "rehype-katex";
@@ -46,8 +47,14 @@ export default defineConfig({
       },
       defaultColor: false,
     },
-    remarkPlugins: [remarkMath, remarkDirective, remarkContentFormatDirectives],
-    rehypePlugins: [rehypeKatex, rehypeFigureCaptions],
+    processor: unified({
+      remarkPlugins: [
+        remarkMath,
+        remarkDirective,
+        remarkContentFormatDirectives,
+      ],
+      rehypePlugins: [rehypeKatex, rehypeFigureCaptions],
+    }),
   },
   vite: {
     plugins: [mdxVoidHtmlPlugin()],

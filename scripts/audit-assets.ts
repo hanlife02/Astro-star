@@ -1,4 +1,4 @@
-import { readdirSync, readFileSync, statSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { basename, dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -50,6 +50,10 @@ function getExtension(path: string) {
 }
 
 function collectFigureAssets() {
+  if (!existsSync(PUBLIC_FIGURES_DIR)) {
+    return [];
+  }
+
   return walk(PUBLIC_FIGURES_DIR, (path) =>
     IMAGE_EXTENSIONS.has(getExtension(path)),
   )
