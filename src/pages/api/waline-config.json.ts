@@ -1,10 +1,10 @@
 import type { APIRoute } from "astro";
-import { WALINE_SERVER_URL } from "astro:env/server";
+import { getWalineServerURL } from "../../utils/waline-server-url";
 
 export const GET: APIRoute = () => {
   return new Response(
     JSON.stringify({
-      serverURL: WALINE_SERVER_URL?.trim() || "",
+      serverURL: getWalineServerURL(),
     }),
     {
       headers: {

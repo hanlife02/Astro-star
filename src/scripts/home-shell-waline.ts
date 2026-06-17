@@ -533,7 +533,9 @@ async function hydrateWalineComments(runId: number) {
     const lang = WALINE_COMMENTS_LANG;
 
     if (!serverURL) {
-      console.warn("[Waline] WALINE_SERVER_URL is not configured.");
+      console.warn(
+        "[Waline] WALINE_SERVER_URL or PUBLIC_WALINE_SERVER_URL is not configured.",
+      );
       return;
     }
 
