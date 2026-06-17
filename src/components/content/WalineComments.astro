@@ -8,6 +8,7 @@ interface Props {
 
 const { articleRoutePath: rawArticleRoutePath, walineServerURL = "" } =
   Astro.props as Props;
+const hasWalineServerURL = Boolean(walineServerURL.trim());
 
 const normalizeWalinePath = (pathname: string) => {
   const trimmedPathname = pathname.trim();
@@ -27,9 +28,25 @@ const articleRoutePath = normalizeWalinePath(
 <section
   class="article-comments"
   aria-label="Comments"
-  data-article-waline
-  data-waline-server-url={walineServerURL || undefined}
-  data-waline-path={articleRoutePath}
+  data-article-waline={hasWalineServerURL || undefined}
+  data-waline-server-url={hasWalineServerURL ? walineServerURL : undefined}
+  data-waline-path={hasWalineServerURL ? articleRoutePath : undefined}
 >
-  <div class="article-comments-thread" data-waline-thread></div>
+  <header class="article-comments-header">
+    <h2 class="article-comments-title">Comments</h2>
+    <p class="article-comments-description">
+      Notes, questions, and follow-ups are welcome here.
+    </p>
+  </header>
+
+  {
+    hasWalineServerURL ? (
+      <div class="article-comments-thread" data-waline-thread />
+    ) : (
+      <p class="article-comments-empty">
+        Comments are temporarily unavailable because{" "}
+        <code>WALINE_SERVER_URL</code> is not configured.
+      </p>
+    )
+  }
 </section>
