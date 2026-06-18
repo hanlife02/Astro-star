@@ -37,3 +37,15 @@ jobs:
 
       - name: Format check
         run: pnpm format:check
+
+      - name: Build
+        run: pnpm build
+
+      - name: Content audit
+        run: pnpm run audit:content
+
+      - name: Asset audit
+        run: pnpm run audit:assets
+
+      - name: Dependency audit
+        run: pnpm audit --registry=https://registry.npmjs.org --audit-level moderate
