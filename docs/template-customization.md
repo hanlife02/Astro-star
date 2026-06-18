@@ -10,7 +10,8 @@ This document lists the main files to edit after forking Astro-star.
 
 ## Pages
 
-- `src/config/about.ts`: About page intro, social cards, tools, and timeline.
+- `src/content/page/about.mdx`: About page content.
+- `src/content/page/links.mdx`: Links page intro and application copy.
 - `src/config/links.ts`: friend links, owner card, and application rules.
 - `src/config/search.ts`: optional Algolia SiteSearch configuration.
 
@@ -19,7 +20,9 @@ This document lists the main files to edit after forking Astro-star.
 - `src/content/blog`: long-form posts.
 - `src/content/note`: short notes and lightweight records.
 - `src/content/project`: project pages.
-- `public/figures`: local images referenced by content.
+- `public/figures`: optional local images referenced by content. Create this directory in your personal site branch when you need local assets.
+
+The layout renders the page title as the article `h1`, so start article body headings at `##`.
 
 ## Deployment
 
