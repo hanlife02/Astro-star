@@ -254,17 +254,6 @@
   display: none !important;
 }
 
-.latest-articles[data-latest-enhanced="true"] .latest-articles-item-content {
-  opacity: 0;
-}
-
-.latest-articles[data-latest-enhanced="true"].latest-articles--entered
-  .latest-articles-item-content {
-  opacity: 1;
-  transition: opacity 0.22s ease;
-  transition-delay: 0s;
-}
-
 .latest-articles-empty {
   margin: 0.25rem 0 0;
   color: var(--line-soft);

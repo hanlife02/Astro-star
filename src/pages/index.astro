@@ -106,12 +106,6 @@ const latestNoteArticles = buildLatestArticles(latestNoteEntries, "note").slice(
   0,
   4,
 );
-const latestAnimationOrderMap = new Map(
-  [...latestBlogArticles, ...latestNoteArticles].map((article, index) => [
-    article.href,
-    index,
-  ]),
-);
 const latestBlogTimelineGroups = buildLatestTimelineGroups(latestBlogArticles);
 const latestNoteTimelineGroups = buildLatestTimelineGroups(latestNoteArticles);
 const profileLinks = getSocialLinks(socialDisplay.home).slice(0, 4);
@@ -123,5 +117,4 @@ const profileLinks = getSocialLinks(socialDisplay.home).slice(0, 4);
   profileLinks={profileLinks}
   latestBlogTimelineGroups={latestBlogTimelineGroups}
   latestNoteTimelineGroups={latestNoteTimelineGroups}
-  latestAnimationOrderMap={latestAnimationOrderMap}
 />
