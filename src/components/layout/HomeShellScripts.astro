@@ -60,50 +60,90 @@
 
   const browserWindow = window as HomeShellWindow;
 
+  const runHomeShellCleanup = (name: string, cleanup: () => void) => {
+    try {
+      cleanup();
+    } catch (error) {
+      console.warn("[HomeShell] Failed to cleanup.", name, error);
+    }
+  };
+
+  const runHomeShellInitializer = (name: string, initialize: () => unknown) => {
+    try {
+      const result = initialize();
+
+      if (result instanceof Promise) {
+        void result.catch((error) => {
+          console.warn("[HomeShell] Failed to initialize.", name, error);
+        });
+      }
+    } catch (error) {
+      console.warn("[HomeShell] Failed to initialize.", name, error);
+    }
+  };
+
   const cleanupHomeShellBeforeSwap = () => {
-    cleanupHomeShellWalineComments();
-    cleanupHomeShellWalinePageviews();
-    cleanupHomeShellArticleActions();
-    cleanupHomeShellContentImageLightbox();
-    cleanupHomeShellConstellationBackground();
+    runHomeShellCleanup("waline-comments", cleanupHomeShellWalineComments);
+    runHomeShellCleanup("waline-pageviews", cleanupHomeShellWalinePageviews);
+    runHomeShellCleanup("article-actions", cleanupHomeShellArticleActions);
+    runHomeShellCleanup(
+      "content-image-lightbox",
+      cleanupHomeShellContentImageLightbox,
+    );
+    runHomeShellCleanup(
+      "constellation-background",
+      cleanupHomeShellConstellationBackground,
+    );
 
     HOME_SHELL_BEFORE_SWAP_CLEANUP_KEYS.forEach((cleanupKey) => {
       const cleanup = browserWindow[cleanupKey];
       browserWindow[cleanupKey] = undefined;
 
-      try {
-        cleanup?.();
-      } catch (error) {
-        console.warn(
-          "[HomeShell] Failed to cleanup before route swap.",
-          cleanupKey,
-          error,
-        );
+      if (cleanup) {
+        runHomeShellCleanup(cleanupKey, cleanup);
       }
     });
   };
 
   const initHomeShell = () => {
-    initHomeShellTheme();
-    initHomeShellDesktopSignatureNav();
-    initHomeShellMobileNav();
-    initHomeShellContentToc();
-    initHomeShellMobileToc();
-    initHomeShellContentPageEntrance();
-    initHomeShellRouteTransitionLock();
-    initHomeShellSearch();
-    initHomeShellDocumentProgress();
-    initHomeShellCodeCopy();
-    initHomeShellContentFold();
-    initHomeShellConstellationBackground();
-    initHomeShellWalineComments();
-    initHomeShellWalinePageviews();
-    initHomeShellArticleActions();
-    initHomeShellGitHubRepoCards();
-    initHomeShellFriendLinkAvatars();
-    initHomeShellFriendFeed();
-    initHomeShellCodeTime();
-    initHomeShellContentImageLightbox();
+    runHomeShellInitializer("theme", initHomeShellTheme);
+    runHomeShellInitializer(
+      "desktop-signature-nav",
+      initHomeShellDesktopSignatureNav,
+    );
+    runHomeShellInitializer("mobile-nav", initHomeShellMobileNav);
+    runHomeShellInitializer("content-toc", initHomeShellContentToc);
+    runHomeShellInitializer("mobile-toc", initHomeShellMobileToc);
+    runHomeShellInitializer(
+      "content-page-entrance",
+      initHomeShellContentPageEntrance,
+    );
+    runHomeShellInitializer(
+      "route-transition-lock",
+      initHomeShellRouteTransitionLock,
+    );
+    runHomeShellInitializer("search", initHomeShellSearch);
+    runHomeShellInitializer("document-progress", initHomeShellDocumentProgress);
+    runHomeShellInitializer("code-copy", initHomeShellCodeCopy);
+    runHomeShellInitializer("content-fold", initHomeShellContentFold);
+    runHomeShellInitializer(
+      "constellation-background",
+      initHomeShellConstellationBackground,
+    );
+    runHomeShellInitializer("waline-comments", initHomeShellWalineComments);
+    runHomeShellInitializer("waline-pageviews", initHomeShellWalinePageviews);
+    runHomeShellInitializer("article-actions", initHomeShellArticleActions);
+    runHomeShellInitializer("github-repo-cards", initHomeShellGitHubRepoCards);
+    runHomeShellInitializer(
+      "friend-link-avatars",
+      initHomeShellFriendLinkAvatars,
+    );
+    runHomeShellInitializer("friend-feed", initHomeShellFriendFeed);
+    runHomeShellInitializer("codetime", initHomeShellCodeTime);
+    runHomeShellInitializer(
+      "content-image-lightbox",
+      initHomeShellContentImageLightbox,
+    );
   };
 
   if (!browserWindow.__homeShellPageLoadBound) {
