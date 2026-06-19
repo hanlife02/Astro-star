@@ -48,4 +48,4 @@ jobs:
         run: pnpm run audit:assets
 
       - name: Dependency audit
-        run: pnpm audit --registry=https://registry.npmjs.org --audit-level moderate
+        run: pnpm run audit:deps
