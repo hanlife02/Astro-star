@@ -1,24 +1,24 @@
 {
   "name": "Astro-star",
   "type": "module",
-  "version": "0.16.10",
+  "version": "0.16.11",
   "packageManager": "pnpm@10.30.3",
   "scripts": {
-    "predev": "node --experimental-strip-types scripts/generate-git-timestamps.ts",
+    "predev": "tsx scripts/generate-git-timestamps.ts",
     "dev": "astro dev",
-    "prebuild": "node --experimental-strip-types scripts/generate-git-timestamps.ts",
+    "prebuild": "tsx scripts/generate-git-timestamps.ts",
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
     "verify": "pnpm check && pnpm format:check && pnpm build && pnpm run audit:content && pnpm run audit:assets",
     "astro": "astro",
-    "algolia:sync": "node --experimental-strip-types scripts/sync-algolia-index.ts",
-    "audit:assets": "node --experimental-strip-types scripts/audit-assets.ts",
-    "audit:content": "node --experimental-strip-types scripts/audit-content.ts",
+    "algolia:sync": "tsx scripts/sync-algolia-index.ts",
+    "audit:assets": "tsx scripts/audit-assets.ts",
+    "audit:content": "tsx scripts/audit-content.ts",
     "migrate:content": "node scripts/migrate-legacy-content.mjs",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
-    "config:extract": "node --experimental-strip-types scripts/config-extract.mjs",
+    "config:extract": "tsx scripts/config-extract.mjs",
     "config:apply": "node scripts/config-apply.mjs"
   },
   "pnpm": {
@@ -35,7 +35,8 @@
     "bson": "^7.2.0",
     "prettier": "3.8.4",
     "prettier-plugin-astro": "0.14.1",
-    "tar": "^7.5.16"
+    "tar": "^7.5.16",
+    "tsx": "^4.22.4"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.9",

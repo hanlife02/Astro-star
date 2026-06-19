@@ -11,7 +11,7 @@ import { create as createTarball } from "tar";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
-// --- 1. Import TS configs (requires --experimental-strip-types) ---
+// --- 1. Import TS configs ---
 const { site } = await import("../src/config/site.ts");
 const { linkApplyOwner, friendLinks, lostLinks } =
   await import("../src/config/links.ts");
