@@ -39,7 +39,6 @@ interface Props {
   profileLinks: SocialLinkItem[];
   latestBlogTimelineGroups: LatestTimelineGroup[];
   latestNoteTimelineGroups: LatestTimelineGroup[];
-  latestAnimationOrderMap: Map<string, number>;
 }
 
 const {
@@ -48,7 +47,6 @@ const {
   profileLinks,
   latestBlogTimelineGroups,
   latestNoteTimelineGroups,
-  latestAnimationOrderMap,
 } = Astro.props as Props;
 const homeDescription = profile.intro.trim() || profile.bio.trim();
 
@@ -68,10 +66,7 @@ function isExternalLink(href: string) {
     class="profile-card home-profile-sequence"
     aria-label="Profile section"
   >
-    <span
-      class="profile-avatar-wrap home-enter-item"
-      data-codetime-status-root
-    >
+    <span class="profile-avatar-wrap home-enter-item" data-codetime-status-root>
       <img
         class="profile-avatar"
         src={profile.avatarSrc}
@@ -134,7 +129,6 @@ function isExternalLink(href: string) {
     slot="latest"
     class="latest-articles home-latest-sequence"
     aria-label="Latest content section"
-    data-latest-enhanced="true"
   >
     {
       [
@@ -199,10 +193,7 @@ function isExternalLink(href: string) {
                             "latest-articles-item--year-end",
                         ]}
                       >
-                        <div
-                          class="latest-articles-item-content"
-                          style={`--latest-enter-order: ${latestAnimationOrderMap.get(article.href) ?? 0};`}
-                        >
+                        <div class="latest-articles-item-content">
                           <time
                             class="latest-articles-time"
                             datetime={article.pubDateIso}
@@ -255,42 +246,11 @@ function isExternalLink(href: string) {
           if (isSamePageReplay) return;
 
           window.__homeEntranceLastPath = currentPageKey;
-          profileRoot.dataset.homeEntranceCompleted = "false";
-
-          const runToken = `${Date.now()}`;
-          profileRoot.dataset.homeEntranceRun = runToken;
-
-          const profileItems = Array.from(
-            profileRoot.querySelectorAll(
-              ".home-enter-item, .home-profile-metric",
-            ),
-          );
-          profileItems.forEach((element, index) => {
-            if (element instanceof HTMLElement) {
-              element.style.setProperty("--home-enter-order", `${index}`);
-            }
-          });
-
-          requestAnimationFrame(() => {
-            if (profileRoot.dataset.homeEntranceRun !== runToken) return;
-
-            profileRoot.dataset.homeEntranceEnabled = "true";
-            latestRoot.dataset.homeEntranceEnabled = "true";
-            profileRoot.classList.remove("home-profile--entered");
-
-            profileItems.forEach((element) => {
-              if (element instanceof HTMLElement) {
-                element.classList.add("is-visible");
-              }
-            });
-
-            profileRoot.classList.add("home-profile--entered");
-            latestRoot.classList.add(
-              "latest-articles--frame-visible",
-              "latest-articles--entered",
-            );
-            profileRoot.dataset.homeEntranceCompleted = "true";
-          });
+          profileRoot.dataset.homeEntranceEnabled = "true";
+          latestRoot.dataset.homeEntranceEnabled = "true";
+          profileRoot.classList.add("home-profile--entered");
+          latestRoot.classList.add("latest-articles--entered");
+          profileRoot.dataset.homeEntranceCompleted = "true";
         };
 
         if (!window.__homeEntrancePageLoadBound) {
