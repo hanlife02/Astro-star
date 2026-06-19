@@ -45,6 +45,7 @@ const defaultSocialLinks = [
     icon: "mail",
     name: "Mail",
     href: "mailto:hello@example.com",
+    handle: "hello@example.com",
     enabled: true,
   },
   {
@@ -52,6 +53,7 @@ const defaultSocialLinks = [
     icon: "github",
     name: "GitHub",
     href: "https://github.com/your-name",
+    handle: "your-name",
     enabled: true,
   },
   {
@@ -59,6 +61,7 @@ const defaultSocialLinks = [
     icon: "bilibili",
     name: "Bilibili",
     href: "https://space.bilibili.com/000000",
+    handle: "000000",
     enabled: true,
   },
   {
@@ -66,9 +69,29 @@ const defaultSocialLinks = [
     icon: "telegram",
     name: "Telegram",
     href: "https://t.me/your-name",
+    handle: "your-name",
     enabled: true,
   },
 ];
+
+const defaultSocialDisplay = {
+  home: ["github", "mail"],
+  about: ["mail", "github", "bilibili", "telegram"],
+};
+
+const defaultAlgoliaSiteSearchConfig = {
+  applicationId: "",
+  apiKey: "",
+  indexName: "",
+  attributes: {
+    primaryText: "headline",
+    secondaryText: "excerpt",
+    tertiaryText: "url",
+    url: "url",
+    image: undefined,
+  },
+  darkMode: false,
+};
 
 function normalizeArticleActions(articleActions = {}) {
   const input = articleActions ?? {};
@@ -174,6 +197,8 @@ function normalizeSocialConfig(input = {}) {
   const social = input?.social ?? {};
   const socialLinks =
     social.socialLinks ?? input?.socialLinks ?? defaultSocialLinks;
+  const socialDisplay =
+    social.socialDisplay ?? input?.socialDisplay ?? defaultSocialDisplay;
 
   return {
     socialLinks: socialLinks.map((item = {}) => ({
@@ -181,9 +206,51 @@ function normalizeSocialConfig(input = {}) {
       icon: item.icon ?? item.id ?? "star",
       name: item.name ?? item.id ?? "Link",
       href: item.href ?? "",
+      handle: item.handle ?? "",
       enabled: item.enabled ?? true,
     })),
+    socialDisplay,
   };
+}
+
+function normalizeSearchConfig(input = {}) {
+  const search = input?.search ?? {};
+  const siteSearchConfig =
+    search.algoliaSiteSearchConfig ??
+    input?.algoliaSiteSearchConfig ??
+    defaultAlgoliaSiteSearchConfig;
+  const attributes = siteSearchConfig.attributes ?? {};
+
+  return {
+    algoliaSiteSearchConfig: {
+      applicationId: siteSearchConfig.applicationId ?? "",
+      apiKey: siteSearchConfig.apiKey ?? "",
+      indexName: siteSearchConfig.indexName ?? "",
+      attributes: {
+        primaryText:
+          attributes.primaryText ??
+          defaultAlgoliaSiteSearchConfig.attributes.primaryText,
+        secondaryText: attributes.secondaryText,
+        tertiaryText: attributes.tertiaryText,
+        url: attributes.url,
+        image: attributes.image,
+      },
+      darkMode: siteSearchConfig.darkMode ?? false,
+    },
+    algoliaCrawlerVerification:
+      search.algoliaCrawlerVerification ??
+      input?.algoliaCrawlerVerification ??
+      "",
+  };
+}
+
+function normalizeRssLanguage(input = {}) {
+  const language = input?.rss?.language ?? input?.rssLanguage ?? "zh-cn";
+
+  if (typeof language !== "string") return "zh-cn";
+
+  const trimmedLanguage = language.trim();
+  return /^[A-Za-z0-9-]+$/.test(trimmedLanguage) ? trimmedLanguage : "zh-cn";
 }
 
 /** writeFileSync with automatic parent directory creation */
@@ -245,35 +312,67 @@ const normalizedSocialConfig = normalizeSocialConfig(config);
 writeFileSyncSafe(
   resolve(ROOT, "src/config/social.ts"),
   [
-    `export interface SocialLinkItem {`,
-    `  id: string;`,
-    `  icon: string;`,
-    `  name: string;`,
-    `  href: string;`,
-    `  enabled: boolean;`,
-    `}`,
+    `import type { SocialLinkId, SocialLinkItem } from "../types/social";`,
     ``,
     `export const socialLinks = ${toTS(normalizedSocialConfig.socialLinks)} satisfies readonly SocialLinkItem[];`,
+    ``,
+    `export const socialDisplay = ${toTS(normalizedSocialConfig.socialDisplay)} as const satisfies Record<string, readonly SocialLinkId[]>;`,
     ``,
   ].join("\n"),
   "utf-8",
 );
 console.log("Written: src/config/social.ts");
 
-// --- 5. Patch rss.xml.ts language ---
+// --- 5. Generate src/config/search.ts ---
+const normalizedSearchConfig = normalizeSearchConfig(config);
+
+writeFileSyncSafe(
+  resolve(ROOT, "src/config/search.ts"),
+  [
+    `export interface AlgoliaSiteSearchConfig {`,
+    `  applicationId: string;`,
+    `  apiKey: string;`,
+    `  indexName: string;`,
+    `  attributes: {`,
+    `    primaryText: string;`,
+    `    secondaryText?: string;`,
+    `    tertiaryText?: string;`,
+    `    url?: string;`,
+    `    image?: string;`,
+    `  };`,
+    `  darkMode: boolean;`,
+    `}`,
+    ``,
+    `export const algoliaSiteSearchConfig = ${toTS(normalizedSearchConfig.algoliaSiteSearchConfig)} satisfies AlgoliaSiteSearchConfig;`,
+    ``,
+    `export const algoliaCrawlerVerification = ${toTS(normalizedSearchConfig.algoliaCrawlerVerification)};`,
+    ``,
+    `export const isAlgoliaSiteSearchConfigured = Boolean(`,
+    `  algoliaSiteSearchConfig.applicationId &&`,
+    `  algoliaSiteSearchConfig.apiKey &&`,
+    `  algoliaSiteSearchConfig.indexName,`,
+    `);`,
+    ``,
+  ].join("\n"),
+  "utf-8",
+);
+console.log("Written: src/config/search.ts");
+
+// --- 6. Patch rss.xml.ts language ---
 const rssPath = resolve(ROOT, "src/pages/rss.xml.ts");
 const rssContent = readFileSync(rssPath, "utf-8");
+const rssLanguage = normalizeRssLanguage(config);
 writeFileSyncSafe(
   rssPath,
   rssContent.replace(
     /<language>[\w-]+<\/language>/,
-    `<language>${config.rss.language}</language>`,
+    `<language>${rssLanguage}</language>`,
   ),
   "utf-8",
 );
 console.log("Written: src/pages/rss.xml.ts");
 
-// --- 6. Extract content archive ---
+// --- 7. Extract content archive ---
 const tarPath = resolve(ROOT, "src/data/user-content.tar.gz");
 if (existsSync(tarPath)) {
   await extractTarball({
@@ -286,15 +385,16 @@ if (existsSync(tarPath)) {
   console.log("No user-content.tar.gz found, skipping content restore.");
 }
 
-// --- 7. Format modified files with prettier ---
+// --- 8. Format modified files with prettier ---
 const filesToFormat = [
   "src/config/site.ts",
   "src/config/links.ts",
   "src/config/social.ts",
+  "src/config/search.ts",
   "src/pages/rss.xml.ts",
 ];
 try {
-  execSync(`npx prettier --write ${filesToFormat.join(" ")}`, {
+  execSync(`pnpm exec prettier --write ${filesToFormat.join(" ")}`, {
     cwd: ROOT,
     stdio: "inherit",
   });

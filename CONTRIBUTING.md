@@ -76,7 +76,7 @@ src/
 
 ### 0. 分支职责固定
 
-本仓库遵守 [Branch Workflow](./docs/branch-workflow.md)：
+本仓库遵守固定分支职责：
 
 - `main` 是主分支，也是模板分支。组件、样式、脚本、文档、依赖和通用模板能力都必须先在 `main` 修改。
 - `Ethan` 是用户分支，只用于维护个人站点的 `src/config/` 和 `src/content/`。

@@ -63,5 +63,19 @@ export default defineConfig({
   },
   vite: {
     plugins: [mdxVoidHtmlPlugin()],
+    build: {
+      rollupOptions: {
+        onwarn(warning, warn) {
+          if (
+            warning.code === "INVALID_ANNOTATION" &&
+            warning.id?.includes("@vueuse/core")
+          ) {
+            return;
+          }
+
+          warn(warning);
+        },
+      },
+    },
   },
 });

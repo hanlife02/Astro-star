@@ -19,10 +19,10 @@ importers:
         version: 7.2.0
       "@astrojs/mdx":
         specifier: ^6.0.3
-        version: 6.0.3(astro@6.4.8(@types/node@24.13.2)(rollup@4.62.0)(yaml@2.9.0))
+        version: 6.0.3(astro@6.4.8(@types/node@24.13.2)(rollup@4.62.0)(tsx@4.22.4)(yaml@2.9.0))
       "@astrojs/node":
         specifier: ^10.1.4
-        version: 10.1.4(astro@6.4.8(@types/node@24.13.2)(rollup@4.62.0)(yaml@2.9.0))
+        version: 10.1.4(astro@6.4.8(@types/node@24.13.2)(rollup@4.62.0)(tsx@4.22.4)(yaml@2.9.0))
       "@astrojs/rss":
         specifier: ^4.0.18
         version: 4.0.18
@@ -37,16 +37,16 @@ importers:
         version: 3.15.2(typescript@5.9.3)
       astro:
         specifier: ^6.4.8
-        version: 6.4.8(@types/node@24.13.2)(rollup@4.62.0)(yaml@2.9.0)
+        version: 6.4.8(@types/node@24.13.2)(rollup@4.62.0)(tsx@4.22.4)(yaml@2.9.0)
       astro-auto-import:
         specifier: ^0.5.1
-        version: 0.5.1(astro@6.4.8(@types/node@24.13.2)(rollup@4.62.0)(yaml@2.9.0))
+        version: 0.5.1(astro@6.4.8(@types/node@24.13.2)(rollup@4.62.0)(tsx@4.22.4)(yaml@2.9.0))
       astro-loader-bluesky-posts:
         specifier: ^1.2.4
-        version: 1.2.4(astro@6.4.8(@types/node@24.13.2)(rollup@4.62.0)(yaml@2.9.0))
+        version: 1.2.4(astro@6.4.8(@types/node@24.13.2)(rollup@4.62.0)(tsx@4.22.4)(yaml@2.9.0))
       astro-loader-github-prs:
         specifier: ^2.0.0
-        version: 2.0.0(astro@6.4.8(@types/node@24.13.2)(rollup@4.62.0)(yaml@2.9.0))
+        version: 2.0.0(astro@6.4.8(@types/node@24.13.2)(rollup@4.62.0)(tsx@4.22.4)(yaml@2.9.0))
       astro-robots-txt:
         specifier: ^1.0.0
         version: 1.0.0
@@ -82,14 +82,17 @@ importers:
         specifier: ^7.2.0
         version: 7.2.0
       prettier:
-        specifier: latest
+        specifier: 3.8.4
         version: 3.8.4
       prettier-plugin-astro:
-        specifier: latest
+        specifier: 0.14.1
         version: 0.14.1
       tar:
         specifier: ^7.5.16
         version: 7.5.16
+      tsx:
+        specifier: ^4.22.4
+        version: 4.22.4
 
 packages:
   "@astrojs/check@0.9.9":
@@ -3925,6 +3928,14 @@ packages:
         integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==,
       }
 
+  tsx@4.22.4:
+    resolution:
+      {
+        integrity: sha512-X8EX+XV4QR5xCsrgxaED954zTDfY8KqlDtskKEL0cHhyS/P8b4IFOvGDQpsC9Q1XnLq915wEfwwY/zzskCtmhg==,
+      }
+    engines: { node: ">=18.0.0" }
+    hasBin: true
+
   tunnel-agent@0.6.0:
     resolution:
       {
@@ -4591,13 +4602,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  "@astrojs/mdx@6.0.3(astro@6.4.8(@types/node@24.13.2)(rollup@4.62.0)(yaml@2.9.0))":
+  "@astrojs/mdx@6.0.3(astro@6.4.8(@types/node@24.13.2)(rollup@4.62.0)(tsx@4.22.4)(yaml@2.9.0))":
     dependencies:
       "@astrojs/internal-helpers": 0.10.0
       "@astrojs/markdown-remark": 7.2.0
       "@mdx-js/mdx": 3.1.1
       acorn: 8.17.0
-      astro: 6.4.8(@types/node@24.13.2)(rollup@4.62.0)(yaml@2.9.0)
+      astro: 6.4.8(@types/node@24.13.2)(rollup@4.62.0)(tsx@4.22.4)(yaml@2.9.0)
       es-module-lexer: 2.1.0
       estree-util-visit: 2.0.0
       hast-util-to-html: 9.0.5
@@ -4611,10 +4622,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  "@astrojs/node@10.1.4(astro@6.4.8(@types/node@24.13.2)(rollup@4.62.0)(yaml@2.9.0))":
+  "@astrojs/node@10.1.4(astro@6.4.8(@types/node@24.13.2)(rollup@4.62.0)(tsx@4.22.4)(yaml@2.9.0))":
     dependencies:
       "@astrojs/internal-helpers": 0.10.0
-      astro: 6.4.8(@types/node@24.13.2)(rollup@4.62.0)(yaml@2.9.0)
+      astro: 6.4.8(@types/node@24.13.2)(rollup@4.62.0)(tsx@4.22.4)(yaml@2.9.0)
       send: 1.2.1
       server-destroy: 1.0.1
     transitivePeerDependencies:
@@ -5472,19 +5483,19 @@ snapshots:
 
   astring@1.9.0: {}
 
-  astro-auto-import@0.5.1(astro@6.4.8(@types/node@24.13.2)(rollup@4.62.0)(yaml@2.9.0)):
+  astro-auto-import@0.5.1(astro@6.4.8(@types/node@24.13.2)(rollup@4.62.0)(tsx@4.22.4)(yaml@2.9.0)):
     dependencies:
       acorn: 8.16.0
-      astro: 6.4.8(@types/node@24.13.2)(rollup@4.62.0)(yaml@2.9.0)
+      astro: 6.4.8(@types/node@24.13.2)(rollup@4.62.0)(tsx@4.22.4)(yaml@2.9.0)
 
-  astro-loader-bluesky-posts@1.2.4(astro@6.4.8(@types/node@24.13.2)(rollup@4.62.0)(yaml@2.9.0)):
+  astro-loader-bluesky-posts@1.2.4(astro@6.4.8(@types/node@24.13.2)(rollup@4.62.0)(tsx@4.22.4)(yaml@2.9.0)):
     dependencies:
       "@atproto/api": 0.20.16
-      astro: 6.4.8(@types/node@24.13.2)(rollup@4.62.0)(yaml@2.9.0)
+      astro: 6.4.8(@types/node@24.13.2)(rollup@4.62.0)(tsx@4.22.4)(yaml@2.9.0)
 
-  astro-loader-github-prs@2.0.0(astro@6.4.8(@types/node@24.13.2)(rollup@4.62.0)(yaml@2.9.0)):
+  astro-loader-github-prs@2.0.0(astro@6.4.8(@types/node@24.13.2)(rollup@4.62.0)(tsx@4.22.4)(yaml@2.9.0)):
     dependencies:
-      astro: 6.4.8(@types/node@24.13.2)(rollup@4.62.0)(yaml@2.9.0)
+      astro: 6.4.8(@types/node@24.13.2)(rollup@4.62.0)(tsx@4.22.4)(yaml@2.9.0)
       octokit: 5.0.5
 
   astro-robots-txt@1.0.0:
@@ -5492,7 +5503,7 @@ snapshots:
       valid-filename: 4.0.0
       zod: 3.25.76
 
-  astro@6.4.8(@types/node@24.13.2)(rollup@4.62.0)(yaml@2.9.0):
+  astro@6.4.8(@types/node@24.13.2)(rollup@4.62.0)(tsx@4.22.4)(yaml@2.9.0):
     dependencies:
       "@astrojs/compiler": 4.0.0
       "@astrojs/internal-helpers": 0.10.0
@@ -5544,8 +5555,8 @@ snapshots:
       unist-util-visit: 5.1.0
       unstorage: 1.17.5
       vfile: 6.0.3
-      vite: 7.3.5(@types/node@24.13.2)(yaml@2.9.0)
-      vitefu: 1.1.3(vite@7.3.5(@types/node@24.13.2)(yaml@2.9.0))
+      vite: 7.3.5(@types/node@24.13.2)(tsx@4.22.4)(yaml@2.9.0)
+      vitefu: 1.1.3(vite@7.3.5(@types/node@24.13.2)(tsx@4.22.4)(yaml@2.9.0))
       xxhash-wasm: 1.1.0
       yargs-parser: 22.0.0
       zod: 4.4.3
@@ -7288,6 +7299,12 @@ snapshots:
 
   tslib@2.8.1: {}
 
+  tsx@4.22.4:
+    dependencies:
+      esbuild: 0.28.1
+    optionalDependencies:
+      fsevents: 2.3.3
+
   tunnel-agent@0.6.0:
     dependencies:
       safe-buffer: 5.2.1
@@ -7412,7 +7429,7 @@ snapshots:
       "@types/unist": 3.0.3
       vfile-message: 4.0.3
 
-  vite@7.3.5(@types/node@24.13.2)(yaml@2.9.0):
+  vite@7.3.5(@types/node@24.13.2)(tsx@4.22.4)(yaml@2.9.0):
     dependencies:
       esbuild: 0.28.1
       fdir: 6.5.0(picomatch@4.0.4)
@@ -7423,11 +7440,12 @@ snapshots:
     optionalDependencies:
       "@types/node": 24.13.2
       fsevents: 2.3.3
+      tsx: 4.22.4
       yaml: 2.9.0
 
-  vitefu@1.1.3(vite@7.3.5(@types/node@24.13.2)(yaml@2.9.0)):
+  vitefu@1.1.3(vite@7.3.5(@types/node@24.13.2)(tsx@4.22.4)(yaml@2.9.0)):
     optionalDependencies:
-      vite: 7.3.5(@types/node@24.13.2)(yaml@2.9.0)
+      vite: 7.3.5(@types/node@24.13.2)(tsx@4.22.4)(yaml@2.9.0)
 
   volar-service-css@0.0.70(@volar/language-service@2.4.28):
     dependencies:

@@ -1,6 +1,6 @@
 # Agent Instructions
 
-开发本项目时必须先阅读并遵守 [Branch Workflow](./docs/branch-workflow.md)。
+开发本项目时必须遵守分支工作流。项目长期文档维护在本地 Obsidian，不在仓库内新增文档目录。
 
 核心规则：
 
