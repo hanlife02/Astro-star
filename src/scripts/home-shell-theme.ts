@@ -30,15 +30,37 @@ export function initHomeShellTheme() {
   const resolveMode = (mode: ThemeMode) =>
     mode === "system" ? (media.matches ? "dark" : "light") : mode;
   const readCookie = (key: string) => {
-    const match = document.cookie.match(
-      new RegExp(
-        `(?:^|; )${key.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}=([^;]*)`,
-      ),
-    );
-    return match ? decodeURIComponent(match[1]) : "";
+    try {
+      const match = document.cookie.match(
+        new RegExp(
+          `(?:^|; )${key.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}=([^;]*)`,
+        ),
+      );
+      return match ? decodeURIComponent(match[1]) : "";
+    } catch {
+      return "";
+    }
   };
   const writeCookie = (key: string, value: string) => {
-    document.cookie = `${key}=${encodeURIComponent(value)}; Max-Age=${COOKIE_MAX_AGE}; Path=/; SameSite=Lax`;
+    try {
+      document.cookie = `${key}=${encodeURIComponent(value)}; Max-Age=${COOKIE_MAX_AGE}; Path=/; SameSite=Lax`;
+    } catch {
+      // Cookie persistence is optional; the resolved theme still applies.
+    }
+  };
+  const readStoredThemeMode = () => {
+    try {
+      return window.localStorage.getItem(STORAGE_KEY);
+    } catch {
+      return "";
+    }
+  };
+  const writeStoredThemeMode = (mode: ThemeMode) => {
+    try {
+      window.localStorage.setItem(STORAGE_KEY, mode);
+    } catch {
+      // Storage can be unavailable in private or restricted browsing contexts.
+    }
   };
 
   const nextMode = (mode: ThemeMode): ThemeMode => {
@@ -63,7 +85,7 @@ export function initHomeShellTheme() {
   };
 
   const getInitialMode = (): ThemeMode => {
-    const stored = window.localStorage.getItem(STORAGE_KEY);
+    const stored = readStoredThemeMode();
     if (stored && VALID_MODES.includes(stored as ThemeMode))
       return stored as ThemeMode;
     const cookieMode = readCookie(STORAGE_KEY);
@@ -90,7 +112,7 @@ export function initHomeShellTheme() {
     }
 
     syncToggle(mode);
-    window.localStorage.setItem(STORAGE_KEY, mode);
+    writeStoredThemeMode(mode);
     writeCookie(STORAGE_KEY, mode);
     writeCookie(RESOLVED_COOKIE_KEY, resolved);
   };
