@@ -13,105 +13,84 @@
     transparent
   );
 }
-
-.snow-bg::before {
+.snow-bg::before,
+.snow-bg::after {
   content: "";
   position: absolute;
-  inset: -12%;
-  background-image:
-    radial-gradient(
-      circle at 6% 14%,
-      var(--snow-ink) 0 0.0813rem,
-      transparent 0.1625rem
-    ),
-    radial-gradient(
-      circle at 18% 62%,
-      var(--snow-ink) 0 0.1125rem,
-      transparent 0.2063rem
-    ),
-    radial-gradient(
-      circle at 27% 28%,
-      var(--snow-ink) 0 0.0813rem,
-      transparent 0.1625rem
-    ),
-    radial-gradient(
-      circle at 33% 80%,
-      var(--snow-ink) 0 0.1438rem,
-      transparent 0.2438rem
-    ),
-    radial-gradient(
-      circle at 41% 18%,
-      var(--snow-ink) 0 0.0938rem,
-      transparent 0.1938rem
-    ),
-    radial-gradient(
-      circle at 49% 55%,
-      var(--snow-ink) 0 0.0813rem,
-      transparent 0.1625rem
-    ),
-    radial-gradient(
-      circle at 57% 32%,
-      var(--snow-ink) 0 0.125rem,
-      transparent 0.225rem
-    ),
-    radial-gradient(
-      circle at 63% 74%,
-      var(--snow-ink) 0 0.0813rem,
-      transparent 0.1625rem
-    ),
-    radial-gradient(
-      circle at 71% 12%,
-      var(--snow-ink) 0 0.175rem,
-      transparent 0.2938rem
-    ),
-    radial-gradient(
-      circle at 78% 46%,
-      var(--snow-ink) 0 0.0938rem,
-      transparent 0.1938rem
-    ),
-    radial-gradient(
-      circle at 86% 83%,
-      var(--snow-ink) 0 0.0813rem,
-      transparent 0.1625rem
-    ),
-    radial-gradient(
-      circle at 92% 24%,
-      var(--snow-ink) 0 0.1375rem,
-      transparent 0.2438rem
-    );
-  background-size: 56.25rem 40.625rem;
+  top: calc(var(--snow-tile-height) * -1);
+  right: auto;
+  bottom: auto;
+  left: calc(var(--snow-tile-width) * -1);
+  width: calc(100% + var(--snow-tile-width));
+  height: calc(100% + var(--snow-tile-height));
+  background-color: var(--snow-ink);
+  opacity: var(--snow-layer-opacity);
+  mask-image: url("/snow-crystals.svg");
+  mask-position: var(--snow-mask-position, 0 0);
+  mask-size: var(--snow-tile-width) var(--snow-tile-height);
+  mask-repeat: repeat;
+  -webkit-mask-image: url("/snow-crystals.svg");
+  -webkit-mask-position: var(--snow-mask-position, 0 0);
+  -webkit-mask-size: var(--snow-tile-width) var(--snow-tile-height);
+  -webkit-mask-repeat: repeat;
   transform: translate3d(0, 0, 0);
 }
-
-.snow-bg[data-animated="true"]::before {
-  animation: snow-drift-transform 22s linear infinite;
-  will-change: transform;
+.snow-bg::before {
+  --snow-tile-width: 56.25rem;
+  --snow-tile-height: 40.625rem;
+  --snow-layer-opacity: 0.68;
+  --snow-duration: 52s;
+  --snow-drift-x: 56.25rem;
+  --snow-drift-y: 40.625rem;
+  --snow-mid-x: 28.125rem;
+  --snow-mid-y: 20.3125rem;
 }
-
+.snow-bg::after {
+  --snow-tile-width: 43.75rem;
+  --snow-tile-height: 31.25rem;
+  --snow-layer-opacity: 0.42;
+  --snow-duration: 34s;
+  --snow-drift-x: 43.75rem;
+  --snow-drift-y: 31.25rem;
+  --snow-mid-x: 21.875rem;
+  --snow-mid-y: 15.625rem;
+  --snow-mask-position: 17rem 9rem;
+}
 :root[data-theme="light"] .snow-bg {
   background-color: #ffffff;
   --fg: #7d7d7d;
   --snow-strength: 36%;
 }
-
 .snow-bg[data-mode="dark"],
 :root[data-theme="dark"] .snow-bg {
   background-color: #000000;
   --fg: #ffffff;
   --snow-strength: 24%;
 }
-
 @keyframes snow-drift-transform {
-  from {
+  0% {
     transform: translate3d(0, 0, 0);
   }
-  to {
-    transform: translate3d(7.5rem, 18.75rem, 0);
+  50% {
+    transform: translate3d(var(--snow-mid-x), var(--snow-mid-y), 0);
+  }
+  100% {
+    transform: translate3d(var(--snow-drift-x), var(--snow-drift-y), 0);
   }
 }
-
+@media (prefers-reduced-motion: no-preference) {
+  .snow-bg[data-animated="true"]::before,
+  .snow-bg[data-animated="true"]::after {
+    mask-image: url("/snow-crystals-spin.svg");
+    -webkit-mask-image: url("/snow-crystals-spin.svg");
+    animation: snow-drift-transform var(--snow-duration) linear infinite;
+    will-change: transform;
+  }
+}
 @media (prefers-reduced-motion: reduce) {
-  .snow-bg::before {
+  .snow-bg::before,
+  .snow-bg::after {
     animation: none;
+    will-change: auto;
   }
 }

@@ -1,0 +1,177 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 650">
+  <defs>
+    <g
+      id="flake-arm"
+      fill="none"
+      stroke="#fff"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path d="M0 0V-27" />
+      <path d="M0-27l-8 9.2M0-27l8 9.2" />
+      <path d="M0-17l-6.2 6.4M0-17l6.2 6.4" />
+    </g>
+    <g
+      id="crystal"
+      fill="none"
+      stroke="#fff"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <use href="#flake-arm" />
+      <use href="#flake-arm" transform="rotate(60)" />
+      <use href="#flake-arm" transform="rotate(120)" />
+      <use href="#flake-arm" transform="rotate(180)" />
+      <use href="#flake-arm" transform="rotate(240)" />
+      <use href="#flake-arm" transform="rotate(300)" />
+      <path d="M0-6.2 5.37-3.1 5.37 3.1 0 6.2-5.37 3.1-5.37-3.1Z" />
+    </g>
+    <g
+      id="rounded-flake-arm"
+      fill="none"
+      stroke="#fff"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path d="M0 0V-35" />
+      <path d="M0-34V-44" />
+      <path d="M0-31l-13-13M0-31l13-13" />
+      <path d="M0-20l-14-11M0-20l14-11" />
+    </g>
+    <g
+      id="rounded-crystal"
+      fill="none"
+      stroke="#fff"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <use href="#rounded-flake-arm" />
+      <use href="#rounded-flake-arm" transform="rotate(60)" />
+      <use href="#rounded-flake-arm" transform="rotate(120)" />
+      <use href="#rounded-flake-arm" transform="rotate(180)" />
+      <use href="#rounded-flake-arm" transform="rotate(240)" />
+      <use href="#rounded-flake-arm" transform="rotate(300)" />
+    </g>
+  </defs>
+
+  <use
+    href="#crystal"
+    transform="translate(43 76) scale(.13) rotate(8)"
+    stroke-width="2.9"
+    opacity=".68"
+  />
+  <use
+    href="#rounded-crystal"
+    transform="translate(116 266) scale(.13) rotate(-10)"
+    stroke-width="4.9"
+    opacity=".7"
+  />
+  <use
+    href="#crystal"
+    transform="translate(161 482) scale(.14) rotate(19)"
+    stroke-width="2.9"
+    opacity=".64"
+  />
+  <use
+    href="#rounded-crystal"
+    transform="translate(207 122) scale(.16) rotate(-4)"
+    stroke-width="4.8"
+    opacity=".72"
+  />
+  <use
+    href="#crystal"
+    transform="translate(254 344) scale(.15) rotate(14)"
+    stroke-width="2.85"
+    opacity=".7"
+  />
+  <use
+    href="#rounded-crystal"
+    transform="translate(314 578) scale(.12) rotate(-22)"
+    stroke-width="5"
+    opacity=".64"
+  />
+  <use
+    href="#crystal"
+    transform="translate(352 196) scale(.18) rotate(3)"
+    stroke-width="2.85"
+    opacity=".76"
+  />
+  <use
+    href="#rounded-crystal"
+    transform="translate(407 421) scale(.13) rotate(26)"
+    stroke-width="5.05"
+    opacity=".66"
+  />
+  <use
+    href="#rounded-crystal"
+    transform="translate(468 61) scale(.17) rotate(-17)"
+    stroke-width="4.7"
+    opacity=".76"
+  />
+  <use
+    href="#crystal"
+    transform="translate(513 286) scale(.16) rotate(11)"
+    stroke-width="2.85"
+    opacity=".68"
+  />
+  <use
+    href="#rounded-crystal"
+    transform="translate(562 548) scale(.14) rotate(-8)"
+    stroke-width="4.95"
+    opacity=".66"
+  />
+  <use
+    href="#crystal"
+    transform="translate(621 154) scale(.2) rotate(21)"
+    stroke-width="2.75"
+    opacity=".78"
+  />
+  <use
+    href="#rounded-crystal"
+    transform="translate(675 357) scale(.12) rotate(16)"
+    stroke-width="5"
+    opacity=".62"
+  />
+  <use
+    href="#crystal"
+    transform="translate(723 604) scale(.14) rotate(-13)"
+    stroke-width="2.9"
+    opacity=".66"
+  />
+  <use
+    href="#rounded-crystal"
+    transform="translate(789 231) scale(.16) rotate(7)"
+    stroke-width="4.8"
+    opacity=".72"
+  />
+  <use
+    href="#crystal"
+    transform="translate(844 455) scale(.12) rotate(-24)"
+    stroke-width="3"
+    opacity=".62"
+  />
+  <use
+    href="#crystal"
+    transform="translate(86 596) scale(.11) rotate(28)"
+    stroke-width="3"
+    opacity=".58"
+  />
+  <use
+    href="#rounded-crystal"
+    transform="translate(276 35) scale(.11) rotate(-28)"
+    stroke-width="5.1"
+    opacity=".6"
+  />
+  <use
+    href="#crystal"
+    transform="translate(704 38) scale(.13) rotate(32)"
+    stroke-width="2.9"
+    opacity=".62"
+  />
+  <use
+    href="#rounded-crystal"
+    transform="translate(848 621) scale(.11) rotate(-18)"
+    stroke-width="5.1"
+    opacity=".6"
+  />
+</svg>
