@@ -10,6 +10,7 @@ import remarkMath from "remark-math";
 import { remarkContentFormatDirectives } from "./src/utils/remark-content-format-directives.js";
 import { rehypeFigureCaptions } from "./src/utils/rehype-figure-captions.js";
 import { mdxVoidHtmlPlugin } from "./src/utils/mdx-void-html.js";
+import { createSitemapLastmodSerializer } from "./src/utils/sitemap-lastmod.ts";
 import { site } from "./src/config/site.ts";
 
 // https://astro.build/config
@@ -43,7 +44,12 @@ export default defineConfig({
       }),
     },
   },
-  integrations: [mdx(), sitemap()],
+  integrations: [
+    mdx(),
+    sitemap({
+      serialize: createSitemapLastmodSerializer(site.site.url),
+    }),
+  ],
   markdown: {
     shikiConfig: {
       themes: {
