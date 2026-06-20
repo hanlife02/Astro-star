@@ -68,11 +68,31 @@ const {
 } = Astro.props as Props;
 
 const pageTitle = siteName ? `${title} - ${siteName}` : title;
+const sectionLabels: Record<string, string> = {
+  blog: "Blog",
+  note: "Note",
+  project: "Project",
+};
+const sectionLabel = sectionLabels[section] ?? section;
+const articleSection =
+  articleType.trim() && articleType !== "Uncategorized"
+    ? articleType
+    : sectionLabel;
+const articleKeywords = Array.from(
+  new Set(
+    [sectionLabel, articleSection]
+      .map((item) => item.trim())
+      .filter((item) => item && item !== "Uncategorized"),
+  ),
+);
 const articleJsonLd = {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
   headline: title,
   description: description || undefined,
+  articleSection,
+  keywords: articleKeywords.length > 0 ? articleKeywords : undefined,
+  wordCount: articleWordCount > 0 ? articleWordCount : undefined,
   author: {
     "@type": "Person",
     name: author,
@@ -91,6 +111,7 @@ const articleJsonLd = {
     : undefined,
   url: canonicalUrl || undefined,
   image: imageUrl ? [imageUrl] : undefined,
+  thumbnailUrl: imageUrl || undefined,
   isPartOf: siteName
     ? {
         "@type": "WebSite",
@@ -102,12 +123,6 @@ const articleJsonLdText = JSON.stringify(articleJsonLd).replace(
   /</g,
   "\\u003c",
 );
-const sectionLabels: Record<string, string> = {
-  blog: "Blog",
-  note: "Note",
-  project: "Project",
-};
-const sectionLabel = sectionLabels[section] ?? section;
 const projectLinks = [
   projectUrl ? { href: projectUrl, label: "Project", kind: "github" } : null,
   docUrl ? { href: docUrl, label: "Docs", kind: "docs" } : null,
