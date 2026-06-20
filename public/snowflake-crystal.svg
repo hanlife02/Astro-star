@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-48 -48 96 96">
+  <g
+    fill="none"
+    stroke="#000"
+    stroke-width="3"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <path d="M0 0V-27" />
+    <path d="M0-27l-8 9.2M0-27l8 9.2" />
+    <path d="M0-17l-6.2 6.4M0-17l6.2 6.4" />
+    <path d="M0 0V-27" transform="rotate(60)" />
+    <path d="M0-27l-8 9.2M0-27l8 9.2" transform="rotate(60)" />
+    <path d="M0-17l-6.2 6.4M0-17l6.2 6.4" transform="rotate(60)" />
+    <path d="M0 0V-27" transform="rotate(120)" />
+    <path d="M0-27l-8 9.2M0-27l8 9.2" transform="rotate(120)" />
+    <path d="M0-17l-6.2 6.4M0-17l6.2 6.4" transform="rotate(120)" />
+    <path d="M0 0V-27" transform="rotate(180)" />
+    <path d="M0-27l-8 9.2M0-27l8 9.2" transform="rotate(180)" />
+    <path d="M0-17l-6.2 6.4M0-17l6.2 6.4" transform="rotate(180)" />
+    <path d="M0 0V-27" transform="rotate(240)" />
+    <path d="M0-27l-8 9.2M0-27l8 9.2" transform="rotate(240)" />
+    <path d="M0-17l-6.2 6.4M0-17l6.2 6.4" transform="rotate(240)" />
+    <path d="M0 0V-27" transform="rotate(300)" />
+    <path d="M0-27l-8 9.2M0-27l8 9.2" transform="rotate(300)" />
+    <path d="M0-17l-6.2 6.4M0-17l6.2 6.4" transform="rotate(300)" />
+    <path d="M0-6.2 5.37-3.1 5.37 3.1 0 6.2-5.37 3.1-5.37-3.1Z" />
+  </g>
+</svg>

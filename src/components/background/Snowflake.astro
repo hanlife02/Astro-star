@@ -1,0 +1,13 @@
+---
+interface Props {
+  shape: "crystal" | "rounded";
+  layer: "near" | "mid" | "far";
+  style: string;
+}
+
+const { shape, layer, style } = Astro.props as Props;
+---
+
+<span
+  class={`snow-flake snow-flake--${shape} snow-flake--${layer}`}
+  style={style}></span>

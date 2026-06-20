@@ -206,3 +206,109 @@ body {
   text-decoration: none;
   white-space: nowrap;
 }
+
+@media (forced-colors: active) {
+  :root,
+  :root[data-theme="dark"] {
+    --line: CanvasText;
+    --line-soft: CanvasText;
+    --accent: LinkText;
+    --border-soft: CanvasText;
+    --text-muted: GrayText;
+    --content-text-color: CanvasText;
+  }
+
+  html,
+  body {
+    background-color: Canvas !important;
+    color: CanvasText !important;
+    color-scheme: light dark;
+  }
+
+  a {
+    color: LinkText !important;
+  }
+
+  :is(button, input, textarea, select) {
+    border-color: ButtonBorder !important;
+    color: ButtonText !important;
+  }
+
+  :is(
+    a,
+    button,
+    summary,
+    input,
+    textarea,
+    select,
+    [role="button"],
+    [tabindex]:not([tabindex="-1"])
+  ):focus-visible {
+    outline: 2px solid Highlight !important;
+    outline-offset: 3px !important;
+  }
+
+  :is(
+    .content-page-body h1,
+    .listing-header-title,
+    .collection-page-title,
+    .article-content-title,
+    .article-comments-title,
+    .latest-articles-title-text,
+    .latest-articles-year-label
+  ) {
+    color: CanvasText !important;
+    -webkit-text-stroke: 0 !important;
+    text-stroke: 0 !important;
+  }
+
+  .content-page-body .content-spoiler {
+    border: 1px solid CanvasText !important;
+    background: CanvasText !important;
+    color: Canvas !important;
+  }
+
+  .content-page-body .content-spoiler:is(:hover, :focus-visible) {
+    background: Canvas !important;
+    color: CanvasText !important;
+  }
+
+  :is(
+    .snow-bg,
+    .content-bg,
+    .coderain,
+    .constellation-bg,
+    .nav-panel,
+    .content-toc,
+    .mobile-nav-drawer .nav-panel
+  ) {
+    background: Canvas !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    color: CanvasText !important;
+  }
+
+  .content-bg::after,
+  .snow-bg::before,
+  .snow-bg::after,
+  .coderain__drop,
+  .constellation-bg__canvas {
+    display: none !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    text-shadow: none !important;
+  }
+
+  :is(
+    .nav-panel,
+    .content-toc,
+    .mobile-nav-drawer .nav-panel,
+    .content-bg__corner,
+    .content-bg__punches span
+  ) {
+    border-color: CanvasText !important;
+  }
+}
