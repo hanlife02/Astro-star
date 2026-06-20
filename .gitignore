@@ -29,6 +29,9 @@ src/data/*
 # generated git timestamps (build artifact)
 src/gitlog/
 
+# generated signature asset (derived from src/config/site.ts)
+public/signature.svg
+
 # claude
 .claude/
 
