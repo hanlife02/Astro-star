@@ -4,6 +4,7 @@
 
 <script>
   import { initHomeShellTheme } from "../../scripts/home-shell-theme";
+  import { initHomeShellSignature } from "../../scripts/home-shell-signature";
   import { initHomeShellDesktopSignatureNav } from "../../scripts/home-shell-desktop-signature-nav";
   import { initHomeShellMobileNav } from "../../scripts/home-shell-mobile-nav";
   import { initHomeShellContentToc } from "../../scripts/home-shell-content-toc";
@@ -39,6 +40,7 @@
 
   const HOME_SHELL_BEFORE_SWAP_CLEANUP_KEYS = [
     "__homeShellGitHubRepoCardsCleanup",
+    "__homeShellSignatureCleanup",
     "__homeShellContentTocCleanup",
     "__homeShellMobileTocCleanup",
     "__homeShellMobileNavCleanup",
@@ -107,6 +109,7 @@
 
   const initHomeShell = () => {
     runHomeShellInitializer("theme", initHomeShellTheme);
+    runHomeShellInitializer("signature", initHomeShellSignature);
     runHomeShellInitializer(
       "desktop-signature-nav",
       initHomeShellDesktopSignatureNav,

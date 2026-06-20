@@ -11,13 +11,33 @@
 .signature-mark {
   display: inline-block;
   width: min(var(--signature-svg-max), 100%);
+  will-change: clip-path;
+}
+
+.signature-mark[data-signature-src="true"] {
+  aspect-ratio: 394.6 / 80.8;
+  background-color: currentColor;
+  mask-image: var(--signature-mask);
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
+  -webkit-mask-image: var(--signature-mask);
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+}
+
+.signature-mark[data-signature-loaded="true"] {
+  aspect-ratio: auto;
+  background-color: transparent;
+  mask-image: none;
+  -webkit-mask-image: none;
 }
 
 .signature-wrap svg {
   display: block;
   width: 100%;
   height: auto;
-  will-change: clip-path;
 }
 
 .signature-mark svg,
@@ -27,11 +47,11 @@
 }
 
 @media (hover: hover) {
-  .signature-wrap:hover .signature-mark svg {
+  .signature-wrap:hover .signature-mark {
     animation: signature-write 1.45s cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
-  .signature-wrap:hover .signature-mark path {
+  .signature-wrap:hover .signature-mark[data-signature-inline="true"] path {
     stroke-opacity: 0;
   }
 }
@@ -40,11 +60,13 @@
   outline: none;
 }
 
-.signature-wrap:focus-visible .signature-mark svg {
+.signature-wrap:focus-visible .signature-mark {
   animation: signature-write 1.45s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-.signature-wrap:focus-visible .signature-mark path {
+.signature-wrap:focus-visible
+  .signature-mark[data-signature-inline="true"]
+  path {
   stroke-opacity: 0;
 }
 
@@ -65,8 +87,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .signature-wrap:hover .signature-mark svg,
-  .signature-wrap:focus-visible .signature-mark svg {
+  .signature-wrap:hover .signature-mark,
+  .signature-wrap:focus-visible .signature-mark {
     animation: none;
   }
 }
