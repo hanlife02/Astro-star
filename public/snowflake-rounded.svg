@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-56 -56 112 112">
+  <g
+    fill="none"
+    stroke="#000"
+    stroke-width="4.8"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <path d="M0 0V-35" />
+    <path d="M0-34V-44" />
+    <path d="M0-31l-13-13M0-31l13-13" />
+    <path d="M0-20l-14-11M0-20l14-11" />
+    <path d="M0 0V-35" transform="rotate(60)" />
+    <path d="M0-34V-44" transform="rotate(60)" />
+    <path d="M0-31l-13-13M0-31l13-13" transform="rotate(60)" />
+    <path d="M0-20l-14-11M0-20l14-11" transform="rotate(60)" />
+    <path d="M0 0V-35" transform="rotate(120)" />
+    <path d="M0-34V-44" transform="rotate(120)" />
+    <path d="M0-31l-13-13M0-31l13-13" transform="rotate(120)" />
+    <path d="M0-20l-14-11M0-20l14-11" transform="rotate(120)" />
+    <path d="M0 0V-35" transform="rotate(180)" />
+    <path d="M0-34V-44" transform="rotate(180)" />
+    <path d="M0-31l-13-13M0-31l13-13" transform="rotate(180)" />
+    <path d="M0-20l-14-11M0-20l14-11" transform="rotate(180)" />
+    <path d="M0 0V-35" transform="rotate(240)" />
+    <path d="M0-34V-44" transform="rotate(240)" />
+    <path d="M0-31l-13-13M0-31l13-13" transform="rotate(240)" />
+    <path d="M0-20l-14-11M0-20l14-11" transform="rotate(240)" />
+    <path d="M0 0V-35" transform="rotate(300)" />
+    <path d="M0-34V-44" transform="rotate(300)" />
+    <path d="M0-31l-13-13M0-31l13-13" transform="rotate(300)" />
+    <path d="M0-20l-14-11M0-20l14-11" transform="rotate(300)" />
+  </g>
+</svg>

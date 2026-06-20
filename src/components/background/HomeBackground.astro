@@ -1,4 +1,5 @@
 ---
+import Snowflake from "./Snowflake.astro";
 import "../../style/components/background/home-background.css";
 
 interface Props {
@@ -7,12 +8,73 @@ interface Props {
   animated?: boolean;
 }
 
+type SnowflakeShape = "crystal" | "rounded";
+type SnowflakeLayer = "near" | "mid" | "far";
+
+interface SnowflakeConfig {
+  shape: SnowflakeShape;
+  layer: SnowflakeLayer;
+  style: string;
+}
+
 const {
   revealAt = "12% 12%",
   mode,
   animated = true,
 } = Astro.props satisfies Props;
 const backgroundMode = mode === "dark" ? "dark" : undefined;
+const snowflakes: SnowflakeConfig[] = Array.from({ length: 44 }, (_, index) => {
+  const layer: SnowflakeLayer =
+    index % 4 === 0 ? "near" : index % 3 === 0 ? "mid" : "far";
+  const duration =
+    layer === "near"
+      ? 16 + ((index * 7) % 10)
+      : layer === "mid"
+        ? 22 + ((index * 7) % 12)
+        : 28 + ((index * 7) % 16);
+  const spinDirection = index % 4 === 0 || index % 4 === 3 ? -1 : 1;
+  const spin =
+    layer === "near"
+      ? spinDirection * (540 + ((index * 83) % 360))
+      : layer === "mid"
+        ? spinDirection * (180 + ((index * 83) % 240))
+        : 0;
+  const driftDirection = index % 6 === 0 ? -1 : 1;
+  const drift = driftDirection * (10 + ((index * 13) % 15));
+  const size =
+    layer === "near"
+      ? 13 + ((index * 5) % 7)
+      : layer === "mid"
+        ? 10 + ((index * 5) % 6)
+        : 8 + ((index * 5) % 5);
+  const opacity =
+    layer === "near"
+      ? 0.56 + ((index * 11) % 28) / 100
+      : layer === "mid"
+        ? 0.46 + ((index * 11) % 24) / 100
+        : 0.34 + ((index * 11) % 20) / 100;
+  const x = (index * 37) % 100;
+  const y = (index * 53) % 100;
+  const delay = -((index * 11) % duration);
+  const rotate = (index * 29) % 360;
+  const shape: SnowflakeShape = index % 3 === 1 ? "rounded" : "crystal";
+
+  return {
+    shape,
+    layer,
+    style: [
+      `--snow-x:${x}vw`,
+      `--snow-y:${y}vh`,
+      `--snow-size:${size}px`,
+      `--snow-opacity:${opacity.toFixed(2)}`,
+      `--snow-duration:${duration}s`,
+      `--snow-delay:${delay}s`,
+      `--snow-drift-x:${drift.toFixed(2)}vw`,
+      `--snow-rotate:${rotate}deg`,
+      `--snow-spin:${spin}deg`,
+    ].join(";"),
+  };
+});
 ---
 
 <div
@@ -22,4 +84,9 @@ const backgroundMode = mode === "dark" ? "dark" : undefined;
   aria-hidden="true"
   style={`--snow-reveal-at:${revealAt};`}
 >
+  {
+    snowflakes.map((flake) => (
+      <Snowflake shape={flake.shape} layer={flake.layer} style={flake.style} />
+    ))
+  }
 </div>

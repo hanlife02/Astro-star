@@ -4,93 +4,113 @@
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
+  contain: strict;
   background-color: #ffffff;
   --fg: #7d7d7d;
-  --snow-strength: 36%;
+  --snow-strength: 38%;
   --snow-ink: color-mix(
     in srgb,
-    var(--fg) var(--snow-strength, 24%),
+    var(--fg) var(--snow-strength, 28%),
     transparent
   );
 }
-.snow-bg::before,
-.snow-bg::after {
+
+.snow-flake {
+  position: absolute;
+  top: var(--snow-y);
+  left: var(--snow-x);
+  width: var(--snow-size);
+  height: var(--snow-size);
+  display: block;
+  color: var(--snow-ink);
+  opacity: var(--snow-opacity);
+  transform: translate3d(0, 0, 0) rotate(var(--snow-rotate));
+  transform-origin: 50% 50%;
+}
+
+.snow-flake::before {
   content: "";
   position: absolute;
-  top: calc(var(--snow-tile-height) * -1);
-  right: auto;
-  bottom: auto;
-  left: calc(var(--snow-tile-width) * -1);
-  width: calc(100% + var(--snow-tile-width));
-  height: calc(100% + var(--snow-tile-height));
-  background-color: var(--snow-ink);
-  opacity: var(--snow-layer-opacity);
-  mask-image: url("/snow-crystals.svg");
-  mask-position: var(--snow-mask-position, 0 0);
-  mask-size: var(--snow-tile-width) var(--snow-tile-height);
-  mask-repeat: repeat;
-  -webkit-mask-image: url("/snow-crystals.svg");
-  -webkit-mask-position: var(--snow-mask-position, 0 0);
-  -webkit-mask-size: var(--snow-tile-width) var(--snow-tile-height);
-  -webkit-mask-repeat: repeat;
-  transform: translate3d(0, 0, 0);
+  inset: 0;
+  background-color: currentColor;
+  mask-image: url("/snowflake-crystal.svg");
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
+  -webkit-mask-image: url("/snowflake-crystal.svg");
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
 }
-.snow-bg::before {
-  --snow-tile-width: 56.25rem;
-  --snow-tile-height: 40.625rem;
-  --snow-layer-opacity: 0.68;
-  --snow-duration: 52s;
-  --snow-drift-x: 56.25rem;
-  --snow-drift-y: 40.625rem;
-  --snow-mid-x: 28.125rem;
-  --snow-mid-y: 20.3125rem;
+
+.snow-flake--rounded::before {
+  mask-image: url("/snowflake-rounded.svg");
+  -webkit-mask-image: url("/snowflake-rounded.svg");
 }
-.snow-bg::after {
-  --snow-tile-width: 43.75rem;
-  --snow-tile-height: 31.25rem;
-  --snow-layer-opacity: 0.42;
-  --snow-duration: 34s;
-  --snow-drift-x: 43.75rem;
-  --snow-drift-y: 31.25rem;
-  --snow-mid-x: 21.875rem;
-  --snow-mid-y: 15.625rem;
-  --snow-mask-position: 17rem 9rem;
-}
+
 :root[data-theme="light"] .snow-bg {
   background-color: #ffffff;
   --fg: #7d7d7d;
-  --snow-strength: 36%;
+  --snow-strength: 38%;
 }
+
 .snow-bg[data-mode="dark"],
 :root[data-theme="dark"] .snow-bg {
   background-color: #000000;
   --fg: #ffffff;
-  --snow-strength: 24%;
+  --snow-strength: 26%;
 }
-@keyframes snow-drift-transform {
+
+@keyframes snow-flake-spin-fall {
   0% {
-    transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0) rotate(var(--snow-rotate));
   }
-  50% {
-    transform: translate3d(var(--snow-mid-x), var(--snow-mid-y), 0);
-  }
+
   100% {
-    transform: translate3d(var(--snow-drift-x), var(--snow-drift-y), 0);
+    transform: translate3d(var(--snow-drift-x), 136vh, 0)
+      rotate(calc(var(--snow-rotate) + var(--snow-spin)));
   }
 }
+
+@keyframes snow-flake-drift-fall {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(var(--snow-rotate));
+  }
+
+  100% {
+    transform: translate3d(var(--snow-drift-x), 136vh, 0)
+      rotate(var(--snow-rotate));
+  }
+}
+
 @media (prefers-reduced-motion: no-preference) {
-  .snow-bg[data-animated="true"]::before,
-  .snow-bg[data-animated="true"]::after {
-    mask-image: url("/snow-crystals-spin.svg");
-    -webkit-mask-image: url("/snow-crystals-spin.svg");
-    animation: snow-drift-transform var(--snow-duration) linear infinite;
+  .snow-bg[data-animated="true"] .snow-flake {
+    top: -18vh;
+    animation-duration: var(--snow-duration);
+    animation-delay: var(--snow-delay);
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+  }
+
+  .snow-bg[data-animated="true"] :is(.snow-flake--near, .snow-flake--mid) {
+    animation-name: snow-flake-spin-fall;
     will-change: transform;
   }
+
+  .snow-bg[data-animated="true"] .snow-flake--far {
+    animation-name: snow-flake-drift-fall;
+  }
 }
+
 @media (prefers-reduced-motion: reduce) {
-  .snow-bg::before,
-  .snow-bg::after {
+  .snow-flake {
     animation: none;
     will-change: auto;
+  }
+}
+
+@media (forced-colors: active) {
+  .snow-flake {
+    display: none !important;
   }
 }
