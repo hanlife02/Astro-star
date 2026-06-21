@@ -22,13 +22,17 @@ export function initHomeShellDesktopSignatureNav() {
 
   if (!(signatureCollapse instanceof HTMLDetailsElement)) return;
 
-  const signatureCollapseTrigger = signatureCollapse.querySelector(
+  const signatureCollapseTrigger = signatureCollapse.querySelector<HTMLElement>(
     ".signature-collapse-trigger",
   );
   const signatureCollapsePanel = signatureCollapse.querySelector(
     ".signature-collapse-panel",
   );
   const desktopNavMedia = window.matchMedia(HOME_SHELL_DESKTOP_MEDIA_QUERY);
+  let signatureCollapseWasOpenOnTriggerActivation = false;
+
+  const isDesktopSignatureCollapseOpen = () =>
+    signatureCollapse.open && signatureCollapse.dataset.panelState === "open";
 
   const syncDesktopSignatureCollapseHitArea = () => {
     if (!(signatureCollapsePanel instanceof HTMLElement)) return;
@@ -68,6 +72,25 @@ export function initHomeShellDesktopSignatureNav() {
     }, 280);
   };
 
+  const captureTriggerActivationState = () => {
+    if (!desktopNavMedia.matches) return;
+
+    signatureCollapseWasOpenOnTriggerActivation =
+      isDesktopSignatureCollapseOpen();
+  };
+
+  const toggleDesktopSignatureCollapse = () => {
+    if (!desktopNavMedia.matches) return;
+
+    if (signatureCollapseWasOpenOnTriggerActivation) {
+      closeDesktopSignatureCollapse();
+    } else {
+      openDesktopSignatureCollapse();
+    }
+
+    signatureCollapseWasOpenOnTriggerActivation = false;
+  };
+
   syncDesktopSignatureCollapse();
   desktopNavMedia.addEventListener("change", syncDesktopSignatureCollapse, {
     signal: controller.signal,
@@ -77,10 +100,28 @@ export function initHomeShellDesktopSignatureNav() {
   });
 
   signatureCollapseTrigger?.addEventListener(
+    "pointerdown",
+    captureTriggerActivationState,
+    { signal: controller.signal },
+  );
+
+  signatureCollapseTrigger?.addEventListener(
+    "keydown",
+    (event) => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+
+      captureTriggerActivationState();
+    },
+    { signal: controller.signal },
+  );
+
+  signatureCollapseTrigger?.addEventListener(
     "click",
     (event) => {
       if (!desktopNavMedia.matches) return;
+
       event.preventDefault();
+      toggleDesktopSignatureCollapse();
     },
     { signal: controller.signal },
   );
