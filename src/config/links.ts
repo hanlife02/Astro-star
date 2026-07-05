@@ -29,8 +29,9 @@ export const friendLinks = [
   {
     href: "https://aerisun.top/",
     name: "Aerisun",
-    avatarSrc: "https://aerisun.top/media/public/assets/hero-image/504b751cf41f.jpg",
-    description: "在喧嚣的缝隙里，做一个关于自由和好奇心的梦"
+    avatarSrc:
+      "https://aerisun.top/media/public/assets/hero-image/504b751cf41f.jpg",
+    description: "在喧嚣的缝隙里，做一个关于自由和好奇心的梦",
   },
   {
     name: "ADreamLeft’s site",
