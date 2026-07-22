@@ -357,6 +357,7 @@ html:lang(zh-CN) .content-page--article {
 
 .article-comments-thread
   [data-waline]
+  .wl-content
   img:not(.wl-emoji):not(.vemoji):not(.wl-user-avatar) {
   display: block;
   max-width: 100%;
@@ -475,8 +476,22 @@ html:lang(zh-CN) .content-page--article {
   border-color: color-mix(in srgb, var(--line) 12%, transparent);
   width: var(--avatar-size, var(--waline-avatar-size));
   height: var(--avatar-size, var(--waline-avatar-size));
+  overflow: hidden;
+  border-radius: var(--waline-avatar-radius, 50%);
+  background: var(--comment-surface-quiet);
   object-fit: cover;
   box-shadow: none;
+}
+
+.article-comments-thread .wl-avatar img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  border-radius: inherit;
+  object-fit: cover;
 }
 
 .article-comments-thread .wl-panel {
