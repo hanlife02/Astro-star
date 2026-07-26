@@ -21,35 +21,37 @@ function isExternalLink(href?: string) {
 
 <div class="app-panel-card not-content" aria-label="Application panel">
   <div class="app-panel-card-grid">
-    {items.map((item) => {
-      const external = isExternalLink(item.href);
+    {
+      items.map((item) => {
+        const external = isExternalLink(item.href);
 
-      return item.href ? (
-        <a
-          class="app-panel-item app-panel-item--link"
-          href={item.href}
-          target={external ? "_blank" : undefined}
-          rel={external ? "noreferrer" : undefined}
-        >
-          <span class="app-panel-item-icon" aria-hidden="true">
-            <AppPanelIcon name={item.icon} label={item.name} />
-          </span>
-          <span class="app-panel-item-copy">
-            <span class="app-panel-item-name">{item.name}</span>
-            <span class="app-panel-item-description">{item.description}</span>
-          </span>
-        </a>
-      ) : (
-        <div class="app-panel-item">
-          <span class="app-panel-item-icon" aria-hidden="true">
-            <AppPanelIcon name={item.icon} label={item.name} />
-          </span>
-          <span class="app-panel-item-copy">
-            <span class="app-panel-item-name">{item.name}</span>
-            <span class="app-panel-item-description">{item.description}</span>
-          </span>
-        </div>
-      );
-    })}
+        return item.href ? (
+          <a
+            class="app-panel-item app-panel-item--link"
+            href={item.href}
+            target={external ? "_blank" : undefined}
+            rel={external ? "noreferrer" : undefined}
+          >
+            <span class="app-panel-item-icon" aria-hidden="true">
+              <AppPanelIcon name={item.icon} label={item.name} />
+            </span>
+            <span class="app-panel-item-copy">
+              <span class="app-panel-item-name">{item.name}</span>
+              <span class="app-panel-item-description">{item.description}</span>
+            </span>
+          </a>
+        ) : (
+          <div class="app-panel-item">
+            <span class="app-panel-item-icon" aria-hidden="true">
+              <AppPanelIcon name={item.icon} label={item.name} />
+            </span>
+            <span class="app-panel-item-copy">
+              <span class="app-panel-item-name">{item.name}</span>
+              <span class="app-panel-item-description">{item.description}</span>
+            </span>
+          </div>
+        );
+      })
+    }
   </div>
 </div>
