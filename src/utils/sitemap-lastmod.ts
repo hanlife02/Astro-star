@@ -8,6 +8,7 @@ import {
   resolveContentSlug,
   slugifyCategoryLabel,
 } from "./content-slug";
+import { getLoaderEntryId } from "./loader-entry-id";
 
 type Frontmatter = Record<string, boolean | number | string | undefined>;
 type GitTimestampManifest = Record<
@@ -135,13 +136,18 @@ function listContentFiles(directory: string): string[] {
   });
 }
 
-function getContentId(collection: string, relativeContentPath: string) {
+function getContentId(
+  collection: string,
+  relativeContentPath: string,
+  frontmatterSlug?: unknown,
+) {
   const prefix = `${collection}/`;
   const path = relativeContentPath.startsWith(prefix)
     ? relativeContentPath.slice(prefix.length)
     : relativeContentPath;
 
-  return path.replace(/\.(md|mdx)$/i, "");
+  // Mirror the glob loader id so map keys match the URLs Astro generates.
+  return getLoaderEntryId(path, frontmatterSlug);
 }
 
 function getContentPath(path: string) {
@@ -211,7 +217,11 @@ function getEntries() {
         archiveSlug: getStringFrontmatterValue(frontmatter.archiveSlug),
         collection: collection as ContentRouteEntry["collection"],
         date,
-        id: getContentId(collection, relativeContentPath),
+        id: getContentId(
+          collection,
+          relativeContentPath,
+          getSlugFrontmatterValue(frontmatter.slug),
+        ),
         path: contentPath,
         routeSlug: getSlugFrontmatterValue(frontmatter.routeSlug),
         type: getStringFrontmatterValue(frontmatter.type),
