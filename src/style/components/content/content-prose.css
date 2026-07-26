@@ -805,8 +805,8 @@ html:lang(zh-CN) .content-page--article .content-page-body {
   border: 0;
   padding: 0;
   background: color-mix(in srgb, var(--paper) 82%, transparent);
-  backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
   cursor: pointer;
 }
 
@@ -994,8 +994,8 @@ html.content-image-lightbox-open {
   box-shadow: 0 0.35rem 0.9rem
     color-mix(in srgb, var(--btn-line) 10%, transparent);
   cursor: pointer;
-  backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
 }
 
 .content-code-copy svg {

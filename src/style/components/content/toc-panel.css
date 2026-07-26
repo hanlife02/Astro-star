@@ -331,8 +331,8 @@ html[data-js="true"]
     border-radius: var(--radius-md);
     background: rgba(255, 255, 255, 0.96);
     box-shadow: 0 1rem 2.2rem rgba(17, 17, 17, 0.16);
-    backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
   }
 
   .home-shell--has-mobile-toc.is-mobile-toc-open .latest-area > .content-toc {

@@ -11,8 +11,8 @@
   background: color-mix(in srgb, white 76%, transparent);
   color: var(--line);
   box-shadow: 0 0.75rem 2rem color-mix(in srgb, var(--line) 12%, transparent);
-  backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
   cursor: pointer;
   transition: color 0.22s ease;
 }
