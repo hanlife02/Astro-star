@@ -279,9 +279,14 @@ export function initHomeShellContentToc() {
     tocObserver.observe(entry.heading);
   });
 
-  const initialHash = decodeURIComponent(
-    window.location.hash.replace(/^#/, ""),
-  );
+  const rawHash = window.location.hash.replace(/^#/, "");
+  let initialHash = rawHash;
+  try {
+    initialHash = decodeURIComponent(rawHash);
+  } catch {
+    // Malformed percent sequences (e.g. "#%") keep the raw hash instead
+    // of aborting the whole TOC initialization.
+  }
   const initialEntry =
     headingEntries.find((entry) => entry.heading.id === initialHash) ??
     headingEntries[0];
