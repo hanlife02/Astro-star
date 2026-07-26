@@ -1,5 +1,3 @@
-import { GITHUB_TOKEN } from "astro:env/server";
-
 export interface GitHubContributionCell {
   count: number;
   date: string;
@@ -184,14 +182,12 @@ async function fetchWithTimeout(url: string, init?: RequestInit) {
 }
 
 async function fetchContributionYear(username: string, year: number) {
+  // Plain HTML endpoint on github.com: authentication brings no benefit
+  // and would needlessly expose the token outside api.github.com.
   const headers: Record<string, string> = {
     accept: "text/html",
     "user-agent": "Astro-star",
   };
-
-  if (GITHUB_TOKEN) {
-    headers.authorization = `Bearer ${GITHUB_TOKEN}`;
-  }
 
   const params = new URLSearchParams({
     from: `${year}-01-01`,
