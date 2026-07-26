@@ -120,9 +120,9 @@ if (!section || !(section in sectionLabels)) {
 }
 
 const sectionKey = section as SectionKey;
-const collectionEntries = (await getCollection(
-  sectionKey,
-)).filter(isPublishedContentEntry) as ContentEntryMeta[];
+const collectionEntries = (await getCollection(sectionKey)).filter(
+  isPublishedContentEntry,
+) as ContentEntryMeta[];
 
 const categories = collectionEntries
   .reduce<SectionCategoryEntry[]>((entries, entry) => {

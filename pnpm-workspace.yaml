@@ -6,22 +6,7 @@ allowBuilds:
 overrides:
   esbuild: 0.28.1
   volar-service-yaml: 0.0.71
-  # Security patches for transitive deps whose parents still pin vulnerable
-  # ranges. Each is the lowest patched release on the same major line.
-  fast-uri: ^3.1.4 # GHSA-v2hh-gcrm-f6hx, GHSA-4c8g-83qw-93j6
-  js-yaml: ^4.3.0 # GHSA-52cp-r559-cp3m
-  postcss: ^8.5.18 # GHSA-r28c-9q8g-f849
-  sharp: ^0.35.3 # GHSA-f88m-g3jw-g9cj (astro pins ^0.34.0; image service verified on 0.35)
-  svgo: ^4.0.2 # GHSA-2p49-hgcm-8545
-
-auditConfig:
-  # Both advisories are patched only in Astro 7 — 6.4.8 is the final 6.x, so
-  # clearing them means a major upgrade (astro 7 + @astrojs/node 11 + mdx 7),
-  # tracked as separate work. Neither is reachable here: both require the app
-  # to pass attacker-controlled data into an Astro API, and this project uses
-  # no transition:animate/transition:name, while every spread attribute name
-  # comes from a Zod schema or a call-site literal.
-  # Re-check when the Astro 7 upgrade lands and drop these entries.
-  ignoreGhsas:
-    - GHSA-4g3v-8h47-v7g6 # Reflected XSS via View Transition animation properties
-    - GHSA-f48w-9m4c-m7f5 # XSS via unescaped spread attribute names
+  # Dedupe: hast-util-from-html-isomorphic (via rehype-katex) pins 3.0.4 while
+  # Astro's chain uses 3.0.5. Two copies make hast.Root two distinct types, so
+  # rehype-katex stops matching Astro's RehypePlugin and `astro check` fails.
+  "@types/hast": 3.0.5

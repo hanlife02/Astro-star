@@ -17,6 +17,10 @@ import { site } from "./src/config/site.ts";
 export default defineConfig({
   site: site.site.url,
   output: "server",
+  // Astro 7 changed the default to 'jsx', which strips whitespace between inline
+  // elements and collapses e.g. nav links into "AboutBlogNote". Pinned to the
+  // pre-7 HTML-aware behaviour so the upgrade carries no rendering change.
+  compressHTML: true,
   adapter: node({
     mode: "standalone",
   }),
