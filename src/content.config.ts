@@ -7,8 +7,8 @@ const baseContentSchema = z.looseObject({
   title: z.string().optional(),
   description: z.string().optional(),
   image: z.string().optional(),
-  createdAt: z.string().optional(),
-  updatedAt: z.string().optional(),
+  createdAt: z.union([z.string(), z.date()]).optional(),
+  updatedAt: z.union([z.string(), z.date()]).optional(),
   published: z.boolean().optional(),
   type: z.string().optional(),
 });
