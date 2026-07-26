@@ -282,7 +282,9 @@ export const site = {
 };
 ```
 
-本地静态资源放在 `public/` 下，引用时从根路径开始写。例如头像放在 `public/avatar.svg`，配置里写 `/avatar.svg`；文章图片可以放在 `public/figures/`，在 Markdown 中写 `/figures/image-name.png`。
+本地静态资源放在 `public/` 下，引用时从根路径开始写。例如头像放在 `public/avatar.svg`，配置里写 `/avatar.svg`。
+
+文章图片则不要放进 `public/`——那里的文件原样直出、不经压缩。原图放在文章所在分类目录的 `images/` 子目录，在 Markdown 中用相对路径写 `![说明文字](./images/image-name.png)`，构建时会自动转成 webp 并注入宽高，`dist/` 里只保留压缩产物。`public/figures/` 只留配置里引用的友链头像。
 
 #### 文章内容
 
@@ -349,7 +351,7 @@ Write your project introduction here.
 - `type`：文章分类或标签性质的展示字段。
 - `projectUrl`：项目地址，仅项目页会展示为 GitHub 圆形图标链接。
 - `docUrl`：项目文档地址，仅项目页会展示为文档圆形图标链接。
-- `image`：社交分享图/SEO 图，通常写 `/figures/xxx.png`。
+- `image`：社交分享图/SEO 图，可写 `./images/xxx.png`；留空时自动取正文第一张图。
 - `published`：设置为 `false` 时可作为草稿隐藏。
 
 固定页面放在 `src/content/page/`，常见字段如下：
