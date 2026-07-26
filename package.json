@@ -1,7 +1,7 @@
 {
   "name": "Astro-star",
   "type": "module",
-  "version": "0.16.59",
+  "version": "0.16.60",
   "packageManager": "pnpm@11.15.1",
   "scripts": {
     "predev": "pnpm run generate:signature && tsx scripts/generate-git-timestamps.ts",
@@ -22,15 +22,6 @@
     "format:check": "prettier . --check",
     "config:extract": "tsx scripts/config-extract.mjs",
     "config:apply": "node scripts/config-apply.mjs"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "better-sqlite3"
-    ],
-    "overrides": {
-      "esbuild": "0.28.1",
-      "volar-service-yaml": "0.0.71"
-    }
   },
   "devDependencies": {
     "better-sqlite3": "^12.6.2",
