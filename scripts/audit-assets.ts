@@ -4,9 +4,15 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const PUBLIC_FIGURES_DIR = join(ROOT, "public", "figures");
+const CONTENT_DIR = join(ROOT, "src", "content");
 const SCAN_DIRS = ["src", "public"].map((dir) => join(ROOT, dir));
 const LARGE_ASSET_LIMIT_BYTES = Number(
   process.env.ASSET_AUDIT_LIMIT_BYTES ?? 800 * 1024,
+);
+// Content images are committed originals; Astro compresses them at build time,
+// so the ceiling only guards repository weight, not what visitors download.
+const CONTENT_IMAGE_LIMIT_BYTES = Number(
+  process.env.CONTENT_IMAGE_AUDIT_LIMIT_BYTES ?? 2 * 1024 * 1024,
 );
 const REPORT_LIMIT = Number(process.env.ASSET_AUDIT_REPORT_LIMIT ?? 30);
 const IMAGE_EXTENSIONS = new Set([
@@ -64,6 +70,21 @@ function collectFigureAssets() {
         size: statSync(path).size,
       };
     })
+    .sort((a, b) => b.size - a.size);
+}
+
+function collectContentImageAssets() {
+  if (!existsSync(CONTENT_DIR)) {
+    return [];
+  }
+
+  return walk(CONTENT_DIR, (path) => IMAGE_EXTENSIONS.has(getExtension(path)))
+    .map(
+      (path): Asset => ({
+        path: relative(ROOT, path).replace(/\\/g, "/"),
+        size: statSync(path).size,
+      }),
+    )
     .sort((a, b) => b.size - a.size);
 }
 
@@ -125,6 +146,34 @@ function main() {
   if (unreferencedAssets.length > REPORT_LIMIT) {
     console.log(
       `... ${unreferencedAssets.length - REPORT_LIMIT} more unreferenced images.`,
+    );
+  }
+
+  const contentImages = collectContentImageAssets();
+  const oversizedContentImages = contentImages.filter(
+    (asset) => asset.size > CONTENT_IMAGE_LIMIT_BYTES,
+  );
+  const contentTotalSize = contentImages.reduce(
+    (sum, asset) => sum + asset.size,
+    0,
+  );
+
+  console.log(
+    `Content originals: ${contentImages.length} images, ${formatBytes(contentTotalSize)} total.`,
+  );
+  console.log(
+    `Content original threshold: ${formatBytes(CONTENT_IMAGE_LIMIT_BYTES)}. Found ${oversizedContentImages.length}.`,
+  );
+
+  oversizedContentImages.slice(0, REPORT_LIMIT).forEach((asset) => {
+    console.log(
+      `oversize ${formatBytes(asset.size).padStart(5)}  ${asset.path}`,
+    );
+  });
+
+  if (oversizedContentImages.length > REPORT_LIMIT) {
+    console.log(
+      `... ${oversizedContentImages.length - REPORT_LIMIT} more oversized content originals.`,
     );
   }
 }
