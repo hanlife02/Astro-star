@@ -224,6 +224,15 @@ const siteJsonLdText = JSON.stringify(siteJsonLd).replace(/</g, "\\u003c");
         writeStorage(mode);
         writeCookie(storageKey, mode);
         writeCookie(resolvedCookieKey, resolved);
+        document.addEventListener("astro:before-swap", function (event) {
+          if (!event.newDocument) return;
+          var liveRoot = document.documentElement;
+          var newRoot = event.newDocument.documentElement;
+          newRoot.dataset.themeMode = liveRoot.dataset.themeMode;
+          newRoot.dataset.theme = liveRoot.dataset.theme;
+          newRoot.style.colorScheme = liveRoot.style.colorScheme;
+          newRoot.style.backgroundColor = liveRoot.style.backgroundColor;
+        });
       })();
     </script>
     <slot name="head" />
