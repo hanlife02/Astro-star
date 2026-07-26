@@ -22,7 +22,26 @@ interface CachedPayload {
 
 const CACHE_TTL = 1000 * 60 * 60 * 6;
 const GITHUB_FETCH_TIMEOUT = 8000;
+// Keyed by client-supplied owner/repo, so the cache must stay bounded.
+const MAX_CACHE_ENTRIES = 200;
 const repositoryCache = new Map<string, CachedPayload>();
+
+function setCachedPayload(
+  cacheKey: string,
+  payload: GitHubRepositoryCardPayload,
+) {
+  repositoryCache.delete(cacheKey);
+
+  if (repositoryCache.size >= MAX_CACHE_ENTRIES) {
+    const oldestKey = repositoryCache.keys().next().value;
+    if (oldestKey !== undefined) repositoryCache.delete(oldestKey);
+  }
+
+  repositoryCache.set(cacheKey, {
+    expiresAt: Date.now() + CACHE_TTL,
+    payload,
+  });
+}
 const REPOSITORY_PART_PATTERN = /^[A-Za-z0-9_.-]+$/;
 
 function jsonResponse(payload: unknown, init?: ResponseInit) {
@@ -207,6 +226,10 @@ export const GET: APIRoute = async ({ url }) => {
     return jsonResponse(cachedPayload.payload);
   }
 
+  if (cachedPayload) {
+    repositoryCache.delete(cacheKey);
+  }
+
   const apiPayload = await fetchFromGitHubApi(owner, repo);
   const htmlPayload = apiPayload
     ? null
@@ -233,10 +256,7 @@ export const GET: APIRoute = async ({ url }) => {
       `https://github.com/${owner}.png?size=96`,
   };
 
-  repositoryCache.set(cacheKey, {
-    expiresAt: Date.now() + CACHE_TTL,
-    payload,
-  });
+  setCachedPayload(cacheKey, payload);
 
   return jsonResponse(payload);
 };
