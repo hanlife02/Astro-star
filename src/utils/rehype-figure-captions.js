@@ -67,7 +67,9 @@ function enhanceImageNode(node, { keyboardOpen = false } = {}) {
     typeof node.properties.alt === "string" ? node.properties.alt.trim() : "";
   node.properties.role ??= "button";
   node.properties.tabIndex ??= 0;
-  node.properties.ariaLabel ??= alt
+  // The serializer emits property keys verbatim, so a camelCase `ariaLabel`
+  // ships as an unknown `arialabel` attribute that screen readers ignore.
+  node.properties["aria-label"] ??= alt
     ? `Open image preview: ${alt}`
     : "Open image preview";
 }
