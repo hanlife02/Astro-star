@@ -5,7 +5,10 @@ import { site } from "../../config/site";
 import { getAdjacentArticles } from "../../utils/adjacent-articles";
 import { resolveContentDates } from "../../utils/content-dates";
 import { resolveContentDescription } from "../../utils/content-description";
-import { resolveContentImage } from "../../utils/content-image";
+import {
+  resolveContentImage,
+  resolveSocialImageSrc,
+} from "../../utils/content-image";
 import {
   assertUniqueContentSlugs,
   resolveContentSlug,
@@ -153,14 +156,14 @@ const hasMathSyntax = (source: string) => {
 const articleWordCount = countWords(articleSource);
 const includeKatexStyles = hasMathSyntax(articleSource);
 const canonicalUrl = new URL(articleRoutePath, site.site.url).toString();
-const imageUrl = new URL(
-  resolveContentImage(
-    articleSource,
-    articleEntry.data.image,
-    site.site.iconSrc,
-  ),
-  site.site.url,
-).toString();
+const scrapedImage = resolveContentImage(
+  articleSource,
+  articleEntry.data.image,
+  site.site.iconSrc,
+);
+const socialImage =
+  (await resolveSocialImageSrc(scrapedImage, contentPath)) || site.site.iconSrc;
+const imageUrl = new URL(socialImage, site.site.url).toString();
 const createdAtIso = createdAt ? toContentIsoString(createdAt) : "";
 const updatedAtIso = updatedAt ? toContentIsoString(updatedAt) : "";
 const tocHeadings = headings
