@@ -1,8 +1,7 @@
 ---
 import FriendLinksPanel from "./FriendLinksPanel.astro";
 import { friendLinks } from "../../config/links";
-
-const shuffledFriendLinks = [...friendLinks].sort(() => Math.random() - 0.5);
 ---
 
-<FriendLinksPanel items={shuffledFriendLinks} />
+{/* Rendered in config order; shuffled per visitor on the client. */}
+<FriendLinksPanel items={friendLinks} />

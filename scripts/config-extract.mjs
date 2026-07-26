@@ -1,10 +1,4 @@
-import {
-  readFileSync,
-  writeFileSync,
-  mkdirSync,
-  copyFileSync,
-  existsSync,
-} from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { create as createTarball } from "tar";
@@ -151,11 +145,30 @@ const jsonStr = JSON.stringify(config, null, 2) + "\n";
 writeFileSync(resolve(dataDir, "user-config.json"), jsonStr, "utf-8");
 console.log("Written: src/data/user-config.json");
 
-copyFileSync(
-  resolve(dataDir, "user-config.json"),
+// The example file must stay a structural skeleton: blank every string so
+// real personal data (email, beian, ids, links) never lands in it.
+function sanitizeConfigValue(value) {
+  if (Array.isArray(value)) {
+    return value.length > 0 ? [sanitizeConfigValue(value[0])] : [];
+  }
+  if (value && typeof value === "object") {
+    return Object.fromEntries(
+      Object.entries(value).map(([key, item]) => [
+        key,
+        sanitizeConfigValue(item),
+      ]),
+    );
+  }
+  return typeof value === "string" ? "" : value;
+}
+
+const exampleStr = JSON.stringify(sanitizeConfigValue(config), null, 2) + "\n";
+writeFileSync(
   resolve(dataDir, "user-config.example.json"),
+  exampleStr,
+  "utf-8",
 );
-console.log("Written: src/data/user-config.example.json");
+console.log("Written: src/data/user-config.example.json (sanitized)");
 
 // --- 5. Pack content & public assets into tar.gz ---
 const packPaths = [

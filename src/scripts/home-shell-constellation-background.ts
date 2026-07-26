@@ -241,7 +241,14 @@ export function initHomeShellConstellationBackground() {
 
   const onVisibility = () => {
     if (document.visibilityState === "hidden") stop();
-    else if (!prefersReduced && !state.raf) tick();
+    else if (prefersReduced) draw();
+    else if (!state.raf) tick();
+  };
+
+  const onResize = () => {
+    resize();
+    // Without the animation loop nothing repaints the cleared bitmap.
+    if (prefersReduced) draw();
   };
 
   const cleanup = () => {
@@ -252,7 +259,7 @@ export function initHomeShellConstellationBackground() {
 
   browserWindow.__homeShellConstellationBackgroundCleanup = cleanup;
 
-  window.addEventListener("resize", resize, {
+  window.addEventListener("resize", onResize, {
     passive: true,
     signal: controller.signal,
   });

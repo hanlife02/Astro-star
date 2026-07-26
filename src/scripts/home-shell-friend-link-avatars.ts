@@ -35,7 +35,27 @@ function trackAvatarImage(image: HTMLImageElement, signal: AbortSignal) {
   signal.addEventListener("abort", cleanup, { once: true });
 }
 
+function shuffleGridItems(grid: HTMLElement) {
+  if (grid.dataset.friendLinksShuffled === "true") return;
+  grid.dataset.friendLinksShuffled = "true";
+
+  const items = Array.from(grid.children);
+
+  // Fisher-Yates, run while the grid is still in its hidden loading state
+  // so every visitor gets an unbiased per-view order.
+  for (let i = items.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [items[i], items[j]] = [items[j], items[i]];
+  }
+
+  items.forEach((item) => {
+    grid.append(item);
+  });
+}
+
 function initGridAvatars(grid: HTMLElement, controller: AbortController) {
+  shuffleGridItems(grid);
+
   const images = Array.from(
     grid.querySelectorAll<HTMLImageElement>(AVATAR_SELECTOR),
   );

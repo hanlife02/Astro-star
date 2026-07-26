@@ -5,15 +5,19 @@ interface Props {
   decorative?: boolean;
 }
 
-const {
-  svg,
-  label,
-  decorative = true,
-} = Astro.props as Props;
+const { svg, label, decorative = true } = Astro.props as Props;
+
+const escapeAttribute = (value: string) =>
+  value
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
 
 const a11yAttrs = decorative
   ? ' aria-hidden="true" focusable="false"'
-  : ` role="img" aria-label="${label ?? ""}" focusable="false"`;
+  : ` role="img" aria-label="${escapeAttribute(label ?? "")}" focusable="false"`;
 
 const svgWithA11y = svg.replace("<svg", `<svg${a11yAttrs}`);
 ---

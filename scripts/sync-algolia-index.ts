@@ -1,6 +1,6 @@
 import { execFileSync } from "node:child_process";
 import { Buffer } from "node:buffer";
-import { readdirSync, readFileSync, statSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import remarkMdx from "remark-mdx";
@@ -10,6 +10,7 @@ import { algoliaSiteSearchConfig } from "../src/config/search.ts";
 import { site } from "../src/config/site.ts";
 import { resolveContentDates } from "../src/utils/content-dates.ts";
 import { resolveContentSlug } from "../src/utils/content-slug.ts";
+import { getLoaderEntryId } from "../src/utils/loader-entry-id.ts";
 import {
   CONTENT_TIME_ZONE,
   toContentIsoString,
@@ -24,6 +25,7 @@ const ALGOLIA_RECORD_SIZE_LIMIT_BYTES = 10000;
 const MAX_ALGOLIA_RECORD_BYTES = 9500;
 const MAX_RECORD_CONTENT_BYTES = 5200;
 const ALGOLIA_BATCH_SIZE = 500;
+const ALGOLIA_REQUEST_TIMEOUT_MS = 30_000;
 
 type SectionKey = (typeof VALID_SECTIONS)[number];
 
@@ -33,6 +35,7 @@ interface Frontmatter {
   description?: string;
   published?: boolean;
   routeSlug?: string | number;
+  slug?: string | number;
   title?: string;
   type?: string;
   updatedAt?: string;
@@ -333,13 +336,17 @@ function buildRecords() {
 
   for (const section of VALID_SECTIONS) {
     const sectionDir = join(CONTENT_DIR, section);
+    if (!existsSync(sectionDir)) continue;
 
     for (const filePath of collectFiles(sectionDir)) {
       const source = readFileSync(filePath, "utf8");
       const { frontmatter, body } = parseFrontmatter(source);
       if (!isPublishedFrontmatter(frontmatter)) continue;
 
-      const entryId = relative(sectionDir, filePath).replace(/\\/g, "/");
+      const entryId = getLoaderEntryId(
+        relative(sectionDir, filePath).replace(/\\/g, "/"),
+        frontmatter.slug,
+      );
       const sourcePath = relative(ROOT, filePath).replace(/\\/g, "/");
       const routeSlug = resolveContentSlug(entryId, frontmatter.routeSlug);
       const title = resolveContentTitle(entryId, frontmatter.title);
@@ -384,17 +391,23 @@ function buildRecords() {
   return records.filter((record) => isSection(record.section));
 }
 
-async function algoliaRequest(path: string, apiKey: string, body?: unknown) {
+async function algoliaRequest(
+  path: string,
+  apiKey: string,
+  body?: unknown,
+  method: "POST" | "DELETE" = "POST",
+) {
   const response = await fetch(
     `https://${algoliaSiteSearchConfig.applicationId}.algolia.net${path}`,
     {
-      method: "POST",
+      method,
       headers: {
         "Content-Type": "application/json",
         "X-Algolia-API-Key": apiKey,
         "X-Algolia-Application-Id": algoliaSiteSearchConfig.applicationId,
       },
       body: body === undefined ? undefined : JSON.stringify(body),
+      signal: AbortSignal.timeout(ALGOLIA_REQUEST_TIMEOUT_MS),
     },
   );
 
@@ -407,13 +420,12 @@ async function algoliaRequest(path: string, apiKey: string, body?: unknown) {
   return response.json() as Promise<unknown>;
 }
 
-async function clearIndex(apiKey: string) {
-  const indexPath = encodeURIComponent(algoliaSiteSearchConfig.indexName);
-  await algoliaRequest(`/1/indexes/${indexPath}/clear`, apiKey);
-}
-
-async function saveRecords(apiKey: string, records: AlgoliaRecord[]) {
-  const indexPath = encodeURIComponent(algoliaSiteSearchConfig.indexName);
+async function saveRecords(
+  apiKey: string,
+  records: AlgoliaRecord[],
+  indexName: string,
+) {
+  const indexPath = encodeURIComponent(indexName);
 
   for (let offset = 0; offset < records.length; offset += ALGOLIA_BATCH_SIZE) {
     const batch = records.slice(offset, offset + ALGOLIA_BATCH_SIZE);
@@ -424,6 +436,44 @@ async function saveRecords(apiKey: string, records: AlgoliaRecord[]) {
         body: record,
       })),
     });
+  }
+}
+
+async function replaceAllRecords(apiKey: string, records: AlgoliaRecord[]) {
+  const indexName = algoliaSiteSearchConfig.indexName;
+  const tmpIndexName = `${indexName}_tmp_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
+  const indexPath = encodeURIComponent(indexName);
+  const tmpIndexPath = encodeURIComponent(tmpIndexName);
+
+  try {
+    try {
+      await algoliaRequest(`/1/indexes/${indexPath}/operation`, apiKey, {
+        operation: "copy",
+        destination: tmpIndexName,
+        scope: ["settings", "synonyms", "rules"],
+      });
+    } catch (error) {
+      // First sync: the production index may not exist yet.
+      const message = error instanceof Error ? error.message : "";
+      if (!message.includes("failed (404)")) throw error;
+    }
+
+    await saveRecords(apiKey, records, tmpIndexName);
+
+    // Algolia processes tasks sequentially per index, so the move is queued
+    // after every batch above and swaps the index atomically.
+    await algoliaRequest(`/1/indexes/${tmpIndexPath}/operation`, apiKey, {
+      operation: "move",
+      destination: indexName,
+    });
+  } catch (error) {
+    await algoliaRequest(
+      `/1/indexes/${tmpIndexPath}`,
+      apiKey,
+      undefined,
+      "DELETE",
+    ).catch(() => {});
+    throw error;
   }
 }
 
@@ -467,14 +517,14 @@ async function main() {
   }
 
   if (adminKey) {
-    await clearIndex(adminKey);
+    await replaceAllRecords(adminKey, records);
   } else {
     console.log(
       "ALGOLIA_ADMIN_API_KEY is not set; stale records from deleted articles will not be removed.",
     );
+    await saveRecords(indexingKey, records, algoliaSiteSearchConfig.indexName);
   }
 
-  await saveRecords(indexingKey, records);
   console.log(
     `Synced ${records.length} Algolia records to ${algoliaSiteSearchConfig.indexName}.`,
   );

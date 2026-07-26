@@ -101,6 +101,9 @@ function openLightbox(sourceImage: HTMLImageElement) {
 
   if (!(image instanceof HTMLImageElement)) return;
 
+  window.clearTimeout(closeLightboxTimer);
+  closeLightboxTimer = 0;
+
   lastFocusedElement =
     document.activeElement instanceof HTMLElement
       ? document.activeElement

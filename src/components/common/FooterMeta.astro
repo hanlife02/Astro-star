@@ -7,7 +7,14 @@ interface Props {
   separator?: string;
 }
 
-const { repoHref = "https://github.com/hanlife02/Astro-star", separator = "|" } = Astro.props as Props;
+const profile = site.profile as { githubUsername?: string };
+const githubUsername = profile.githubUsername?.trim() ?? "";
+const {
+  repoHref = githubUsername
+    ? `https://github.com/${githubUsername}`
+    : site.site.url,
+  separator = "|",
+} = Astro.props as Props;
 const currentYear = new Date().getFullYear();
 const copyrightYears = `${site.site.startYear}-${currentYear}`;
 const beianLinks = [site.site.beian.icp, site.site.beian.moe].filter(
@@ -17,18 +24,38 @@ const beianLinks = [site.site.beian.icp, site.site.beian.moe].filter(
 
 <div class="footer-meta" aria-label="Site footer information">
   <p class="footer-meta-line">
-    <a class="footer-meta-link footer-meta-link--copyright" href={repoHref} target="_blank" rel="noreferrer">
-      @{copyrightYears} Astro-star
+    <a
+      class="footer-meta-link footer-meta-link--copyright"
+      href={repoHref}
+      target="_blank"
+      rel="noreferrer"
+    >
+      @{copyrightYears}
+      {site.site.name}
     </a>
     {
       beianLinks.length > 0 && (
         <>
-          <span class="footer-meta-separator footer-meta-separator--primary" aria-hidden="true">{separator}</span>
+          <span
+            class="footer-meta-separator footer-meta-separator--primary"
+            aria-hidden="true"
+          >
+            {separator}
+          </span>
           <span class="footer-meta-group">
             {beianLinks.map((item, index) => (
               <>
-                {index > 0 && <span class="footer-meta-separator" aria-hidden="true">{separator}</span>}
-                <a class="footer-meta-link" href={item.href} target="_blank" rel="noreferrer">
+                {index > 0 && (
+                  <span class="footer-meta-separator" aria-hidden="true">
+                    {separator}
+                  </span>
+                )}
+                <a
+                  class="footer-meta-link"
+                  href={item.href}
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   {item.text}
                 </a>
               </>

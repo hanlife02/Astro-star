@@ -1,41 +1,33 @@
 ---
 import { site } from "../../config/site";
+import {
+  SIGNATURE_ASSET_BASENAME,
+  isValidSignatureSvgMarkup,
+  normalizeSignatureSvgMarkup,
+} from "../../utils/signature-svg";
 import "../../style/components/home/signature.css";
 
 const profile = site.profile as {
   signatureSvg?: string;
 };
 const signatureSvg = profile.signatureSvg ?? "";
-const signatureAssetSrc = "/signature.svg";
+const signatureAssetSrc = `/${SIGNATURE_ASSET_BASENAME}`;
 
-const normalizeSvgMarkup = (input: string) => {
-  let value = input.trim();
-
-  if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
-    value = value.slice(1, -1);
-  } else {
-    value = value.replace(/^['"]/, "").replace(/['"]$/, "");
-  }
-
-  return value.replace(/\\"/g, '"').replace(/\\'/g, "'");
-};
-
-const svgMarkup = normalizeSvgMarkup(signatureSvg);
-const isValidSvg = svgMarkup.startsWith("<svg") && svgMarkup.includes("</svg>");
-const hasSignatureAsset = isValidSvg;
+const svgMarkup = normalizeSignatureSvgMarkup(signatureSvg);
+const hasSignatureAsset = isValidSignatureSvgMarkup(svgMarkup);
 const signatureMaskStyle = hasSignatureAsset
   ? `--signature-mask: url("${signatureAssetSrc}");`
   : undefined;
 ---
 
 {
-  (hasSignatureAsset || isValidSvg) && (
+  hasSignatureAsset && (
     <a class="signature-wrap" href="/" aria-label="Back to home">
       <span
         class="signature-mark"
         aria-hidden="true"
-        data-signature-src={hasSignatureAsset ? "true" : undefined}
-        data-signature-asset={hasSignatureAsset ? signatureAssetSrc : undefined}
+        data-signature-src="true"
+        data-signature-asset={signatureAssetSrc}
         style={signatureMaskStyle}
       />
     </a>

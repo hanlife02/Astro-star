@@ -1,4 +1,4 @@
-import { readdirSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -82,6 +82,7 @@ function main() {
 
   for (const section of CONTENT_SECTIONS) {
     const sectionDir = join(CONTENT_DIR, section);
+    if (!existsSync(sectionDir)) continue;
 
     for (const filePath of walk(sectionDir)) {
       const issues = auditFile(section, filePath);

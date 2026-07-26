@@ -1,18 +1,22 @@
 export function remarkContentFormatDirectives() {
-  return function remarkContentFormatDirectivesTransformer(tree) {
-    transformChildren(tree);
+  return function remarkContentFormatDirectivesTransformer(tree, file) {
+    const source =
+      typeof file?.value === "string"
+        ? file.value
+        : String(file?.value ?? "") || "";
+    transformChildren(tree, source);
   };
 }
 
-function transformChildren(parent) {
+function transformChildren(parent, source) {
   if (!Array.isArray(parent.children)) return;
 
-  for (let index = 0; index < parent.children.length; index += 1) {
-    const child = parent.children[index];
+  applyInlineSpoilerSpans(parent, source);
 
+  for (const child of parent.children) {
     if (child.type === "containerDirective" && child.name === "fold") {
       applyFoldData(child);
-      transformChildren(child);
+      transformChildren(child, source);
       continue;
     }
 
@@ -21,73 +25,169 @@ function transformChildren(parent) {
       continue;
     }
 
-    if (child.type === "text" && typeof child.value === "string") {
-      const replacement = splitSpoilerText(child.value);
-
-      if (replacement) {
-        parent.children.splice(index, 1, ...replacement);
-        index += replacement.length - 1;
-      }
-
-      continue;
-    }
-
-    transformChildren(child);
+    transformChildren(child, source);
   }
 }
 
-function splitSpoilerText(value) {
-  const nodes = [];
-  let cursor = 0;
-  let changed = false;
+// Character escapes collapse "\\|" into "|" inside a single mdast text node,
+// so the escape can only be recovered by re-reading the raw source at the
+// node's position. Entities and other constructs stop the mapping early and
+// leave the remaining characters treated as unescaped.
+function getEscapedIndexes(child, source) {
+  const escaped = new Set();
+  const start = child.position?.start?.offset;
+  const end = child.position?.end?.offset;
 
-  while (cursor < value.length) {
-    const start = value.indexOf("||", cursor);
+  if (typeof start !== "number" || typeof end !== "number" || !source) {
+    return escaped;
+  }
 
-    if (start === -1) {
-      appendTextNode(nodes, value.slice(cursor));
-      break;
-    }
+  const raw = source.slice(start, end);
+  if (raw === child.value) return escaped;
 
-    const end = value.indexOf("||", start + 2);
+  let rawIndex = 0;
 
-    if (end === -1) {
-      appendTextNode(nodes, value.slice(cursor));
-      break;
-    }
+  for (let valueIndex = 0; valueIndex < child.value.length; valueIndex += 1) {
+    const character = child.value[valueIndex];
 
-    if (end === start + 2) {
-      appendTextNode(nodes, value.slice(cursor, start + 2));
-      cursor = start + 2;
+    if (raw[rawIndex] === character) {
+      rawIndex += 1;
       continue;
     }
 
-    appendTextNode(nodes, value.slice(cursor, start));
-    nodes.push(createSpoilerNode(value.slice(start + 2, end)));
-    changed = true;
-    cursor = end + 2;
+    if (raw[rawIndex] === "\\" && raw[rawIndex + 1] === character) {
+      escaped.add(valueIndex);
+      rawIndex += 2;
+      continue;
+    }
+
+    break;
   }
 
-  return changed ? nodes : undefined;
+  return escaped;
 }
 
-function createSpoilerNode(value) {
+function findSpoilerDelimiter(
+  children,
+  startNodeIndex,
+  startCharIndex,
+  source,
+) {
+  for (
+    let nodeIndex = startNodeIndex;
+    nodeIndex < children.length;
+    nodeIndex += 1
+  ) {
+    const child = children[nodeIndex];
+    if (child.type !== "text" || typeof child.value !== "string") continue;
+
+    const fromIndex = nodeIndex === startNodeIndex ? startCharIndex : 0;
+    const escaped = getEscapedIndexes(child, source);
+
+    for (
+      let charIndex = child.value.indexOf("||", fromIndex);
+      charIndex !== -1;
+      charIndex = child.value.indexOf("||", charIndex + 1)
+    ) {
+      if (escaped.has(charIndex) || escaped.has(charIndex + 1)) continue;
+      return { nodeIndex, charIndex };
+    }
+  }
+
+  return undefined;
+}
+
+function applyInlineSpoilerSpans(parent, source) {
+  const children = parent.children;
+
+  if (
+    !children.some(
+      (child) => child.type === "text" && child.value?.includes("||"),
+    )
+  ) {
+    return;
+  }
+
+  let nodeIndex = 0;
+  let charIndex = 0;
+
+  while (nodeIndex < children.length) {
+    const opener = findSpoilerDelimiter(children, nodeIndex, charIndex, source);
+    if (!opener) return;
+
+    const closer = findSpoilerDelimiter(
+      children,
+      opener.nodeIndex,
+      opener.charIndex + 2,
+      source,
+    );
+    if (!closer) return;
+
+    // "||||" has no content: keep the first delimiter literal and let the
+    // second one try to pair with a later delimiter instead.
+    if (
+      closer.nodeIndex === opener.nodeIndex &&
+      closer.charIndex === opener.charIndex + 2
+    ) {
+      nodeIndex = closer.nodeIndex;
+      charIndex = closer.charIndex;
+      continue;
+    }
+
+    const openerNode = children[opener.nodeIndex];
+    const closerNode = children[closer.nodeIndex];
+    const spoilerChildren = [];
+
+    if (opener.nodeIndex === closer.nodeIndex) {
+      spoilerChildren.push({
+        type: "text",
+        value: openerNode.value.slice(opener.charIndex + 2, closer.charIndex),
+      });
+    } else {
+      const leadingText = openerNode.value.slice(opener.charIndex + 2);
+      if (leadingText)
+        spoilerChildren.push({ type: "text", value: leadingText });
+
+      spoilerChildren.push(
+        ...children.slice(opener.nodeIndex + 1, closer.nodeIndex),
+      );
+
+      const trailingText = closerNode.value.slice(0, closer.charIndex);
+      if (trailingText)
+        spoilerChildren.push({ type: "text", value: trailingText });
+    }
+
+    const replacement = [];
+    const preText = openerNode.value.slice(0, opener.charIndex);
+    if (preText) replacement.push({ type: "text", value: preText });
+
+    replacement.push(createSpoilerNode(spoilerChildren));
+
+    const postText = closerNode.value.slice(closer.charIndex + 2);
+    if (postText) replacement.push({ type: "text", value: postText });
+
+    children.splice(
+      opener.nodeIndex,
+      closer.nodeIndex - opener.nodeIndex + 1,
+      ...replacement,
+    );
+
+    nodeIndex = opener.nodeIndex + replacement.length - (postText ? 1 : 0);
+    charIndex = 0;
+  }
+}
+
+function createSpoilerNode(children) {
   const node = {
     type: "textDirective",
     name: "spoiler",
     attributes: {},
-    children: [{ type: "text", value }],
+    children,
   };
 
   applySpoilerData(node);
 
   return node;
-}
-
-function appendTextNode(nodes, value) {
-  if (value) {
-    nodes.push({ type: "text", value });
-  }
 }
 
 function applyFoldData(node) {

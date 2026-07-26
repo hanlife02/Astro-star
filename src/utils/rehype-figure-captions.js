@@ -85,6 +85,51 @@ function enhanceImageMediaNode(node) {
   });
 }
 
+// Two-segment github.com paths whose first segment is a reserved product
+// route, not a repository owner (e.g. /sponsors/alice, /topics/astro).
+const GITHUB_RESERVED_OWNER_SEGMENTS = new Set([
+  "about",
+  "account",
+  "apps",
+  "blog",
+  "codespaces",
+  "collections",
+  "contact",
+  "customer-stories",
+  "dashboard",
+  "enterprise",
+  "enterprises",
+  "events",
+  "explore",
+  "features",
+  "gist",
+  "issues",
+  "join",
+  "login",
+  "logout",
+  "marketplace",
+  "new",
+  "notifications",
+  "organizations",
+  "orgs",
+  "pricing",
+  "pulls",
+  "readme",
+  "search",
+  "security",
+  "sessions",
+  "settings",
+  "signup",
+  "site",
+  "sponsors",
+  "stars",
+  "team",
+  "topics",
+  "trending",
+  "users",
+  "watching",
+]);
+
 function getGitHubRepository(href) {
   if (typeof href !== "string") {
     return null;
@@ -105,6 +150,10 @@ function getGitHubRepository(href) {
   const [owner, repo, ...rest] = url.pathname.split("/").filter(Boolean);
 
   if (!owner || !repo || rest.length > 0) {
+    return null;
+  }
+
+  if (GITHUB_RESERVED_OWNER_SEGMENTS.has(owner.toLowerCase())) {
     return null;
   }
 
