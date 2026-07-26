@@ -1,7 +1,7 @@
 {
   "name": "Astro-star",
   "type": "module",
-  "version": "0.16.26",
+  "version": "0.16.27",
   "packageManager": "pnpm@11.15.1",
   "scripts": {
     "predev": "pnpm run generate:signature && tsx scripts/generate-git-timestamps.ts",

@@ -119,6 +119,11 @@ const siteJsonLdText = JSON.stringify(siteJsonLd).replace(/</g, "\\u003c");
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script is:inline>
       document.documentElement.dataset.js = "true";
+      document.addEventListener("astro:before-swap", function (event) {
+        if (event.newDocument) {
+          event.newDocument.documentElement.dataset.js = "true";
+        }
+      });
     </script>
     <meta name="color-scheme" content="light dark" />
     <meta name="theme-color" content="#ffffff" />
