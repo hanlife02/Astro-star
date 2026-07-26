@@ -65,20 +65,32 @@ html[data-js="true"] .friend-links-grid[data-friend-links-state="ready"] {
   isolation: isolate;
   border-color: transparent;
   border-radius: var(--friend-link-card-radius);
-  background: var(--friend-link-card-glass);
   box-shadow:
     0 1px 24px -1px rgba(0, 0, 0, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.22);
-  backdrop-filter: blur(20px) saturate(1.25);
-  -webkit-backdrop-filter: blur(20px) saturate(1.25);
   min-height: 4.45rem;
   content-visibility: auto;
   contain-intrinsic-size: 4.45rem;
   overflow: hidden;
   transition:
-    background-color 0.2s ease,
     box-shadow 0.22s ease,
     transform 0.22s ease;
+}
+
+/* The glass lives on its own background layer rather than on the card element,
+   so it never sits in the same box as the avatar and copy. z-index -1 keeps it
+   beneath every child (bg image 0, tint 1, content 2, border 3) while the card's
+   `isolation: isolate` stops it escaping behind the card itself. */
+.friend-links-grid .friend-link-card-glass {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background-color: var(--friend-link-card-glass);
+  -webkit-backdrop-filter: blur(20px) saturate(1.25);
+  backdrop-filter: blur(20px) saturate(1.25);
+  pointer-events: none;
+  transition: background-color 0.2s ease;
 }
 
 .friend-links-grid .app-panel-item--link::before {
@@ -117,9 +129,18 @@ html[data-route-transitioning="true"]
   .friend-links-grid
   .app-panel-item--link {
   box-shadow: none;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
   transform: none;
+  transition: none;
+}
+
+/* Follows the blur to its new layer — dropping backdrop-filter during route
+   transitions is the perf optimisation from cbde297 / 18d2a06. */
+html[data-route-transitioning="true"]
+  .content-page--links
+  .friend-links-grid
+  .friend-link-card-glass {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
   transition: none;
 }
 
@@ -280,11 +301,15 @@ html[data-js="true"]
 }
 
 .friend-links-grid .app-panel-item--link:hover {
-  background-color: color-mix(in srgb, #fff 8%, transparent);
   box-shadow:
     0 1px 28px -1px rgba(0, 0, 0, 0.14),
     inset 0 1px 0 rgba(255, 255, 255, 0.3);
   transform: translateY(-1px);
+}
+
+.friend-links-grid .app-panel-item--link:hover .friend-link-card-glass,
+.friend-links-grid .app-panel-item--link:focus-visible .friend-link-card-glass {
+  background-color: color-mix(in srgb, #fff 8%, transparent);
 }
 
 .friend-links-grid .app-panel-item--link:hover::before {
@@ -311,7 +336,6 @@ html[data-js="true"]
 .friend-links-grid .app-panel-item--link:focus-visible {
   outline: 2px solid color-mix(in srgb, var(--line) 28%, transparent);
   outline-offset: 0.2rem;
-  background-color: color-mix(in srgb, #fff 8%, transparent);
   box-shadow:
     0 1px 28px -1px rgba(0, 0, 0, 0.14),
     inset 0 1px 0 rgba(255, 255, 255, 0.3);
@@ -424,6 +448,7 @@ html[data-js="true"]
 @media (prefers-reduced-motion: reduce) {
   .friend-links-grid .app-panel-item,
   .friend-links-grid .app-panel-item--link,
+  .friend-links-grid .friend-link-card-glass,
   .friend-link-card-bg,
   .friend-links-grid .friend-link-avatar,
   html[data-js="true"] .friend-links-grid .friend-link-avatar,
