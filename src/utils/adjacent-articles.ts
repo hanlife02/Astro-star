@@ -53,10 +53,14 @@ export function getAdjacentArticles(
   entries: SectionEntry[],
   currentEntryId: string,
 ) {
-  let datedEntries = adjacentArticlesCache.get(section);
+  // The memo only pays off across the one-shot production build; in dev it
+  // would serve stale titles/orders after content edits, so rebuild there.
+  const cachedEntries = import.meta.env.DEV
+    ? undefined
+    : adjacentArticlesCache.get(section);
+  const datedEntries = cachedEntries ?? buildDatedEntries(section, entries);
 
-  if (!datedEntries) {
-    datedEntries = buildDatedEntries(section, entries);
+  if (!cachedEntries) {
     adjacentArticlesCache.set(section, datedEntries);
   }
 
