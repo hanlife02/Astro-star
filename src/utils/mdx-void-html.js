@@ -1,5 +1,5 @@
 const VOID_HTML_TAG_PATTERN =
-  /<(area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr)(\s[^<>]*?)?>/gi;
+  /<(area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr)(\s(?:"[^"]*"|'[^']*'|[^<>"'])*)?>/gi;
 
 function normalizeVoidHtmlTags(line) {
   let output = "";
