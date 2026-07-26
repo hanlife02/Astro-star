@@ -48,6 +48,15 @@ export default defineConfig({
       }),
     },
   },
+  image: {
+    // Emit a srcset so phones stop downloading desktop-sized images. `src`
+    // still points at the full-size variant, which is what the lightbox opens.
+    layout: "constrained",
+    // The article column tops out at 36rem, so anything past ~1668w only ever
+    // serves the lightbox. Trimmed from Astro's default ladder to keep the
+    // generated-file count down.
+    breakpoints: [640, 828, 1080, 1280, 1668],
+  },
   integrations: [
     mdx(),
     sitemap({
