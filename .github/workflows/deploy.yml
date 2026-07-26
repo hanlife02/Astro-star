@@ -87,6 +87,24 @@ jobs:
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -p ${{ env.SSH_PORT }} -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
+      # Ship hashed assets first, additively. Everything under _astro/ carries a
+      # content hash in its filename, so an existing name is byte-identical and
+      # can be skipped outright — no checksums, no re-transfer. Landing these
+      # before any HTML moves means the markup swapped in below never points at
+      # a file that is still uploading; a single-pass rsync once served new HTML
+      # for 13 minutes while its script bundle was still in flight, leaving the
+      # page without any of its client behaviour.
+      - name: Rsync hashed assets to server
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          rsync -a --ignore-existing \
+            -e "ssh -i ~/.ssh/deploy_key -p ${{ env.SSH_PORT }}" \
+            dist/client/_astro/ \
+            ${{ env.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ env.DEPLOY_PATH }}/client/_astro/
+
+      # Reconcile everything else and drop what the new build no longer ships.
+      # --checksum stays: a fresh CI build rewrites every mtime, so the default
+      # size+time comparison would re-upload the whole tree each deploy.
       - name: Rsync to server
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
