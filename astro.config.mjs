@@ -74,6 +74,13 @@ export default defineConfig({
   vite: {
     plugins: [mdxVoidHtmlPlugin()],
     build: {
+      // Vite 8 switched the default CSS minifier to lightningcss, which folds a
+      // prefixed and unprefixed property into one and keeps only the last —
+      // silently dropping one of the backdrop-filter pair. It only re-derives
+      // prefixes when given browser targets, and routing CSS through its
+      // transformer breaks our @import graph. esbuild (the Vite 7 default) keeps
+      // both declarations, so pin it and keep the glass working on Safari < 18.
+      cssMinify: "esbuild",
       rollupOptions: {
         onwarn(warning, warn) {
           if (

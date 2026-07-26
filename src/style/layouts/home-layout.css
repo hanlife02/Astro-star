@@ -264,8 +264,8 @@
   border-radius: 0.9rem;
   background: rgba(255, 255, 255, 0.94);
   box-shadow: 0 0.9rem 2rem rgba(17, 17, 17, 0.12);
-  backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
   overflow: hidden;
   z-index: 12;
 }
