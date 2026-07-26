@@ -254,11 +254,9 @@ function createContributionHeatmap(
 
     const monthKey = dateKey.slice(0, 7);
 
-    if (
-      !isBlank &&
-      !labeledMonths.has(monthKey) &&
-      (date.getUTCDate() <= 7 || dateTime === rangeStartTime)
-    ) {
+    // Label a month only where its 1st-7th day falls inside the range, so
+    // the leading partial month never stacks onto the first week column.
+    if (!isBlank && !labeledMonths.has(monthKey) && date.getUTCDate() <= 7) {
       labeledMonths.add(monthKey);
       months.push({
         label: monthFormatter.format(date),
@@ -281,6 +279,15 @@ function createContributionHeatmap(
       level: isBlank ? 0 : (contribution?.level ?? 0),
       weekIndex,
     });
+  }
+
+  // A rolling 365-day window contains the same calendar month at both ends;
+  // keep only the trailing (current) one so 12 unique labels remain.
+  if (
+    months.length > 1 &&
+    months[0].label === months[months.length - 1].label
+  ) {
+    months.shift();
   }
 
   return {
