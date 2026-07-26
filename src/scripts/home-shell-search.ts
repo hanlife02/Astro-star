@@ -47,39 +47,39 @@ function loadSiteSearchScript(browserWindow: SearchWindow) {
   if (browserWindow.__homeShellSiteSearchScript)
     return browserWindow.__homeShellSiteSearchScript;
 
-  browserWindow.__homeShellSiteSearchScript = new Promise<void>(
-    (resolve, reject) => {
-      const existingScript = document.querySelector<HTMLScriptElement>(
-        "[data-home-shell-sitesearch-script]",
-      );
+  const scriptPromise = new Promise<void>((resolve, reject) => {
+    const existingScript = document.querySelector<HTMLScriptElement>(
+      "[data-home-shell-sitesearch-script]",
+    );
+    const script = existingScript ?? document.createElement("script");
 
-      if (existingScript) {
-        existingScript.addEventListener("load", () => resolve(), {
-          once: true,
-        });
-        existingScript.addEventListener(
-          "error",
-          () => reject(new Error("Failed to load Algolia SiteSearch.")),
-          { once: true },
-        );
-        return;
-      }
+    script.addEventListener("load", () => resolve(), { once: true });
+    script.addEventListener(
+      "error",
+      () => {
+        // Drop the dead tag so the next attempt can retry with a fresh one.
+        script.remove();
+        reject(new Error("Failed to load Algolia SiteSearch."));
+      },
+      { once: true },
+    );
 
-      const script = document.createElement("script");
+    if (!existingScript) {
       script.src = SITESEARCH_SCRIPT_URL;
       script.async = true;
       script.dataset.homeShellSiteSearchScript = "true";
-      script.addEventListener("load", () => resolve(), { once: true });
-      script.addEventListener(
-        "error",
-        () => reject(new Error("Failed to load Algolia SiteSearch.")),
-        { once: true },
-      );
       document.head.append(script);
-    },
-  );
+    }
+  });
 
-  return browserWindow.__homeShellSiteSearchScript;
+  browserWindow.__homeShellSiteSearchScript = scriptPromise;
+  scriptPromise.catch(() => {
+    if (browserWindow.__homeShellSiteSearchScript === scriptPromise) {
+      browserWindow.__homeShellSiteSearchScript = undefined;
+    }
+  });
+
+  return scriptPromise;
 }
 
 function initializeSiteSearch(
