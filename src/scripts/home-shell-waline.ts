@@ -77,65 +77,74 @@ function loadTikzJaxProcessor() {
 
   const previousOnload = window.onload;
 
-  browserWindow.__homeShellTikzJaxLoadPromise = new Promise(
-    (resolve, reject) => {
-      const resolveProcessor = () => {
-        const tikzJaxOnload = window.onload;
+  const loadPromise = new Promise<TikzJaxProcessor>((resolve, reject) => {
+    const resolveProcessor = () => {
+      const tikzJaxOnload = window.onload;
 
-        if (typeof tikzJaxOnload !== "function") {
-          reject(new Error("TikZJax did not expose a renderer."));
-          return;
-        }
-
-        const processor: TikzJaxProcessor = () =>
-          tikzJaxOnload.call(window, new Event("load"));
-
-        browserWindow.__homeShellTikzJaxProcessor = processor;
-        window.onload = previousOnload;
-        resolve(processor);
-      };
-
-      const existingScript = document.getElementById(TIKZJAX_SCRIPT_ID);
-      if (existingScript instanceof HTMLScriptElement) {
-        if (existingScript.dataset.loaded === "true") {
-          resolveProcessor();
-          return;
-        }
-
-        existingScript.addEventListener("load", resolveProcessor, {
-          once: true,
-        });
-        existingScript.addEventListener("error", () => {
-          reject(new Error("Failed to load TikZJax."));
-        });
+      if (typeof tikzJaxOnload !== "function") {
+        reject(new Error("TikZJax did not expose a renderer."));
         return;
       }
 
-      const script = document.createElement("script");
-      script.id = TIKZJAX_SCRIPT_ID;
-      script.src = TIKZJAX_SCRIPT_URL;
-      script.async = true;
-      script.addEventListener(
-        "load",
-        () => {
-          script.dataset.loaded = "true";
-          resolveProcessor();
-        },
-        { once: true },
-      );
-      script.addEventListener(
+      const processor: TikzJaxProcessor = () =>
+        tikzJaxOnload.call(window, new Event("load"));
+
+      browserWindow.__homeShellTikzJaxProcessor = processor;
+      window.onload = previousOnload;
+      resolve(processor);
+    };
+
+    const rejectAndDropScript = (script: HTMLScriptElement) => {
+      // Drop the dead tag so the next render attempt can retry loading.
+      script.remove();
+      reject(new Error("Failed to load TikZJax."));
+    };
+
+    const existingScript = document.getElementById(TIKZJAX_SCRIPT_ID);
+    if (existingScript instanceof HTMLScriptElement) {
+      if (existingScript.dataset.loaded === "true") {
+        resolveProcessor();
+        return;
+      }
+
+      existingScript.addEventListener("load", resolveProcessor, {
+        once: true,
+      });
+      existingScript.addEventListener(
         "error",
-        () => {
-          reject(new Error("Failed to load TikZJax."));
-        },
+        () => rejectAndDropScript(existingScript),
         { once: true },
       );
+      return;
+    }
 
-      document.head.append(script);
-    },
-  );
+    const script = document.createElement("script");
+    script.id = TIKZJAX_SCRIPT_ID;
+    script.src = TIKZJAX_SCRIPT_URL;
+    script.async = true;
+    script.addEventListener(
+      "load",
+      () => {
+        script.dataset.loaded = "true";
+        resolveProcessor();
+      },
+      { once: true },
+    );
+    script.addEventListener("error", () => rejectAndDropScript(script), {
+      once: true,
+    });
 
-  return browserWindow.__homeShellTikzJaxLoadPromise;
+    document.head.append(script);
+  });
+
+  browserWindow.__homeShellTikzJaxLoadPromise = loadPromise;
+  loadPromise.catch(() => {
+    if (browserWindow.__homeShellTikzJaxLoadPromise === loadPromise) {
+      browserWindow.__homeShellTikzJaxLoadPromise = undefined;
+    }
+  });
+
+  return loadPromise;
 }
 
 function queueTikzJaxRender() {
