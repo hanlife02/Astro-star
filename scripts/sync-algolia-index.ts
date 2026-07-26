@@ -10,6 +10,7 @@ import { algoliaSiteSearchConfig } from "../src/config/search.ts";
 import { site } from "../src/config/site.ts";
 import { resolveContentDates } from "../src/utils/content-dates.ts";
 import { resolveContentSlug } from "../src/utils/content-slug.ts";
+import { getLoaderEntryId } from "../src/utils/loader-entry-id.ts";
 import {
   CONTENT_TIME_ZONE,
   toContentIsoString,
@@ -33,6 +34,7 @@ interface Frontmatter {
   description?: string;
   published?: boolean;
   routeSlug?: string | number;
+  slug?: string | number;
   title?: string;
   type?: string;
   updatedAt?: string;
@@ -339,7 +341,10 @@ function buildRecords() {
       const { frontmatter, body } = parseFrontmatter(source);
       if (!isPublishedFrontmatter(frontmatter)) continue;
 
-      const entryId = relative(sectionDir, filePath).replace(/\\/g, "/");
+      const entryId = getLoaderEntryId(
+        relative(sectionDir, filePath).replace(/\\/g, "/"),
+        frontmatter.slug,
+      );
       const sourcePath = relative(ROOT, filePath).replace(/\\/g, "/");
       const routeSlug = resolveContentSlug(entryId, frontmatter.routeSlug);
       const title = resolveContentTitle(entryId, frontmatter.title);
