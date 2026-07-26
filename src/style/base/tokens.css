@@ -31,6 +31,7 @@
 }
 
 :root {
+  --paper: #ffffff;
   --line: #111111;
   --line-soft: rgba(17, 17, 17, 0.88);
   --accent: var(--line);
@@ -90,6 +91,7 @@
 }
 
 :root[data-theme="dark"] {
+  --paper: #000000;
   --line: #f5f5f5;
   --line-soft: rgba(245, 245, 245, 0.9);
 }
