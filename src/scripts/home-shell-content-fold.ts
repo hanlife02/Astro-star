@@ -81,7 +81,11 @@ function initFold(fold: HTMLDetailsElement, controller: AbortController) {
       if (!summary) return;
 
       event.preventDefault();
-      setFoldOpen(fold, !fold.open);
+      // During the closing animation `open` is still true; treat the fold
+      // as closed so a quick second click reopens it instead of re-closing.
+      const isEffectivelyOpen =
+        fold.open && fold.dataset.foldState !== "closing";
+      setFoldOpen(fold, !isEffectivelyOpen);
     },
     { signal: controller.signal },
   );
