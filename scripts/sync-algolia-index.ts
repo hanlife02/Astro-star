@@ -1,6 +1,6 @@
 import { execFileSync } from "node:child_process";
 import { Buffer } from "node:buffer";
-import { readdirSync, readFileSync, statSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import remarkMdx from "remark-mdx";
@@ -336,6 +336,7 @@ function buildRecords() {
 
   for (const section of VALID_SECTIONS) {
     const sectionDir = join(CONTENT_DIR, section);
+    if (!existsSync(sectionDir)) continue;
 
     for (const filePath of collectFiles(sectionDir)) {
       const source = readFileSync(filePath, "utf8");
