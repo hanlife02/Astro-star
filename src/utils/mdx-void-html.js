@@ -70,7 +70,7 @@ function normalizeMdxVoidHtml(source) {
       continue;
     }
 
-    const fenceMatch = line.match(/^(\s*)(`{3,}|~{3,})/);
+    const fenceMatch = line.match(/^(\s*)(`{3,}|~{3,})(.*)$/);
 
     if (fenceMatch) {
       normalizedLines.push(line);
@@ -79,8 +79,11 @@ function normalizeMdxVoidHtml(source) {
         fencedCodeMarker = fenceMatch[2];
       } else if (
         fenceMatch[2][0] === fencedCodeMarker[0] &&
-        fenceMatch[2].length >= fencedCodeMarker.length
+        fenceMatch[2].length >= fencedCodeMarker.length &&
+        fenceMatch[3].trim() === ""
       ) {
+        // A closing fence cannot carry an info string (CommonMark), so a
+        // line like ```js inside an open block is content, not a closer.
         fencedCodeMarker = "";
       }
 
