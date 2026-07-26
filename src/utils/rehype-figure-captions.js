@@ -54,12 +54,18 @@ function getCaptionSource(node) {
   return "";
 }
 
+// Mirrors --content-image-max-width in content-prose.css. Astro's constrained
+// layout defaults to `100vw`, which makes a desktop browser fetch a variant
+// several times wider than the column the image actually occupies.
+const CONTENT_IMAGE_SIZES = "(min-width: 56.25rem) 36rem, 24rem";
+
 function enhanceImageNode(node, { keyboardOpen = false } = {}) {
   if (!isElement(node, "img")) return;
 
   node.properties ??= {};
   node.properties.loading ??= "lazy";
   node.properties.decoding ??= "async";
+  node.properties.sizes = CONTENT_IMAGE_SIZES;
 
   if (!keyboardOpen) return;
 
