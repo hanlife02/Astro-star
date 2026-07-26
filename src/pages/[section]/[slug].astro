@@ -6,7 +6,10 @@ import { getAdjacentArticles } from "../../utils/adjacent-articles";
 import { resolveContentDates } from "../../utils/content-dates";
 import { resolveContentDescription } from "../../utils/content-description";
 import { resolveContentImage } from "../../utils/content-image";
-import { resolveContentSlug } from "../../utils/content-slug";
+import {
+  assertUniqueContentSlugs,
+  resolveContentSlug,
+} from "../../utils/content-slug";
 import {
   formatContentDateTime,
   toContentIsoString,
@@ -28,6 +31,8 @@ export async function getStaticPaths() {
       const entries = (await getCollection(section)).filter(
         isPublishedContentEntry,
       );
+
+      assertUniqueContentSlugs(section, entries);
 
       return entries.map((entry) => ({
         params: {
