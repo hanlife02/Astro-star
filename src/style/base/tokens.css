@@ -37,6 +37,7 @@
   --accent: var(--line);
   --border-soft: color-mix(in srgb, var(--line) 14%, transparent);
   --text-muted: color-mix(in srgb, var(--line) 68%, transparent);
+  --radius-sm: 0.5rem;
   --radius-md: 1rem;
   --font-size-base: clamp(0.9375rem, 1.35vw, 1.8rem);
   --type-xs: clamp(12.5px, 0.62rem + 0.08vw, 15px);
