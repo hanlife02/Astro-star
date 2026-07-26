@@ -1,0 +1,8 @@
+allowBuilds:
+  better-sqlite3: true
+  esbuild: true
+  sharp: true
+
+overrides:
+  esbuild: 0.28.1
+  volar-service-yaml: 0.0.71
