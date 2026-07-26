@@ -107,6 +107,11 @@ export function initHomeShellTheme() {
     document.documentElement.style.backgroundColor =
       resolved === "dark" ? "#000000" : "#ffffff";
 
+    const themeColorMeta = document.querySelector('meta[name="theme-color"]');
+    if (themeColorMeta instanceof HTMLMetaElement) {
+      themeColorMeta.content = resolved === "dark" ? "#000000" : "#ffffff";
+    }
+
     if (snowBackground instanceof HTMLElement) {
       snowBackground.dataset.mode = resolved;
     }

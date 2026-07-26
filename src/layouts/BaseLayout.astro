@@ -221,6 +221,13 @@ const siteJsonLdText = JSON.stringify(siteJsonLd).replace(/</g, "\\u003c");
         root.style.colorScheme = resolved;
         root.style.backgroundColor =
           resolved === "dark" ? "#000000" : "#ffffff";
+        var themeColorMeta = document.querySelector('meta[name="theme-color"]');
+        if (themeColorMeta) {
+          themeColorMeta.setAttribute(
+            "content",
+            resolved === "dark" ? "#000000" : "#ffffff",
+          );
+        }
         writeStorage(mode);
         writeCookie(storageKey, mode);
         writeCookie(resolvedCookieKey, resolved);
@@ -232,6 +239,18 @@ const siteJsonLdText = JSON.stringify(siteJsonLd).replace(/</g, "\\u003c");
           newRoot.dataset.theme = liveRoot.dataset.theme;
           newRoot.style.colorScheme = liveRoot.style.colorScheme;
           newRoot.style.backgroundColor = liveRoot.style.backgroundColor;
+          var liveThemeColor = document.querySelector(
+            'meta[name="theme-color"]',
+          );
+          var newThemeColor = event.newDocument.querySelector(
+            'meta[name="theme-color"]',
+          );
+          if (liveThemeColor && newThemeColor) {
+            newThemeColor.setAttribute(
+              "content",
+              liveThemeColor.getAttribute("content"),
+            );
+          }
         });
       })();
     </script>
