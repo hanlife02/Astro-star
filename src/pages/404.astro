@@ -32,8 +32,16 @@ const pageDescription = "The requested page could not be found.";
     </p>
     <p class="not-found-path">
       <span>Requested path</span>
-      <code>{requestedPath}</code>
+      <code data-not-found-path>{requestedPath}</code>
     </p>
+    <script is:inline data-astro-rerun>
+      (function () {
+        var pathElement = document.querySelector("[data-not-found-path]");
+        if (pathElement) {
+          pathElement.textContent = location.pathname;
+        }
+      })();
+    </script>
     <nav class="not-found-actions" aria-label="Not found page actions">
       <a class="not-found-action not-found-action--primary" href="/">Home</a>
       <a class="not-found-action" href="/blog/">Blog</a>
