@@ -133,6 +133,8 @@ const projectLinks = [
 ---
 
 <DocumentDetailPage
+  background="home"
+  contentSurface="paper"
   backHref={`/${section}/`}
   backLabel={`Back to ${sectionLabel}`}
   backAriaLabel={`Back to ${sectionLabel} list`}
@@ -205,31 +207,6 @@ const projectLinks = [
         >
       </p>
     </div>
-    {
-      projectLinks.length > 0 && (
-        <nav class="article-project-links" aria-label="Project links">
-          {projectLinks.map((link) => (
-            <a
-              class:list={[
-                "article-project-link",
-                `article-project-link--${link.kind}`,
-              ]}
-              href={link.href}
-              aria-label={link.label}
-              title={link.label}
-            >
-              <span class="article-project-link-icon" aria-hidden="true">
-                {link.kind === "github" ? (
-                  <GithubIcon />
-                ) : (
-                  <Icon svg={BookOpen} />
-                )}
-              </span>
-            </a>
-          ))}
-        </nav>
-      )
-    }
   </header>
 
   <Fragment slot="after-content">
@@ -237,6 +214,34 @@ const projectLinks = [
       articleRoutePath={articleRoutePath}
       walineServerURL={walineServerURL}
     />
+
+    <nav
+      class="article-project-links"
+      aria-label="Project links"
+      hidden={projectLinks.length === 0}
+    >
+      {
+        projectLinks.map((link) => (
+          <a
+            class:list={[
+              "article-project-link",
+              `article-project-link--${link.kind}`,
+            ]}
+            href={link.href}
+            aria-label={link.label}
+            title={link.label}
+          >
+            <span class="article-project-link-icon" aria-hidden="true">
+              {link.kind === "github" ? (
+                <GithubIcon />
+              ) : (
+                <Icon svg={BookOpen} />
+              )}
+            </span>
+          </a>
+        ))
+      }
+    </nav>
 
     {
       (previousArticle || nextArticle) && (

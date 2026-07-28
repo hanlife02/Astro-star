@@ -24,6 +24,7 @@ interface Props {
   ogType?: "article" | "website";
   twitterCard?: "summary" | "summary_large_image";
   includeKatexStyles?: boolean;
+  contentSurface?: "default" | "paper";
   contentClass?: string;
   contentAriaLabel: string;
   tocAriaLabel: string;
@@ -50,6 +51,7 @@ const {
   ogType = "website",
   twitterCard,
   includeKatexStyles,
+  contentSurface = "default",
   contentClass = "content-page content-page--article",
   contentAriaLabel,
   tocAriaLabel,
@@ -86,21 +88,42 @@ const {
   }))}
 >
   <slot name="head" slot="head" />
-  <slot name="before-content" />
   {
-    (contentTitle || contentDescription) && (
-      <header class="content-page-header">
-        {contentTitle && (
-          <h1 id={contentTitleId} class="content-page-title">
-            {contentTitle}
-          </h1>
+    contentSurface === "paper" ? (
+      <div class="article-reading-paper">
+        <slot name="before-content" />
+        {(contentTitle || contentDescription) && (
+          <header class="content-page-header">
+            {contentTitle && (
+              <h1 id={contentTitleId} class="content-page-title">
+                {contentTitle}
+              </h1>
+            )}
+            {contentDescription && (
+              <p class="content-page-description">{contentDescription}</p>
+            )}
+          </header>
         )}
-        {contentDescription && (
-          <p class="content-page-description">{contentDescription}</p>
+        <DocumentContent />
+      </div>
+    ) : (
+      <Fragment>
+        <slot name="before-content" />
+        {(contentTitle || contentDescription) && (
+          <header class="content-page-header">
+            {contentTitle && (
+              <h1 id={contentTitleId} class="content-page-title">
+                {contentTitle}
+              </h1>
+            )}
+            {contentDescription && (
+              <p class="content-page-description">{contentDescription}</p>
+            )}
+          </header>
         )}
-      </header>
+        <DocumentContent />
+      </Fragment>
     )
   }
-  <DocumentContent />
   <slot name="after-content" />
 </DocumentPageShell>
