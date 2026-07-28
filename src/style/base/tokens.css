@@ -37,6 +37,9 @@
   --accent: var(--line);
   --border-soft: color-mix(in srgb, var(--line) 14%, transparent);
   --text-muted: color-mix(in srgb, var(--line) 68%, transparent);
+  --article-paper-surface: #fdfcf9;
+  --article-paper-border: rgba(17, 17, 17, 0.13);
+  --article-paper-shadow: rgba(17, 17, 17, 0.12);
   --radius-sm: 0.5rem;
   --radius-md: 1rem;
   --font-size-base: clamp(0.9375rem, 1.35vw, 1.8rem);
@@ -95,6 +98,9 @@
   --paper: #000000;
   --line: #f5f5f5;
   --line-soft: rgba(245, 245, 245, 0.9);
+  --article-paper-surface: #08090a;
+  --article-paper-border: rgba(245, 245, 245, 0.15);
+  --article-paper-shadow: rgba(0, 0, 0, 0.48);
 }
 
 * {
@@ -281,6 +287,7 @@ body {
     .content-bg,
     .coderain,
     .constellation-bg,
+    .article-reading-paper,
     .nav-panel,
     .content-toc,
     .mobile-nav-drawer .nav-panel
