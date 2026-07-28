@@ -134,6 +134,12 @@ function normalizeSplitSiteConfig(input) {
         description: input.site.description ?? "",
         iconSrc: input.site.iconSrc ?? "",
         startYear: input.site.startYear ?? new Date().getFullYear(),
+        footer: input.site.footer ?? {
+          name: input.site.name ?? "",
+          repoHref: input.profile.githubUsername
+            ? `https://github.com/${input.profile.githubUsername}`
+            : (input.site.url ?? ""),
+        },
         beian: input.site.beian ?? {
           icp: { text: "", href: "" },
           moe: { text: "", href: "" },
@@ -170,6 +176,12 @@ function normalizeSplitSiteConfig(input) {
       description: legacySite.description ?? "",
       iconSrc: legacySite.iconSrc ?? "",
       startYear: legacyOwner.startYear ?? new Date().getFullYear(),
+      footer: legacySite.footer ?? {
+        name: legacySite.name ?? "",
+        repoHref: legacyProfile.githubUsername
+          ? `https://github.com/${legacyProfile.githubUsername}`
+          : (legacySite.url ?? ""),
+      },
       beian: legacySite.beian ?? {
         icp: { text: "", href: "" },
         moe: { text: "", href: "" },

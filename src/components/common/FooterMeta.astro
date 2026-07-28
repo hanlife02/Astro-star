@@ -7,14 +7,8 @@ interface Props {
   separator?: string;
 }
 
-const profile = site.profile as { githubUsername?: string };
-const githubUsername = profile.githubUsername?.trim() ?? "";
-const {
-  repoHref = githubUsername
-    ? `https://github.com/${githubUsername}`
-    : site.site.url,
-  separator = "|",
-} = Astro.props as Props;
+const { repoHref = site.site.footer.repoHref, separator = "|" } =
+  Astro.props as Props;
 const currentYear = new Date().getFullYear();
 const copyrightYears = `${site.site.startYear}-${currentYear}`;
 const beianLinks = [site.site.beian.icp, site.site.beian.moe].filter(
@@ -31,7 +25,7 @@ const beianLinks = [site.site.beian.icp, site.site.beian.moe].filter(
       rel="noreferrer"
     >
       @{copyrightYears}
-      {site.site.name}
+      {site.site.footer.name}
     </a>
     {
       beianLinks.length > 0 && (
