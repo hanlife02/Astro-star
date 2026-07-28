@@ -15,6 +15,10 @@ export const site = {
       "A personal site template for blogs, notes, projects, comments, and friend links.",
     iconSrc: "/site-icon.svg",
     startYear: 2026,
+    footer: {
+      name: "Astro-star",
+      repoHref: "https://github.com/hanlife02/Astro-star",
+    },
     beian: {
       icp: {
         text: "",
