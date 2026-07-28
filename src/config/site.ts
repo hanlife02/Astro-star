@@ -15,6 +15,10 @@ export const site = {
       "Ethan's personal blog — coding, AI4S, and life at Peking University.",
     iconSrc: "/site-icon.svg",
     startYear: 2026,
+    footer: {
+      name: "Astro-star",
+      repoHref: "https://github.com/hanlife02/Astro-star",
+    },
     beian: {
       icp: {
         text: "京ICP备2024074085号-2",
