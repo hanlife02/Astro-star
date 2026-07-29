@@ -64,8 +64,8 @@ jobs:
 
           curl --fail-with-body --silent --show-error \
             --request POST \
-            --url "https://api.github.com/repos/hanlife02/Astro-star-docs/dispatches" \
+            --url "https://api.github.com/repos/hanlife02/Astro-star-docs/actions/workflows/deploy.yml/dispatches" \
             --header "Accept: application/vnd.github+json" \
             --header "Authorization: Bearer ${ACTIONS_PAT}" \
             --header "X-GitHub-Api-Version: 2022-11-28" \
-            --data "{\"event_type\":\"deploy-docs\",\"client_payload\":{\"sha\":\"${SOURCE_SHA}\"}}"
+            --data "{\"ref\":\"main\",\"inputs\":{\"source_sha\":\"${SOURCE_SHA}\"}}"
