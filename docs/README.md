@@ -1,6 +1,6 @@
 # Astro-star Docs
 
-这是 Astro-star 项目的 VitePress 文档站。左侧导航按“主题 / 部署 / 创作 / 开发”四部分组织，右侧目录显示当前页面内的标题层级。
+这是 Astro-star 项目的 VitePress 文档源码，随主仓库一起维护。左侧导航按“主题 / 部署 / 创作 / 开发”四部分组织，右侧目录显示当前页面内的标题层级。
 
 ## 本地开发
 
@@ -41,12 +41,16 @@ order: 50
 # 新页面标题
 ```
 
+## 自动部署
+
+`main` 分支中的 `docs/` 或文档工作流发生变化后，主仓库会先检查格式并构建文档，再通知 `hanlife02/Astro-star-docs` 发布 GitHub Pages。文档源码只在当前目录维护，发布仓库仅保留部署工作流，站点继续沿用原有域名。
+
 ## 来源与版权
 
-本仓库的文档站脚手架改造自 [lcpu-club/getting-started](https://github.com/lcpu-club/getting-started)。原仓库采用 MIT License：
+本文档站脚手架改造自 [lcpu-club/getting-started](https://github.com/lcpu-club/getting-started)。原仓库采用 MIT License：
 
 ```text
 Copyright (c) 2024 Linux Club of Peking University
 ```
 
-本仓库保留原 MIT 版权声明和许可文本，见 [LICENSE](./LICENSE)。Astro-star 项目源码本身采用 Apache-2.0，见 [hanlife02/Astro-star](https://github.com/hanlife02/Astro-star)。
+当前目录保留原 MIT 版权声明和许可文本，见 [LICENSE](./LICENSE)。Astro-star 项目源码本身采用 Apache-2.0，见主仓库根目录的 [LICENSE](../LICENSE)。
