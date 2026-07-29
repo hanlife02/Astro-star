@@ -7,6 +7,7 @@ import { isAlgoliaSiteSearchConfigured } from "../../config/search";
 import {
   AlignLeft,
   ArrowUp,
+  FolderKanban,
   Monitor,
   Moon,
   Search,
@@ -203,6 +204,14 @@ const {
     </div>
 
     <nav class="wire-box footer-icons" aria-label="Footer icon navigation">
+      <a
+        class="footer-rss-btn"
+        href="/project/"
+        aria-label="View projects"
+        title="Projects"
+      >
+        <Icon svg={FolderKanban} />
+      </a>
       <a
         class="footer-rss-btn"
         href="/rss.xml"
