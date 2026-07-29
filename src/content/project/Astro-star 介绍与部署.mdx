@@ -2,7 +2,7 @@
 routeSlug: astro-star
 title: Astro-star 介绍与部署
 createdAt: "2026-06-14 23:05:26"
-updatedAt: "2026-06-19 17:42:22"
+updatedAt: "2026-07-29 17:44:40"
 type: Project
 description: 介绍 Astro-star 博客主题的内容与部署
 tags:
@@ -243,15 +243,63 @@ ALGOLIA_ADMIN_API_KEY=xxxxxxxxxxxxxxxx
 
 凭证、token 统一放在 `Secrets` 里：
 
-| Secret                  | 是否必填 | 用途                | 说明                                                                                  |
-| ----------------------- | -------- | ------------------- | ------------------------------------------------------------------------------------- |
-| `SSH_HOST`              | 必填     | SSH / rsync 部署    | 服务器公网 IP 或域名。当前 workflow 仍从 Secret 读取这个值。                          |
-| `SSH_PRIVATE_KEY`       | 必填     | SSH / rsync 部署    | 用于登录服务器的私钥内容。对应公钥需要提前加入服务器用户的 `~/.ssh/authorized_keys`。 |
-| `WALINE_SERVER_URL`     | 可选     | 构建和服务器 `.env` | Waline 评论服务地址；不使用评论可以不填。                                             |
-| `GITHUB_TOKEN`          | 可选     | 服务器 `.env`       | GitHub API token；用于 GitHub 仓库卡片、贡献数据等接口，避免匿名请求限流。            |
-| `CODETIME_TOKEN`        | 可选     | 服务器 `.env`       | CodeTime 徽章接口 token；不使用可以不填。                                             |
-| `ALGOLIA_WRITE_API_KEY` | 可选     | Algolia 索引同步    | Algolia 写入索引用的 key；只有启用搜索索引同步时才需要。                              |
-| `ALGOLIA_ADMIN_API_KEY` | 可选     | Algolia 索引同步    | Algolia 管理 key；用于清理已经删除文章对应的旧记录。                                  |
+| Secret                  | 是否必填 | 用途                 | 说明                                                                                  |
+| ----------------------- | -------- | -------------------- | ------------------------------------------------------------------------------------- |
+| `SSH_HOST`              | 必填     | SSH / rsync 部署     | 服务器公网 IP 或仅 DNS 解析的域名，不能填写由 Cloudflare 代理的橙云域名。             |
+| `SSH_PRIVATE_KEY`       | 必填     | SSH / rsync 部署     | 用于登录服务器的私钥内容。对应公钥需要提前加入服务器用户的 `~/.ssh/authorized_keys`。 |
+| `WALINE_SERVER_URL`     | 可选     | 构建和服务器 `.env`  | Waline 评论服务地址；不使用评论可以不填。                                             |
+| `GITHUB_TOKEN`          | 可选     | 服务器 `.env`        | GitHub API token；用于 GitHub 仓库卡片、贡献数据等接口，避免匿名请求限流。            |
+| `CODETIME_TOKEN`        | 可选     | 服务器 `.env`        | CodeTime 徽章接口 token；不使用可以不填。                                             |
+| `ALGOLIA_WRITE_API_KEY` | 可选     | Algolia 索引同步     | Algolia 写入索引用的 key；只有启用搜索索引同步时才需要。                              |
+| `ALGOLIA_ADMIN_API_KEY` | 可选     | Algolia 索引同步     | Algolia 管理 key；用于清理已经删除文章对应的旧记录。                                  |
+| `CLOUDFLARE_API_TOKEN`  | 可选     | 部署后清理 CDN 缓存  | 建议使用仅有目标站点 `Cache Purge` 权限的 API Token。                                 |
+| `CLOUDFLARE_ZONE_ID`    | 可选     | 指定 Cloudflare Zone | 在 Cloudflare 站点概览页获取；需与 API Token 授权的站点一致。                         |
+
+#### Cloudflare CDN（可选）
+
+CDN 不是部署博客的必要条件。未配置 Cloudflare 时，GitHub Actions 会正常完成构建、上传和重启；只有同时设置 `CLOUDFLARE_API_TOKEN` 与 `CLOUDFLARE_ZONE_ID`，工作流才会在部署成功后清理旧缓存。
+
+##### DNS 与 SSL/TLS
+
+1. 在 Cloudflare 添加自己的域名，并按提示把域名服务器改为 Cloudflare 提供的 Nameserver。
+2. 为博客域名添加指向服务器公网 IP 的 `A` 记录，并开启代理（橙云）。只用于 SSH、面板或其他不经过 Cloudflare HTTP 代理的子域名应保持“仅 DNS”。
+3. 在 `SSL/TLS` 中选择 `Full (strict)`。源站需要安装有效证书，不能只依赖 Cloudflare 到访客这一段的 HTTPS。
+
+> `SSH_HOST` 必须填写源站公网 IP 或“仅 DNS”的域名。Cloudflare 橙云不会代理普通的 SSH 22 端口；如果这里填写博客的橙云域名，Actions 会在 `Setup SSH` 的 `ssh-keyscan` 阶段失败。
+
+##### 缓存规则
+
+可以在 `Caching -> Cache Rules` 中按下面的顺序创建规则：
+
+| 顺序 | 匹配范围               | 缓存行为 | Edge TTL | Browser TTL |
+| ---- | ---------------------- | -------- | -------- | ----------- |
+| 1    | `/api` 与 `/api/*`     | 绕过缓存 | -        | -           |
+| 2    | `/_astro/*`            | 可以缓存 | 1 年     | 遵循源站    |
+| 3    | 其余博客页面和静态文件 | 可以缓存 | 2 小时   | 遵循源站    |
+
+顺序很重要：API 的绕过规则应放在普通页面规则之前。`/_astro/` 下的文件名带内容哈希，可以长期缓存；文章 HTML 使用较短的边缘缓存时间，并在每次部署后主动清理，能够兼顾访问速度和内容更新。
+
+##### 自动清理缓存
+
+在 Cloudflare 创建 API Token 时，将权限限制为目标站点的 `Zone -> Cache Purge -> Purge`，不要使用 Global API Key。然后把 Token 和 Zone ID 分别保存到 GitHub Actions Secrets：
+
+```text
+CLOUDFLARE_API_TOKEN
+CLOUDFLARE_ZONE_ID
+```
+
+部署工作流会在服务器重启成功后调用 Cloudflare API 清理缓存，并检查 API 返回的 `success` 字段。任意一项未设置时，该步骤会输出跳过提示并正常结束，不会影响未使用 CDN 的部署。
+
+##### 验证 CDN
+
+部署完成后可以连续执行两次：
+
+```shell
+curl -I https://example.com/
+curl -I https://example.com/
+```
+
+响应头中出现 `server: cloudflare` 表示流量已经经过 Cloudflare；`cf-cache-status` 通常会从首次访问的 `MISS` 变为后续访问的 `HIT`。对于 `/_astro/` 下的构建资源，还应看到类似 `cache-control: public, max-age=31536000, immutable` 的长期缓存响应头。
 
 #### 配置
 
@@ -380,8 +428,117 @@ pnpm build
 
 ### 反向代理
 
-待施工
+Astro 服务默认监听 `4321` 端口。正式部署时不要让访客直接访问这个端口，而是让 Nginx 接收域名的 80/443 请求，再转发到本机 Astro 服务：
+
+```text
+访客 -> Nginx :443 -> Astro/PM2 :4321
+```
+
+配置前先确认：
+
+- 域名的 `A` 记录已经指向服务器公网 IP。
+- PM2 中的 Astro 应用正在运行，执行 `curl -I http://127.0.0.1:4321` 能收到响应。
+- 服务器安全组和防火墙已放行 TCP 80、443；应用端口 `4321` 不需要向公网开放。
+
+#### 使用 1Panel
+
+在 `网站 -> 网站 -> 创建网站 -> 反向代理` 中填写：
+
+| 配置项   | 示例                    |
+| -------- | ----------------------- |
+| 主域名   | `example.com`           |
+| 代理地址 | `http://127.0.0.1:4321` |
+| Host     | `$host`                 |
+
+保存后访问 `http://example.com`，确认能显示博客，再继续配置证书。若使用了 `www.example.com`，需要同时添加域名解析，并把它加入网站的其他域名。
+
+#### 手写 Nginx 配置
+
+没有使用面板时，可以创建一个站点配置：
+
+```nginx
+server {
+    listen 80;
+    listen [::]:80;
+    server_name example.com www.example.com;
+
+    location / {
+        proxy_pass http://127.0.0.1:4321;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+```
+
+启用配置后检查并重载 Nginx：
+
+```shell
+sudo nginx -t
+sudo systemctl reload nginx
+```
+
+如果返回 `502 Bad Gateway`，先检查 `pm2 status` 和 `curl -I http://127.0.0.1:4321`。本机端口无法访问通常说明 Astro 未启动或 `APP_PORT` 与反向代理填写的端口不一致。
 
 ### SSL 证书
 
-待施工
+推荐使用受浏览器信任并可自动续期的 Let’s Encrypt 证书。使用 1Panel 时，进入网站的 `HTTPS` 设置，申请 ACME/Let’s Encrypt 证书并开启 HTTPS；申请成功后再开启“HTTP 跳转 HTTPS”。
+
+没有使用面板时，可以安装 Certbot，并让它自动修改已启用的 Nginx 配置：
+
+```shell
+sudo certbot --nginx -d example.com -d www.example.com
+```
+
+只申请实际已经解析到服务器的域名；没有使用 `www` 时去掉对应参数。完成后验证自动续期：
+
+```shell
+sudo certbot renew --dry-run
+```
+
+最终的 HTTPS 配置应包含证书路径，并把 HTTP 请求重定向到 HTTPS。下面是结构示例，具体证书路径以 Certbot 或 1Panel 生成的配置为准：
+
+```nginx
+server {
+    listen 80;
+    listen [::]:80;
+    server_name example.com www.example.com;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name example.com www.example.com;
+
+    ssl_certificate /etc/letsencrypt/live/example.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/example.com/privkey.pem;
+
+    location / {
+        proxy_pass http://127.0.0.1:4321;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+```
+
+如果已经开启 Cloudflare 橙云代理：
+
+- Cloudflare 的 `SSL/TLS` 模式应使用 `Full (strict)`，不要使用会导致重定向循环和源站明文传输的 `Flexible`。
+- Let’s Encrypt 的 HTTP 验证失败时，可以暂时把 DNS 记录切换为“仅 DNS”，签发完成后再恢复橙云；也可以改用 DNS 验证。
+- 也可以在 Cloudflare 创建 Origin CA 证书并安装到源站，但该证书只受 Cloudflare 信任。若绕过 Cloudflare 直接访问源站，浏览器会提示证书不受信任。
+
+配置完成后依次验证源站服务、HTTPS 和跳转：
+
+```shell
+curl -I http://127.0.0.1:4321
+curl -I http://example.com
+curl -I https://example.com
+```
+
+预期结果是 Astro 本机端口返回正常响应，HTTP 域名返回 `301` 或 `308` 跳转，HTTPS 域名返回 `200`。
