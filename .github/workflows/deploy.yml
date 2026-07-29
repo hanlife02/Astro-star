@@ -81,11 +81,23 @@ jobs:
       # ── Deploy via rsync + SSH ──
       - name: Setup SSH
         if: steps.cache.outputs.cache-hit != 'true'
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          if [ -z "$SSH_HOST" ] || [ -z "$SSH_PRIVATE_KEY" ]; then
+            echo "::error::SSH_HOST and SSH_PRIVATE_KEY secrets are required for deployment."
+            exit 1
+          fi
+
+          install -d -m 700 ~/.ssh
+          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -p ${{ env.SSH_PORT }} -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
+          if ! ssh-keyscan -T 10 -p "$SSH_PORT" -H "$SSH_HOST" >> ~/.ssh/known_hosts; then
+            echo "::error::Unable to collect the SSH host key for the configured SSH_HOST on port ${SSH_PORT}."
+            exit 1
+          fi
 
       # Ship hashed assets first, additively. Everything under _astro/ carries a
       # content hash in its filename, so an existing name is byte-identical and
