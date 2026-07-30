@@ -65,7 +65,6 @@ function isExternalLink(href: string) {
     slot="profile"
     class="profile-card home-profile-sequence"
     aria-label="Profile section"
-    data-profile-avatar-state="loading"
   >
     <span class="profile-avatar-wrap home-enter-item" data-codetime-status-root>
       <img
@@ -223,81 +222,6 @@ function isExternalLink(href: string) {
         </section>
       ))
     }
-
-    <script is:inline>
-      (() => {
-        const getCurrentPageKey = () =>
-          `${window.location.pathname}${window.location.search}`;
-
-        const runHomeEntrance = () => {
-          const profileRoot = document.querySelector(".home-profile-sequence");
-          const latestRoot = document.querySelector(".home-latest-sequence");
-          if (
-            !(profileRoot instanceof HTMLElement) ||
-            !(latestRoot instanceof HTMLElement)
-          )
-            return;
-
-          const currentPageKey = getCurrentPageKey();
-          const isSamePageReplay =
-            window.__homeEntranceLastPath === currentPageKey &&
-            profileRoot.dataset.homeEntranceCompleted === "true" &&
-            latestRoot.classList.contains("latest-articles--entered");
-
-          if (isSamePageReplay) return;
-
-          window.__homeEntranceLastPath = currentPageKey;
-          const entranceMode =
-            profileRoot.dataset.homeEntranceMode === "route" ||
-            latestRoot.dataset.homeEntranceMode === "route" ||
-            document.documentElement.dataset.routeSwapping === "true"
-              ? "route"
-              : "initial";
-          profileRoot.dataset.homeEntranceEnabled = "true";
-          profileRoot.dataset.homeEntranceMode = entranceMode;
-          latestRoot.dataset.homeEntranceEnabled = "true";
-          latestRoot.dataset.homeEntranceMode = entranceMode;
-          latestRoot.classList.add("latest-articles--entered");
-
-          const profileAvatar = profileRoot.querySelector(".profile-avatar");
-          if (!(profileAvatar instanceof HTMLImageElement)) {
-            profileRoot.dataset.profileAvatarState = "error";
-            profileRoot.classList.add("home-profile--entered");
-            profileRoot.dataset.homeEntranceCompleted = "true";
-            return;
-          }
-
-          const revealProfile = () => {
-            profileAvatar.removeEventListener("load", revealProfile);
-            profileAvatar.removeEventListener("error", revealProfile);
-            profileRoot.dataset.profileAvatarState =
-              profileAvatar.naturalWidth > 0 ? "loaded" : "error";
-            profileRoot.classList.add("home-profile--entered");
-            profileRoot.dataset.homeEntranceCompleted = "true";
-          };
-
-          if (profileAvatar.complete) {
-            revealProfile();
-            return;
-          }
-
-          profileAvatar.addEventListener("load", revealProfile);
-          profileAvatar.addEventListener("error", revealProfile);
-        };
-
-        if (!window.__homeEntrancePageLoadBound) {
-          document.addEventListener("astro:page-load", () => {
-            if (typeof window.__runHomeEntrance === "function") {
-              window.__runHomeEntrance();
-            }
-          });
-          window.__homeEntrancePageLoadBound = true;
-        }
-
-        window.__runHomeEntrance = runHomeEntrance;
-        runHomeEntrance();
-      })();
-    </script>
   </section>
   <FooterMeta slot="footer-info" />
 </HomeLayout>

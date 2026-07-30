@@ -23,6 +23,7 @@ interface NavItem {
 interface Props {
   foldedNavItems: readonly NavItem[];
   githubHref?: string;
+  initialHomeEntrance?: boolean;
   initialThemeMode?: "light" | "dark" | "system";
   shellStyle?: string;
   shellVariant?: "default" | "article";
@@ -31,6 +32,7 @@ interface Props {
 const {
   foldedNavItems,
   githubHref = "",
+  initialHomeEntrance = false,
   initialThemeMode = "system",
   shellStyle = "",
   shellVariant = "default",
@@ -43,6 +45,7 @@ const {
     shellVariant !== "default" && `home-shell--${shellVariant}`,
   ]}
   style={shellStyle || undefined}
+  data-home-initial-entrance={initialHomeEntrance ? "true" : undefined}
   data-home-shell-root
 >
   <header class="home-header">
