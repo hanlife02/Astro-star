@@ -101,7 +101,7 @@ const socialLinks: DefaultTheme.SocialLink[] = [
 
 const footer = {
   message: 'Astro-star documentation site.',
-  copyright: 'Astro-star source code uses Apache-2.0.'
+  copyright: 'Astro-star source code uses the MIT License.'
 }
 
 const markdown: DefaultTheme.Config['markdown'] = {

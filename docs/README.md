@@ -53,4 +53,4 @@ order: 50
 Copyright (c) 2024 Linux Club of Peking University
 ```
 
-当前目录保留原 MIT 版权声明和许可文本，见 [LICENSE](./LICENSE)。Astro-star 项目源码本身采用 Apache-2.0，见主仓库根目录的 [LICENSE](../LICENSE)。
+当前目录保留原 MIT 版权声明和许可文本，见 [LICENSE](./LICENSE)。Astro-star 项目源码同样采用 MIT License，但版权声明以主仓库根目录的 [LICENSE](../LICENSE) 为准。

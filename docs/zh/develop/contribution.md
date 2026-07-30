@@ -41,4 +41,4 @@ pnpm build
 - 涉及配置、部署或内容格式变化时，同步更新文档。
 - 不提交密钥、私钥和真实生产环境凭据。
 
-Astro-star 使用 [Apache License 2.0](https://github.com/hanlife02/Astro-star/blob/main/LICENSE) 开源。
+Astro-star 使用 [MIT License](https://github.com/hanlife02/Astro-star/blob/main/LICENSE) 开源。
