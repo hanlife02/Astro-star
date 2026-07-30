@@ -41,8 +41,8 @@ Create a `.env` file in the project root:
 # Waline comment server URL
 WALINE_SERVER_URL=https://comment.example.com
 
-# GitHub API token
-GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxx
+# Runtime token for the GitHub repository card API (optional)
+GH_TOKEN=github_pat_xxxxxxxxxxxxxxxxxxxx
 
 # CodeTime token
 CODETIME_TOKEN=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
@@ -136,16 +136,20 @@ Required:
 
 Optional Secrets (add as needed):
 
-| Secret                     | Default        | Description                                |
-| -------------------------- | -------------- | ------------------------------------------ |
-| `SSH_USER`                 | `ubuntu`       | SSH user                                   |
-| `SSH_PORT`                 | `22`           | SSH port                                   |
-| `DEPLOY_PATH`              | `~/Astro-star` | Directory to deploy on the server          |
-| `PM2_APP_NAME`             | `Astro-star`   | PM2 app name                               |
-| `APP_PORT`                 | `4321`         | Node server port                           |
-| `PUBLIC_WALINE_SERVER_URL` | empty          | Waline server URL written to server `.env` |
-| `ALGOLIA_ADMIN_API_KEY`    | empty          | Algolia admin API key                      |
-| `ALGOLIA_WRITE_API_KEY`    | empty          | Algolia write API key                      |
+| Secret                     | Default        | Description                                                                      |
+| -------------------------- | -------------- | -------------------------------------------------------------------------------- |
+| `SSH_USER`                 | `ubuntu`       | SSH user                                                                         |
+| `SSH_PORT`                 | `22`           | SSH port                                                                         |
+| `DEPLOY_PATH`              | `~/Astro-star` | Directory to deploy on the server                                                |
+| `PM2_APP_NAME`             | `Astro-star`   | PM2 app name                                                                     |
+| `APP_PORT`                 | `4321`         | Node server port                                                                 |
+| `PUBLIC_WALINE_SERVER_URL` | empty          | Waline server URL written to server `.env`                                       |
+| `GH_TOKEN`                 | empty          | Read-only PAT used by the repository card API and written unchanged to `.env`    |
+| `ALGOLIA_ADMIN_API_KEY`    | empty          | Algolia admin API key                                                            |
+| `ALGOLIA_WRITE_API_KEY`    | empty          | Algolia write API key                                                            |
+| `ACTIONS_PAT`              | empty          | Upstream cross-repository dispatch or branch pushes; normal forks do not need it |
+
+GitHub Actions automatically provides the `github.token` context for the current workflow, so it must not be created as a repository secret. Use a separate read-only PAT for `GH_TOKEN`; the deployment workflow writes the same name to the server `.env`. Do not reuse the write-capable `ACTIONS_PAT` for the server runtime.
 
 ### 6. Push Changes
 

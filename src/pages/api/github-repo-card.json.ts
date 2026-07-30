@@ -1,5 +1,5 @@
 import type { APIRoute } from "astro";
-import { GITHUB_TOKEN } from "astro:env/server";
+import { GH_TOKEN, GITHUB_TOKEN } from "astro:env/server";
 
 interface GitHubRepositoryApiResponse {
   description?: string | null;
@@ -22,6 +22,7 @@ interface CachedPayload {
 
 const CACHE_TTL = 1000 * 60 * 60 * 6;
 const GITHUB_FETCH_TIMEOUT = 8000;
+const githubApiToken = GH_TOKEN || GITHUB_TOKEN;
 // Keyed by client-supplied owner/repo, so the cache must stay bounded.
 const MAX_CACHE_ENTRIES = 200;
 const repositoryCache = new Map<string, CachedPayload>();
@@ -150,8 +151,8 @@ async function fetchFromGitHubApi(owner: string, repo: string) {
     "user-agent": "Astro-star",
   };
 
-  if (GITHUB_TOKEN) {
-    headers.authorization = `Bearer ${GITHUB_TOKEN}`;
+  if (githubApiToken) {
+    headers.authorization = `Bearer ${githubApiToken}`;
   }
 
   try {
