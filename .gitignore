@@ -38,6 +38,8 @@ public/signature.svg
 
 # local agent and test files
 .omo/
+playwright.config.mjs
+test-results/
 tests/
 
 # local development data (not tracked)
