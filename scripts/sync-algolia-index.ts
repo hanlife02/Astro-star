@@ -9,7 +9,10 @@ import { unified } from "unified";
 import { algoliaSiteSearchConfig } from "../src/config/search.ts";
 import { site } from "../src/config/site.ts";
 import { resolveContentDates } from "../src/utils/content-dates.ts";
-import { resolveContentSlug } from "../src/utils/content-slug.ts";
+import {
+  assertUniqueContentSlugs,
+  resolveContentSlug,
+} from "../src/utils/content-slug.ts";
 import { getLoaderEntryId } from "../src/utils/loader-entry-id.ts";
 import {
   CONTENT_TIME_ZONE,
@@ -338,15 +341,28 @@ function buildRecords() {
     const sectionDir = join(CONTENT_DIR, section);
     if (!existsSync(sectionDir)) continue;
 
-    for (const filePath of collectFiles(sectionDir)) {
+    const contentEntries = collectFiles(sectionDir).flatMap((filePath) => {
       const source = readFileSync(filePath, "utf8");
       const { frontmatter, body } = parseFrontmatter(source);
-      if (!isPublishedFrontmatter(frontmatter)) continue;
+      if (!isPublishedFrontmatter(frontmatter)) return [];
 
       const entryId = getLoaderEntryId(
         relative(sectionDir, filePath).replace(/\\/g, "/"),
         frontmatter.slug,
       );
+
+      return [{ body, entryId, filePath, frontmatter }];
+    });
+
+    assertUniqueContentSlugs(
+      section,
+      contentEntries.map(({ entryId, frontmatter }) => ({
+        id: entryId,
+        data: { routeSlug: frontmatter.routeSlug },
+      })),
+    );
+
+    for (const { body, entryId, filePath, frontmatter } of contentEntries) {
       const sourcePath = relative(ROOT, filePath).replace(/\\/g, "/");
       const routeSlug = resolveContentSlug(entryId, frontmatter.routeSlug);
       const title = resolveContentTitle(entryId, frontmatter.title);
