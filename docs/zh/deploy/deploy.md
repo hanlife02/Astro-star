@@ -41,8 +41,8 @@ pnpm install
 # Waline 评论服务地址
 WALINE_SERVER_URL=https://comment.example.com
 
-# GitHub API token
-GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxx
+# GitHub 仓库卡片 API 使用的运行时 token（可选）
+GH_TOKEN=github_pat_xxxxxxxxxxxxxxxxxxxx
 
 # CodeTime token
 CODETIME_TOKEN=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
@@ -136,16 +136,20 @@ on:
 
 可选 Secrets (根据需求添加)：
 
-| Secret                     | 默认值         | 说明                             |
-| -------------------------- | -------------- | -------------------------------- |
-| `SSH_USER`                 | `ubuntu`       | SSH 用户                         |
-| `SSH_PORT`                 | `22`           | SSH 端口                         |
-| `DEPLOY_PATH`              | `~/Astro-star` | 部署到服务器的目录               |
-| `PM2_APP_NAME`             | `Astro-star`   | PM2 应用名称                     |
-| `APP_PORT`                 | `4321`         | Node 服务端口                    |
-| `PUBLIC_WALINE_SERVER_URL` | 空             | 写入服务器 `.env` 的 Waline 地址 |
-| `ALGOLIA_ADMIN_API_KEY`    | 空             | Algolia 的管理密钥               |
-| `ALGOLIA_WRITE_API_KEY`    | 空             | Algolia 的写入密钥               |
+| Secret                     | 默认值         | 说明                                                     |
+| -------------------------- | -------------- | -------------------------------------------------------- |
+| `SSH_USER`                 | `ubuntu`       | SSH 用户                                                 |
+| `SSH_PORT`                 | `22`           | SSH 端口                                                 |
+| `DEPLOY_PATH`              | `~/Astro-star` | 部署到服务器的目录                                       |
+| `PM2_APP_NAME`             | `Astro-star`   | PM2 应用名称                                             |
+| `APP_PORT`                 | `4321`         | Node 服务端口                                            |
+| `PUBLIC_WALINE_SERVER_URL` | 空             | 写入服务器 `.env` 的 Waline 地址                         |
+| `GH_TOKEN`                 | 空             | 仓库卡片 API 使用的只读 PAT，以同名变量写入服务器 `.env` |
+| `ALGOLIA_ADMIN_API_KEY`    | 空             | Algolia 的管理密钥                                       |
+| `ALGOLIA_WRITE_API_KEY`    | 空             | Algolia 的写入密钥                                       |
+| `ACTIONS_PAT`              | 空             | 上游维护者跨仓库触发或推送分支使用；普通 fork 不需要     |
+
+GitHub Actions 会自动提供仅限当前工作流使用的 `github.token`，无需在 Secrets 中手动创建。`GH_TOKEN` 应使用独立的只读 PAT；部署工作流会以同名变量写入服务器 `.env`。不要与具有仓库写权限的 `ACTIONS_PAT` 共用同一个 token。
 
 ### 6. 推送修改
 
