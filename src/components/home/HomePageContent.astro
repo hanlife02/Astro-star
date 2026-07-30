@@ -65,6 +65,7 @@ function isExternalLink(href: string) {
     slot="profile"
     class="profile-card home-profile-sequence"
     aria-label="Profile section"
+    data-profile-avatar-state="loading"
   >
     <span class="profile-avatar-wrap home-enter-item" data-codetime-status-root>
       <img
@@ -73,9 +74,9 @@ function isExternalLink(href: string) {
         alt={ownerName}
         width="1080"
         height="1080"
-        loading="lazy"
-        decoding="async"
-        fetchpriority="low"
+        loading="eager"
+        decoding="sync"
+        fetchpriority="high"
       />
       <span
         class="profile-codetime-popover"
@@ -248,9 +249,32 @@ function isExternalLink(href: string) {
           window.__homeEntranceLastPath = currentPageKey;
           profileRoot.dataset.homeEntranceEnabled = "true";
           latestRoot.dataset.homeEntranceEnabled = "true";
-          profileRoot.classList.add("home-profile--entered");
           latestRoot.classList.add("latest-articles--entered");
-          profileRoot.dataset.homeEntranceCompleted = "true";
+
+          const profileAvatar = profileRoot.querySelector(".profile-avatar");
+          if (!(profileAvatar instanceof HTMLImageElement)) {
+            profileRoot.dataset.profileAvatarState = "error";
+            profileRoot.classList.add("home-profile--entered");
+            profileRoot.dataset.homeEntranceCompleted = "true";
+            return;
+          }
+
+          const revealProfile = () => {
+            profileAvatar.removeEventListener("load", revealProfile);
+            profileAvatar.removeEventListener("error", revealProfile);
+            profileRoot.dataset.profileAvatarState =
+              profileAvatar.naturalWidth > 0 ? "loaded" : "error";
+            profileRoot.classList.add("home-profile--entered");
+            profileRoot.dataset.homeEntranceCompleted = "true";
+          };
+
+          if (profileAvatar.complete) {
+            revealProfile();
+            return;
+          }
+
+          profileAvatar.addEventListener("load", revealProfile);
+          profileAvatar.addEventListener("error", revealProfile);
         };
 
         if (!window.__homeEntrancePageLoadBound) {

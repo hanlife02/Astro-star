@@ -1,5 +1,11 @@
+html[data-js="true"]
+  .home-profile-sequence[data-profile-avatar-state="loading"] {
+  visibility: hidden;
+  opacity: 0;
+}
+
 html[data-js="true"] .home-profile-sequence.home-profile--entered {
-  animation: home-section-fade-in 0.76s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: home-section-fade-in 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 html[data-js="true"][data-route-swapping="true"]
