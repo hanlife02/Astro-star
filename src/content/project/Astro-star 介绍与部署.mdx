@@ -214,8 +214,8 @@ Actions 执行完成后即顺利部署
 # Waline 评论服务地址；不填时评论入口会隐藏或不可用
 WALINE_SERVER_URL=https://comment.example.com
 
-# GitHub API token；用于 GitHub 仓库卡片、贡献数据等接口，避免匿名请求限流
-GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxx
+# GitHub API token；仅供服务器上的仓库卡片接口使用，避免匿名请求限流
+GH_TOKEN=github_pat_xxxxxxxxxxxxxxxxxxxx
 
 # CodeTime token；用于 CodeTime 徽章接口
 CODETIME_TOKEN=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
@@ -226,6 +226,8 @@ ALGOLIA_ADMIN_API_KEY=xxxxxxxxxxxxxxxx
 ```
 
 注意不要把真实密钥提交到公开仓库。`.env` 只放在服务器或自己的私有分支里。
+
+这里的 `GH_TOKEN` 是 Astro 服务运行时读取的可选变量，只用于 GitHub 仓库卡片的 REST API 请求。它不是 GitHub Actions 自动提供的 `${{ github.token }}`，也与下面用于跨仓库操作的 `ACTIONS_PAT` 无关；不配置时仓库卡片会使用匿名请求和页面回退逻辑。
 
 ##### GitHub Actions 自动部署环境变量
 
@@ -248,12 +250,17 @@ ALGOLIA_ADMIN_API_KEY=xxxxxxxxxxxxxxxx
 | `SSH_HOST`              | 必填     | SSH / rsync 部署     | 服务器公网 IP 或仅 DNS 解析的域名，不能填写由 Cloudflare 代理的橙云域名。             |
 | `SSH_PRIVATE_KEY`       | 必填     | SSH / rsync 部署     | 用于登录服务器的私钥内容。对应公钥需要提前加入服务器用户的 `~/.ssh/authorized_keys`。 |
 | `WALINE_SERVER_URL`     | 可选     | 构建和服务器 `.env`  | Waline 评论服务地址；不使用评论可以不填。                                             |
-| `GITHUB_TOKEN`          | 可选     | 服务器 `.env`        | GitHub API token；用于 GitHub 仓库卡片、贡献数据等接口，避免匿名请求限流。            |
+| `GH_TOKEN`              | 可选     | 服务器 `.env`        | 独立只读 PAT；以同名变量写入 `.env`，供仓库卡片 REST API 使用。                       |
 | `CODETIME_TOKEN`        | 可选     | 服务器 `.env`        | CodeTime 徽章接口 token；不使用可以不填。                                             |
 | `ALGOLIA_WRITE_API_KEY` | 可选     | Algolia 索引同步     | Algolia 写入索引用的 key；只有启用搜索索引同步时才需要。                              |
 | `ALGOLIA_ADMIN_API_KEY` | 可选     | Algolia 索引同步     | Algolia 管理 key；用于清理已经删除文章对应的旧记录。                                  |
 | `CLOUDFLARE_API_TOKEN`  | 可选     | 部署后清理 CDN 缓存  | 建议使用仅有目标站点 `Cache Purge` 权限的 API Token。                                 |
 | `CLOUDFLARE_ZONE_ID`    | 可选     | 指定 Cloudflare Zone | 在 Cloudflare 站点概览页获取；需与 API Token 授权的站点一致。                         |
+| `ACTIONS_PAT`           | 可选     | 跨仓库或分支写操作   | 普通 fork 无需配置；仅上游维护者同步 `main -> Ethan`、触发独立文档仓库时需要。        |
+
+GitHub Actions 每次运行都会自动提供 `${{ github.token }}`，它不需要手动创建，也不会显示在仓库 Secrets 列表中。普通 fork 的同仓库检出和服务器部署会直接使用这个自动 token。若希望自动部署后的仓库卡片使用认证请求，应额外创建独立的只读 PAT，保存为 `GH_TOKEN`；部署工作流会以同名变量写入服务器 `.env`。
+
+只有工作流需要向其他仓库发起操作，或者把提交推送到受保护分支时，才需要手动创建 `ACTIONS_PAT`。本项目上游维护场景需要将 `Astro-star` 与 `Astro-star-docs` 加入 token 的仓库范围，并授予目标操作所需的 `Contents: Read and write` 与 `Actions: Read and write` 权限。`ACTIONS_PAT` 只供 Actions 使用，不会写入服务器 `.env`。技术上可以把同一个 PAT 同时填入两个 Secret，但这会把仓库写权限长期暴露在服务器上，因此不应合并。
 
 #### Cloudflare CDN（可选）
 
