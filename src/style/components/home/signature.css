@@ -70,6 +70,13 @@
   stroke-opacity: 0;
 }
 
+.signature-wrap:hover .signature-mark[data-signature-hover-locked="true"],
+.signature-wrap:focus-visible
+  .signature-mark[data-signature-hover-locked="true"] {
+  animation: none;
+  clip-path: inset(0 0 0 0);
+}
+
 @keyframes signature-write {
   0% {
     clip-path: inset(0 100% 0 0);
