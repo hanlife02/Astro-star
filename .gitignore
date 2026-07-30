@@ -36,5 +36,9 @@ public/signature.svg
 # claude
 .claude/
 
+# local agent and test files
+.omo/
+tests/
+
 # local development data (not tracked)
 src/data
