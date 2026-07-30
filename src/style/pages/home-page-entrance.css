@@ -8,26 +8,8 @@ html[data-js="true"] .home-profile-sequence.home-profile--entered {
   animation: home-section-fade-in 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-html[data-js="true"][data-route-swapping="true"]
-  .home-profile-sequence.home-profile--entered {
-  animation: none;
-}
-
 html[data-js="true"]
-  .home-latest-sequence[data-home-entrance-enabled="true"].latest-articles--entered
-  .latest-articles-panel {
-  animation: home-section-fade-in 0.76s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-html[data-js="true"]
-  .home-latest-sequence[data-home-entrance-enabled="true"].latest-articles--entered
-  .latest-articles-panel:nth-of-type(2) {
-  animation-delay: 0.06s;
-}
-
-html[data-js="true"][data-route-swapping="true"]
-  .home-latest-sequence[data-home-entrance-enabled="true"].latest-articles--entered
-  .latest-articles-panel {
+  .home-profile-sequence[data-home-entrance-mode="route"].home-profile--entered {
   animation: none;
 }
 
@@ -57,7 +39,6 @@ html[data-js="true"][data-route-swapping="true"]
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .home-latest-sequence .latest-articles-panel,
   .home-profile-sequence.home-profile--entered {
     opacity: 1;
     transform: none;
