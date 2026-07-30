@@ -41,4 +41,4 @@ pnpm build
 - When changes involve configuration, deployment, or content format, update the documentation accordingly.
 - Do not commit secrets, private keys, or real production environment credentials.
 
-Astro-star is open-sourced under the [Apache License 2.0](https://github.com/hanlife02/Astro-star/blob/main/LICENSE).
+Astro-star is open-sourced under the [MIT License](https://github.com/hanlife02/Astro-star/blob/main/LICENSE).

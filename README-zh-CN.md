@@ -9,7 +9,7 @@
 [![Astro](https://img.shields.io/badge/Astro-6.x-ff5d01?style=flat-square&logo=astro&logoColor=white)](https://astro.build)
 [![Node.js](https://img.shields.io/badge/Node.js-%3E%3D22-339933?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org)
 [![pnpm](https://img.shields.io/badge/pnpm-10.30.x-f69220?style=flat-square&logo=pnpm&logoColor=white)](https://pnpm.io)
-[![License](https://img.shields.io/badge/License-Apache--2.0-blue?style=flat-square)](./LICENSE)
+[![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](./LICENSE)
 [![PRs](https://img.shields.io/badge/PRs-welcome-brightgreen?style=flat-square)](./CONTRIBUTING.md)
 
 [English](./README.md) · 简体中文
@@ -109,7 +109,7 @@ pnpm build
 
 ## 许可证
 
-Astro-star 使用 [Apache License 2.0](./LICENSE) 开源。
+Astro-star 使用 [MIT License](./LICENSE) 开源。
 
 <a href="https://www.star-history.com/?repos=hanlife02%2FAstro-star&type=date&legend=top-left">
  <picture>
