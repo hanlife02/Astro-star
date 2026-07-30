@@ -1,36 +1,21 @@
-html[data-js="true"]
-  .home-profile-sequence[data-profile-avatar-state="loading"]:not(
-    [data-home-entrance-mode="route"]
-  ) {
-  visibility: hidden;
-  opacity: 0;
+:root {
+  --home-initial-entrance-ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-html[data-js="true"] .home-profile-sequence.home-profile--entered {
-  animation: home-section-fade-in 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
+@media (prefers-reduced-motion: no-preference) {
+  html[data-js="true"]
+    .home-shell[data-home-initial-entrance="true"]
+    :is(.home-header, .side-nav-area, .home-footer) {
+    animation: home-initial-chrome-in 160ms var(--home-initial-entrance-ease)
+      backwards;
+  }
 
-html[data-js="true"]
-  .home-profile-sequence[data-home-entrance-mode="route"].home-profile--entered {
-  animation: none;
-}
-
-html[data-js="true"]
-  .home-latest-sequence[data-home-entrance-enabled="true"].latest-articles--entered
-  .latest-articles-panel {
-  animation: home-section-fade-in 0.76s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-html[data-js="true"]
-  .home-latest-sequence[data-home-entrance-enabled="true"].latest-articles--entered
-  .latest-articles-panel:nth-of-type(2) {
-  animation-delay: 0.06s;
-}
-
-html[data-js="true"]
-  .home-latest-sequence[data-home-entrance-mode="route"].latest-articles--entered
-  .latest-articles-panel {
-  animation: none;
+  html[data-js="true"]
+    .home-shell[data-home-initial-entrance="true"]
+    :is(.profile-area, .latest-area) {
+    animation: home-initial-panel-in 200ms var(--home-initial-entrance-ease)
+      backwards;
+  }
 }
 
 .home-profile-metrics {
@@ -47,24 +32,24 @@ html[data-js="true"]
   justify-content: center;
 }
 
-@keyframes home-section-fade-in {
+@keyframes home-initial-chrome-in {
   from {
-    opacity: 0.001;
-    transform: scale(0.994);
+    opacity: 0.78;
+    transform: translate3d(0, 1px, 0) scale(0.999);
   }
   to {
     opacity: 1;
-    transform: scale(1);
+    transform: translate3d(0, 0, 0) scale(1);
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .home-latest-sequence .latest-articles-panel,
-  .home-profile-sequence.home-profile--entered {
+@keyframes home-initial-panel-in {
+  from {
+    opacity: 0.72;
+    transform: translate3d(0, 2px, 0) scale(0.997);
+  }
+  to {
     opacity: 1;
-    transform: none;
-    filter: none;
-    animation: none;
-    transition: none;
+    transform: translate3d(0, 0, 0) scale(1);
   }
 }
