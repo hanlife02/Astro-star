@@ -1,5 +1,6 @@
 type HomeShellSignatureWindow = Window & {
   __homeShellSignatureCleanup?: () => void;
+  __homeShellSignatureRoutePending?: boolean;
 };
 
 function parseSignatureSvg(markup: string) {
@@ -47,8 +48,59 @@ export function initHomeShellSignature() {
   const signatures = document.querySelectorAll<HTMLElement>(
     "[data-signature-asset]",
   );
+  const currentPathname = window.location.pathname.replace(/\/+$/, "") || "/";
+  const shouldLockIncomingRouteHover =
+    browserWindow.__homeShellSignatureRoutePending === true &&
+    currentPathname === "/" &&
+    document.documentElement.dataset.routeSwapping === "true";
+
+  browserWindow.__homeShellSignatureRoutePending = false;
 
   signatures.forEach((signature) => {
+    const signatureLink = signature.closest(".signature-wrap");
+
+    // A swapped Home link inherits the pointer position but not a new hover intent.
+    if (
+      shouldLockIncomingRouteHover ||
+      signature.dataset.signatureHoverLocked === "true"
+    ) {
+      signature.dataset.signatureHoverLocked = "true";
+      const armRouteHoverUnlock = () => {
+        if (controller.signal.aborted) return;
+        if (document.documentElement.dataset.routeTransitioning === "true") {
+          requestAnimationFrame(armRouteHoverUnlock);
+          return;
+        }
+
+        signatureLink?.addEventListener(
+          "pointerleave",
+          () => delete signature.dataset.signatureHoverLocked,
+          { once: true, signal: controller.signal },
+        );
+      };
+      requestAnimationFrame(armRouteHoverUnlock);
+    }
+
+    if (signatureLink instanceof HTMLAnchorElement) {
+      signatureLink.addEventListener(
+        "click",
+        (event) => {
+          if (
+            event.button !== 0 ||
+            event.metaKey ||
+            event.ctrlKey ||
+            event.altKey ||
+            event.shiftKey ||
+            currentPathname === "/"
+          )
+            return;
+
+          browserWindow.__homeShellSignatureRoutePending = true;
+        },
+        { signal: controller.signal },
+      );
+    }
+
     if (signature.dataset.signatureLoaded === "true") return;
 
     const assetSrc = signature.dataset.signatureAsset;
