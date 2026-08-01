@@ -117,6 +117,66 @@ const siteJsonLdText = JSON.stringify(siteJsonLd).replace(/</g, "\\u003c");
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Preload the faces used by first-viewport text before it can paint. -->
+    <link
+      rel="preload"
+      href="/fonts/Biotif-Regular.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      fetchpriority="high"
+    />
+    <link
+      rel="preload"
+      href="/fonts/Biotif-Bold.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/Biotif-SemiBold.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      media="(max-width: 56.25rem)"
+    />
+    <style is:inline>
+      @font-face {
+        font-family: "Biotif";
+        src: url("/fonts/Biotif-Regular.woff2") format("woff2");
+        font-weight: 400;
+        font-style: normal;
+        /* Short FOIT instead of fallback-to-custom swap on first paint. */
+        font-display: block;
+      }
+      @font-face {
+        font-family: "Biotif";
+        src: url("/fonts/Biotif-Medium.woff2") format("woff2");
+        font-weight: 500;
+        font-style: normal;
+        font-display: block;
+      }
+      @font-face {
+        font-family: "Biotif";
+        src: url("/fonts/Biotif-SemiBold.woff2") format("woff2");
+        font-weight: 600;
+        font-style: normal;
+        font-display: block;
+      }
+      @font-face {
+        font-family: "Biotif";
+        src: url("/fonts/Biotif-Bold.woff2") format("woff2");
+        font-weight: 700;
+        font-style: normal;
+        font-display: block;
+      }
+      /* Apply family before Vite/dev CSS arrives, otherwise UA font paints first. */
+      html {
+        font-family:
+          "Biotif", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+      }
+    </style>
     <script is:inline>
       document.documentElement.dataset.js = "true";
       document.addEventListener("astro:before-swap", function (event) {
@@ -143,20 +203,6 @@ const siteJsonLdText = JSON.stringify(siteJsonLd).replace(/</g, "\\u003c");
     <meta name="twitter:image" content={socialImageUrl} />
     <ClientRouter fallback="animate" />
     {includeKatexStyles && <link rel="stylesheet" href={katexStylesheetUrl} />}
-    <link
-      rel="preload"
-      href="/fonts/Biotif-Regular.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
-    <link
-      rel="preload"
-      href="/fonts/Biotif-SemiBold.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="icon" type="image/svg+xml" sizes="any" href={faviconHref} />
     <link
