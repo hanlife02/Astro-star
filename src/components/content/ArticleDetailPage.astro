@@ -251,6 +251,7 @@ const projectLinks = [
               class="article-neighbor article-neighbor--previous"
               href={previousArticle.href}
               aria-label={`Previous article: ${previousArticle.title}`}
+              data-astro-prefetch
             >
               <span class="article-neighbor-arrow" aria-hidden="true">
                 <Icon svg={ArrowLeft} />
@@ -265,6 +266,7 @@ const projectLinks = [
               class="article-neighbor article-neighbor--next"
               href={nextArticle.href}
               aria-label={`Next article: ${nextArticle.title}`}
+              data-astro-prefetch
             >
               <span class="article-neighbor-title">{nextArticle.title}</span>
               <span class="article-neighbor-arrow" aria-hidden="true">

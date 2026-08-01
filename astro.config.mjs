@@ -24,6 +24,10 @@ export default defineConfig({
   adapter: node({
     mode: "standalone",
   }),
+  prefetch: {
+    prefetchAll: false,
+    defaultStrategy: "hover",
+  },
   env: {
     schema: {
       WALINE_SERVER_URL: envField.string({

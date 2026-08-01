@@ -9,7 +9,7 @@ const layoutSource = await readFile(
   "utf8",
 );
 
-test("Biotif disables swaps and preloads first-viewport body and heading faces", () => {
+test("Biotif blocks fallback swaps and prioritizes first-viewport faces", () => {
   const faceBlocks = [...layoutSource.matchAll(/@font-face\s*\{([^}]+)\}/g)]
     .map((match) => match[1])
     .filter((block) => block.includes('font-family: "Biotif"'));
@@ -35,6 +35,11 @@ test("Biotif disables swaps and preloads first-viewport body and heading faces",
       "/fonts/Biotif-SemiBold.woff2",
     ],
     "preload every Biotif face visible in the first viewport",
+  );
+  assert.match(
+    layoutSource,
+    /href="\/fonts\/Biotif-Regular\.woff2"[\s\S]*?fetchpriority="high"/,
+    "prioritize the body face so the block period ends quickly",
   );
   assert.match(
     layoutSource,
