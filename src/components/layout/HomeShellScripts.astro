@@ -32,7 +32,6 @@
   import { initHomeShellGitHubRepoCards } from "../../scripts/home-shell-github-repo-cards";
   import { initHomeShellFriendLinkAvatars } from "../../scripts/home-shell-friend-link-avatars";
   import { initHomeShellFriendFeed } from "../../scripts/home-shell-friend-feed";
-  import { initHomeShellCodeTime } from "../../scripts/home-shell-codetime";
   import {
     cleanupHomeShellContentImageLightbox,
     initHomeShellContentImageLightbox,
@@ -142,7 +141,15 @@
       initHomeShellFriendLinkAvatars,
     );
     runHomeShellInitializer("friend-feed", initHomeShellFriendFeed);
-    runHomeShellInitializer("codetime", initHomeShellCodeTime);
+    if (
+      document.querySelector("[data-codetime-badge], [data-codetime-status]")
+    ) {
+      runHomeShellInitializer("codetime", async () => {
+        const { initHomeShellCodeTime } =
+          await import("../../scripts/home-shell-codetime");
+        initHomeShellCodeTime();
+      });
+    }
     runHomeShellInitializer(
       "content-image-lightbox",
       initHomeShellContentImageLightbox,

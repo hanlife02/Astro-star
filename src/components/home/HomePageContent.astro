@@ -1,11 +1,12 @@
 ---
+import { CODETIME_TOKEN } from "astro:env/server";
 import HomeLayout from "../../layouts/HomeLayout.astro";
-import CodeTime from "./CodeTime.astro";
 import GitHeatmap from "./githeatmap.astro";
 import Signature from "./signature.astro";
 import FooterMeta from "../common/FooterMeta.astro";
 import AppPanelIcon from "../ui/icons/AppPanelIcon.astro";
 import type { SocialLinkItem } from "../../types/social";
+import { isCodeTimeConfigured } from "../../utils/codetime";
 import "../../style/components/home/profile.css";
 import "../../style/components/home/latest-articles.css";
 import "../../style/components/home/home-page-content.css";
@@ -49,6 +50,10 @@ const {
   latestNoteTimelineGroups,
 } = Astro.props as Props;
 const homeDescription = profile.intro.trim() || profile.bio.trim();
+const codeTimeEnabled = isCodeTimeConfigured(CODETIME_TOKEN);
+const CodeTime = codeTimeEnabled
+  ? (await import("./CodeTime.astro")).default
+  : undefined;
 
 function isExternalLink(href: string) {
   return /^https?:\/\//.test(href);
@@ -67,7 +72,10 @@ function isExternalLink(href: string) {
     aria-label="Profile section"
     data-home-entrance-enabled="true"
   >
-    <span class="profile-avatar-wrap home-enter-item" data-codetime-status-root>
+    <span
+      class="profile-avatar-wrap home-enter-item"
+      data-codetime-status-root={codeTimeEnabled ? "" : undefined}
+    >
       <img
         class="profile-avatar"
         src={profile.avatarSrc}
@@ -78,24 +86,28 @@ function isExternalLink(href: string) {
         decoding="sync"
         fetchpriority="high"
       />
-      <span
-        class="profile-codetime-popover"
-        aria-hidden="true"
-        data-codetime-status-popover
-      >
-        <img
-          class="profile-codetime-status"
-          src="/api/codetime-status.svg"
-          alt=""
-          width="380"
-          height="116"
-          loading="lazy"
-          decoding="async"
-          fetchpriority="low"
-          referrerpolicy="no-referrer"
-          data-codetime-status
-        />
-      </span>
+      {
+        CodeTime && (
+          <span
+            class="profile-codetime-popover"
+            aria-hidden="true"
+            data-codetime-status-popover
+          >
+            <img
+              class="profile-codetime-status"
+              src="/api/codetime-status.svg"
+              alt=""
+              width="380"
+              height="116"
+              loading="lazy"
+              decoding="async"
+              fetchpriority="low"
+              referrerpolicy="no-referrer"
+              data-codetime-status
+            />
+          </span>
+        )
+      }
     </span>
     <h1 class="profile-name home-enter-item">{ownerName}</h1>
     {
@@ -118,9 +130,13 @@ function isExternalLink(href: string) {
     <p class="profile-one-word home-enter-item">{profile.bio}</p>
     <p class="profile-bio home-enter-item">{profile.intro}</p>
     <div class="home-profile-metrics">
-      <div class="home-enter-item home-profile-metric" data-codetime-metric>
-        <CodeTime />
-      </div>
+      {
+        CodeTime && (
+          <div class="home-enter-item home-profile-metric" data-codetime-metric>
+            <CodeTime />
+          </div>
+        )
+      }
       <div class="home-enter-item home-profile-metric">
         <GitHeatmap />
       </div>

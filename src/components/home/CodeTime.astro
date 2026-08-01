@@ -1,24 +1,121 @@
 ---
-import "../../style/components/home/codetime.css";
+import { CODETIME_TOKEN } from "astro:env/server";
+import { isCodeTimeConfigured } from "../../utils/codetime";
+
+const enabled = isCodeTimeConfigured(CODETIME_TOKEN);
+const codeTimeStyles = `.codetime-link {
+  position: relative;
+  display: block;
+  width: 100%;
+  max-width: 9.5rem;
+  aspect-ratio: 168 / 20;
+  min-height: 1.125rem;
+  overflow: hidden;
+  line-height: 0;
+}
+
+.codetime-link::after {
+  position: absolute;
+  inset: -45% -55%;
+  z-index: 1;
+  background: linear-gradient(
+    105deg,
+    transparent 34%,
+    rgb(255 255 255 / 0.78) 50%,
+    transparent 66%
+  );
+  content: "";
+  mix-blend-mode: screen;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-76%) skewX(-18deg);
+}
+
+.codetime-link img {
+  position: relative;
+  z-index: 0;
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  transition: filter 0.18s ease;
+  object-fit: contain;
+}
+
+:root[data-theme="dark"] .codetime-link img {
+  filter: invert(1) hue-rotate(180deg) saturate(0.88) contrast(0.96)
+    brightness(1.12);
+}
+
+.codetime-link:focus-visible {
+  outline: 0.125rem solid currentColor;
+  outline-offset: 0.18rem;
+}
+
+@keyframes codetime-shine {
+  0% {
+    opacity: 0;
+    transform: translateX(-76%) skewX(-18deg);
+  }
+
+  18%,
+  72% {
+    opacity: 0.82;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(76%) skewX(-18deg);
+  }
+}
+
+@media (hover: hover) {
+  .codetime-link:hover::after {
+    animation: codetime-shine 0.78s ease;
+  }
+}
+
+.codetime-link:focus-visible::after {
+  animation: codetime-shine 0.78s ease;
+}
+
+@media (min-width: 48rem) {
+  .codetime-link {
+    max-width: 11rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .codetime-link::after {
+    display: none;
+  }
+}`;
 ---
 
-<a
-  class="codetime-link"
-  href="https://codetime.dev"
-  target="_blank"
-  rel="noopener noreferrer"
-  aria-label="CodeTime Badge"
-  data-codetime-link
->
-  <img
-    src="/api/codetime-badge.svg"
-    alt="CodeTime Badge"
-    width="168"
-    height="20"
-    loading="eager"
-    decoding="async"
-    fetchpriority="low"
-    referrerpolicy="no-referrer"
-    data-codetime-badge
-  />
-</a>
+{
+  enabled && (
+    <>
+      <style is:inline set:html={codeTimeStyles} />
+      <a
+        class="codetime-link"
+        href="https://codetime.dev"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="CodeTime Badge"
+        data-codetime-link
+      >
+        <img
+          src="/api/codetime-badge.svg"
+          alt="CodeTime Badge"
+          width="168"
+          height="20"
+          loading="eager"
+          decoding="async"
+          fetchpriority="low"
+          referrerpolicy="no-referrer"
+          data-codetime-badge
+        />
+      </a>
+    </>
+  )
+}
