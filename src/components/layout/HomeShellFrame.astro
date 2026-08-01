@@ -98,7 +98,11 @@ const {
             {
               foldedNavItems.map((item) => (
                 <li>
-                  <a href={item.href} aria-label={item.label}>
+                  <a
+                    href={item.href}
+                    aria-label={item.label}
+                    data-astro-prefetch
+                  >
                     {item.label}
                   </a>
                 </li>
@@ -132,7 +136,11 @@ const {
               {
                 foldedNavItems.map((item) => (
                   <li>
-                    <a href={item.href} aria-label={item.label}>
+                    <a
+                      href={item.href}
+                      aria-label={item.label}
+                      data-astro-prefetch
+                    >
                       {item.label}
                     </a>
                   </li>
@@ -212,6 +220,7 @@ const {
         href="/project/"
         aria-label="View projects"
         title="Projects"
+        data-astro-prefetch
       >
         <Icon svg={FolderKanban} />
       </a>

@@ -179,6 +179,7 @@ function isExternalLink(href: string) {
                 href={block.archiveHref}
                 aria-label={block.archiveLabel}
                 title={block.archiveLabel}
+                data-astro-prefetch
               >
                 <span class="latest-articles-title-text">{block.title}</span>
                 <span class="latest-articles-title-hint">
@@ -218,7 +219,11 @@ function isExternalLink(href: string) {
                           >
                             {article.displayDate}
                           </time>
-                          <a class="latest-articles-link" href={article.href}>
+                          <a
+                            class="latest-articles-link"
+                            href={article.href}
+                            data-astro-prefetch
+                          >
                             <span class="latest-articles-link-text">
                               {article.title}
                             </span>

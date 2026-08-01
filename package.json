@@ -1,7 +1,7 @@
 {
   "name": "Astro-star",
   "type": "module",
-  "version": "0.21.14",
+  "version": "0.21.15",
   "license": "MIT",
   "packageManager": "pnpm@11.15.1",
   "scripts": {
@@ -11,7 +11,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
-    "verify": "pnpm check && pnpm test:font-loading && pnpm format:check && pnpm build && pnpm run audit:content && pnpm run audit:assets && pnpm run audit:deps",
+    "verify": "pnpm check && pnpm test:performance-loading && pnpm format:check && pnpm build && pnpm run audit:content && pnpm run audit:assets && pnpm run audit:deps",
     "astro": "astro",
     "algolia:sync": "tsx scripts/sync-algolia-index.ts",
     "generate:signature": "tsx scripts/generate-signature-asset.ts",
@@ -19,6 +19,7 @@
     "audit:content": "tsx scripts/audit-content.ts",
     "audit:deps": "pnpm audit --registry=https://registry.npmjs.org --audit-level moderate",
     "test:font-loading": "node --test scripts/font-loading-policy.test.mjs",
+    "test:performance-loading": "node --test scripts/font-loading-policy.test.mjs scripts/prefetch-policy.test.mjs scripts/home-shell-loading-policy.test.mjs",
     "migrate:content": "node scripts/migrate-legacy-content.mjs",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
