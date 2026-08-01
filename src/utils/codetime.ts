@@ -15,6 +15,10 @@ const USER_ID_CACHE_TTL = 1000 * 60 * 60 * 24;
 
 let cachedUserId: CachedUserId | null = null;
 
+export function isCodeTimeConfigured(token?: string | null) {
+  return Boolean(token?.trim());
+}
+
 export function emptyCodeTimeResponse() {
   return new Response(null, {
     status: 204,
