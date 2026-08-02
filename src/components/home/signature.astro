@@ -28,8 +28,12 @@ const signatureMaskStyle = hasSignatureAsset
         aria-hidden="true"
         data-signature-src="true"
         data-signature-asset={signatureAssetSrc}
+        data-signature-inline="true"
+        data-signature-loaded="true"
         style={signatureMaskStyle}
-      />
+      >
+        <Fragment set:html={svgMarkup} />
+      </span>
     </a>
   )
 }
