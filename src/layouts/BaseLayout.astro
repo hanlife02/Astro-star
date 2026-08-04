@@ -168,57 +168,7 @@ const biotifFontStyles = `
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!-- The body face is enough to start loading Biotif without blocking text. -->
-    <link
-      rel="preload"
-      href={biotifRegularUrl}
-      as="font"
-      type="font/woff2"
-      crossorigin
-      fetchpriority="high"
-    />
-    <style is:inline set:html={biotifFontStyles}></style>
-    <script is:inline>
-      document.documentElement.dataset.js = "true";
-      document.addEventListener("astro:before-swap", function (event) {
-        if (event.newDocument) {
-          event.newDocument.documentElement.dataset.js = "true";
-        }
-      });
-    </script>
-    <meta name="color-scheme" content="light dark" />
     <meta name="theme-color" content="#ffffff" />
-    <meta name="description" content={pageDescription} />
-    <meta name="generator" content={Astro.generator} />
-    <link rel="canonical" href={canonicalHref} />
-    <meta property="og:locale" content={openGraphLocale} />
-    <meta property="og:site_name" content={site.site.name} />
-    <meta property="og:title" content={socialTitle} />
-    <meta property="og:description" content={pageDescription} />
-    <meta property="og:type" content={openGraphType} />
-    <meta property="og:url" content={canonicalHref} />
-    <meta property="og:image" content={socialImageUrl} />
-    <meta name="twitter:card" content={twitterCardType} />
-    <meta name="twitter:title" content={socialTitle} />
-    <meta name="twitter:description" content={pageDescription} />
-    <meta name="twitter:image" content={socialImageUrl} />
-    <ClientRouter fallback="animate" />
-    {includeKatexStyles && <link rel="stylesheet" href={katexStylesheetUrl} />}
-    <link rel="sitemap" href="/sitemap-index.xml" />
-    <link
-      rel="icon"
-      type={faviconType}
-      sizes={faviconSizes}
-      href={faviconHref}
-    />
-    <link
-      rel="alternate"
-      type="application/rss+xml"
-      title={`${site.site.name} RSS Feed`}
-      href={new URL("/rss.xml", site.site.url).toString()}
-    />
-    <title>{pageTitle}</title>
-    <script is:inline type="application/ld+json" set:html={siteJsonLdText} />
     <script is:inline>
       (function () {
         var root = document.documentElement;
@@ -306,6 +256,56 @@ const biotifFontStyles = `
         });
       })();
     </script>
+    <meta name="color-scheme" content="light dark" />
+    <!-- The body face is enough to start loading Biotif without blocking text. -->
+    <link
+      rel="preload"
+      href={biotifRegularUrl}
+      as="font"
+      type="font/woff2"
+      crossorigin
+      fetchpriority="high"
+    />
+    <style is:inline set:html={biotifFontStyles}></style>
+    <script is:inline>
+      document.documentElement.dataset.js = "true";
+      document.addEventListener("astro:before-swap", function (event) {
+        if (event.newDocument) {
+          event.newDocument.documentElement.dataset.js = "true";
+        }
+      });
+    </script>
+    <meta name="description" content={pageDescription} />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="canonical" href={canonicalHref} />
+    <meta property="og:locale" content={openGraphLocale} />
+    <meta property="og:site_name" content={site.site.name} />
+    <meta property="og:title" content={socialTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:type" content={openGraphType} />
+    <meta property="og:url" content={canonicalHref} />
+    <meta property="og:image" content={socialImageUrl} />
+    <meta name="twitter:card" content={twitterCardType} />
+    <meta name="twitter:title" content={socialTitle} />
+    <meta name="twitter:description" content={pageDescription} />
+    <meta name="twitter:image" content={socialImageUrl} />
+    <ClientRouter fallback="animate" />
+    {includeKatexStyles && <link rel="stylesheet" href={katexStylesheetUrl} />}
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link
+      rel="icon"
+      type={faviconType}
+      sizes={faviconSizes}
+      href={faviconHref}
+    />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={`${site.site.name} RSS Feed`}
+      href={new URL("/rss.xml", site.site.url).toString()}
+    />
+    <title>{pageTitle}</title>
+    <script is:inline type="application/ld+json" set:html={siteJsonLdText} />
     <slot name="head" />
   </head>
   <body>
