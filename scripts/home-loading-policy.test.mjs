@@ -10,8 +10,15 @@ const homeShellSource = await readFile(
   new URL("../src/components/layout/HomeShellFrame.astro", import.meta.url),
   "utf8",
 );
-const entranceScriptSource = await readFile(
+const entranceScriptExists = await readFile(
   new URL("../src/scripts/home-shell-home-entrance.ts", import.meta.url),
+  "utf8",
+).then(
+  () => true,
+  () => false,
+);
+const avatarScriptSource = await readFile(
+  new URL("../src/scripts/home-shell-profile-avatar.ts", import.meta.url),
   "utf8",
 ).catch(() => "");
 const pageModulesSource = await readFile(
@@ -32,36 +39,39 @@ test("the homepage preloads its avatar and has a local fallback", () => {
   assert.match(homePageSource, /href=\{profile\.avatarSrc\}/);
   assert.match(homePageSource, /data-profile-avatar-fallback/);
   assert.match(homePageSource, /data-home-profile-avatar/);
-});
-
-test("the homepage reveals as one unit with a bounded wait", () => {
-  assert.match(homeShellSource, /data-home-main-state=/);
-  assert.match(homeShellSource, /data-home-shell-main/);
-  assert.match(entranceScriptSource, /HOME_MAIN_WAIT_MS = 350/);
-  assert.match(entranceScriptSource, /dataset\.homeMainState = "ready"/);
-  assert.match(
-    entranceScriptSource,
-    /new CustomEvent\(HOME_MAIN_READY_EVENT\)/,
-  );
-  assert.match(pageModulesSource, /name: "home-entrance"/);
-});
-
-test("CSS provides the entrance and a no-script-failure escape hatch", () => {
-  assert.equal(homeShellSource.match(/data-home-entrance-content/g)?.length, 2);
-  assert.doesNotMatch(homeShellSource, /<aside[^>]*data-home-entrance-content/);
-  assert.match(
-    entranceStylesSource,
-    /data-home-main-state="waiting"[\s\S]*?data-home-entrance-content[\s\S]*?350ms/,
-  );
-  assert.match(
-    entranceStylesSource,
-    /data-home-main-state="ready"[\s\S]*?data-home-entrance-content/,
-  );
+  assert.match(avatarScriptSource, /dataset\.profileAvatarState = "loaded"/);
+  assert.match(avatarScriptSource, /dataset\.profileAvatarState = "fallback"/);
   assert.doesNotMatch(
-    entranceStylesSource,
-    /data-home-main-state="(?:waiting|ready)"[^\{]*\.home-main/,
+    avatarScriptSource,
+    /homeMainState|HOME_MAIN_READY_EVENT/,
   );
-  assert.match(entranceStylesSource, /translate3d\(0, 14px, 0\)/);
+});
+
+test("the homepage entrance is CSS-only", () => {
+  assert.doesNotMatch(homeShellSource, /data-home-main-state=/);
+  assert.match(homeShellSource, /data-home-shell-main/);
+  assert.equal(entranceScriptExists, false);
+  assert.doesNotMatch(pageModulesSource, /name: "home-entrance"/);
+  assert.match(pageModulesSource, /name: "profile-avatar"/);
+});
+
+test("CSS restarts the profile and latest entrance for every document", () => {
+  assert.match(homeShellSource, /data-home-entrance-content="profile"/);
+  assert.match(homeShellSource, /data-home-entrance-content="latest"/);
+  assert.doesNotMatch(homeShellSource, /<aside[^>]*data-home-entrance-content/);
+  assert.doesNotMatch(entranceStylesSource, /data-home-main-state/);
+  assert.doesNotMatch(entranceStylesSource, /html\[data-js=/);
+  assert.match(entranceStylesSource, /animation:\s*300ms home-content-in/);
+  assert.match(entranceStylesSource, /animation-fill-mode:\s*forwards/);
+  assert.match(
+    entranceStylesSource,
+    /data-home-entrance-content="profile"[\s\S]*?animation-delay:\s*50ms/,
+  );
+  assert.match(
+    entranceStylesSource,
+    /data-home-entrance-content="latest"[\s\S]*?animation-delay:\s*100ms/,
+  );
+  assert.match(entranceStylesSource, /translateY\(2rem\)/);
   assert.match(
     entranceStylesSource,
     /@media \(prefers-reduced-motion: reduce\)/,

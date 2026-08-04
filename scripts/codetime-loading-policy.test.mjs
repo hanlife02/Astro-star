@@ -25,7 +25,7 @@ function getImageTag(source, marker) {
   return source.slice(tagStart, tagEnd + 2);
 }
 
-test("the CodeTime badge has no request URL before the main reveal", () => {
+test("the CodeTime badge has no request URL before script initialization", () => {
   const badgeTag = getImageTag(codeTimeComponentSource, "data-codetime-badge");
 
   assert.doesNotMatch(badgeTag, /\ssrc=/);
@@ -56,7 +56,15 @@ test("the status request is reused after its first interaction", () => {
 });
 
 test("the badge only occupies layout after it loads successfully", () => {
-  assert.match(codeTimeScriptSource, /HOME_MAIN_READY_EVENT/);
+  assert.doesNotMatch(codeTimeScriptSource, /HOME_MAIN_READY_EVENT/);
+  assert.doesNotMatch(
+    codeTimeScriptSource,
+    /requestCodeTimeBadgeAfterMainReveal/,
+  );
+  assert.match(
+    codeTimeScriptSource,
+    /if \(badgeImage\) \{\s*requestCodeTimeBadgeImage\(badgeImage,/,
+  );
   assert.match(codeTimeScriptSource, /dataset\.codetimeBadgeSrc/);
   assert.match(codeTimeScriptSource, /dataset\.codetimeState = "ready"/);
   assert.match(codeTimeScriptSource, /naturalWidth <= 0/);

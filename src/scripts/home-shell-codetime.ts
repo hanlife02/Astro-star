@@ -1,5 +1,3 @@
-import { HOME_MAIN_READY_EVENT } from "./home-shell-home-entrance";
-
 type CodeTimeWindow = Window & {
   __homeShellCodeTimeCleanup?: () => void;
 };
@@ -209,24 +207,6 @@ function requestCodeTimeBadgeImage(
   );
 }
 
-function requestCodeTimeBadgeAfterMainReveal(
-  image: HTMLImageElement,
-  signal: AbortSignal,
-) {
-  const shell = document.querySelector<HTMLElement>("[data-home-main-state]");
-  const requestBadge = () => requestCodeTimeBadgeImage(image, signal);
-
-  if (shell?.dataset.homeMainState === "waiting") {
-    shell.addEventListener(HOME_MAIN_READY_EVENT, requestBadge, {
-      once: true,
-      signal,
-    });
-    return;
-  }
-
-  requestBadge();
-}
-
 export function initHomeShellCodeTime() {
   const browserWindow = window as CodeTimeWindow;
   browserWindow.__homeShellCodeTimeCleanup?.();
@@ -248,7 +228,7 @@ export function initHomeShellCodeTime() {
   let themeObserver: MutationObserver | undefined;
 
   if (badgeImage) {
-    requestCodeTimeBadgeAfterMainReveal(badgeImage, badgeController.signal);
+    requestCodeTimeBadgeImage(badgeImage, badgeController.signal);
   }
 
   if (statusImage && statusRoot && statusPopover) {

@@ -46,7 +46,6 @@ const {
   ]}
   style={shellStyle || undefined}
   data-home-initial-entrance={initialHomeEntrance ? "true" : undefined}
-  data-home-main-state={initialHomeEntrance ? "waiting" : undefined}
   data-home-shell-root
 >
   <header class="home-header">
@@ -157,7 +156,7 @@ const {
     <section
       class="wire-box profile-area"
       aria-label="Profile area"
-      data-home-entrance-content
+      data-home-entrance-content="profile"
     >
       <slot name="profile" />
     </section>
@@ -166,7 +165,7 @@ const {
       class="wire-box latest-area"
       aria-label="Latest area"
       data-home-shell-latest
-      data-home-entrance-content
+      data-home-entrance-content="latest"
     >
       <slot name="latest" />
     </section>
