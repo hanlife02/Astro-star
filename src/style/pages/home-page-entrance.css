@@ -1,27 +1,23 @@
-:root {
-  --home-initial-entrance-ease: cubic-bezier(0.22, 1, 0.36, 1);
-}
-
 @media (prefers-reduced-motion: no-preference) {
-  html[data-js="true"]
-    .home-shell[data-home-main-state="waiting"]
-    [data-home-entrance-content] {
+  .home-shell[data-home-initial-entrance="true"] [data-home-entrance-content] {
     opacity: 0;
-    animation: home-content-in 280ms var(--home-initial-entrance-ease) 350ms
-      forwards;
+    animation: 300ms home-content-in;
+    animation-fill-mode: forwards;
   }
 
-  html[data-js="true"]
-    .home-shell[data-home-main-state="ready"]
-    [data-home-entrance-content] {
-    animation: home-content-in 280ms var(--home-initial-entrance-ease) forwards;
+  .home-shell[data-home-initial-entrance="true"]
+    [data-home-entrance-content="profile"] {
+    animation-delay: 50ms;
+  }
+
+  .home-shell[data-home-initial-entrance="true"]
+    [data-home-entrance-content="latest"] {
+    animation-delay: 100ms;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html[data-js="true"]
-    .home-shell[data-home-initial-entrance="true"]
-    [data-home-entrance-content] {
+  .home-shell[data-home-initial-entrance="true"] [data-home-entrance-content] {
     opacity: 1;
     transform: none;
     animation: none;
@@ -45,10 +41,10 @@
 @keyframes home-content-in {
   from {
     opacity: 0;
-    transform: translate3d(0, 14px, 0);
+    transform: translateY(2rem);
   }
   to {
     opacity: 1;
-    transform: translate3d(0, 0, 0);
+    transform: translateY(0);
   }
 }

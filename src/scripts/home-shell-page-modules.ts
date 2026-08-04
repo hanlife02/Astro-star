@@ -11,11 +11,11 @@ type HomeShellPageModule = {
 
 const HOME_SHELL_PAGE_MODULES = [
   {
-    name: "home-entrance",
-    selector: "[data-home-main-state]",
+    name: "profile-avatar",
+    selector: "[data-home-profile-avatar]",
     load: async () => {
-      const module = await import("./home-shell-home-entrance");
-      return { initialize: module.initHomeShellHomeEntrance };
+      const module = await import("./home-shell-profile-avatar");
+      return { initialize: module.initHomeShellProfileAvatar };
     },
   },
   {
