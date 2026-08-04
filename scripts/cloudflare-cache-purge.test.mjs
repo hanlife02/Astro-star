@@ -13,7 +13,7 @@ test("the Cloudflare purge helper exposes testable URL collection", () => {
   assert.equal(typeof purgeModule.chunkUrls, "function");
 });
 
-test("only page-like build outputs become purge URLs", async () => {
+test("page-like outputs and stable public routes become purge URLs", async () => {
   const clientDir = await mkdtemp(join(tmpdir(), "astro-star-purge-"));
 
   try {
@@ -25,12 +25,14 @@ test("only page-like build outputs become purge URLs", async () => {
     );
     await writeFile(join(clientDir, "about", "index.html"), "about");
     await writeFile(join(clientDir, "sitemap-0.xml"), "sitemap");
+    await writeFile(join(clientDir, "avatar.svg"), "avatar");
     await writeFile(join(clientDir, "avatar.webp"), "avatar");
     await writeFile(join(clientDir, "_astro", "app.hash.js"), "app");
 
     assert.deepEqual(await purgeModule.collectPurgeUrls(clientDir), [
       "https://example.com/",
       "https://example.com/about/",
+      "https://example.com/avatar.svg",
       "https://example.com/favicon.ico",
       "https://example.com/robots.txt",
       "https://example.com/rss.xml",
