@@ -190,6 +190,7 @@ const packPaths = [
   "src/content/project",
   "public/avatar.svg",
   "public/avatar.webp",
+  "public/friend-avatars",
   "public/site-icon.svg",
   "public/figures",
   "public/reward",

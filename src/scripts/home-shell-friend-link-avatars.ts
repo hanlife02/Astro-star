@@ -3,6 +3,8 @@ type FriendLinkAvatarWindow = Window & {
 };
 
 const GRID_SELECTOR = "[data-friend-links-grid='true']";
+const CARD_SELECTOR = "[data-friend-link-card='true']";
+const IMAGE_SELECTOR = "[data-friend-link-image='true']";
 const AVATAR_SELECTOR = "[data-friend-link-avatar='true']";
 const AVATAR_FRAME_SELECTOR = "[data-friend-link-avatar-frame='true']";
 
@@ -35,6 +37,50 @@ function trackAvatarImage(image: HTMLImageElement, signal: AbortSignal) {
   signal.addEventListener("abort", cleanup, { once: true });
 }
 
+function loadCardImages(card: HTMLElement, signal: AbortSignal) {
+  const images = Array.from(
+    card.querySelectorAll<HTMLImageElement>(IMAGE_SELECTOR),
+  );
+
+  images.forEach((image) => {
+    const source = image.dataset.friendLinkSrc;
+    if (source && !image.hasAttribute("src")) {
+      image.src = source;
+    }
+
+    if (image.matches(AVATAR_SELECTOR)) {
+      trackAvatarImage(image, signal);
+    }
+  });
+}
+
+function observeGridCards(grid: HTMLElement, signal: AbortSignal) {
+  const cards = Array.from(grid.querySelectorAll<HTMLElement>(CARD_SELECTOR));
+
+  if (!("IntersectionObserver" in window)) {
+    cards.forEach((card) => loadCardImages(card, signal));
+    return;
+  }
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting || !(entry.target instanceof HTMLElement)) {
+          return;
+        }
+
+        const card = entry.target;
+        loadCardImages(card, signal);
+        observer.unobserve(card);
+      });
+    },
+    { rootMargin: "160px 0px" },
+  );
+
+  cards.forEach((card) => observer.observe(card));
+  signal.addEventListener("abort", () => observer.disconnect(), { once: true });
+}
+
 function shuffleGridItems(grid: HTMLElement) {
   if (grid.dataset.friendLinksShuffled === "true") return;
   grid.dataset.friendLinksShuffled = "true";
@@ -56,16 +102,9 @@ function shuffleGridItems(grid: HTMLElement) {
 function initGridAvatars(grid: HTMLElement, controller: AbortController) {
   shuffleGridItems(grid);
 
-  const images = Array.from(
-    grid.querySelectorAll<HTMLImageElement>(AVATAR_SELECTOR),
-  );
-
   grid.dataset.friendLinksState = "ready";
   grid.setAttribute("aria-busy", "false");
-
-  images.forEach((image) => {
-    trackAvatarImage(image, controller.signal);
-  });
+  observeGridCards(grid, controller.signal);
 }
 
 export function initHomeShellFriendLinkAvatars() {
