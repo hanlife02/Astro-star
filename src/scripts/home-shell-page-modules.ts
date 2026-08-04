@@ -11,6 +11,14 @@ type HomeShellPageModule = {
 
 const HOME_SHELL_PAGE_MODULES = [
   {
+    name: "home-entrance",
+    selector: "[data-home-main-state]",
+    load: async () => {
+      const module = await import("./home-shell-home-entrance");
+      return { initialize: module.initHomeShellHomeEntrance };
+    },
+  },
+  {
     name: "content-toc",
     selector: "[data-home-shell-content-toc]",
     load: async () => {

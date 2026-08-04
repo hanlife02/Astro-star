@@ -25,10 +25,15 @@ function getImageTag(source, marker) {
   return source.slice(tagStart, tagEnd + 2);
 }
 
-test("the visible CodeTime badge remains available on first paint", () => {
+test("the CodeTime badge has no request URL before the main reveal", () => {
   const badgeTag = getImageTag(codeTimeComponentSource, "data-codetime-badge");
 
-  assert.match(badgeTag, /src="\/api\/codetime-badge\.svg"/);
+  assert.doesNotMatch(badgeTag, /\ssrc=/);
+  assert.match(
+    badgeTag,
+    /data-codetime-badge-src="\/api\/codetime-badge\.svg"/,
+  );
+  assert.match(homePageSource, /data-codetime-state="waiting"/);
 });
 
 test("the hidden status image has no request URL before interaction", () => {
@@ -48,6 +53,17 @@ test("the status request is reused after its first interaction", () => {
   assert.match(codeTimeScriptSource, /"pointerenter"/);
   assert.doesNotMatch(codeTimeScriptSource, /Date\.now\(\)/);
   assert.doesNotMatch(codeTimeScriptSource, /refreshCodeTimeStatusImage/);
+});
+
+test("the badge only occupies layout after it loads successfully", () => {
+  assert.match(codeTimeScriptSource, /HOME_MAIN_READY_EVENT/);
+  assert.match(codeTimeScriptSource, /dataset\.codetimeBadgeSrc/);
+  assert.match(codeTimeScriptSource, /dataset\.codetimeState = "ready"/);
+  assert.match(codeTimeScriptSource, /naturalWidth <= 0/);
+
+  const heatmapIndex = homePageSource.indexOf("<GitHeatmap />");
+  const codeTimeIndex = homePageSource.indexOf("<CodeTime />");
+  assert.ok(heatmapIndex >= 0 && codeTimeIndex > heatmapIndex);
 });
 
 test("a failed status request removes its inactive controls", () => {

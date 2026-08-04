@@ -50,6 +50,7 @@ const {
   latestNoteTimelineGroups,
 } = Astro.props as Props;
 const homeDescription = profile.intro.trim() || profile.bio.trim();
+const profileInitial = Array.from(ownerName.trim())[0]?.toUpperCase() || "?";
 const codeTimeEnabled = isCodeTimeConfigured(CODETIME_TOKEN);
 const CodeTime = codeTimeEnabled
   ? (await import("./CodeTime.astro")).default
@@ -65,6 +66,14 @@ function isExternalLink(href: string) {
   description={homeDescription || undefined}
   ogTitle={ownerName}
 >
+  <link
+    slot="head"
+    rel="preload"
+    as="image"
+    href={profile.avatarSrc}
+    fetchpriority="high"
+    data-home-avatar-preload
+  />
   <Signature slot="signature" />
   <section
     slot="profile"
@@ -75,7 +84,15 @@ function isExternalLink(href: string) {
     <span
       class="profile-avatar-wrap home-enter-item"
       data-codetime-status-root={codeTimeEnabled ? "" : undefined}
+      data-profile-avatar-state="loading"
     >
+      <span
+        class="profile-avatar-fallback"
+        aria-hidden="true"
+        data-profile-avatar-fallback
+      >
+        {profileInitial}
+      </span>
       <img
         class="profile-avatar"
         src={profile.avatarSrc}
@@ -85,6 +102,7 @@ function isExternalLink(href: string) {
         loading="eager"
         decoding="sync"
         fetchpriority="high"
+        data-home-profile-avatar
       />
       {
         CodeTime && (
@@ -130,16 +148,20 @@ function isExternalLink(href: string) {
     <p class="profile-one-word home-enter-item">{profile.bio}</p>
     <p class="profile-bio home-enter-item">{profile.intro}</p>
     <div class="home-profile-metrics">
+      <div class="home-enter-item home-profile-metric">
+        <GitHeatmap />
+      </div>
       {
         CodeTime && (
-          <div class="home-enter-item home-profile-metric" data-codetime-metric>
+          <div
+            class="home-enter-item home-profile-metric"
+            data-codetime-metric
+            data-codetime-state="waiting"
+          >
             <CodeTime />
           </div>
         )
       }
-      <div class="home-enter-item home-profile-metric">
-        <GitHeatmap />
-      </div>
     </div>
   </section>
   <section
