@@ -53,6 +53,8 @@
 }
 
 .profile-avatar {
+  position: relative;
+  z-index: 1;
   width: 100%;
   height: 100%;
   display: block;
@@ -61,16 +63,43 @@
   object-fit: cover;
   object-position: center;
   overflow: hidden;
-  border: clamp(0.0625rem, 0.08vw, 0.1rem) solid var(--line-soft);
   border-radius: 50%;
   transition:
-    border-color 0.2s ease,
+    opacity 0.16s ease,
     transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.profile-avatar-fallback {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: 50%;
+  background: color-mix(in srgb, canvas 92%, var(--line) 8%);
+  color: var(--line-soft);
+  display: grid;
+  place-items: center;
+  font-size: calc(var(--avatar-size) * 0.36);
+  font-weight: 600;
+  line-height: 1;
+  transition: opacity 0.16s ease;
+}
+
+html[data-js="true"]
+  .profile-avatar-wrap[data-profile-avatar-state="loading"]
+  .profile-avatar,
+html[data-js="true"]
+  .profile-avatar-wrap[data-profile-avatar-state="fallback"]
+  .profile-avatar {
+  opacity: 0;
+}
+
+.profile-avatar-wrap[data-profile-avatar-state="loaded"]
+  .profile-avatar-fallback {
+  opacity: 0;
 }
 
 .profile-avatar-wrap[data-codetime-status-open="true"] .profile-avatar {
   transform: scale(1.02);
-  border-color: var(--line);
 }
 
 .profile-codetime-popover {
@@ -182,7 +211,6 @@
 @media (hover: hover) {
   .profile-avatar-wrap:hover .profile-avatar {
     transform: scale(1.02);
-    border-color: var(--line);
   }
 
   .profile-avatar-wrap:hover .profile-codetime-popover {
@@ -209,7 +237,6 @@
 }
 
 .profile-avatar-wrap:focus-visible .profile-avatar {
-  border-color: var(--line);
   box-shadow: 0 0 0 0.18rem color-mix(in srgb, var(--line) 18%, transparent);
 }
 
@@ -219,6 +246,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .profile-avatar,
+  .profile-avatar-fallback,
   .profile-codetime-popover,
   .profile-link svg {
     transition: none;

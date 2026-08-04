@@ -1,3 +1,5 @@
+import { HOME_MAIN_READY_EVENT } from "./home-shell-home-entrance";
+
 type CodeTimeWindow = Window & {
   __homeShellCodeTimeCleanup?: () => void;
 };
@@ -178,6 +180,53 @@ function requestCodeTimeStatusImage(
   );
 }
 
+function requestCodeTimeBadgeImage(
+  image: HTMLImageElement,
+  signal: AbortSignal,
+) {
+  if (image.dataset.codetimeBadgeRequested === "true") return;
+
+  const source = image.dataset.codetimeBadgeSrc;
+  if (!source) {
+    hideCodeTimeElement(image, "[data-codetime-metric]");
+    return;
+  }
+
+  const metric = image.closest<HTMLElement>("[data-codetime-metric]");
+  image.dataset.codetimeBadgeRequested = "true";
+  image.hidden = false;
+  image.src = source;
+  settleCodeTimeImage(
+    image,
+    "[data-codetime-metric]",
+    () => {
+      if (metric) {
+        metric.dataset.codetimeState = "ready";
+      }
+    },
+    undefined,
+    signal,
+  );
+}
+
+function requestCodeTimeBadgeAfterMainReveal(
+  image: HTMLImageElement,
+  signal: AbortSignal,
+) {
+  const shell = document.querySelector<HTMLElement>("[data-home-main-state]");
+  const requestBadge = () => requestCodeTimeBadgeImage(image, signal);
+
+  if (shell?.dataset.homeMainState === "waiting") {
+    shell.addEventListener(HOME_MAIN_READY_EVENT, requestBadge, {
+      once: true,
+      signal,
+    });
+    return;
+  }
+
+  requestBadge();
+}
+
 export function initHomeShellCodeTime() {
   const browserWindow = window as CodeTimeWindow;
   browserWindow.__homeShellCodeTimeCleanup?.();
@@ -194,11 +243,12 @@ export function initHomeShellCodeTime() {
   const statusPopover = document.querySelector<HTMLElement>(
     "[data-codetime-status-popover]",
   );
+  const badgeController = new AbortController();
   const statusController = new AbortController();
   let themeObserver: MutationObserver | undefined;
 
   if (badgeImage) {
-    settleCodeTimeImage(badgeImage, "[data-codetime-metric]");
+    requestCodeTimeBadgeAfterMainReveal(badgeImage, badgeController.signal);
   }
 
   if (statusImage && statusRoot && statusPopover) {
@@ -248,8 +298,9 @@ export function initHomeShellCodeTime() {
     });
   }
 
-  if (statusImage || statusRoot) {
+  if (badgeImage || statusImage || statusRoot) {
     browserWindow.__homeShellCodeTimeCleanup = () => {
+      badgeController.abort();
       statusController.abort();
       themeObserver?.disconnect();
     };
