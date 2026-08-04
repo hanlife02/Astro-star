@@ -3,7 +3,12 @@ import { extname, join, relative, resolve, sep } from "node:path";
 import { pathToFileURL } from "node:url";
 
 const PURGEABLE_EXTENSIONS = new Set([".html", ".txt", ".xml"]);
-const RUNTIME_PURGE_PATHS = ["/favicon.ico", "/robots.txt", "/rss.xml"];
+const ALWAYS_PURGE_PATHS = [
+  "/avatar.svg",
+  "/favicon.ico",
+  "/robots.txt",
+  "/rss.xml",
+];
 const MAX_URLS_PER_REQUEST = 100;
 
 async function walkPurgeableFiles(directory) {
@@ -52,7 +57,7 @@ export async function collectPurgeUrls(clientDirectory) {
   const files = await walkPurgeableFiles(clientDirectory);
   const publicPaths = new Set([
     ...files.map((filePath) => toPublicPath(filePath, clientDirectory)),
-    ...RUNTIME_PURGE_PATHS,
+    ...ALWAYS_PURGE_PATHS,
   ]);
 
   return [...publicPaths]
