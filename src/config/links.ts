@@ -22,7 +22,7 @@ export const linkApplyOwner = {
   name: "Ethan",
   description: "Don't stay awake for too long.",
   href: "https://hanlife02.com",
-  avatarSrc: "https://hanlife02.com/avatar.svg",
+  avatarSrc: "https://hanlife02.com/avatar.webp?v=20260804",
 } satisfies LinkApplyOwner;
 
 export const friendLinks = [

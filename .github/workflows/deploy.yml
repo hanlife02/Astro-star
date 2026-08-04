@@ -153,20 +153,7 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
-        run: |
-          if [ -z "$CLOUDFLARE_API_TOKEN" ] || [ -z "$CLOUDFLARE_ZONE_ID" ]; then
-            echo "Cloudflare credentials not configured — skipping cache purge."
-            exit 0
-          fi
-
-          response=$(curl --fail-with-body --silent --show-error \
-            --request POST \
-            --url "https://api.cloudflare.com/client/v4/zones/${CLOUDFLARE_ZONE_ID}/purge_cache" \
-            --header "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
-            --header "Content-Type: application/json" \
-            --data '{"purge_everything":true}')
-
-          echo "$response" | jq --exit-status '.success == true' >/dev/null
+        run: node scripts/cloudflare-cache-purge.mjs dist/client
 
       - name: Cleanup SSH
         if: steps.cache.outputs.cache-hit != 'true'

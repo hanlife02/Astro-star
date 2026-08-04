@@ -52,6 +52,7 @@ jobs:
 
           personal_paths=(
             public/avatar.svg
+            public/avatar.webp
             public/figures
             public/reward
             public/site-icon.svg

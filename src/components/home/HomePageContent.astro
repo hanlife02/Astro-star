@@ -92,18 +92,18 @@ function isExternalLink(href: string) {
             class="profile-codetime-popover"
             aria-hidden="true"
             data-codetime-status-popover
+            hidden
           >
             <img
               class="profile-codetime-status"
-              src="/api/codetime-status.svg"
               alt=""
               width="380"
               height="116"
-              loading="lazy"
               decoding="async"
               fetchpriority="low"
               referrerpolicy="no-referrer"
               data-codetime-status
+              data-codetime-status-src="/api/codetime-status.svg"
             />
           </span>
         )

@@ -1,7 +1,7 @@
 export const site = {
   profile: {
     name: "Ethan",
-    avatarSrc: "/avatar.svg",
+    avatarSrc: "/avatar.webp?v=20260804",
     bio: "Don't stay awake for too long.",
     intro:
       "Hi, I'm Ethan, a third-year student at Peking University. I enjoy learning how to code during my leisure time, and I am very interested in the AI4S field. ",
@@ -13,7 +13,7 @@ export const site = {
     url: "https://hanlife02.com",
     description:
       "Ethan's personal blog — coding, AI4S, and life at Peking University.",
-    iconSrc: "/site-icon.svg",
+    iconSrc: "/avatar.webp?v=20260804",
     startYear: 2026,
     footer: {
       name: "Astro-star",

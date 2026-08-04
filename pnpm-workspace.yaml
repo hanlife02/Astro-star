@@ -5,6 +5,7 @@ allowBuilds:
 
 overrides:
   esbuild: 0.28.1
+  fast-uri: 3.1.5
   volar-service-yaml: 0.0.71
   # Dedupe: hast-util-from-html-isomorphic (via rehype-katex) pins 3.0.4 while
   # Astro's chain uses 3.0.5. Two copies make hast.Root two distinct types, so

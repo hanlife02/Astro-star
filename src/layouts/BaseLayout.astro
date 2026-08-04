@@ -1,5 +1,9 @@
 ---
 import { ClientRouter } from "astro:transitions";
+import biotifBoldUrl from "../assets/fonts/Biotif-Bold.woff2?url";
+import biotifMediumUrl from "../assets/fonts/Biotif-Medium.woff2?url";
+import biotifRegularUrl from "../assets/fonts/Biotif-Regular.woff2?url";
+import biotifSemiBoldUrl from "../assets/fonts/Biotif-SemiBold.woff2?url";
 import { site } from "../config/site";
 import { getEnabledSocialLinks, getSocialLink } from "../utils/social";
 import katexStylesheetUrl from "katex/dist/katex.min.css?url";
@@ -69,6 +73,20 @@ const faviconSrc = site.site.iconSrc.trim() || "/site-icon.svg";
 const faviconHref = faviconSrc.includes("?")
   ? faviconSrc
   : `${faviconSrc}?v=20260521`;
+const faviconPathname = new URL(
+  faviconSrc,
+  site.site.url,
+).pathname.toLowerCase();
+const faviconType = faviconPathname.endsWith(".webp")
+  ? "image/webp"
+  : faviconPathname.endsWith(".png")
+    ? "image/png"
+    : faviconPathname.endsWith(".ico")
+      ? "image/x-icon"
+      : faviconPathname.endsWith(".svg")
+        ? "image/svg+xml"
+        : undefined;
+const faviconSizes = faviconPathname.endsWith(".svg") ? "any" : undefined;
 const openGraphType = ogType ?? "website";
 const openGraphLocale = "zh_CN";
 const twitterCardType = twitterCard ?? "summary_large_image";
@@ -107,6 +125,39 @@ const siteJsonLd = {
   ],
 };
 const siteJsonLdText = JSON.stringify(siteJsonLd).replace(/</g, "\\u003c");
+const biotifFontStyles = `
+  @font-face {
+    font-family: "Biotif";
+    src: url("${biotifRegularUrl}") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Biotif";
+    src: url("${biotifMediumUrl}") format("woff2");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Biotif";
+    src: url("${biotifSemiBoldUrl}") format("woff2");
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Biotif";
+    src: url("${biotifBoldUrl}") format("woff2");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  html {
+    font-family: "Biotif", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+  }
+`;
 ---
 
 <html
@@ -117,66 +168,16 @@ const siteJsonLdText = JSON.stringify(siteJsonLd).replace(/</g, "\\u003c");
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!-- Preload the faces used by first-viewport text before it can paint. -->
+    <!-- The body face is enough to start loading Biotif without blocking text. -->
     <link
       rel="preload"
-      href="/fonts/Biotif-Regular.woff2"
+      href={biotifRegularUrl}
       as="font"
       type="font/woff2"
       crossorigin
       fetchpriority="high"
     />
-    <link
-      rel="preload"
-      href="/fonts/Biotif-Bold.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
-    <link
-      rel="preload"
-      href="/fonts/Biotif-SemiBold.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-      media="(max-width: 56.25rem)"
-    />
-    <style is:inline>
-      @font-face {
-        font-family: "Biotif";
-        src: url("/fonts/Biotif-Regular.woff2") format("woff2");
-        font-weight: 400;
-        font-style: normal;
-        /* Short FOIT instead of fallback-to-custom swap on first paint. */
-        font-display: block;
-      }
-      @font-face {
-        font-family: "Biotif";
-        src: url("/fonts/Biotif-Medium.woff2") format("woff2");
-        font-weight: 500;
-        font-style: normal;
-        font-display: block;
-      }
-      @font-face {
-        font-family: "Biotif";
-        src: url("/fonts/Biotif-SemiBold.woff2") format("woff2");
-        font-weight: 600;
-        font-style: normal;
-        font-display: block;
-      }
-      @font-face {
-        font-family: "Biotif";
-        src: url("/fonts/Biotif-Bold.woff2") format("woff2");
-        font-weight: 700;
-        font-style: normal;
-        font-display: block;
-      }
-      /* Apply family before Vite/dev CSS arrives, otherwise UA font paints first. */
-      html {
-        font-family:
-          "Biotif", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
-      }
-    </style>
+    <style is:inline set:html={biotifFontStyles}></style>
     <script is:inline>
       document.documentElement.dataset.js = "true";
       document.addEventListener("astro:before-swap", function (event) {
@@ -204,7 +205,12 @@ const siteJsonLdText = JSON.stringify(siteJsonLd).replace(/</g, "\\u003c");
     <ClientRouter fallback="animate" />
     {includeKatexStyles && <link rel="stylesheet" href={katexStylesheetUrl} />}
     <link rel="sitemap" href="/sitemap-index.xml" />
-    <link rel="icon" type="image/svg+xml" sizes="any" href={faviconHref} />
+    <link
+      rel="icon"
+      type={faviconType}
+      sizes={faviconSizes}
+      href={faviconHref}
+    />
     <link
       rel="alternate"
       type="application/rss+xml"
