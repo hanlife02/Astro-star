@@ -213,6 +213,10 @@ html[data-route-transitioning="true"]
   animation: none;
 }
 
+html:not([data-js="true"]) .friend-links-grid .friend-link-avatar-frame {
+  animation: none;
+}
+
 .friend-links-grid .friend-link-avatar {
   display: block;
   width: 100%;

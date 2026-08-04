@@ -14,17 +14,19 @@ const { name, description, href, avatarSrc } = Astro.props as Props;
   target="_blank"
   rel="noreferrer"
   aria-label={`Visit ${name}`}
+  data-friend-link-card="true"
 >
   <span class="friend-link-card-glass" aria-hidden="true"></span>
 
   <img
     class="friend-link-card-bg"
-    src={avatarSrc}
     alt=""
     aria-hidden="true"
     loading="lazy"
     decoding="async"
     fetchpriority="low"
+    data-friend-link-image="true"
+    data-friend-link-src={avatarSrc}
   />
 
   <span
@@ -35,14 +37,26 @@ const { name, description, href, avatarSrc } = Astro.props as Props;
     <img
       class="friend-link-avatar"
       data-friend-link-avatar="true"
-      src={avatarSrc}
       alt=""
       width="56"
       height="56"
       loading="lazy"
       decoding="async"
       fetchpriority="low"
+      data-friend-link-image="true"
+      data-friend-link-src={avatarSrc}
     />
+    <noscript>
+      <img
+        class="friend-link-avatar"
+        src={avatarSrc}
+        alt=""
+        width="56"
+        height="56"
+        loading="lazy"
+        decoding="async"
+      />
+    </noscript>
     <span class="friend-link-avatar-mask" aria-hidden="true">
       <Icon svg={ArrowRight} />
     </span>

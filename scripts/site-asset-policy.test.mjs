@@ -34,5 +34,7 @@ test("favicon markup and legacy redirect follow site.iconSrc", () => {
 
 test("personal WebP avatars survive main-to-Ethan sync and config export", () => {
   assert.match(syncWorkflowSource, /^\s+public\/avatar\.webp$/m);
+  assert.match(syncWorkflowSource, /^\s+public\/friend-avatars$/m);
   assert.match(configExtractSource, /"public\/avatar\.webp"/);
+  assert.match(configExtractSource, /"public\/friend-avatars"/);
 });
