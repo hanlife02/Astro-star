@@ -11,6 +11,10 @@
   import { initHomeShellRouteTransitionLock } from "../../scripts/home-shell-route-transition-lock";
   import { initHomeShellSearch } from "../../scripts/home-shell-search";
   import {
+    cleanupHomeShellGitHeatmap,
+    initHomeShellGitHeatmap,
+  } from "../../scripts/home-shell-githeatmap";
+  import {
     cleanupHomeShellPageModules,
     initHomeShellPageModules,
   } from "../../scripts/home-shell-page-modules";
@@ -27,7 +31,6 @@
     "__homeShellContentFoldCleanup",
     "__homeShellFriendLinkAvatarsCleanup",
     "__homeShellFriendFeedCleanup",
-    "__homeShellProfileAvatarCleanup",
     "__homeShellCodeTimeCleanup",
   ] as const;
 
@@ -63,6 +66,7 @@
   };
 
   const cleanupHomeShellBeforeSwap = () => {
+    runHomeShellCleanup("githeatmap", cleanupHomeShellGitHeatmap);
     runHomeShellCleanup("page-modules", cleanupHomeShellPageModules);
 
     HOME_SHELL_BEFORE_SWAP_CLEANUP_KEYS.forEach((cleanupKey) => {
@@ -92,6 +96,7 @@
       initHomeShellRouteTransitionLock,
     );
     runHomeShellInitializer("search", initHomeShellSearch);
+    runHomeShellInitializer("githeatmap", initHomeShellGitHeatmap);
     runHomeShellInitializer("page-modules", initHomeShellPageModules);
   };
 
