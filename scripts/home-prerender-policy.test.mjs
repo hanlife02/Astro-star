@@ -15,7 +15,7 @@ const homePageContentSource = await readFile(
   "utf8",
 );
 
-test("the GitHub heatmap remains on the prerendered homepage build path", () => {
+test("the GitHub heatmap data remains on the prerendered homepage build path", () => {
   assert.match(indexSource, /export const prerender = true;/);
   assert.match(
     homePageContentSource,
@@ -23,5 +23,8 @@ test("the GitHub heatmap remains on the prerendered homepage build path", () => 
   );
   assert.match(homePageContentSource, /<GitHeatmap \/>/);
   assert.match(heatmapSource, /await getGitHubContributionHeatmap\(username\)/);
+  assert.match(heatmapSource, /data-githeatmap-levels=\{heatmapLevels\}/);
+  assert.match(heatmapSource, /data-githeatmap-counts=\{heatmapCounts\}/);
+  assert.doesNotMatch(heatmapSource, /fetch\(/);
   assert.doesNotMatch(heatmapSource, /client:(?:load|idle|visible|only)/);
 });
