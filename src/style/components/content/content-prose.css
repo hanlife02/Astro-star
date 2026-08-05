@@ -931,7 +931,7 @@ html.content-image-lightbox-open {
 
 .content-page-body pre code {
   display: block;
-  min-width: max-content;
+  min-width: 100%;
   font-family: inherit;
   font-size: inherit;
   line-height: inherit;
