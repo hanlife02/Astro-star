@@ -72,12 +72,17 @@
   display: grid;
   grid-template-columns: repeat(var(--githeatmap-week-count, 53), 1fr);
   grid-template-rows: repeat(7, 1fr);
+  grid-auto-flow: column;
   gap: var(--githeatmap-gap);
   width: 100%;
   aspect-ratio: var(--githeatmap-week-count, 53) / 7;
   margin: 0;
   padding: 0;
   list-style: none;
+}
+
+.githeatmap-week {
+  display: contents;
 }
 
 .githeatmap-cell,

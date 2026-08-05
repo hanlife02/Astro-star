@@ -41,6 +41,24 @@ const profileStylesSource = await readFile(
   new URL("../src/style/components/home/profile.css", import.meta.url),
   "utf8",
 );
+const heatmapSource = await readFile(
+  new URL("../src/components/home/githeatmap.astro", import.meta.url),
+  "utf8",
+);
+const heatmapStylesSource = await readFile(
+  new URL("../src/style/components/home/githeatmap.css", import.meta.url),
+  "utf8",
+);
+const siteConfigSource = await readFile(
+  new URL("../src/config/site.ts", import.meta.url),
+  "utf8",
+);
+
+function getConfiguredSignatureSvg(source) {
+  const match = source.match(/signatureSvg:\s*'([^']+)'/);
+  assert.ok(match?.[1], "site.profile.signatureSvg must be a quoted SVG");
+  return match[1];
+}
 
 test("the homepage preloads its avatar and has a local fallback", () => {
   assert.match(homePageSource, /data-home-avatar-preload/);
@@ -112,5 +130,37 @@ test("content page styles are owned by the content shell", () => {
   assert.match(
     contentShellSource,
     /import "\.\.\/\.\.\/style\/pages\/content-page\.css";/,
+  );
+});
+
+test("the homepage heatmap compacts layout metadata by week", () => {
+  assert.match(heatmapSource, /const heatmapWeeks =/);
+  assert.match(heatmapSource, /class="githeatmap-week"/);
+  assert.match(heatmapSource, /--githeatmap-hover-delay:/);
+  assert.doesNotMatch(heatmapSource, /grid-column:\s*\$\{day\.weekIndex/);
+  assert.doesNotMatch(heatmapSource, /grid-row:\s*\$\{\s*day\.dayIndex/);
+  assert.doesNotMatch(heatmapSource, /aria-label=\{day\.label/);
+  assert.match(heatmapSource, /title=\{day\.label \|\| undefined\}/);
+  assert.match(heatmapSource, /data-level=\{day\.level\}/);
+  assert.match(heatmapSource, /data-blank=\{day\.isBlank/);
+  assert.match(
+    heatmapStylesSource,
+    /\.githeatmap-grid\s*\{[\s\S]*?grid-auto-flow:\s*column;/,
+  );
+  assert.match(
+    heatmapStylesSource,
+    /\.githeatmap-week\s*\{[\s\S]*?display:\s*contents;/,
+  );
+});
+
+test("the inline signature source stays below 16 KiB", () => {
+  const signatureSvg = getConfiguredSignatureSvg(siteConfigSource);
+
+  assert.ok(
+    Buffer.byteLength(signatureSvg, "utf8") < 16 * 1024,
+    `Expected signatureSvg below 16 KiB, received ${Buffer.byteLength(
+      signatureSvg,
+      "utf8",
+    )} bytes`,
   );
 });
