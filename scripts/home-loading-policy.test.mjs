@@ -53,6 +53,14 @@ const siteConfigSource = await readFile(
   new URL("../src/config/site.ts", import.meta.url),
   "utf8",
 );
+const astroConfigSource = await readFile(
+  new URL("../astro.config.mjs", import.meta.url),
+  "utf8",
+);
+const inlineHomepageStylesSource = await readFile(
+  new URL("./inline-homepage-styles.mjs", import.meta.url),
+  "utf8",
+).catch(() => "");
 
 function getConfiguredSignatureSvg(source) {
   const match = source.match(/signatureSvg:\s*'([^']+)'/);
@@ -163,4 +171,16 @@ test("the inline signature source stays below 16 KiB", () => {
       "utf8",
     )} bytes`,
   );
+});
+
+test("the production build inlines styles only for the prerendered homepage", () => {
+  assert.match(
+    astroConfigSource,
+    /import \{ inlineHomepageStylesIntegration \} from "\.\/scripts\/inline-homepage-styles\.mjs";/,
+  );
+  assert.match(astroConfigSource, /inlineHomepageStylesIntegration\(\)/);
+  assert.doesNotMatch(astroConfigSource, /inlineStylesheets:\s*["']always["']/);
+  assert.match(inlineHomepageStylesSource, /astro:build:done/);
+  assert.match(inlineHomepageStylesSource, /index\.html/);
+  assert.match(inlineHomepageStylesSource, /data-home-inline-stylesheet/);
 });

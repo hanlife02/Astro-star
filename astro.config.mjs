@@ -12,6 +12,7 @@ import { rehypeFigureCaptions } from "./src/utils/rehype-figure-captions.js";
 import { mdxVoidHtmlPlugin } from "./src/utils/mdx-void-html.js";
 import { createSitemapLastmodSerializer } from "./src/utils/sitemap-lastmod.ts";
 import { site } from "./src/config/site.ts";
+import { inlineHomepageStylesIntegration } from "./scripts/inline-homepage-styles.mjs";
 
 // https://astro.build/config
 export default defineConfig({
@@ -67,6 +68,7 @@ export default defineConfig({
     breakpoints: [640, 828, 1080, 1280, 1668],
   },
   integrations: [
+    inlineHomepageStylesIntegration(),
     mdx(),
     sitemap({
       serialize: createSitemapLastmodSerializer(site.site.url),
