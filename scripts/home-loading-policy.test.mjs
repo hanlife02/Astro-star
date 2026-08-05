@@ -10,6 +10,14 @@ const homeShellSource = await readFile(
   new URL("../src/components/layout/HomeShellFrame.astro", import.meta.url),
   "utf8",
 );
+const homeLayoutSource = await readFile(
+  new URL("../src/layouts/HomeLayout.astro", import.meta.url),
+  "utf8",
+);
+const contentShellSource = await readFile(
+  new URL("../src/components/layout/ContentShell.astro", import.meta.url),
+  "utf8",
+);
 const entranceScriptExists = await readFile(
   new URL("../src/scripts/home-shell-home-entrance.ts", import.meta.url),
   "utf8",
@@ -93,5 +101,16 @@ test("the avatar has no decorative border", () => {
   assert.doesNotMatch(
     profileStylesSource,
     /profile-avatar[^\{]*\{[^\}]*border-color:/,
+  );
+});
+
+test("content page styles are owned by the content shell", () => {
+  assert.doesNotMatch(
+    homeLayoutSource,
+    /import "\.\.\/style\/pages\/content-page\.css";/,
+  );
+  assert.match(
+    contentShellSource,
+    /import "\.\.\/\.\.\/style\/pages\/content-page\.css";/,
   );
 });
