@@ -87,6 +87,9 @@ importers:
       bson:
         specifier: ^7.2.0
         version: 7.2.0
+      parse5:
+        specifier: 7.3.0
+        version: 7.3.0
       prettier:
         specifier: 3.8.4
         version: 3.8.4
