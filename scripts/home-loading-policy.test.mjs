@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { access, readFile } from "node:fs/promises";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 const homePageSource = await readFile(
@@ -8,10 +8,6 @@ const homePageSource = await readFile(
 );
 const homeShellSource = await readFile(
   new URL("../src/components/layout/HomeShellFrame.astro", import.meta.url),
-  "utf8",
-);
-const homeShellScriptsSource = await readFile(
-  new URL("../src/components/layout/HomeShellScripts.astro", import.meta.url),
   "utf8",
 );
 const homeLayoutSource = await readFile(
@@ -29,12 +25,10 @@ const entranceScriptExists = await readFile(
   () => true,
   () => false,
 );
-const avatarScriptExists = await access(
+const avatarScriptSource = await readFile(
   new URL("../src/scripts/home-shell-profile-avatar.ts", import.meta.url),
-).then(
-  () => true,
-  () => false,
-);
+  "utf8",
+).catch(() => "");
 const pageModulesSource = await readFile(
   new URL("../src/scripts/home-shell-page-modules.ts", import.meta.url),
   "utf8",
@@ -53,17 +47,6 @@ const heatmapSource = await readFile(
 );
 const heatmapStylesSource = await readFile(
   new URL("../src/style/components/home/githeatmap.css", import.meta.url),
-  "utf8",
-);
-const heatmapScriptSource = await readFile(
-  new URL("../src/scripts/home-shell-githeatmap.ts", import.meta.url),
-  "utf8",
-).catch(() => "");
-const homeBackgroundStylesSource = await readFile(
-  new URL(
-    "../src/style/components/background/home-background.css",
-    import.meta.url,
-  ),
   "utf8",
 );
 const siteConfigSource = await readFile(
@@ -85,19 +68,17 @@ function getConfiguredSignatureSvg(source) {
   return match[1];
 }
 
-test("the homepage preloads a real avatar preview without initials", () => {
+test("the homepage preloads its avatar and has a local fallback", () => {
   assert.match(homePageSource, /data-home-avatar-preload/);
   assert.match(homePageSource, /href=\{profile\.avatarSrc\}/);
-  assert.match(homePageSource, /createAvatarPlaceholderDataUrl/);
+  assert.match(homePageSource, /data-profile-avatar-fallback/);
   assert.match(homePageSource, /data-home-profile-avatar/);
-  assert.match(homePageSource, /role="img"/);
-  assert.match(homePageSource, /aria-label=\{ownerName\}/);
-  assert.doesNotMatch(homePageSource, /profileInitial/);
-  assert.doesNotMatch(homePageSource, /profile-avatar-fallback/);
-  assert.doesNotMatch(homePageSource, /data-profile-avatar-state/);
-  assert.doesNotMatch(profileStylesSource, /profile-avatar-fallback/);
-  assert.equal(avatarScriptExists, false);
-  assert.doesNotMatch(pageModulesSource, /name: "profile-avatar"/);
+  assert.match(avatarScriptSource, /dataset\.profileAvatarState = "loaded"/);
+  assert.match(avatarScriptSource, /dataset\.profileAvatarState = "fallback"/);
+  assert.doesNotMatch(
+    avatarScriptSource,
+    /homeMainState|HOME_MAIN_READY_EVENT/,
+  );
 });
 
 test("the homepage entrance is CSS-only", () => {
@@ -105,6 +86,7 @@ test("the homepage entrance is CSS-only", () => {
   assert.match(homeShellSource, /data-home-shell-main/);
   assert.equal(entranceScriptExists, false);
   assert.doesNotMatch(pageModulesSource, /name: "home-entrance"/);
+  assert.match(pageModulesSource, /name: "profile-avatar"/);
 });
 
 test("CSS restarts the profile and latest entrance for every document", () => {
@@ -134,9 +116,14 @@ test("the avatar has no decorative border", () => {
   const avatarRule = profileStylesSource.match(
     /\.profile-avatar \{([\s\S]*?)\}/,
   )?.[1];
+  const fallbackRule = profileStylesSource.match(
+    /\.profile-avatar-fallback \{([\s\S]*?)\}/,
+  )?.[1];
 
   assert.ok(avatarRule);
+  assert.ok(fallbackRule);
   assert.doesNotMatch(avatarRule, /\bborder(?:-color)?:/);
+  assert.doesNotMatch(fallbackRule, /\bborder(?:-color)?:/);
   assert.doesNotMatch(
     profileStylesSource,
     /profile-avatar[^\{]*\{[^\}]*border-color:/,
@@ -154,40 +141,16 @@ test("content page styles are owned by the content shell", () => {
   );
 });
 
-test("the homepage heatmap materializes its cells after the initial HTML", () => {
-  assert.match(heatmapSource, /data-githeatmap-grid/);
-  assert.match(heatmapSource, /data-githeatmap-levels=\{heatmapLevels\}/);
-  assert.match(heatmapSource, /data-githeatmap-counts=\{heatmapCounts\}/);
-  assert.match(
-    heatmapSource,
-    /data-githeatmap-calendar-start=\{heatmapCalendarStart\}/,
-  );
-  assert.doesNotMatch(heatmapSource, /class="githeatmap-week"/);
-  assert.doesNotMatch(heatmapSource, /class="githeatmap-cell"/);
-  assert.match(
-    homeShellScriptsSource,
-    /from "\.\.\/\.\.\/scripts\/home-shell-githeatmap"/,
-  );
-  assert.match(
-    homeShellScriptsSource,
-    /runHomeShellInitializer\("githeatmap", initHomeShellGitHeatmap\)/,
-  );
-  assert.match(
-    homeShellScriptsSource,
-    /runHomeShellCleanup\("githeatmap", cleanupHomeShellGitHeatmap\)/,
-  );
-  assert.doesNotMatch(pageModulesSource, /name: "githeatmap"/);
-  assert.match(heatmapScriptSource, /new IntersectionObserver/);
-  assert.match(heatmapScriptSource, /requestIdleCallback/);
-  assert.match(heatmapScriptSource, /const idleFallback = window\.setTimeout/);
-  assert.match(
-    heatmapScriptSource,
-    /const visibilityFallback = window\.setTimeout/,
-  );
-  assert.match(heatmapScriptSource, /document\.createElement\("span"\)/);
-  assert.match(heatmapScriptSource, /cell\.dataset\.level/);
-  assert.match(heatmapScriptSource, /cell\.title =/);
-  assert.match(heatmapScriptSource, /observer\.disconnect\(\)/);
+test("the homepage heatmap compacts layout metadata by week", () => {
+  assert.match(heatmapSource, /const heatmapWeeks =/);
+  assert.match(heatmapSource, /class="githeatmap-week"/);
+  assert.match(heatmapSource, /--githeatmap-hover-delay:/);
+  assert.doesNotMatch(heatmapSource, /grid-column:\s*\$\{day\.weekIndex/);
+  assert.doesNotMatch(heatmapSource, /grid-row:\s*\$\{\s*day\.dayIndex/);
+  assert.doesNotMatch(heatmapSource, /aria-label=\{day\.label/);
+  assert.match(heatmapSource, /title=\{day\.label \|\| undefined\}/);
+  assert.match(heatmapSource, /data-level=\{day\.level\}/);
+  assert.match(heatmapSource, /data-blank=\{day\.isBlank/);
   assert.match(
     heatmapStylesSource,
     /\.githeatmap-grid\s*\{[\s\S]*?grid-auto-flow:\s*column;/,
@@ -195,14 +158,6 @@ test("the homepage heatmap materializes its cells after the initial HTML", () =>
   assert.match(
     heatmapStylesSource,
     /\.githeatmap-week\s*\{[\s\S]*?display:\s*contents;/,
-  );
-});
-
-test("narrow screens animate no more than 24 snowflakes", () => {
-  assert.match(homeBackgroundStylesSource, /@media \(max-width: 30rem\)/);
-  assert.match(
-    homeBackgroundStylesSource,
-    /\.snow-flake:nth-child\(n \+ 25\)\s*\{[\s\S]*?display:\s*none;/,
   );
 });
 

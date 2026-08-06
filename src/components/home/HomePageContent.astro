@@ -6,7 +6,6 @@ import Signature from "./signature.astro";
 import FooterMeta from "../common/FooterMeta.astro";
 import AppPanelIcon from "../ui/icons/AppPanelIcon.astro";
 import type { SocialLinkItem } from "../../types/social";
-import { createAvatarPlaceholderDataUrl } from "../../utils/avatar-placeholder.mjs";
 import { isCodeTimeConfigured } from "../../utils/codetime";
 import "../../style/components/home/profile.css";
 import "../../style/components/home/latest-articles.css";
@@ -51,22 +50,7 @@ const {
   latestNoteTimelineGroups,
 } = Astro.props as Props;
 const homeDescription = profile.intro.trim() || profile.bio.trim();
-const avatarPreviewDataUrl = await createAvatarPlaceholderDataUrl(
-  profile.avatarSrc,
-);
-const encodeCssUrl = (value: string) =>
-  encodeURI(value).replace(
-    /["'()\\]/g,
-    (character) => `%${character.charCodeAt(0).toString(16).toUpperCase()}`,
-  );
-const avatarStyle = [
-  `--profile-avatar-full: url("${encodeCssUrl(profile.avatarSrc)}")`,
-  `--profile-avatar-preview: ${
-    avatarPreviewDataUrl
-      ? `url("${encodeCssUrl(avatarPreviewDataUrl)}")`
-      : "none"
-  }`,
-].join(";");
+const profileInitial = Array.from(ownerName.trim())[0]?.toUpperCase() || "?";
 const codeTimeEnabled = isCodeTimeConfigured(CODETIME_TOKEN);
 const CodeTime = codeTimeEnabled
   ? (await import("./CodeTime.astro")).default
@@ -100,13 +84,26 @@ function isExternalLink(href: string) {
     <span
       class="profile-avatar-wrap home-enter-item"
       data-codetime-status-root={codeTimeEnabled ? "" : undefined}
+      data-profile-avatar-state="loading"
     >
       <span
+        class="profile-avatar-fallback"
+        aria-hidden="true"
+        data-profile-avatar-fallback
+      >
+        {profileInitial}
+      </span>
+      <img
         class="profile-avatar"
-        role="img"
-        aria-label={ownerName}
-        style={avatarStyle}
-        data-home-profile-avatar></span>
+        src={profile.avatarSrc}
+        alt={ownerName}
+        width="1080"
+        height="1080"
+        loading="eager"
+        decoding="sync"
+        fetchpriority="high"
+        data-home-profile-avatar
+      />
       {
         CodeTime && (
           <span

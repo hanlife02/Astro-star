@@ -102,14 +102,6 @@
   }
 }
 
-@media (max-width: 30rem) {
-  .snow-flake:nth-child(n + 25) {
-    display: none;
-    animation: none;
-    will-change: auto;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .snow-flake {
     animation: none;
