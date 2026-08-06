@@ -33,6 +33,7 @@
   - [使用本主题的网站列表](#使用本主题的网站列表)
   - [交流讨论](#交流讨论)
   - [许可证](#许可证)
+  - [Star 历史](#star-历史)
 
 ## 项目地图
 
@@ -111,11 +112,13 @@ pnpm build
 
 Astro-star 使用 [MIT License](./LICENSE) 开源。
 
+## Star 历史
+
 <a href="https://www.star-history.com/?repos=hanlife02%2FAstro-star&type=date&legend=top-left">
  <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=hanlife02/Astro-star&type=date&theme=dark&legend=top-left" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=hanlife02/Astro-star&type=date&legend=top-left" />
-   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=hanlife02/Astro-star&type=date&legend=top-left" />
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=hanlife02/Astro-star&type=date&theme=dark&legend=top-left&sealed_token=SUzwHN5ZdCscIYlMbiRmw-j7ttKNlySwP5lTx0DRCE2cuY8mqab0dfXSD1kB0SzYvpNKvi83I8ogVp-jGSuX3VYtGFuf55k0vfIOyw2LU1JAYkkGGneifgvI_Egn2A-qH96gWrbfFlczWOcpRE8r2Cgqfc1cR75IISNQZbodN6x4P42-x6sdlRn5lcya" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=hanlife02/Astro-star&type=date&legend=top-left&sealed_token=SUzwHN5ZdCscIYlMbiRmw-j7ttKNlySwP5lTx0DRCE2cuY8mqab0dfXSD1kB0SzYvpNKvi83I8ogVp-jGSuX3VYtGFuf55k0vfIOyw2LU1JAYkkGGneifgvI_Egn2A-qH96gWrbfFlczWOcpRE8r2Cgqfc1cR75IISNQZbodN6x4P42-x6sdlRn5lcya" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=hanlife02/Astro-star&type=date&legend=top-left&sealed_token=SUzwHN5ZdCscIYlMbiRmw-j7ttKNlySwP5lTx0DRCE2cuY8mqab0dfXSD1kB0SzYvpNKvi83I8ogVp-jGSuX3VYtGFuf55k0vfIOyw2LU1JAYkkGGneifgvI_Egn2A-qH96gWrbfFlczWOcpRE8r2Cgqfc1cR75IISNQZbodN6x4P42-x6sdlRn5lcya" />
  </picture>
 </a>
 

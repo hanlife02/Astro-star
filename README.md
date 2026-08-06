@@ -33,6 +33,7 @@ English · [简体中文](./README-zh-CN.md)
   - [Sites Using This Theme](#sites-using-this-theme)
   - [Discussion and Exchange](#discussion-and-exchange)
   - [License](#license)
+  - [Star History](#star-history)
 
 ## Project Map
 
@@ -111,11 +112,13 @@ Welcome to participate in discussions, feedback issues, and feature suggestions 
 
 Astro-star is open-source under the [MIT License](./LICENSE).
 
+## Star History
+
 <a href="https://www.star-history.com/?repos=hanlife02%2FAstro-star&type=date&legend=top-left">
  <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=hanlife02/Astro-star&type=date&theme=dark&legend=top-left" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=hanlife02/Astro-star&type=date&legend=top-left" />
-   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=hanlife02/Astro-star&type=date&legend=top-left" />
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=hanlife02/Astro-star&type=date&theme=dark&legend=top-left&sealed_token=SUzwHN5ZdCscIYlMbiRmw-j7ttKNlySwP5lTx0DRCE2cuY8mqab0dfXSD1kB0SzYvpNKvi83I8ogVp-jGSuX3VYtGFuf55k0vfIOyw2LU1JAYkkGGneifgvI_Egn2A-qH96gWrbfFlczWOcpRE8r2Cgqfc1cR75IISNQZbodN6x4P42-x6sdlRn5lcya" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=hanlife02/Astro-star&type=date&legend=top-left&sealed_token=SUzwHN5ZdCscIYlMbiRmw-j7ttKNlySwP5lTx0DRCE2cuY8mqab0dfXSD1kB0SzYvpNKvi83I8ogVp-jGSuX3VYtGFuf55k0vfIOyw2LU1JAYkkGGneifgvI_Egn2A-qH96gWrbfFlczWOcpRE8r2Cgqfc1cR75IISNQZbodN6x4P42-x6sdlRn5lcya" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=hanlife02/Astro-star&type=date&legend=top-left&sealed_token=SUzwHN5ZdCscIYlMbiRmw-j7ttKNlySwP5lTx0DRCE2cuY8mqab0dfXSD1kB0SzYvpNKvi83I8ogVp-jGSuX3VYtGFuf55k0vfIOyw2LU1JAYkkGGneifgvI_Egn2A-qH96gWrbfFlczWOcpRE8r2Cgqfc1cR75IISNQZbodN6x4P42-x6sdlRn5lcya" />
  </picture>
 </a>
 
