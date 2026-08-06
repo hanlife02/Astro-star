@@ -148,13 +148,6 @@ jobs:
             ${{ env.SSH_USER }}@${{ secrets.SSH_HOST }} \
             "source ~/.nvm/nvm.sh 2>/dev/null; source ~/.bashrc 2>/dev/null; cd ${{ env.DEPLOY_PATH }} && pnpm install --prod --frozen-lockfile && pm2 stop ${{ env.PM2_APP_NAME }} 2>/dev/null; pm2 delete ${{ env.PM2_APP_NAME }} 2>/dev/null; cd ${{ env.DEPLOY_PATH }} && PM2_APP_NAME=${{ env.PM2_APP_NAME }} PORT=${{ env.APP_PORT }} pm2 start ecosystem.config.cjs && pm2 save"
 
-      - name: Purge Cloudflare cache
-        if: steps.cache.outputs.cache-hit != 'true'
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
-        run: node scripts/cloudflare-cache-purge.mjs dist/client
-
       - name: Cleanup SSH
         if: steps.cache.outputs.cache-hit != 'true'
         run: rm -f ~/.ssh/deploy_key
