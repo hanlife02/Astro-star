@@ -11,6 +11,14 @@ type HomeShellPageModule = {
 
 const HOME_SHELL_PAGE_MODULES = [
   {
+    name: "profile-avatar",
+    selector: "[data-home-profile-avatar]",
+    load: async () => {
+      const module = await import("./home-shell-profile-avatar");
+      return { initialize: module.initHomeShellProfileAvatar };
+    },
+  },
+  {
     name: "content-toc",
     selector: "[data-home-shell-content-toc]",
     load: async () => {

@@ -1,7 +1,7 @@
 {
   "name": "Astro-star",
   "type": "module",
-  "version": "0.21.29",
+  "version": "0.21.28",
   "license": "MIT",
   "packageManager": "pnpm@11.15.1",
   "scripts": {
@@ -18,7 +18,7 @@
     "audit:assets": "tsx scripts/audit-assets.ts",
     "audit:content": "tsx scripts/audit-content.ts",
     "audit:deps": "pnpm audit --registry=https://registry.npmjs.org --audit-level moderate",
-    "test:performance-policy": "node --test scripts/avatar-placeholder.test.mjs scripts/githeatmap-payload.test.mjs scripts/font-loading-policy.test.mjs scripts/theme-loading-policy.test.mjs scripts/home-loading-policy.test.mjs scripts/codetime-loading-policy.test.mjs scripts/cloudflare-cache-purge.test.mjs scripts/site-asset-policy.test.mjs scripts/home-prerender-policy.test.mjs scripts/friend-link-loading-policy.test.mjs scripts/content-code-block-policy.test.mjs scripts/inline-homepage-styles.test.mjs",
+    "test:performance-policy": "node --test scripts/font-loading-policy.test.mjs scripts/theme-loading-policy.test.mjs scripts/home-loading-policy.test.mjs scripts/codetime-loading-policy.test.mjs scripts/cloudflare-cache-purge.test.mjs scripts/site-asset-policy.test.mjs scripts/home-prerender-policy.test.mjs scripts/friend-link-loading-policy.test.mjs scripts/content-code-block-policy.test.mjs scripts/inline-homepage-styles.test.mjs",
     "test:deployment-policy": "node --test scripts/codetime-deployment-policy.test.mjs",
     "migrate:content": "node scripts/migrate-legacy-content.mjs",
     "format": "prettier . --write",
