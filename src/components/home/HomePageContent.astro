@@ -50,7 +50,12 @@ const {
   latestNoteTimelineGroups,
 } = Astro.props as Props;
 const homeDescription = profile.intro.trim() || profile.bio.trim();
-const profileInitial = Array.from(ownerName.trim())[0]?.toUpperCase() || "?";
+const encodeCssUrl = (value: string) =>
+  encodeURI(value).replace(
+    /["'()\\]/g,
+    (character) => `%${character.charCodeAt(0).toString(16).toUpperCase()}`,
+  );
+const avatarStyle = `--profile-avatar-image: url("${encodeCssUrl(profile.avatarSrc)}")`;
 const codeTimeEnabled = isCodeTimeConfigured(CODETIME_TOKEN);
 const CodeTime = codeTimeEnabled
   ? (await import("./CodeTime.astro")).default
@@ -84,26 +89,13 @@ function isExternalLink(href: string) {
     <span
       class="profile-avatar-wrap home-enter-item"
       data-codetime-status-root={codeTimeEnabled ? "" : undefined}
-      data-profile-avatar-state="loading"
     >
       <span
-        class="profile-avatar-fallback"
-        aria-hidden="true"
-        data-profile-avatar-fallback
-      >
-        {profileInitial}
-      </span>
-      <img
         class="profile-avatar"
-        src={profile.avatarSrc}
-        alt={ownerName}
-        width="1080"
-        height="1080"
-        loading="eager"
-        decoding="sync"
-        fetchpriority="high"
-        data-home-profile-avatar
-      />
+        role="img"
+        aria-label={ownerName}
+        style={avatarStyle}
+        data-home-profile-avatar></span>
       {
         CodeTime && (
           <span
