@@ -245,68 +245,20 @@ ALGOLIA_ADMIN_API_KEY=xxxxxxxxxxxxxxxx
 
 凭证、token 统一放在 `Secrets` 里：
 
-| Secret                  | 是否必填 | 用途                 | 说明                                                                                  |
-| ----------------------- | -------- | -------------------- | ------------------------------------------------------------------------------------- |
-| `SSH_HOST`              | 必填     | SSH / rsync 部署     | 服务器公网 IP 或仅 DNS 解析的域名，不能填写由 Cloudflare 代理的橙云域名。             |
-| `SSH_PRIVATE_KEY`       | 必填     | SSH / rsync 部署     | 用于登录服务器的私钥内容。对应公钥需要提前加入服务器用户的 `~/.ssh/authorized_keys`。 |
-| `WALINE_SERVER_URL`     | 可选     | 构建和服务器 `.env`  | Waline 评论服务地址；不使用评论可以不填。                                             |
-| `GH_TOKEN`              | 可选     | 服务器 `.env`        | 独立只读 PAT；以同名变量写入 `.env`，供仓库卡片 REST API 使用。                       |
-| `CODETIME_TOKEN`        | 可选     | 服务器 `.env`        | CodeTime 徽章接口 token；不使用可以不填。                                             |
-| `ALGOLIA_WRITE_API_KEY` | 可选     | Algolia 索引同步     | Algolia 写入索引用的 key；只有启用搜索索引同步时才需要。                              |
-| `ALGOLIA_ADMIN_API_KEY` | 可选     | Algolia 索引同步     | Algolia 管理 key；用于清理已经删除文章对应的旧记录。                                  |
-| `CLOUDFLARE_API_TOKEN`  | 可选     | 部署后清理 CDN 缓存  | 建议使用仅有目标站点 `Cache Purge` 权限的 API Token。                                 |
-| `CLOUDFLARE_ZONE_ID`    | 可选     | 指定 Cloudflare Zone | 在 Cloudflare 站点概览页获取；需与 API Token 授权的站点一致。                         |
-| `ACTIONS_PAT`           | 可选     | 跨仓库或分支写操作   | 普通 fork 无需配置；仅上游维护者同步 `main -> Ethan`、触发独立文档仓库时需要。        |
+| Secret                  | 是否必填 | 用途                | 说明                                                                                  |
+| ----------------------- | -------- | ------------------- | ------------------------------------------------------------------------------------- |
+| `SSH_HOST`              | 必填     | SSH / rsync 部署    | 服务器公网 IP 或能够直连 SSH 端口的域名。                                             |
+| `SSH_PRIVATE_KEY`       | 必填     | SSH / rsync 部署    | 用于登录服务器的私钥内容。对应公钥需要提前加入服务器用户的 `~/.ssh/authorized_keys`。 |
+| `WALINE_SERVER_URL`     | 可选     | 构建和服务器 `.env` | Waline 评论服务地址；不使用评论可以不填。                                             |
+| `GH_TOKEN`              | 可选     | 服务器 `.env`       | 独立只读 PAT；以同名变量写入 `.env`，供仓库卡片 REST API 使用。                       |
+| `CODETIME_TOKEN`        | 可选     | 服务器 `.env`       | CodeTime 徽章接口 token；不使用可以不填。                                             |
+| `ALGOLIA_WRITE_API_KEY` | 可选     | Algolia 索引同步    | Algolia 写入索引用的 key；只有启用搜索索引同步时才需要。                              |
+| `ALGOLIA_ADMIN_API_KEY` | 可选     | Algolia 索引同步    | Algolia 管理 key；用于清理已经删除文章对应的旧记录。                                  |
+| `ACTIONS_PAT`           | 可选     | 跨仓库或分支写操作  | 普通 fork 无需配置；仅上游维护者同步 `main -> Ethan`、触发独立文档仓库时需要。        |
 
 GitHub Actions 每次运行都会自动提供 `${{ github.token }}`，它不需要手动创建，也不会显示在仓库 Secrets 列表中。普通 fork 的同仓库检出和服务器部署会直接使用这个自动 token。若希望自动部署后的仓库卡片使用认证请求，应额外创建独立的只读 PAT，保存为 `GH_TOKEN`；部署工作流会以同名变量写入服务器 `.env`。
 
 只有工作流需要向其他仓库发起操作，或者把提交推送到受保护分支时，才需要手动创建 `ACTIONS_PAT`。本项目上游维护场景需要将 `Astro-star` 与 `Astro-star-docs` 加入 token 的仓库范围，并授予目标操作所需的 `Contents: Read and write` 与 `Actions: Read and write` 权限。`ACTIONS_PAT` 只供 Actions 使用，不会写入服务器 `.env`。技术上可以把同一个 PAT 同时填入两个 Secret，但这会把仓库写权限长期暴露在服务器上，因此不应合并。
-
-#### Cloudflare CDN（可选）
-
-CDN 不是部署博客的必要条件。未配置 Cloudflare 时，GitHub Actions 会正常完成构建、上传和重启；只有同时设置 `CLOUDFLARE_API_TOKEN` 与 `CLOUDFLARE_ZONE_ID`，工作流才会在部署成功后清理旧缓存。
-
-##### DNS 与 SSL/TLS
-
-1. 在 Cloudflare 添加自己的域名，并按提示把域名服务器改为 Cloudflare 提供的 Nameserver。
-2. 为博客域名添加指向服务器公网 IP 的 `A` 记录，并开启代理（橙云）。只用于 SSH、面板或其他不经过 Cloudflare HTTP 代理的子域名应保持“仅 DNS”。
-3. 在 `SSL/TLS` 中选择 `Full (strict)`。源站需要安装有效证书，不能只依赖 Cloudflare 到访客这一段的 HTTPS。
-
-> `SSH_HOST` 必须填写源站公网 IP 或“仅 DNS”的域名。Cloudflare 橙云不会代理普通的 SSH 22 端口；如果这里填写博客的橙云域名，Actions 会在 `Setup SSH` 的 `ssh-keyscan` 阶段失败。
-
-##### 缓存规则
-
-可以在 `Caching -> Cache Rules` 中按下面的顺序创建规则：
-
-| 顺序 | 匹配范围               | 缓存行为 | Edge TTL | Browser TTL |
-| ---- | ---------------------- | -------- | -------- | ----------- |
-| 1    | `/api` 与 `/api/*`     | 绕过缓存 | -        | -           |
-| 2    | `/_astro/*`            | 可以缓存 | 1 年     | 遵循源站    |
-| 3    | 其余博客页面和静态文件 | 可以缓存 | 2 小时   | 遵循源站    |
-
-顺序很重要：API 的绕过规则应放在普通页面规则之前。`/_astro/` 下的文件名带内容哈希，可以长期缓存；文章 HTML 使用较短的边缘缓存时间，并在每次部署后主动清理，能够兼顾访问速度和内容更新。
-
-##### 自动清理缓存
-
-在 Cloudflare 创建 API Token 时，将权限限制为目标站点的 `Zone -> Cache Purge -> Purge`，不要使用 Global API Key。然后把 Token 和 Zone ID 分别保存到 GitHub Actions Secrets：
-
-```text
-CLOUDFLARE_API_TOKEN
-CLOUDFLARE_ZONE_ID
-```
-
-部署工作流会在服务器重启成功后调用 Cloudflare API 清理缓存，并检查 API 返回的 `success` 字段。任意一项未设置时，该步骤会输出跳过提示并正常结束，不会影响未使用 CDN 的部署。
-
-##### 验证 CDN
-
-部署完成后可以连续执行两次：
-
-```shell
-curl -I https://example.com/
-curl -I https://example.com/
-```
-
-响应头中出现 `server: cloudflare` 表示流量已经经过 Cloudflare；`cf-cache-status` 通常会从首次访问的 `MISS` 变为后续访问的 `HIT`。对于 `/_astro/` 下的构建资源，还应看到类似 `cache-control: public, max-age=31536000, immutable` 的长期缓存响应头。
 
 #### 配置
 
@@ -533,12 +485,6 @@ server {
     }
 }
 ```
-
-如果已经开启 Cloudflare 橙云代理：
-
-- Cloudflare 的 `SSL/TLS` 模式应使用 `Full (strict)`，不要使用会导致重定向循环和源站明文传输的 `Flexible`。
-- Let’s Encrypt 的 HTTP 验证失败时，可以暂时把 DNS 记录切换为“仅 DNS”，签发完成后再恢复橙云；也可以改用 DNS 验证。
-- 也可以在 Cloudflare 创建 Origin CA 证书并安装到源站，但该证书只受 Cloudflare 信任。若绕过 Cloudflare 直接访问源站，浏览器会提示证书不受信任。
 
 配置完成后依次验证源站服务、HTTPS 和跳转：
 
