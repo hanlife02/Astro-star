@@ -1,7 +1,7 @@
 {
   "name": "Astro-star",
   "type": "module",
-  "version": "0.21.29",
+  "version": "0.21.30",
   "license": "MIT",
   "packageManager": "pnpm@11.15.1",
   "scripts": {
