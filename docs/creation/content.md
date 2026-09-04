@@ -130,6 +130,22 @@ Use `~~text~~` syntax to render strikethrough text in a muted style.
 
 A GitHub repository link on its own line in article content is automatically rendered as a card with icons.
 
+### Video
+
+Use the block-level `:video[title](url)` directive to embed a direct video URL, YouTube video, or Bilibili video:
+
+```md
+:video[](/videos/demo.mp4)
+
+:video[Demo video](/videos/demo.mp4){poster="/figures/demo.webp"}
+
+:video[YouTube demo](https://youtu.be/VIDEO_ID)
+
+:video[Bilibili demo](https://www.bilibili.com/video/BV1xx411c7mD?p=3)
+```
+
+The title is optional and becomes the figure caption. `poster` is only supported for direct video URLs. The directive must occupy its own line; playback is loaded after the reader activates it, so articles without video interaction do not request media or embedded players.
+
 ## Static Resources
 
 Local assets are placed under `public/` and referenced from the root path:

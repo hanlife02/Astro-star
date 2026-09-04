@@ -130,6 +130,22 @@ Frontmatter 字段均可省略，省略后会使用文件路径、文件名、�
 
 在文章内容中单列一个 GitHub 仓库链接，会自动渲染为带图标的卡片形式。
 
+### 视频
+
+使用块级 `:video[标题](地址)` 指令插入直链视频、YouTube 视频或 Bilibili 视频：
+
+```md
+:video[](/videos/demo.mp4)
+
+:video[演示视频](/videos/demo.mp4){poster="/figures/demo.webp"}
+
+:video[YouTube 示例](https://youtu.be/VIDEO_ID)
+
+:video[Bilibili 示例](https://www.bilibili.com/video/BV1xx411c7mD?p=3)
+```
+
+方括号中的标题可省略，存在时会渲染为视频说明。`poster` 仅支持直链视频。指令必须独占一行；视频在读者主动点击后才加载，因此没有播放操作的文章不会请求视频文件或嵌入播放器。
+
 ## 静态资源
 
 本地资源放在 `public/` 下，引用时从根路径开始：
