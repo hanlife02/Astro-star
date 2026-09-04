@@ -53,3 +53,18 @@ Hidden content can include paragraphs, lists, and code blocks.
 :::fold[Open by default]{open=true}
 This fold starts open, so the bottom-right corner is already placed at the end of the full content area.
 :::
+
+## Video
+
+Video directives support direct files and common hosted players:
+
+```md
+:video[](/videos/demo.mp4)
+:video[Demo video](/videos/demo.mp4){poster="/figures/demo.webp"}
+:video[YouTube demo](https://youtu.be/VIDEO_ID)
+:video[Bilibili demo](https://www.bilibili.com/video/BV1xx411c7mD?p=3)
+```
+
+The rendered player looks like this:
+
+:video[Flower demo](https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4)

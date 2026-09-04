@@ -51,6 +51,17 @@ const HOME_SHELL_PAGE_MODULES = [
     },
   },
   {
+    name: "content-video",
+    selector: ".content-video-frame[data-video-player='true']",
+    load: async () => {
+      const module = await import("./home-shell-content-video");
+      return {
+        initialize: module.initHomeShellContentVideo,
+        cleanup: module.cleanupHomeShellContentVideo,
+      };
+    },
+  },
+  {
     name: "article-actions",
     selector: "[data-article-actions]",
     load: async () => {
