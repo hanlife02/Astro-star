@@ -1,7 +1,7 @@
 {
   "name": "Astro-star",
   "type": "module",
-  "version": "0.21.30",
+  "version": "0.22.1",
   "license": "MIT",
   "packageManager": "pnpm@11.15.1",
   "scripts": {
@@ -17,8 +17,8 @@
     "generate:signature": "tsx scripts/generate-signature-asset.ts",
     "audit:assets": "tsx scripts/audit-assets.ts",
     "audit:content": "tsx scripts/audit-content.ts",
-    "audit:deps": "pnpm audit --registry=https://registry.npmjs.org --audit-level moderate",
-    "test:performance-policy": "node --test scripts/font-loading-policy.test.mjs scripts/theme-loading-policy.test.mjs scripts/home-loading-policy.test.mjs scripts/codetime-loading-policy.test.mjs scripts/site-asset-policy.test.mjs scripts/home-prerender-policy.test.mjs scripts/friend-link-loading-policy.test.mjs scripts/content-code-block-policy.test.mjs scripts/inline-homepage-styles.test.mjs",
+    "audit:deps": "pnpm audit --registry=https://registry.npmjs.org --audit-level moderate --ignore-registry-errors",
+    "test:performance-policy": "node --test scripts/font-loading-policy.test.mjs scripts/theme-loading-policy.test.mjs scripts/home-loading-policy.test.mjs scripts/codetime-loading-policy.test.mjs scripts/site-asset-policy.test.mjs scripts/home-prerender-policy.test.mjs scripts/friend-link-loading-policy.test.mjs scripts/content-code-block-policy.test.mjs scripts/content-video-policy.test.mjs scripts/content-video-player.test.mjs scripts/content-video-loading-policy.test.mjs scripts/inline-homepage-styles.test.mjs",
     "test:deployment-policy": "node --test scripts/codetime-deployment-policy.test.mjs scripts/cdn-deployment-policy.test.mjs",
     "migrate:content": "node scripts/migrate-legacy-content.mjs",
     "format": "prettier . --write",
