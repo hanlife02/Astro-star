@@ -1,12 +1,8 @@
 ---
 import { getCollection } from "astro:content";
 import SectionArchivePage from "../components/content/SectionArchivePage.astro";
-import SectionListingPage from "../components/content/SectionListingPage.astro";
 import { resolveContentDates } from "../utils/content-dates";
-import {
-  normalizeArchiveSlug as normalizeContentArchiveSlug,
-  resolveContentSlug,
-} from "../utils/content-slug";
+import { resolveContentSlug } from "../utils/content-slug";
 import {
   formatContentDate,
   getContentYear,
@@ -16,6 +12,7 @@ import { site } from "../config/site";
 import { resolveContentTitle } from "../utils/content-title";
 import { isPublishedContentEntry } from "../utils/content-visibility";
 import { getGitTimestamps } from "../utils/git-timestamps";
+import { buildSectionTags } from "../utils/content-tags";
 
 interface ContentEntryMeta {
   filePath?: string;
@@ -25,24 +22,10 @@ interface ContentEntryMeta {
     createdAt?: string | Date;
     routeSlug?: string | number;
     title?: string;
+    tags?: string[];
     type?: string;
     updatedAt?: string | Date;
   };
-}
-
-interface SectionArticleEntry {
-  createdLabel: string;
-  href: string;
-  timestamp: number;
-  title: string;
-}
-
-interface SectionCategoryEntry {
-  archiveSlug: string;
-  articles: SectionArticleEntry[];
-  count: number;
-  href?: string;
-  label: string;
 }
 
 interface ArchiveArticleItem {
@@ -68,50 +51,6 @@ type SectionKey = keyof typeof sectionLabels;
 
 export const prerender = true;
 
-function normalizeArchiveSlug(value?: unknown) {
-  return normalizeContentArchiveSlug(value);
-}
-
-function getArchiveSlugFromEntryId(id: string) {
-  return normalizeArchiveSlug(id.split("/").slice(0, -1).at(-1));
-}
-
-function slugifyCategoryLabel(value: string) {
-  return value
-    .toLowerCase()
-    .trim()
-    .replace(/[`*_~()[\]{}]/g, "")
-    .replace(/[^\p{Letter}\p{Number}\s-]/gu, "")
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-")
-    .replace(/^-|-$/g, "");
-}
-
-function getEntryCategory(
-  section: keyof typeof sectionLabels,
-  entry: ContentEntryMeta,
-) {
-  if (section === "project") {
-    return { archiveSlug: "project", label: "Project", href: undefined };
-  }
-
-  const directoryArchiveSlug = getArchiveSlugFromEntryId(entry.id);
-  const label =
-    entry.data.type?.trim() || directoryArchiveSlug || "Uncategorized";
-  const archiveSlug =
-    (section === "blog" ? directoryArchiveSlug : "") ||
-    normalizeArchiveSlug(entry.data.archiveSlug) ||
-    directoryArchiveSlug ||
-    slugifyCategoryLabel(label) ||
-    "uncategorized";
-
-  return {
-    archiveSlug,
-    href: `/${section}-archive/${archiveSlug}/`,
-    label,
-  };
-}
-
 function getEntryPublishedAt(section: SectionKey, entry: ContentEntryMeta) {
   const contentPath =
     entry.filePath ?? `src/content/${section}/${entry.id}.mdx`;
@@ -123,25 +62,6 @@ function getEntryPublishedAt(section: SectionKey, entry: ContentEntryMeta) {
   });
 
   return createdAt ?? updatedAt;
-}
-
-function getEntryArticle(section: SectionKey, entry: ContentEntryMeta) {
-  const routeSlug = resolveContentSlug(entry.id, entry.data.routeSlug);
-  const title = resolveContentTitle(entry.id, entry.data.title);
-  const publishedAt = getEntryPublishedAt(section, entry);
-
-  return {
-    createdLabel:
-      publishedAt && !Number.isNaN(publishedAt.getTime())
-        ? formatContentDate(publishedAt)
-        : "",
-    href: `/${section}/${routeSlug}/`,
-    timestamp:
-      publishedAt && !Number.isNaN(publishedAt.getTime())
-        ? publishedAt.getTime()
-        : 0,
-    title,
-  } satisfies SectionArticleEntry;
 }
 
 function getEntryArchiveArticle(section: SectionKey, entry: ContentEntryMeta) {
@@ -180,38 +100,6 @@ const collectionEntries = (await getCollection(sectionKey)).filter(
   isPublishedContentEntry,
 ) as ContentEntryMeta[];
 
-const categories = collectionEntries
-  .reduce<SectionCategoryEntry[]>((entries, entry) => {
-    const category = getEntryCategory(sectionKey, entry);
-    const article = getEntryArticle(sectionKey, entry);
-    const existingEntry = entries.find(
-      (item) => item.archiveSlug === category.archiveSlug,
-    );
-
-    if (existingEntry) {
-      existingEntry.count += 1;
-      existingEntry.articles.push(article);
-      return entries;
-    }
-
-    entries.push({
-      archiveSlug: category.archiveSlug,
-      articles: [article],
-      count: 1,
-      href: category.href,
-      label: category.label,
-    });
-    return entries;
-  }, [])
-  .map((category) => ({
-    ...category,
-    articles: category.articles.sort(
-      (a, b) =>
-        b.timestamp - a.timestamp || a.title.localeCompare(b.title, "en-US"),
-    ),
-  }))
-  .sort((a, b) => a.label.localeCompare(b.label, "en-US"));
-
 const archiveArticles = collectionEntries
   .map((entry) => getEntryArchiveArticle(sectionKey, entry))
   .filter((item): item is ArchiveArticleItem => item !== null)
@@ -231,7 +119,6 @@ const yearGroups = archiveArticles.reduce<
   return groups;
 }, []);
 
-const usesArchivePage = sectionKey === "blog" || sectionKey === "note";
 const basePageLabel = sectionLabels[sectionKey];
 const pageLabel =
   sectionKey === "blog"
@@ -239,40 +126,38 @@ const pageLabel =
     : sectionKey === "note"
       ? "All Notes"
       : basePageLabel;
-const activityEntries = usesArchivePage
-  ? archiveArticles.map((article) => ({
-      date: toContentIsoString(article.createdAt),
-      dateLabel: article.createdLabel,
-      href: article.href,
-      title: article.title,
-    }))
-  : [];
-const viewAllHref = `/${section}-archive/`;
-const viewCategoriesLabel = `View ${basePageLabel.toLowerCase()} categories`;
+const activityEntries =
+  sectionKey === "blog" || sectionKey === "note"
+    ? archiveArticles.map((article) => ({
+        date: toContentIsoString(article.createdAt),
+        dateLabel: article.createdLabel,
+        href: article.href,
+        title: article.title,
+      }))
+    : [];
+const viewAllHref =
+  sectionKey === "blog" || sectionKey === "note"
+    ? `/${section}-archive/`
+    : undefined;
+const viewCategoriesLabel = viewAllHref
+  ? `View ${basePageLabel.toLowerCase()} categories`
+  : undefined;
+const taxonomyTags = buildSectionTags(
+  sectionKey,
+  collectionEntries.map((entry) => ({ id: entry.id, tags: entry.data.tags })),
+);
 const seoTitle = `${pageLabel} - ${site.site.name}`;
 const seoDescription = sectionDescriptions[sectionKey];
 ---
 
-{
-  usesArchivePage ? (
-    <SectionArchivePage
-      actionHref={viewAllHref}
-      actionLabel={viewCategoriesLabel}
-      activityEntries={activityEntries}
-      pageLabel={pageLabel}
-      title={seoTitle}
-      description={seoDescription}
-      ogTitle={pageLabel}
-      yearGroups={yearGroups}
-    />
-  ) : (
-    <SectionListingPage
-      categories={categories}
-      pageLabel={pageLabel}
-      title={seoTitle}
-      description={seoDescription}
-      ogTitle={pageLabel}
-      showCounts={sectionKey !== "project"}
-    />
-  )
-}
+<SectionArchivePage
+  actionHref={viewAllHref}
+  actionLabel={viewCategoriesLabel}
+  activityEntries={activityEntries}
+  pageLabel={pageLabel}
+  title={seoTitle}
+  description={seoDescription}
+  ogTitle={pageLabel}
+  taxonomyTags={taxonomyTags}
+  yearGroups={yearGroups}
+/>

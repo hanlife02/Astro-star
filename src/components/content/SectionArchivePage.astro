@@ -1,6 +1,7 @@
 ---
 import CollectionPageShell from "../layout/CollectionPageShell.astro";
 import ArchiveActivityHeatmap from "./ArchiveActivityHeatmap.astro";
+import type { SectionTag } from "../../utils/content-tags";
 
 interface ArchiveArticleItem {
   createdLabel: string;
@@ -33,6 +34,8 @@ interface Props {
   description?: string;
   ogTitle?: string;
   yearGroups: ArchiveYearGroup[];
+  taxonomyTags?: SectionTag[];
+  activeTagSlug?: string;
 }
 
 const {
@@ -47,6 +50,8 @@ const {
   description,
   ogTitle,
   yearGroups,
+  taxonomyTags,
+  activeTagSlug,
 } = Astro.props as Props;
 ---
 
@@ -65,6 +70,8 @@ const {
     label: group.year,
     depth: 2 as const,
   }))}
+  taxonomyTags={taxonomyTags}
+  activeTagSlug={activeTagSlug}
 >
   <header class="listing-header collection-page-header">
     <div class="listing-header-bar collection-page-header-bar">
