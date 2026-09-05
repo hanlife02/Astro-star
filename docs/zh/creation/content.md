@@ -52,7 +52,7 @@ tags:
 | createdAt   | 创建日期，不存在时会根据 git 自动生成，一般不需要设置 |
 | updatedAt   | 更新日期，同理 createdAt ,一般不需要设置              |
 | type        | 文章分类 (project 暂时不支持 type 分类)               |
-| tags        | 可选的文章标签列表，会显示在文章页和分区导航中         |
+| tags        | 可选的文章标签列表，会显示在文章页和分区导航中        |
 
 `tags` 必须使用 YAML 列表。系统会去除首尾空格并按不区分大小写的方式去重，每个标签都会生成稳定地址，例如 `/blog/tag/astro/`。
 
@@ -78,7 +78,7 @@ tags:
 | projectUrl | 项目地址（仅项目页展示）     |
 | docUrl     | 项目文档地址（仅项目页展示） |
 | published  | 设为 `false` 时作为草稿隐藏  |
-| tags       | 可选的项目标签列表            |
+| tags       | 可选的项目标签列表           |
 
 ## 固定页面 frontmatter
 
@@ -109,7 +109,7 @@ background: code-rain
 | docUrl      | 项目文档地址（仅项目页展示）                  |
 | image       | 社交分享图/SEO 图                             |
 | published   | 设为 `false` 时作为草稿隐藏                   |
-| tags        | 可选的标签列表，用于文章和标签导航             |
+| tags        | 可选的标签列表，用于文章和标签导航            |
 
 Frontmatter 字段均可省略，省略后会使用文件路径、文件名、正文内容或 Git 时间等信息作为兜底。
 

@@ -44,14 +44,14 @@ tags:
 ---
 ```
 
-| Variables   | Description                                                                     |
-| ----------- | ------------------------------------------------------------------------------- |
-| routeSlug   | Defines the end of the article URL                                              |
-| title       | Article title                                                                   |
-| description | Article description                                                             |
-| createdAt   | Creation date. Auto-generated from git if absent; generally not needed          |
-| updatedAt   | Update date. Same as `createdAt`; generally not needed                          |
-| type        | Article category (`project` does not currently support `type`-based categories) |
+| Variables   | Description                                                                         |
+| ----------- | ----------------------------------------------------------------------------------- |
+| routeSlug   | Defines the end of the article URL                                                  |
+| title       | Article title                                                                       |
+| description | Article description                                                                 |
+| createdAt   | Creation date. Auto-generated from git if absent; generally not needed              |
+| updatedAt   | Update date. Same as `createdAt`; generally not needed                              |
+| type        | Article category (`project` does not currently support `type`-based categories)     |
 | tags        | Optional list of article tags. Tags are shown on the article and section navigation |
 
 `tags` must be a YAML list. Values are trimmed and deduplicated case-insensitively; each tag gets a stable URL such as `/blog/tag/astro/`.
@@ -109,7 +109,7 @@ background: code-rain
 | docUrl      | Project docs URL (only shown on project page)               |
 | image       | Social share image / SEO image                              |
 | published   | Set to `false` to hide as draft                             |
-| tags        | Optional list of tags used in article and tag navigation   |
+| tags        | Optional list of tags used in article and tag navigation    |
 
 All frontmatter fields are optional. When omitted, the system falls back to file path, filename, content, or Git timestamps.
 
