@@ -103,19 +103,33 @@ test("tag archives render filtered years, all section tags, and an active tag", 
   }
 });
 
-test("tagged articles render chips and tag-backed metadata", () => {
+test("tagged articles render inline metadata and tag-backed metadata", () => {
   const document = readPage("blog/welcome-to-astro-star");
-  const articleTags = findOne(document, (node) =>
-    hasClass(node, "content-tags--article"),
+  assert.equal(
+    findOne(document, (node) => hasClass(node, "content-tags--article")),
+    undefined,
   );
-  assert.ok(articleTags);
-  assert.ok(
-    findOne(
-      articleTags,
-      (node) =>
-        node.tagName === "a" &&
-        getAttribute(node, "href") === "/blog/tag/astro/",
+
+  const metadataLines = findAll(document, (node) =>
+    hasClass(node, "article-content-meta-line"),
+  );
+  const tagsLine = metadataLines.at(-1);
+  assert.equal(
+    getText(
+      findOne(tagsLine, (node) => hasClass(node, "article-content-meta-label")),
+    ).trim(),
+    "Tags",
+  );
+  assert.equal(
+    findAll(tagsLine, (node) => node.tagName === "strong").length,
+    2,
+  );
+  assert.equal(findAll(tagsLine, (node) => node.tagName === "em").length, 2);
+  assert.deepEqual(
+    findAll(tagsLine, (node) => node.tagName === "a").map((node) =>
+      getAttribute(node, "href"),
     ),
+    ["/blog/tag/blog/", "/blog/tag/astro/"],
   );
 
   const keywords = findOne(

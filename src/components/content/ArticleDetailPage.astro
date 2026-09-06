@@ -5,7 +5,6 @@ import WalineComments from "./WalineComments.astro";
 import Icon from "../ui/Icon.astro";
 import GithubIcon from "../ui/icons/GithubIcon.astro";
 import { ArrowLeft, ArrowRight, BookOpen } from "lucide-static";
-import ContentTags from "./ContentTags.astro";
 import type { ContentTag } from "../../utils/content-tags";
 
 interface TocHeading {
@@ -219,8 +218,26 @@ const projectLinks = [
           >{articleWordCount.toLocaleString("en-US")}</span
         >
       </p>
+      {
+        tags.length > 0 && (
+          <p class="article-content-meta-line">
+            <span class="article-content-meta-label">Tags</span>{" "}
+            <span class="article-content-meta-value article-content-meta-tags-value">
+              {tags.map((tag, index) => (
+                <Fragment>
+                  {index > 0 && ", "}
+                  <a class="article-content-meta-tag" href={tag.href}>
+                    <strong>
+                      <em>{tag.label}</em>
+                    </strong>
+                  </a>
+                </Fragment>
+              ))}
+            </span>
+          </p>
+        )
+      }
     </div>
-    <ContentTags tags={tags} variant="article" />
   </header>
 
   <Fragment slot="after-content">
