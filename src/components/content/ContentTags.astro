@@ -1,0 +1,48 @@
+---
+interface TagLink {
+  count?: number;
+  href: string;
+  label: string;
+  slug: string;
+}
+
+interface Props {
+  activeTagSlug?: string;
+  tags: TagLink[];
+  variant: "article" | "sidebar";
+}
+
+const { activeTagSlug, tags, variant } = Astro.props as Props;
+---
+
+{
+  tags.length > 0 && (
+    <ul
+      class:list={["content-tags", `content-tags--${variant}`]}
+      aria-label={variant === "article" ? "Article tags" : "Tags"}
+    >
+      {tags.map((tag) => (
+        <li class="content-tags-item">
+          <a
+            class:list={[
+              "content-tags-link",
+              activeTagSlug === tag.slug && "is-active",
+            ]}
+            href={tag.href}
+            aria-current={activeTagSlug === tag.slug ? "page" : undefined}
+          >
+            <span class="content-tags-label">{`# ${tag.label}`}</span>
+            {variant === "sidebar" && "count" in tag && (
+              <span
+                class="content-tags-count"
+                aria-label={`${tag.count} articles`}
+              >
+                {tag.count}
+              </span>
+            )}
+          </a>
+        </li>
+      ))}
+    </ul>
+  )
+}

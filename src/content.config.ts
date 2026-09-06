@@ -10,6 +10,7 @@ const baseContentSchema = z.looseObject({
   createdAt: z.union([z.string(), z.date()]).optional(),
   updatedAt: z.union([z.string(), z.date()]).optional(),
   published: z.boolean().optional(),
+  tags: z.array(z.string()).optional(),
   type: z.string().optional(),
 });
 

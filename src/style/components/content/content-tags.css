@@ -1,0 +1,110 @@
+.content-taxonomy-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+  min-width: 0;
+  min-height: 0;
+}
+
+.content-taxonomy-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  min-width: 0;
+}
+
+.content-taxonomy-group--time .content-toc {
+  position: static;
+  width: 100%;
+  max-height: none;
+  padding: 0;
+  overflow: visible;
+}
+
+.content-taxonomy-group--time .content-toc-list-frame {
+  min-height: 0;
+}
+
+.content-tags {
+  list-style: none;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.content-tags--sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  max-height: min(45dvh, 24rem);
+  padding-left: 0.9rem;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.content-tags-link {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.7rem;
+  min-width: 0;
+  color: color-mix(in srgb, var(--line) 58%, transparent);
+  line-height: 1.35;
+  text-decoration: none;
+  transition:
+    color 0.2s ease,
+    transform 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.content-tags-label {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.content-tags-count {
+  flex: 0 0 auto;
+  color: color-mix(in srgb, var(--line) 44%, transparent);
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
+  font-size: var(--type-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+.content-tags-link.is-active,
+.content-tags-link:focus-visible {
+  color: var(--line);
+}
+
+@media (hover: hover) {
+  .content-tags-link:hover {
+    color: var(--line);
+    transform: translateX(0.18rem);
+  }
+}
+
+@media not all and (min-width: 56.25rem) {
+  .content-taxonomy-sidebar {
+    gap: 1rem;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .content-taxonomy-group--time .content-toc {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    min-height: 0;
+  }
+
+  .content-taxonomy-group--time .content-toc-list-frame {
+    flex: 1;
+    min-height: 0;
+  }
+
+  .content-tags--sidebar {
+    max-height: none;
+    overflow: visible;
+  }
+}

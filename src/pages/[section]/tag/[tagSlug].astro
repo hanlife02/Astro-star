@@ -1,0 +1,149 @@
+---
+import { getCollection } from "astro:content";
+import SectionArchivePage from "../../../components/content/SectionArchivePage.astro";
+import { site } from "../../../config/site";
+import { resolveContentDates } from "../../../utils/content-dates";
+import {
+  buildSectionTags,
+  normalizeContentTags,
+} from "../../../utils/content-tags";
+import { resolveContentSlug } from "../../../utils/content-slug";
+import {
+  formatContentDate,
+  getContentYear,
+} from "../../../utils/content-time-zone";
+import { resolveContentTitle } from "../../../utils/content-title";
+import { isPublishedContentEntry } from "../../../utils/content-visibility";
+import { getGitTimestamps } from "../../../utils/git-timestamps";
+
+interface ContentEntryMeta {
+  filePath?: string;
+  id: string;
+  data: {
+    createdAt?: string | Date;
+    routeSlug?: string | number;
+    tags?: string[];
+    title?: string;
+    updatedAt?: string | Date;
+  };
+}
+
+interface ArchiveArticleItem {
+  createdAt: Date;
+  createdLabel: string;
+  href: string;
+  title: string;
+  year: string;
+}
+
+const validSections = ["blog", "note", "project"] as const;
+type SectionKey = (typeof validSections)[number];
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const paths = [];
+  const sections = ["blog", "note", "project"] as const;
+
+  for (const section of sections) {
+    const entries = (await getCollection(section)).filter(
+      isPublishedContentEntry,
+    ) as ContentEntryMeta[];
+    const tags = buildSectionTags(
+      section,
+      entries.map((entry) => ({ id: entry.id, tags: entry.data.tags })),
+    );
+
+    for (const tag of tags) {
+      paths.push({ params: { section, tagSlug: tag.slug } });
+    }
+  }
+
+  return paths;
+}
+
+const { section, tagSlug } = Astro.params;
+
+if (!section || !tagSlug || !validSections.includes(section as SectionKey)) {
+  return new Response(null, { status: 404, statusText: "Not found" });
+}
+
+const sectionKey = section as SectionKey;
+const collectionEntries = (await getCollection(sectionKey)).filter(
+  isPublishedContentEntry,
+) as ContentEntryMeta[];
+const taxonomyTags = buildSectionTags(
+  sectionKey,
+  collectionEntries.map((entry) => ({ id: entry.id, tags: entry.data.tags })),
+);
+const activeTag = taxonomyTags.find((tag) => tag.slug === tagSlug);
+
+if (!activeTag) {
+  return new Response(null, { status: 404, statusText: "Not found" });
+}
+
+const articles = collectionEntries
+  .filter((entry) =>
+    normalizeContentTags(entry.data.tags).some((tag) => tag.slug === tagSlug),
+  )
+  .map((entry) => {
+    const contentPath =
+      entry.filePath ?? `src/content/${sectionKey}/${entry.id}.mdx`;
+    const { createdAt: gitCreatedAt, updatedAt: gitUpdatedAt } =
+      getGitTimestamps(contentPath);
+    const { createdAt, updatedAt } = resolveContentDates(entry.data, {
+      createdAt: gitCreatedAt,
+      updatedAt: gitUpdatedAt,
+    });
+    const publishedAt = createdAt ?? updatedAt;
+
+    if (!publishedAt || Number.isNaN(publishedAt.getTime())) return null;
+
+    const routeSlug = resolveContentSlug(entry.id, entry.data.routeSlug);
+    return {
+      createdAt: publishedAt,
+      createdLabel: formatContentDate(publishedAt),
+      href: `/${sectionKey}/${routeSlug}/`,
+      title: resolveContentTitle(entry.id, entry.data.title),
+      year: getContentYear(publishedAt),
+    } satisfies ArchiveArticleItem;
+  })
+  .filter((article): article is ArchiveArticleItem => article !== null)
+  .sort(
+    (a, b) =>
+      b.createdAt.getTime() - a.createdAt.getTime() ||
+      a.title.localeCompare(b.title, "en-US"),
+  );
+
+const yearGroups = articles.reduce<
+  Array<{ articles: ArchiveArticleItem[]; year: string }>
+>((groups, article) => {
+  const currentGroup = groups[groups.length - 1];
+
+  if (currentGroup?.year === article.year) {
+    currentGroup.articles.push(article);
+    return groups;
+  }
+
+  groups.push({ year: article.year, articles: [article] });
+  return groups;
+}, []);
+
+const sectionLabel = sectionKey[0].toUpperCase() + sectionKey.slice(1);
+const pageLabel = `# ${activeTag.label}`;
+const seoTitle = `${pageLabel} - ${site.site.name}`;
+const seoDescription = `Browse ${sectionLabel.toLowerCase()} posts tagged ${activeTag.label}.`;
+---
+
+<SectionArchivePage
+  backHref={`/${sectionKey}/`}
+  backLabel={`Back to ${sectionLabel}`}
+  backAriaLabel={`Back to ${sectionLabel} list`}
+  pageLabel={pageLabel}
+  title={seoTitle}
+  description={seoDescription}
+  ogTitle={pageLabel}
+  taxonomyTags={taxonomyTags}
+  activeTagSlug={activeTag.slug}
+  yearGroups={yearGroups}
+/>
