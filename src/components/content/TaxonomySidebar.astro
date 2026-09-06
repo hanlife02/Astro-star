@@ -1,0 +1,50 @@
+---
+import type { SectionTag } from "../../utils/content-tags";
+import ContentTags from "./ContentTags.astro";
+import TocPanel from "./TocPanel.astro";
+
+interface TimeItem {
+  depth?: 1 | 2 | 3 | 4 | 5 | 6;
+  href: string;
+  label: string;
+}
+
+interface Props {
+  activeTagSlug?: string;
+  emptyText?: string;
+  showProgress?: boolean;
+  tags: SectionTag[];
+  timeItems: TimeItem[];
+}
+
+const {
+  activeTagSlug,
+  emptyText,
+  showProgress = true,
+  tags,
+  timeItems,
+} = Astro.props as Props;
+---
+
+<div class="content-taxonomy-sidebar" data-taxonomy-sidebar>
+  <section class="content-taxonomy-group content-taxonomy-group--time">
+    <TocPanel
+      items={timeItems}
+      title="Time"
+      emptyText={emptyText}
+      showProgress={showProgress}
+    />
+  </section>
+  {
+    tags.length > 0 && (
+      <section class="content-taxonomy-group content-taxonomy-group--tags">
+        <p class="content-toc-title">Tags</p>
+        <ContentTags
+          tags={tags}
+          variant="sidebar"
+          activeTagSlug={activeTagSlug}
+        />
+      </section>
+    )
+  }
+</div>

@@ -1,6 +1,8 @@
 ---
 import TocPanel from "../content/TocPanel.astro";
+import TaxonomySidebar from "../content/TaxonomySidebar.astro";
 import ContentShell from "./ContentShell.astro";
+import type { SectionTag } from "../../utils/content-tags";
 
 interface TocItem {
   href: string;
@@ -27,6 +29,8 @@ interface Props {
   tocEmptyText?: string;
   enableDocumentNavigation?: boolean;
   showTocProgress?: boolean;
+  taxonomyTags?: SectionTag[];
+  activeTagSlug?: string;
 }
 
 const {
@@ -48,6 +52,8 @@ const {
   tocEmptyText,
   enableDocumentNavigation = false,
   showTocProgress = true,
+  taxonomyTags,
+  activeTagSlug,
 } = Astro.props as Props;
 ---
 
@@ -71,10 +77,23 @@ const {
 >
   <slot />
 
-  <TocPanel
-    slot="toc"
-    items={tocItems}
-    emptyText={tocEmptyText}
-    showProgress={showTocProgress}
-  />
+  {
+    taxonomyTags ? (
+      <TaxonomySidebar
+        slot="toc"
+        timeItems={tocItems}
+        tags={taxonomyTags}
+        activeTagSlug={activeTagSlug}
+        emptyText={tocEmptyText}
+        showProgress={showTocProgress}
+      />
+    ) : (
+      <TocPanel
+        slot="toc"
+        items={tocItems}
+        emptyText={tocEmptyText}
+        showProgress={showTocProgress}
+      />
+    )
+  }
 </ContentShell>

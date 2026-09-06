@@ -21,6 +21,7 @@ import { resolveContentTitle } from "../../utils/content-title";
 import { isPublishedContentEntry } from "../../utils/content-visibility";
 import { getGitTimestamps } from "../../utils/git-timestamps";
 import { getWalineServerURL } from "../../utils/waline-server-url";
+import { normalizeContentTags } from "../../utils/content-tags";
 
 const validSections = ["blog", "note", "project"] as const;
 type SectionKey = (typeof validSections)[number];
@@ -83,6 +84,7 @@ const description = resolveContentDescription(
 );
 const articleType =
   (articleEntry.data as { type?: string }).type?.trim() || "Uncategorized";
+const articleTags = normalizeContentTags(articleEntry.data.tags);
 const projectUrl =
   sectionKey === "project"
     ? (articleEntry.data as { projectUrl?: string }).projectUrl?.trim() || ""
@@ -196,6 +198,10 @@ const tocHeadings = headings
   imageUrl={imageUrl}
   projectUrl={projectUrl}
   docUrl={docUrl}
+  tags={articleTags.map((tag) => ({
+    ...tag,
+    href: `/${section}/tag/${tag.slug}/`,
+  }))}
   siteName={site.site.name}
   includeKatexStyles={includeKatexStyles}
 />

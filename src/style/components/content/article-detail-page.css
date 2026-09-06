@@ -74,6 +74,29 @@ html:lang(zh-CN) .content-page--article {
   font-weight: 500;
 }
 
+.content-page-body .article-content-meta-tag {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.18s ease;
+}
+
+.content-page-body .article-content-meta-tag:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: 0.12rem;
+}
+
+@media (hover: hover) {
+  .content-page-body .article-content-meta-tag:hover {
+    color: LinkText;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .content-page-body .article-content-meta-tag {
+    transition: none;
+  }
+}
+
 .article-content-meta-separator {
   margin-inline: 0.34rem;
   color: color-mix(in srgb, var(--line) 36%, transparent);
