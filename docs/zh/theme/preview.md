@@ -18,10 +18,6 @@ order: 30
 
 ![Astro-star 博客列表](/figures/Blog.png)
 
-## 博客分类
-
-![Astro-star 博客分类](/figures/Blog-Categories.png)
-
 ## 文章详情
 
 ![Astro-star 文章详情](/figures/Content.png)

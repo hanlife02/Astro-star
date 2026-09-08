@@ -16,13 +16,11 @@ src/content/
 
 `blog` 用于博文，`note` 用于手记，`project` 用于项目，`page` 用于固定页面（如 about、links）。
 
-## 分类
+## 内容组织
 
-在 blog/ 或 note/ 下新建目录，目录名即为分类的`routeslug`，不建议使用中文。
+`blog/`、`note/` 和 `project/` 下的目录仅用于组织源文件，不会生成分类页面或分类导航。`tags` 是唯一的内容分类和导航方式。
 
-后续`type`可以使用中文作为分类名，同一目录下`type`值一定要保持一致，不然会随机选取其中的一个`type`值作为分类名。
-
-如果直接将文章置于 blog/ 或 note/ 下，则是`uncategorized`类
+可选的 `type` 字段可以继续作为文章 frontmatter 中的展示元数据保留，但不会生成分类地址。
 
 ## 文章
 
@@ -51,8 +49,8 @@ tags:
 | description | 文章描述                                              |
 | createdAt   | 创建日期，不存在时会根据 git 自动生成，一般不需要设置 |
 | updatedAt   | 更新日期，同理 createdAt ,一般不需要设置              |
-| type        | 文章分类 (project 暂时不支持 type 分类)               |
-| tags        | 可选的文章标签列表，会显示在文章页和分区导航中        |
+| type        | 可选的文章类别/展示元数据，仅保留在 frontmatter 中，不生成分类导航 |
+| tags        | 可选的文章标签列表，是唯一的内容分类和导航方式       |
 
 `tags` 必须使用 YAML 列表。系统会去除首尾空格并按不区分大小写的方式去重，每个标签都会生成稳定地址，例如 `/blog/tag/astro/`。
 
@@ -104,7 +102,7 @@ background: code-rain
 | description | 摘要，用于列表页和 SEO                        |
 | createdAt   | 创建时间，省略时从 Git 记录或文件系统时间回退 |
 | updatedAt   | 更新时间，省略时同样从 Git 记录回退           |
-| type        | 文章分类/标签展示字段                         |
+| type        | 可选的文章类别/展示元数据                    |
 | projectUrl  | 项目地址（仅项目页展示）                      |
 | docUrl      | 项目文档地址（仅项目页展示）                  |
 | image       | 社交分享图/SEO 图                             |
