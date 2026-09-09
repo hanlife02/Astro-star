@@ -12,13 +12,7 @@ interface Props {
 
 const { pathname, background } = Astro.props as Props;
 const routeRoot = pathname.split("/").filter(Boolean)[0] || "";
-const contentBackgroundRoutes = [
-  "blog",
-  "note",
-  "project",
-  "blog-archive",
-  "note-archive",
-] as const;
+const contentBackgroundRoutes = ["blog", "note", "project"] as const;
 type ContentBackgroundRoute = (typeof contentBackgroundRoutes)[number];
 const contentBackgroundSection = contentBackgroundRoutes.includes(
   routeRoot as ContentBackgroundRoute,

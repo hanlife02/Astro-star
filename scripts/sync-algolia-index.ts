@@ -36,7 +36,6 @@ const ALGOLIA_REQUEST_TIMEOUT_MS = 30_000;
 type SectionKey = (typeof VALID_SECTIONS)[number];
 
 interface Frontmatter {
-  archiveSlug?: string;
   createdAt?: string;
   description?: string;
   published?: boolean;

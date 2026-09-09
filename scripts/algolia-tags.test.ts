@@ -27,7 +27,7 @@ test("Algolia records include normalized tags and searchable tag text", () => {
   const taggedRecords = records.filter((record) =>
     record.objectID.startsWith("blog/welcome-to-astro-star"),
   );
-  const untagged = records.find(
+  const mdxRecord = records.find(
     (record) => record.objectID === "blog/mdx-rendering-formats",
   );
 
@@ -40,5 +40,5 @@ test("Algolia records include normalized tags and searchable tag text", () => {
     taggedRecords.map((record) => record.content).join(" "),
     /Astro/,
   );
-  assert.deepEqual(untagged?.tags, []);
+  assert.deepEqual(mdxRecord?.tags, ["blog", "MDX", "Template"]);
 });

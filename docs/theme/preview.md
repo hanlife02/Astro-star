@@ -18,10 +18,6 @@ Live preview: <https://hanlife02.com>
 
 ![Astro-star blog list](/figures/Blog.png)
 
-## Blog Categories
-
-![Astro-star blog categories](/figures/Blog-Categories.png)
-
 ## Article Detail
 
 ![Astro-star article detail](/figures/Content.png)

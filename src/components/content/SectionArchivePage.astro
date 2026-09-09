@@ -23,8 +23,6 @@ interface ArchiveYearGroup {
 }
 
 interface Props {
-  actionHref?: string;
-  actionLabel?: string;
   activityEntries?: ArchiveActivityEntry[];
   backAriaLabel?: string;
   backHref?: string;
@@ -39,8 +37,6 @@ interface Props {
 }
 
 const {
-  actionHref,
-  actionLabel,
   activityEntries = [],
   backAriaLabel,
   backHref,
@@ -73,26 +69,8 @@ const {
   taxonomyTags={taxonomyTags}
   activeTagSlug={activeTagSlug}
 >
-  <header class="listing-header collection-page-header">
-    <div class="listing-header-bar collection-page-header-bar">
-      <h1 class="listing-header-title collection-page-title">{pageLabel}</h1>
-      {
-        actionHref && actionLabel && (
-          <a
-            class="listing-view-all-link collection-page-view-all-link"
-            href={actionHref}
-          >
-            <span class="listing-view-all-link-text collection-page-view-all-link-text">
-              {actionLabel}
-            </span>
-            <span
-              class="listing-view-all-link-arrow collection-page-view-all-link-arrow"
-              aria-hidden="true"
-            />
-          </a>
-        )
-      }
-    </div>
+  <header class="collection-page-header">
+    <h1 class="collection-page-title">{pageLabel}</h1>
   </header>
 
   {

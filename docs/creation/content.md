@@ -16,13 +16,11 @@ src/content/
 
 `blog` is for blog posts, `note` is for notes, `project` is for projects, and `page` is for fixed pages (e.g. about, links).
 
-## Categories
+## Content Organization
 
-Create a new directory under `blog/` or `note/`. The directory name becomes the category `routeSlug`. Using Chinese characters is not recommended.
+Directories under `blog/`, `note/`, and `project/` organize source files only. They do not create category pages or category navigation. Use `tags` as the only content classification and navigation system.
 
-The `type` field can use Chinese as the category name. Within the same directory, the `type` value must remain consistent; otherwise, one of the values will be randomly selected as the category name.
-
-If articles are placed directly under `blog/` or `note/`, they will be classified as `uncategorized`.
+The optional `type` field may be kept as article display metadata in frontmatter, but it does not create a category route.
 
 ## Articles
 
@@ -51,8 +49,8 @@ tags:
 | description | Article description                                                                 |
 | createdAt   | Creation date. Auto-generated from git if absent; generally not needed              |
 | updatedAt   | Update date. Same as `createdAt`; generally not needed                              |
-| type        | Article category (`project` does not currently support `type`-based categories)     |
-| tags        | Optional list of article tags. Tags are shown on the article and section navigation |
+| type        | Optional article category/display metadata; retained in frontmatter without navigation |
+| tags        | Optional list of article tags; the only content classification and navigation system |
 
 `tags` must be a YAML list. Values are trimmed and deduplicated case-insensitively; each tag gets a stable URL such as `/blog/tag/astro/`.
 
@@ -104,7 +102,7 @@ background: code-rain
 | description | Summary, used in list pages and SEO                         |
 | createdAt   | Creation time, falls back to Git record or file system time |
 | updatedAt   | Update time, same fallback as `createdAt`                   |
-| type        | Article category/display tag                                |
+| type        | Optional article category/display metadata                  |
 | projectUrl  | Project URL (only shown on project page)                    |
 | docUrl      | Project docs URL (only shown on project page)               |
 | image       | Social share image / SEO image                              |

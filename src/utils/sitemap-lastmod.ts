@@ -3,11 +3,7 @@ import { extname, join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { SitemapItem } from "@astrojs/sitemap";
 import { resolveContentDates } from "./content-dates";
-import {
-  normalizeArchiveSlug,
-  resolveContentSlug,
-  slugifyCategoryLabel,
-} from "./content-slug";
+import { resolveContentSlug } from "./content-slug";
 import { getLoaderEntryId } from "./loader-entry-id";
 
 type Frontmatter = Record<string, boolean | number | string | undefined>;
@@ -17,7 +13,6 @@ type GitTimestampManifest = Record<
 >;
 
 const CONTENT_COLLECTIONS = ["blog", "note", "project"] as const;
-const ARCHIVE_COLLECTIONS = ["blog", "note"] as const;
 const PROJECT_ROOT = fileURLToPath(new URL("../../", import.meta.url));
 const CONTENT_ROOT = join(PROJECT_ROOT, "src", "content");
 const GIT_TIMESTAMPS_PATH = join(
@@ -28,25 +23,17 @@ const GIT_TIMESTAMPS_PATH = join(
 );
 
 interface ContentRouteEntry {
-  archiveSlug?: string;
   collection: "blog" | "note" | "page" | "project";
   date: Date;
   id: string;
   path: string;
   routeSlug?: number | string;
-  type?: string;
 }
 
 function isContentCollection(
   collection: ContentRouteEntry["collection"],
 ): collection is (typeof CONTENT_COLLECTIONS)[number] {
   return CONTENT_COLLECTIONS.some((item) => item === collection);
-}
-
-function isArchiveCollection(
-  collection: ContentRouteEntry["collection"],
-): collection is (typeof ARCHIVE_COLLECTIONS)[number] {
-  return ARCHIVE_COLLECTIONS.some((item) => item === collection);
 }
 
 function isValidDate(value: Date | null): value is Date {
@@ -154,21 +141,6 @@ function getContentPath(path: string) {
   return relative(PROJECT_ROOT, path).split(sep).join("/");
 }
 
-function getArchiveSlug(collection: "blog" | "note", entry: ContentRouteEntry) {
-  const directoryArchiveSlug = normalizeArchiveSlug(
-    entry.id.split("/").slice(0, -1).at(-1),
-  );
-  const label = entry.type || directoryArchiveSlug || "Uncategorized";
-
-  return (
-    (collection === "blog" ? directoryArchiveSlug : "") ||
-    normalizeArchiveSlug(entry.archiveSlug) ||
-    directoryArchiveSlug ||
-    slugifyCategoryLabel(label) ||
-    "uncategorized"
-  );
-}
-
 function setLatest(map: Map<string, Date>, path: string, date: Date) {
   const existing = map.get(path);
 
@@ -214,7 +186,6 @@ function getEntries() {
 
     return [
       {
-        archiveSlug: getStringFrontmatterValue(frontmatter.archiveSlug),
         collection: collection as ContentRouteEntry["collection"],
         date,
         id: getContentId(
@@ -224,7 +195,6 @@ function getEntries() {
         ),
         path: contentPath,
         routeSlug: getSlugFrontmatterValue(frontmatter.routeSlug),
-        type: getStringFrontmatterValue(frontmatter.type),
       } satisfies ContentRouteEntry,
     ];
   });
@@ -247,16 +217,6 @@ export function createSitemapLastmodSerializer(siteUrl: string) {
     setLatest(lastmodByPath, `/${entry.collection}/${slug}/`, entry.date);
     setLatest(lastmodByPath, `/${entry.collection}/`, entry.date);
     setLatest(lastmodByPath, "/", entry.date);
-
-    if (isArchiveCollection(entry.collection)) {
-      const archiveSlug = getArchiveSlug(entry.collection, entry);
-      setLatest(lastmodByPath, `/${entry.collection}-archive/`, entry.date);
-      setLatest(
-        lastmodByPath,
-        `/${entry.collection}-archive/${archiveSlug}/`,
-        entry.date,
-      );
-    }
   }
 
   const lastmodByUrl = new Map(

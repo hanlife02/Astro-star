@@ -2,20 +2,14 @@
 import "../../style/components/background/content-background.css";
 
 type ContentBackgroundBaseSection = "blog" | "note" | "project";
-type ContentBackgroundSection =
-  | ContentBackgroundBaseSection
-  | "blog-archive"
-  | "note-archive";
+type ContentBackgroundSection = ContentBackgroundBaseSection;
 
 interface Props {
   section?: ContentBackgroundSection;
 }
 
 const { section = "blog" } = Astro.props satisfies Props;
-const contentSection = section.replace(
-  "-archive",
-  "",
-) as ContentBackgroundBaseSection;
+const contentSection = section;
 ---
 
 <div
