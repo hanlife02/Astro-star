@@ -23,6 +23,8 @@ const pageSchema = z.object({
   title: z.string().min(1),
   heading: z.string().optional(),
   description: z.string().optional(),
+  createdAt: z.union([z.string(), z.date()]).optional(),
+  updatedAt: z.union([z.string(), z.date()]).optional(),
   background: z
     .enum(["home", "code-rain", "constellation", "content"])
     .optional(),

@@ -1,0 +1,86 @@
+---
+import type { ContentTag } from "../../utils/content-tags";
+
+interface Props {
+  ariaLabel?: string;
+  contentType?: string;
+  createdLabel: string;
+  updatedLabel: string;
+  routePath: string;
+  walineServerURL?: string;
+  wordCount: number;
+  tags?: Array<ContentTag & { href: string }>;
+}
+
+const {
+  ariaLabel = "Content metadata",
+  contentType = "",
+  createdLabel,
+  updatedLabel,
+  routePath,
+  walineServerURL = "",
+  wordCount,
+  tags = [],
+} = Astro.props as Props;
+---
+
+<div class="article-content-meta" aria-label={ariaLabel}>
+  {
+    contentType && (
+      <p class="article-content-meta-line">
+        <span class="article-content-meta-label">Type</span>{" "}
+        <span class="article-content-meta-value">{contentType}</span>
+      </p>
+    )
+  }
+  <p class="article-content-meta-line">
+    <span class="article-content-meta-label">Created</span>{" "}
+    <span class="article-content-meta-value">{createdLabel}</span>
+    <span class="article-content-meta-separator">/</span>
+    <span class="article-content-meta-label">Updated</span>{" "}
+    <span class="article-content-meta-value">{updatedLabel}</span>
+  </p>
+  <p class="article-content-meta-line">
+    <span class="article-content-meta-label">Views</span>{" "}
+    <span
+      class="article-content-meta-value waline-pageview-count"
+      data-path={routePath}
+      data-server-url={walineServerURL}
+    >
+      —
+    </span>
+    <span class="article-content-meta-separator">/</span>
+    <span class="article-content-meta-label">Comments</span>{" "}
+    <span
+      class="article-content-meta-value waline-comment-count"
+      data-path={routePath}
+      data-server-url={walineServerURL}
+    >
+      —
+    </span>
+    <span class="article-content-meta-separator">/</span>
+    <span class="article-content-meta-label">Words</span>{" "}
+    <span class="article-content-meta-value"
+      >{wordCount.toLocaleString("en-US")}</span
+    >
+  </p>
+  {
+    tags.length > 0 && (
+      <p class="article-content-meta-line">
+        <span class="article-content-meta-label">Tags</span>{" "}
+        <span class="article-content-meta-value article-content-meta-tags-value">
+          {tags.map((tag, index) => (
+            <Fragment>
+              {index > 0 && ", "}
+              <a class="article-content-meta-tag" href={tag.href}>
+                <strong>
+                  <em>{tag.label}</em>
+                </strong>
+              </a>
+            </Fragment>
+          ))}
+        </span>
+      </p>
+    )
+  }
+</div>
