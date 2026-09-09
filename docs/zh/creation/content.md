@@ -42,15 +42,15 @@ tags:
 ---
 ```
 
-| Variables   | 说明                                                  |
-| ----------- | ----------------------------------------------------- |
-| routeSlug   | 命名文章 URL 的末尾                                   |
-| title       | 文章标题                                              |
-| description | 文章描述                                              |
-| createdAt   | 创建日期，不存在时会根据 git 自动生成，一般不需要设置 |
-| updatedAt   | 更新日期，同理 createdAt ,一般不需要设置              |
+| Variables   | 说明                                                               |
+| ----------- | ------------------------------------------------------------------ |
+| routeSlug   | 命名文章 URL 的末尾                                                |
+| title       | 文章标题                                                           |
+| description | 文章描述                                                           |
+| createdAt   | 创建日期，不存在时会根据 git 自动生成，一般不需要设置              |
+| updatedAt   | 更新日期，同理 createdAt ,一般不需要设置                           |
 | type        | 可选的文章类别/展示元数据，仅保留在 frontmatter 中，不生成分类导航 |
-| tags        | 可选的文章标签列表，是唯一的内容分类和导航方式       |
+| tags        | 可选的文章标签列表，是唯一的内容分类和导航方式                     |
 
 `tags` 必须使用 YAML 列表。系统会去除首尾空格并按不区分大小写的方式去重，每个标签都会生成稳定地址，例如 `/blog/tag/astro/`。
 
@@ -102,7 +102,7 @@ background: code-rain
 | description | 摘要，用于列表页和 SEO                        |
 | createdAt   | 创建时间，省略时从 Git 记录或文件系统时间回退 |
 | updatedAt   | 更新时间，省略时同样从 Git 记录回退           |
-| type        | 可选的文章类别/展示元数据                    |
+| type        | 可选的文章类别/展示元数据                     |
 | projectUrl  | 项目地址（仅项目页展示）                      |
 | docUrl      | 项目文档地址（仅项目页展示）                  |
 | image       | 社交分享图/SEO 图                             |

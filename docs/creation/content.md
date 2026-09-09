@@ -42,15 +42,15 @@ tags:
 ---
 ```
 
-| Variables   | Description                                                                         |
-| ----------- | ----------------------------------------------------------------------------------- |
-| routeSlug   | Defines the end of the article URL                                                  |
-| title       | Article title                                                                       |
-| description | Article description                                                                 |
-| createdAt   | Creation date. Auto-generated from git if absent; generally not needed              |
-| updatedAt   | Update date. Same as `createdAt`; generally not needed                              |
+| Variables   | Description                                                                            |
+| ----------- | -------------------------------------------------------------------------------------- |
+| routeSlug   | Defines the end of the article URL                                                     |
+| title       | Article title                                                                          |
+| description | Article description                                                                    |
+| createdAt   | Creation date. Auto-generated from git if absent; generally not needed                 |
+| updatedAt   | Update date. Same as `createdAt`; generally not needed                                 |
 | type        | Optional article category/display metadata; retained in frontmatter without navigation |
-| tags        | Optional list of article tags; the only content classification and navigation system |
+| tags        | Optional list of article tags; the only content classification and navigation system   |
 
 `tags` must be a YAML list. Values are trimmed and deduplicated case-insensitively; each tag gets a stable URL such as `/blog/tag/astro/`.
 
