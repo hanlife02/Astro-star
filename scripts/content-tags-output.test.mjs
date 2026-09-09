@@ -165,22 +165,23 @@ test("tagged articles render inline metadata and tag-backed metadata", () => {
   assert.ok(jsonLd.keywords.includes("Template"));
 });
 
-test("articles without tags render no tag block or tag metadata", () => {
+test("all published blog examples render their tag metadata", () => {
   const document = readPage("blog/mdx-rendering-formats");
   assert.equal(
     findOne(document, (node) => hasClass(node, "content-tags--article")),
     undefined,
   );
-  assert.equal(
-    findOne(
-      document,
-      (node) =>
-        node.tagName === "meta" &&
-        (getAttribute(node, "name") === "keywords" ||
-          getAttribute(node, "property") === "article:tag"),
-    ),
-    undefined,
+
+  const keywords = findOne(
+    document,
+    (node) =>
+      node.tagName === "meta" && getAttribute(node, "name") === "keywords",
   );
+  assert.deepEqual(getAttribute(keywords, "content")?.split(", "), [
+    "blog",
+    "MDX",
+    "Template",
+  ]);
 });
 
 test("tag archives are included in the generated sitemap", () => {
