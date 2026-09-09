@@ -102,6 +102,7 @@ const {
             {contentDescription && (
               <p class="content-page-description">{contentDescription}</p>
             )}
+            <slot name="header-meta" />
           </header>
         )}
         <DocumentContent />
@@ -119,6 +120,7 @@ const {
             {contentDescription && (
               <p class="content-page-description">{contentDescription}</p>
             )}
+            <slot name="header-meta" />
           </header>
         )}
         <DocumentContent />

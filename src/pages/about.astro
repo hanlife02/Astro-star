@@ -1,8 +1,13 @@
 ---
 import { getCollection, render } from "astro:content";
 import DocumentDetailPage from "../components/content/DocumentDetailPage.astro";
+import ContentMetadata from "../components/content/ContentMetadata.astro";
 import WalineComments from "../components/content/WalineComments.astro";
 import { site } from "../config/site";
+import { resolveContentDates } from "../utils/content-dates";
+import { formatContentDateTime } from "../utils/content-time-zone";
+import { countContentWords } from "../utils/content-word-count";
+import { getGitTimestamps } from "../utils/git-timestamps";
 import { getWalineServerURL } from "../utils/waline-server-url";
 
 export const prerender = true;
@@ -26,6 +31,18 @@ const contentTitleId = pageEntry.id;
 const pageRoutePath = "/about/";
 const canonicalUrl = new URL(pageRoutePath, site.site.url).toString();
 const walineServerURL = getWalineServerURL();
+const pageSource = pageEntry.body ?? "";
+const contentPath = pageEntry.filePath ?? "src/content/page/about.mdx";
+const { createdAt: gitCreatedAt, updatedAt: gitUpdatedAt } =
+  getGitTimestamps(contentPath);
+const { createdAt, updatedAt } = resolveContentDates(pageEntry.data, {
+  createdAt: gitCreatedAt,
+  updatedAt: gitUpdatedAt,
+});
+const formatDateTime = (value: Date | null) =>
+  value && !Number.isNaN(value.getTime())
+    ? formatContentDateTime(value)
+    : "Unknown";
 const tocHeadings = [
   {
     depth: 1 as const,
@@ -57,6 +74,15 @@ const tocHeadings = [
   tocHeadings={tocHeadings}
   DocumentContent={Content}
 >
+  <ContentMetadata
+    slot="header-meta"
+    ariaLabel="About page metadata"
+    createdLabel={formatDateTime(createdAt)}
+    updatedLabel={formatDateTime(updatedAt)}
+    routePath={pageRoutePath}
+    walineServerURL={walineServerURL}
+    wordCount={countContentWords(pageSource)}
+  />
   <WalineComments
     slot="after-content"
     articleRoutePath={pageRoutePath}

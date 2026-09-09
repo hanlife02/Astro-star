@@ -1,6 +1,7 @@
 ---
 import DocumentDetailPage from "./DocumentDetailPage.astro";
 import ArticleActionCard from "./ArticleActionCard.astro";
+import ContentMetadata from "./ContentMetadata.astro";
 import WalineComments from "./WalineComments.astro";
 import Icon from "../ui/Icon.astro";
 import GithubIcon from "../ui/icons/GithubIcon.astro";
@@ -182,62 +183,16 @@ const projectLinks = [
   <header slot="before-content" class="article-content-header">
     <h1 class="article-content-title">{title}</h1>
     {description && <p class="article-content-description">{description}</p>}
-    <div class="article-content-meta" aria-label="Article metadata">
-      <p class="article-content-meta-line">
-        <span class="article-content-meta-label">Type</span>{" "}
-        <span class="article-content-meta-value">{articleType}</span>
-      </p>
-      <p class="article-content-meta-line">
-        <span class="article-content-meta-label">Created</span>{" "}
-        <span class="article-content-meta-value">{createdLabel}</span>
-        <span class="article-content-meta-separator">/</span>
-        <span class="article-content-meta-label">Updated</span>{" "}
-        <span class="article-content-meta-value">{updatedLabel}</span>
-      </p>
-      <p class="article-content-meta-line">
-        <span class="article-content-meta-label">Views</span>{" "}
-        <span
-          class="article-content-meta-value waline-pageview-count"
-          data-path={articleRoutePath}
-          data-server-url={walineServerURL}
-        >
-          —
-        </span>
-        <span class="article-content-meta-separator">/</span>
-        <span class="article-content-meta-label">Comments</span>{" "}
-        <span
-          class="article-content-meta-value waline-comment-count"
-          data-path={articleRoutePath}
-          data-server-url={walineServerURL}
-        >
-          —
-        </span>
-        <span class="article-content-meta-separator">/</span>
-        <span class="article-content-meta-label">Words</span>{" "}
-        <span class="article-content-meta-value"
-          >{articleWordCount.toLocaleString("en-US")}</span
-        >
-      </p>
-      {
-        tags.length > 0 && (
-          <p class="article-content-meta-line">
-            <span class="article-content-meta-label">Tags</span>{" "}
-            <span class="article-content-meta-value article-content-meta-tags-value">
-              {tags.map((tag, index) => (
-                <Fragment>
-                  {index > 0 && ", "}
-                  <a class="article-content-meta-tag" href={tag.href}>
-                    <strong>
-                      <em>{tag.label}</em>
-                    </strong>
-                  </a>
-                </Fragment>
-              ))}
-            </span>
-          </p>
-        )
-      }
-    </div>
+    <ContentMetadata
+      ariaLabel="Article metadata"
+      contentType={articleType}
+      createdLabel={createdLabel}
+      updatedLabel={updatedLabel}
+      routePath={articleRoutePath}
+      walineServerURL={walineServerURL}
+      wordCount={articleWordCount}
+      tags={tags}
+    />
   </header>
 
   <Fragment slot="after-content">

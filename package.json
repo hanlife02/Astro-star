@@ -1,7 +1,7 @@
 {
   "name": "Astro-star",
   "type": "module",
-  "version": "0.23.3",
+  "version": "0.24.0",
   "license": "MIT",
   "packageManager": "pnpm@11.15.1",
   "scripts": {
@@ -11,7 +11,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
-    "verify": "pnpm check && pnpm test:content-tags && pnpm test:performance-policy && pnpm test:deployment-policy && pnpm format:check && pnpm build && pnpm test:content-tags-output && pnpm run audit:content && pnpm run audit:assets && pnpm run audit:deps",
+    "verify": "pnpm check && pnpm test:content-tags && pnpm test:performance-policy && pnpm test:deployment-policy && pnpm format:check && pnpm build && pnpm test:content-tags-output && pnpm test:fixed-page-metadata-output && pnpm run audit:content && pnpm run audit:assets && pnpm run audit:deps",
     "astro": "astro",
     "algolia:sync": "tsx scripts/sync-algolia-index.ts",
     "generate:signature": "tsx scripts/generate-signature-asset.ts",
@@ -20,6 +20,7 @@
     "audit:deps": "pnpm audit --registry=https://registry.npmjs.org --audit-level moderate --ignore-registry-errors",
     "test:content-tags": "node --import tsx --test scripts/content-tags.test.ts scripts/rss-tags.test.ts scripts/algolia-tags.test.ts scripts/content-category-removal.test.mjs",
     "test:content-tags-output": "node --test scripts/content-tags-output.test.mjs",
+    "test:fixed-page-metadata-output": "node --test scripts/fixed-page-metadata-output.test.mjs",
     "test:performance-policy": "node --import tsx --test scripts/font-loading-policy.test.mjs scripts/theme-loading-policy.test.mjs scripts/home-loading-policy.test.mjs scripts/codetime-loading-policy.test.mjs scripts/site-asset-policy.test.mjs scripts/home-prerender-policy.test.mjs scripts/friend-link-loading-policy.test.mjs scripts/content-code-block-policy.test.mjs scripts/content-video-policy.test.mjs scripts/content-video-player.test.mjs scripts/content-video-loading-policy.test.mjs scripts/inline-homepage-styles.test.mjs",
     "test:deployment-policy": "node --test scripts/codetime-deployment-policy.test.mjs scripts/cdn-deployment-policy.test.mjs",
     "migrate:content": "node scripts/migrate-legacy-content.mjs",
