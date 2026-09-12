@@ -1666,7 +1666,7 @@ html:lang(zh-CN) .content-page--article {
 
   .article-neighbor--next {
     grid-column: 1;
-    justify-content: flex-start;
-    text-align: start;
+    justify-content: flex-end;
+    text-align: end;
   }
 }
