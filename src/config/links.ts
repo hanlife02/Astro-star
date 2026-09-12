@@ -200,6 +200,18 @@ export const friendLinks = [
     href: "https://fomalhaut647.com/",
     avatarSrc: "/friend-avatars/29-friend.webp",
   },
+  {
+    name: "羽衣草",
+    description: "温暖的具体",
+    href: "https://hdnsmantle.com/",
+    avatarSrc: "https://hdnsmantle.com/images/avatar.png",
+  },
+  {
+    name: "尘末ChenM0M",
+    description: "相信的心就是你的魔法！",
+    href: "https://cmoms.top/",
+    avatarSrc: "https://cmoms.top/avatar.webp",
+  },
 ] satisfies readonly FriendLinkItem[];
 
 export const lostLinks = [
