@@ -186,7 +186,7 @@ export const friendLinks = [
     name: "雨缄信笺",
     description: "倚楼听风雨，淡看江湖路",
     href: "https://rain-sealedletter.top",
-    avatarSrc: "/friend-avatars/27-friend.webp",
+    avatarSrc: "https://blog.rain-sealedletter.top/img/avatar.png",
   },
   {
     name: "LanM",
