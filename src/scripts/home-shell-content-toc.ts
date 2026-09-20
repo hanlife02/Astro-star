@@ -34,6 +34,7 @@ export function initHomeShellContentToc() {
   const toc = document.querySelector("[data-home-shell-content-toc]");
   const tocList = toc?.querySelector(".content-toc-list");
   const tocProgress = toc?.querySelector("[data-content-toc-progress]");
+  const tocHighlight = toc?.querySelector("[data-content-toc-highlight]");
   const motionMedia = window.matchMedia(REDUCED_MOTION_MEDIA_QUERY);
 
   if (
@@ -157,6 +158,9 @@ export function initHomeShellContentToc() {
 
     if (!firstEntry || !lastEntry) {
       tocProgress.style.setProperty("--content-toc-progress-opacity", "0");
+      if (tocHighlight instanceof HTMLElement) {
+        tocHighlight.style.setProperty("--content-toc-highlight-opacity", "0");
+      }
       return;
     }
 
@@ -181,6 +185,20 @@ export function initHomeShellContentToc() {
       `${Math.max(0, height)}px`,
     );
     tocProgress.style.setProperty("--content-toc-progress-opacity", "1");
+
+    if (tocHighlight instanceof HTMLElement) {
+      const highlightTop = clampProgressPosition(rawTop - 6, maxTop);
+      const highlightBottom = clampProgressPosition(rawBottom + 6, listHeight);
+      tocHighlight.style.setProperty(
+        "--content-toc-highlight-top",
+        `${highlightTop}px`,
+      );
+      tocHighlight.style.setProperty(
+        "--content-toc-highlight-height",
+        `${Math.max(0, highlightBottom - highlightTop)}px`,
+      );
+      tocHighlight.style.setProperty("--content-toc-highlight-opacity", "1");
+    }
   };
 
   const setActiveEntry = (
