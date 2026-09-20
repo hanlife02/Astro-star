@@ -23,7 +23,7 @@
 .content-toc-list {
   list-style: none;
   margin: 0;
-  padding: 0;
+  padding: 0.4rem 0;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -55,6 +55,25 @@
   transition:
     opacity 0.18s ease,
     transform 0.22s ease;
+}
+
+.content-toc-highlight {
+  --content-toc-highlight-top: 0px;
+  --content-toc-highlight-height: 0px;
+  --content-toc-highlight-opacity: 0;
+  position: absolute;
+  left: 0.15rem;
+  right: 0.15rem;
+  top: var(--content-toc-highlight-top);
+  height: var(--content-toc-highlight-height);
+  border-radius: 0.45rem;
+  background: color-mix(in srgb, var(--line) 9%, transparent);
+  opacity: var(--content-toc-highlight-opacity);
+  pointer-events: none;
+  transition:
+    top 0.18s cubic-bezier(0.22, 1, 0.36, 1),
+    height 0.18s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.18s ease;
 }
 
 .content-toc-progress-track,
@@ -129,6 +148,9 @@ html[data-js="true"]
   .content-toc-empty,
 html[data-js="true"]
   .content-toc[data-content-entrance-enabled="true"][data-toc-entrance="ready"]
+  .content-toc-highlight,
+html[data-js="true"]
+  .content-toc[data-content-entrance-enabled="true"][data-toc-entrance="ready"]
   .content-toc-progress,
 html[data-js="true"]
   .content-toc[data-content-entrance-enabled="true"][data-toc-entrance="ready"]
@@ -174,6 +196,9 @@ html[data-js="true"]
 html[data-js="true"]
   .content-toc[data-content-entrance-enabled="true"][data-toc-entrance="entered"]
   .content-toc-empty,
+html[data-js="true"]
+  .content-toc[data-content-entrance-enabled="true"][data-toc-entrance="entered"]
+  .content-toc-highlight,
 html[data-js="true"]
   .content-toc[data-content-entrance-enabled="true"][data-toc-entrance="entered"]
   .content-toc-progress,
@@ -277,7 +302,7 @@ html[data-js="true"]
 }
 
 .content-toc-link.is-active {
-  color: var(--line);
+  color: LinkText;
   opacity: 1;
   transform: translateX(0);
 }
@@ -291,6 +316,9 @@ html[data-js="true"]
     .content-toc-empty,
   html[data-js="true"]
     .content-toc[data-content-entrance-enabled="true"][data-toc-entrance="ready"]
+    .content-toc-highlight,
+  html[data-js="true"]
+    .content-toc[data-content-entrance-enabled="true"][data-toc-entrance="ready"]
     .content-toc-progress,
   html[data-js="true"]
     .content-toc[data-content-entrance-enabled="true"][data-toc-entrance="ready"]
@@ -301,6 +329,9 @@ html[data-js="true"]
   html[data-js="true"]
     .content-toc[data-content-entrance-enabled="true"][data-toc-entrance="entered"]
     .content-toc-empty,
+  html[data-js="true"]
+    .content-toc[data-content-entrance-enabled="true"][data-toc-entrance="entered"]
+    .content-toc-highlight,
   html[data-js="true"]
     .content-toc[data-content-entrance-enabled="true"][data-toc-entrance="entered"]
     .content-toc-progress,
