@@ -217,16 +217,18 @@ html:lang(zh-CN) .content-page--article {
 }
 
 .article-comments-thread {
-  --comment-font-size: 13.2px;
-  --comment-body-font-size: 13.2px;
-  --comment-nick-font-size: 13.3px;
-  --comment-meta-font-size: 11.2px;
-  --comment-child-body-font-size: 13px;
-  --comment-child-nick-font-size: 13.1px;
-  --comment-child-meta-font-size: 11px;
-  --comment-button-font-size: 11.4px;
-  --comment-action-font-size: 13px;
-  --comment-count-font-size: 13.2px;
+  /* Comment typography is derived from article body text so it scales with
+     the viewport instead of staying pinned at a fixed px size. */
+  --comment-font-size: var(--type-content-body);
+  --comment-body-font-size: var(--type-content-body);
+  --comment-nick-font-size: calc(var(--type-content-body) - 0.05rem);
+  --comment-meta-font-size: calc(var(--type-content-body) * 0.8);
+  --comment-child-body-font-size: calc(var(--type-content-body) - 0.15rem);
+  --comment-child-nick-font-size: calc(var(--type-content-body) - 0.1rem);
+  --comment-child-meta-font-size: calc(var(--type-content-body) * 0.77);
+  --comment-button-font-size: calc(var(--type-content-body) * 0.8);
+  --comment-action-font-size: calc(var(--type-content-body) - 0.1rem);
+  --comment-count-font-size: var(--type-content-body);
   --comment-thread-gap: 0.68rem;
   --comment-panel-offset: 0.55rem;
   --comment-editor-min-height: 5.65rem;
@@ -1002,16 +1004,6 @@ html:lang(zh-CN) .content-page--article {
 
 @media (min-width: 1280px) {
   .article-comments-thread {
-    --comment-font-size: 13.4px;
-    --comment-body-font-size: 13.45px;
-    --comment-nick-font-size: 13.55px;
-    --comment-meta-font-size: 11.35px;
-    --comment-child-body-font-size: 13.2px;
-    --comment-child-nick-font-size: 13.3px;
-    --comment-child-meta-font-size: 11.1px;
-    --comment-button-font-size: 11.6px;
-    --comment-action-font-size: 13.4px;
-    --comment-count-font-size: 13.45px;
     --comment-thread-gap: 0.74rem;
     --comment-panel-offset: 0.58rem;
     --comment-editor-min-height: 5.85rem;
@@ -1032,16 +1024,6 @@ html:lang(zh-CN) .content-page--article {
   }
 
   .article-comments-thread {
-    --comment-font-size: 13px;
-    --comment-body-font-size: 13px;
-    --comment-nick-font-size: 13.1px;
-    --comment-meta-font-size: 11px;
-    --comment-child-body-font-size: 12.8px;
-    --comment-child-nick-font-size: 12.9px;
-    --comment-child-meta-font-size: 10.8px;
-    --comment-button-font-size: 11.2px;
-    --comment-action-font-size: 12.8px;
-    --comment-count-font-size: 13px;
     --comment-thread-gap: 0.62rem;
     --comment-panel-offset: 0.48rem;
     --comment-editor-min-height: 5.35rem;
@@ -1065,16 +1047,6 @@ html:lang(zh-CN) .content-page--article {
 
 @media (max-width: 580px) {
   .article-comments-thread {
-    --comment-font-size: 12.7px;
-    --comment-body-font-size: 12.7px;
-    --comment-nick-font-size: 12.8px;
-    --comment-meta-font-size: 10.7px;
-    --comment-child-body-font-size: 12.5px;
-    --comment-child-nick-font-size: 12.6px;
-    --comment-child-meta-font-size: 10.5px;
-    --comment-button-font-size: 10.9px;
-    --comment-action-font-size: 12.5px;
-    --comment-count-font-size: 12.7px;
     --comment-thread-gap: 0.56rem;
     --comment-panel-offset: 0.38rem;
     --comment-editor-min-height: 5.1rem;
@@ -1136,16 +1108,6 @@ html:lang(zh-CN) .content-page--article {
   }
 
   .article-comments-thread {
-    --comment-font-size: 12.4px;
-    --comment-body-font-size: 12.4px;
-    --comment-nick-font-size: 12.5px;
-    --comment-meta-font-size: 10.5px;
-    --comment-child-body-font-size: 12.2px;
-    --comment-child-nick-font-size: 12.3px;
-    --comment-child-meta-font-size: 10.3px;
-    --comment-button-font-size: 10.7px;
-    --comment-action-font-size: 12.2px;
-    --comment-count-font-size: 12.4px;
     --comment-panel-offset: 0;
     --comment-editor-min-height: 4.9rem;
     --comment-editor-margin: 0.38rem;

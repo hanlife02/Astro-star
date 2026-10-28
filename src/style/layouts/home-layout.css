@@ -477,7 +477,9 @@
   position: relative;
   z-index: 2;
   padding: clamp(0.55rem, 1vw, 0.85rem);
-  padding-top: clamp(0.55rem, 1.5vw, 1.85rem);
+  /* Same breathing room above the rule as below it, so the line sits evenly
+     between the content above and the footer row. */
+  padding-top: clamp(0.8rem, 1.5vw, 1.4rem);
   border-top: 1px solid var(--line-soft);
   display: flex;
   align-items: center;
@@ -567,7 +569,9 @@
     align-items: flex-end;
     flex-wrap: nowrap;
     justify-content: flex-start;
-    padding-top: clamp(0rem, 0vw, 1.05rem);
+    /* Compact rule-to-row gap; the clearance above the icons comes from this
+       plus the optical padding on .footer-meta-line. */
+    padding-top: clamp(0.15rem, 0.35vw, 0.35rem);
   }
 
   .footer-info {

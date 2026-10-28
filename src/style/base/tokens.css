@@ -13,9 +13,23 @@
   --radius-sm: 0.5rem;
   --radius-md: 1rem;
   --font-size-base: clamp(0.9375rem, 1.35vw, 1.8rem);
-  --type-xs: clamp(12.5px, 0.62rem + 0.08vw, 15px);
-  --type-sm: clamp(14px, 0.72rem + 0.1vw, 17px);
-  --type-base: clamp(15.5px, 0.78rem + 0.12vw, 19px);
+  /* Small type tracks the root font size so it keeps scaling on large
+     displays, while max() keeps it from shrinking below a readable floor. */
+  --type-xs: clamp(
+    max(12.5px, calc(var(--font-size-base) * 0.66)),
+    0.62rem + 0.08vw,
+    calc(var(--font-size-base) * 0.8)
+  );
+  --type-sm: clamp(
+    max(14px, calc(var(--font-size-base) * 0.76)),
+    0.72rem + 0.1vw,
+    calc(var(--font-size-base) * 0.92)
+  );
+  --type-base: clamp(
+    max(15.5px, calc(var(--font-size-base) * 0.84)),
+    0.78rem + 0.12vw,
+    calc(var(--font-size-base) * 1.02)
+  );
   --type-md: clamp(17px, 0.9rem + 0.14vw, 21px);
   --type-lg: clamp(20px, 1.05rem + 0.2vw, 26px);
   --type-xl: clamp(26px, 1.35rem + 0.32vw, 36px);

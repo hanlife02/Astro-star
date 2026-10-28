@@ -9,9 +9,17 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem 0.65rem;
-  font-size: var(--type-xs);
-  line-height: 1.3;
-  color: var(--line-soft);
+  /* Scales with the root font size on large displays while keeping a
+     readable floor on small ones. Tuned a little larger than the generic
+     small-type tokens so the legal/ICP line stays legible on high-DPI
+     monitors. */
+  font-size: clamp(
+    max(12.5px, calc(var(--font-size-base) * 0.74)),
+    0.6rem + 0.34vw,
+    calc(var(--font-size-base) * 0.84)
+  );
+  line-height: 1.4;
+  color: var(--text-muted);
   text-align: center;
 }
 
@@ -62,6 +70,16 @@
     align-items: flex-end;
     justify-content: flex-start;
     text-align: left;
+    /* The icon buttons keep their original large size and sit on the footer
+       baseline; this nudges the text up to their optical center so the two
+       read as one balanced row. */
+    /* Small breathing room above the row, mirrored in the centring math
+       below so the text stays optically aligned with the icons. */
+    padding-top: clamp(0.05rem, 0.18em, 0.3rem);
+    padding-bottom: calc(
+      (var(--icon-btn-size) - var(--icon-size)) / 2 - 0.05em -
+        clamp(0.05rem, 0.18em, 0.3rem)
+    );
   }
 
   .footer-meta-link {
