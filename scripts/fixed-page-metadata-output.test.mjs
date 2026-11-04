@@ -63,3 +63,23 @@ test("about and links render dates, counters, and word counts in their headers",
     }
   }
 });
+
+test("About contact links render existing icons and labels from their destinations", () => {
+  const document = readPage("about");
+  const contacts = findAll(document, (node) => hasClass(node, "contact-link"));
+  assert.ok(contacts.length >= 2, "expected GitHub and email contact links");
+  for (const link of contacts) {
+    const href = getAttribute(link, "href");
+    const expectedLabel = href.startsWith("mailto:")
+      ? decodeURIComponent(new URL(href).pathname)
+      : new URL(href).pathname.split("/")[1];
+    assert.equal(getText(link).trim(), expectedLabel);
+    const icon = findOne(link, (node) => hasClass(node, "contact-link-icon"));
+    assert.equal(getAttribute(icon, "aria-hidden"), "true");
+    assert.ok(findOne(icon, (node) => node.tagName === "svg"));
+  }
+  assert.equal(
+    findAll(document, (node) => hasClass(node, "link-card-group")).length,
+    0,
+  );
+});

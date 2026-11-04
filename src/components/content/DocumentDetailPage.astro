@@ -1,5 +1,6 @@
 ---
 import DocumentPageShell from "../layout/DocumentPageShell.astro";
+import ContactLink from "./ContactLink.astro";
 
 interface TocHeading {
   depth: 1 | 2 | 3 | 4 | 5 | 6;
@@ -105,7 +106,7 @@ const {
             <slot name="header-meta" />
           </header>
         )}
-        <DocumentContent />
+        <DocumentContent components={{ a: ContactLink }} />
       </div>
     ) : (
       <Fragment>
@@ -123,7 +124,7 @@ const {
             <slot name="header-meta" />
           </header>
         )}
-        <DocumentContent />
+        <DocumentContent components={{ a: ContactLink }} />
       </Fragment>
     )
   }
