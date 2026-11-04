@@ -315,20 +315,26 @@
 
 @media (min-width: 56.25rem) {
   .latest-articles {
-    --latest-year-col: clamp(3.5rem, 3rem + 1vw, 5.25rem);
+    --latest-date-size: 1rem;
+    --latest-title-size: 1rem;
+    --latest-year-col: 4rem;
     --latest-group-gap: 1.85rem;
     --latest-line-col: 1.35rem;
     --latest-item-gap: 0.9rem;
-    gap: clamp(0.18rem, 0.08rem + 0.22vw, 0.45rem);
+    gap: 0.35rem;
   }
 
   .latest-articles-panel {
-    padding: clamp(0.75rem, 0.9vw, 1.1rem);
+    padding: 1rem;
     gap: 0.6rem;
   }
 
   .latest-articles-groups {
     gap: 0.45rem;
+  }
+
+  .latest-articles-year-label {
+    font-size: 1.5rem;
   }
 
   .latest-articles-group {

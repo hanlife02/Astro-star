@@ -13,19 +13,19 @@
   --radius-sm: 0.5rem;
   --radius-md: 1rem;
   /* Keep rem-based type, controls and spacing stable on desktop displays. */
-  --font-size-base: clamp(0.9375rem, 0.875rem + 0.15vw, 1rem);
-  --type-xs: clamp(0.8125rem, 0.76rem + 0.08vw, 0.875rem);
-  --type-sm: clamp(0.875rem, 0.82rem + 0.1vw, 0.9375rem);
-  --type-base: clamp(0.96875rem, 0.9rem + 0.12vw, 1rem);
-  --type-md: clamp(17px, 0.9rem + 0.14vw, 21px);
-  --type-lg: clamp(20px, 1.05rem + 0.2vw, 26px);
-  --type-xl: clamp(26px, 1.35rem + 0.32vw, 36px);
-  --type-2xl: clamp(31px, 1.55rem + 0.42vw, 44px);
-  --type-page-title: clamp(2rem, 1.8rem + 0.5vw, 2.75rem);
-  --type-content-body: clamp(17px, 15px + 0.18vw, 20px);
-  --type-content-body-zh: clamp(16.8px, 14.9px + 0.18vw, 19.5px);
-  --type-content-code: clamp(13.8px, 12.6px + 0.08vw, 15.8px);
-  --type-content-caption: clamp(14px, 13px + 0.08vw, 16.2px);
+  --font-size-base: 100%;
+  --type-xs: 0.8125rem;
+  --type-sm: 0.875rem;
+  --type-base: 1rem;
+  --type-md: 1.125rem;
+  --type-lg: 1.375rem;
+  --type-xl: 1.75rem;
+  --type-2xl: 2.25rem;
+  --type-page-title: 2.5rem;
+  --type-content-body: 1.125rem;
+  --type-content-body-zh: 1.125rem;
+  --type-content-code: 0.875rem;
+  --type-content-caption: 0.875rem;
   --type-content-h1: var(--type-2xl);
   --type-content-h2: var(--type-xl);
   --type-content-h3: 1.38rem;
@@ -40,20 +40,20 @@
   --type-toc-depth-5: 0.73rem;
   --type-toc-depth-6: 0.7rem;
   --type-toc-mobile-title: 0.96rem;
-  /* Keep the frame near the screen edges; constrain the reading area separately. */
-  --shell-max: 96vw;
+  /* The entire foreground shares one centered frame; only the background fills the viewport. */
+  --shell-max: 88rem;
   --reading-page-max: 56rem;
-  --space: clamp(0.1rem, 0.2vw, 1.25rem);
-  --header-main-gap: clamp(1.25rem, 1.4vw, 2.75rem);
-  --footer-height: clamp(0.5rem, 1vh, 1rem);
+  --space: 0.5rem;
+  --header-main-gap: 2rem;
+  --footer-height: 0.75rem;
   --main-col-1-min: 7.5rem;
-  --main-col-1-size: clamp(7.5rem, 8.5vw, 10.5rem);
+  --main-col-1-size: 10.5rem;
   --main-col-2-min: 7.5rem;
   --main-col-3-min: 7.5rem;
   --main-col-1-fr: 0.5fr;
   --main-col-2-fr: 2.5fr;
   --main-col-3-fr: 3.5fr;
-  --main-col-gap: 0.2rem;
+  --main-col-gap: 1.5rem;
   --nav-flyout-min: clamp(10.5rem, 18vw, 14rem);
   /* One text-relative scale for standalone icons and their clickable areas. */
   --icon-size: 1.375rem;
@@ -66,7 +66,7 @@
     clamp(0.35rem, 1vw, 0.75rem),
     env(safe-area-inset-top)
   );
-  --layout-sticky-main-top: clamp(4.4rem, 8vw, 6.4rem);
+  --layout-sticky-main-top: 6rem;
 }
 
 :root[data-theme="dark"] {

@@ -9,15 +9,7 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem 0.65rem;
-  /* Scales with the root font size on large displays while keeping a
-     readable floor on small ones. Tuned a little larger than the generic
-     small-type tokens so the legal/ICP line stays legible on high-DPI
-     monitors. */
-  font-size: clamp(
-    max(12.5px, calc(var(--font-size-base) * 0.74)),
-    0.6rem + 0.34vw,
-    calc(var(--font-size-base) * 0.84)
-  );
+  font-size: var(--type-xs);
   line-height: 1.4;
   color: var(--text-muted);
   text-align: center;
