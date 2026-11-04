@@ -55,12 +55,13 @@
   --main-col-3-fr: 3.5fr;
   --main-col-gap: 0.2rem;
   --nav-flyout-min: clamp(10.5rem, 18vw, 14rem);
-  --menu-trigger-width: clamp(2.4rem, 2.8vw, 3rem);
-  --menu-trigger-height: clamp(2rem, 2.2vw, 2.5rem);
-  --menu-icon-size: clamp(1.3rem, 1.7vw, 2rem);
-  --icon-btn-size: clamp(2.25rem, 3vw, 3.75rem);
-  --icon-size: clamp(1.4rem, 2vw, 2.25rem);
-  --signature-link-size: clamp(1rem, 1.4vw, 1.45rem);
+  /* One text-relative scale for standalone icons and their clickable areas. */
+  --icon-size: 1.375rem;
+  --icon-btn-size: max(44px, 2.75rem);
+  --menu-trigger-width: var(--icon-btn-size);
+  --menu-trigger-height: var(--icon-btn-size);
+  --menu-icon-size: var(--icon-size);
+  --signature-link-size: 1rem;
   --layout-sticky-top: max(
     clamp(0.35rem, 1vw, 0.75rem),
     env(safe-area-inset-top)

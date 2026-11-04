@@ -312,8 +312,8 @@
 
 .header-actions {
   grid-column: 3;
-  min-height: clamp(2.25rem, 2.8vw, 2.85rem);
-  min-width: clamp(8rem, 9.5vw, 11rem);
+  min-height: var(--icon-btn-size);
+  min-width: 0;
   display: inline-flex;
   align-items: center;
   justify-content: flex-end;
