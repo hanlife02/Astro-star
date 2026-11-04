@@ -20,3 +20,24 @@
   filter: none;
   transition: none;
 }
+.home-section-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-muted);
+  font-size: var(--type-sm);
+  line-height: 1.5;
+  text-decoration: none;
+  transition: color 0.18s ease;
+}
+
+.home-section-link:hover {
+  color: var(--line);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.home-section-link:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+}
