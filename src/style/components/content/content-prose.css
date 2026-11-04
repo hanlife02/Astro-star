@@ -5,6 +5,7 @@
   --content-body-font-size: inherit;
   --content-body-line-height: 1.8;
   --content-text-color: var(--line);
+  --content-strong-color: #000;
   --content-code-font-family:
     ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
     "Courier New", monospace;
@@ -23,6 +24,10 @@
   --content-body-font-size: var(--type-content-body);
   --content-body-line-height: 1.78;
   --content-text-color: color-mix(in srgb, var(--line) 82%, transparent);
+}
+
+:root[data-theme="dark"] .content-page-body {
+  --content-strong-color: #fff;
 }
 
 :root[data-theme="dark"] .content-page--article .content-page-body {
@@ -93,8 +98,13 @@
 }
 
 .content-page-body :is(strong, b) {
-  color: var(--line);
+  color: var(--content-strong-color);
   font-weight: 600;
+  text-decoration-line: underline;
+  text-decoration-color: color-mix(in srgb, currentColor 38%, transparent);
+  text-decoration-thickness: 0.045em;
+  text-underline-offset: 0.2em;
+  text-decoration-skip-ink: auto;
 }
 
 .content-page-body :is(a, .content-spoiler) :is(strong, b) {
