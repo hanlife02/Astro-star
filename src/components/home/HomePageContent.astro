@@ -262,15 +262,6 @@ function isExternalLink(href: string) {
           ) : (
             <p class="latest-articles-empty">No {block.key} published yet.</p>
           )}
-          <footer class="latest-articles-footer">
-            <a
-              class="home-section-link"
-              href={block.archiveHref}
-              data-astro-prefetch
-            >
-              {block.archiveHint} <span aria-hidden="true">→</span>
-            </a>
-          </footer>
         </section>
       ))
     }
