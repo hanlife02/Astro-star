@@ -36,6 +36,16 @@
 }
 
 .home-header {
+  --nav-star-shape: polygon(
+    50% 0%,
+    61% 39%,
+    100% 50%,
+    61% 61%,
+    50% 100%,
+    39% 61%,
+    0% 50%,
+    39% 39%
+  );
   position: sticky;
   top: var(--layout-sticky-top);
   z-index: 30;
@@ -47,9 +57,97 @@
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   column-gap: clamp(0.3rem, 0.8vw, 0.55rem);
-  background: color-mix(in srgb, var(--paper) 92%, transparent);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
+  isolation: isolate;
+  opacity: var(--header-opacity, 1);
+  transform: translate3d(0, var(--header-shift, 0px), 0);
+  transition:
+    transform 180ms ease-out,
+    opacity 180ms ease-out;
+}
+
+.home-header::before,
+.home-header::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: 1.25rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 240ms ease;
+}
+
+.home-header::before {
+  background:
+    radial-gradient(
+      ellipse at 100% 0%,
+      color-mix(in srgb, var(--line) 6%, transparent),
+      transparent 46%
+    ),
+    radial-gradient(
+      ellipse at 0% 100%,
+      color-mix(in srgb, var(--line) 4%, transparent),
+      transparent 40%
+    ),
+    color-mix(in srgb, var(--paper) 84%, transparent);
+  box-shadow: 0 0.65rem 2rem color-mix(in srgb, var(--line) 5%, transparent);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+}
+
+.home-header::after {
+  background:
+    radial-gradient(
+      circle at 1.4rem 1rem,
+      color-mix(in srgb, var(--line) 48%, transparent) 0.6px,
+      transparent 1.2px
+    ),
+    radial-gradient(
+      circle at 30% 72%,
+      color-mix(in srgb, var(--line) 24%, transparent) 0.5px,
+      transparent 1px
+    ),
+    radial-gradient(
+      circle at 54% 22%,
+      color-mix(in srgb, var(--line) 28%, transparent) 0.6px,
+      transparent 1.1px
+    ),
+    radial-gradient(
+      circle at calc(100% - 1.25rem) 1rem,
+      color-mix(in srgb, var(--line) 44%, transparent) 0.7px,
+      transparent 1.2px
+    );
+}
+
+.home-header[data-floating="true"]::before,
+.home-header[data-floating="true"]::after {
+  opacity: 1;
+}
+
+.home-header[data-scroll-hidden="true"] {
+  pointer-events: none;
+}
+
+.home-header:has(:focus-visible),
+.home-header:has([data-home-shell-mobile-nav][open]) {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-header::before,
+  .home-header::after,
+  .home-header .top-nav-links a::before,
+  .home-header .top-nav-links a::after {
+    transition: none;
+  }
+
+  .home-header {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }
 
 .desktop-top-nav {
@@ -68,6 +166,7 @@
 }
 
 .top-nav-links a {
+  position: relative;
   display: inline-flex;
   align-items: center;
   min-height: var(--icon-btn-size);
@@ -75,13 +174,52 @@
   color: var(--text-muted);
   font-size: var(--type-base);
   text-decoration: none;
-  text-underline-offset: 0.4em;
+  transition: color 180ms ease;
+}
+
+.top-nav-links a::before,
+.top-nav-links a::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  background: currentColor;
+  pointer-events: none;
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease;
+}
+
+.top-nav-links a::before {
+  bottom: 0.275rem;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  opacity: 0.3;
+  transform: translateX(-50%);
+}
+
+.top-nav-links a::after {
+  bottom: 0.15rem;
+  width: 0.4rem;
+  height: 0.4rem;
+  clip-path: var(--nav-star-shape);
+  opacity: 0;
+  transform: translate(-50%, 3px) scale(0.5);
 }
 
 .top-nav-links a:hover,
+.top-nav-links a:focus-visible,
 .top-nav-links a[data-active="true"] {
   color: var(--line);
-  text-decoration: underline;
+}
+
+.top-nav-links a:is(:hover, :focus-visible, [data-active="true"])::before {
+  opacity: 0;
+}
+
+.top-nav-links a:is(:hover, :focus-visible, [data-active="true"])::after {
+  opacity: 1;
+  transform: translate(-50%, 0) scale(1);
 }
 
 .top-nav-links a:focus-visible {

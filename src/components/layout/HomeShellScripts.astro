@@ -6,6 +6,7 @@
   import { initHomeShellTheme } from "../../scripts/home-shell-theme";
   import { initHomeShellSignature } from "../../scripts/home-shell-signature";
   import { initHomeShellMobileNav } from "../../scripts/home-shell-mobile-nav";
+  import { initHomeShellHeaderScroll } from "../../scripts/home-shell-header-scroll";
   import { initHomeShellContentPageEntrance } from "../../scripts/home-shell-content-page-entrance";
   import { initHomeShellRouteTransitionLock } from "../../scripts/home-shell-route-transition-lock";
   import { initHomeShellSearch } from "../../scripts/home-shell-search";
@@ -20,6 +21,7 @@
     "__homeShellContentTocCleanup",
     "__homeShellMobileTocCleanup",
     "__homeShellMobileNavCleanup",
+    "__homeShellHeaderScrollCleanup",
     "__homeShellDocumentProgressCleanup",
     "__homeShellCodeCopyCleanup",
     "__homeShellContentFoldCleanup",
@@ -76,6 +78,7 @@
     runHomeShellInitializer("theme", initHomeShellTheme);
     runHomeShellInitializer("signature", initHomeShellSignature);
     runHomeShellInitializer("mobile-nav", initHomeShellMobileNav);
+    runHomeShellInitializer("header-scroll", initHomeShellHeaderScroll);
     runHomeShellInitializer(
       "content-page-entrance",
       initHomeShellContentPageEntrance,
