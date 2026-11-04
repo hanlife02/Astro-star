@@ -138,7 +138,13 @@ function isExternalLink(href: string) {
       )
     }
     <p class="profile-one-word home-enter-item">{profile.bio}</p>
-    <p class="profile-bio home-enter-item">{profile.intro}</p>
+    <a
+      class="home-section-link home-enter-item"
+      href="/about/"
+      data-astro-prefetch
+    >
+      More about me <span aria-hidden="true">→</span>
+    </a>
     <div class="home-profile-metrics">
       <div class="home-enter-item home-profile-metric">
         <GitHeatmap />
@@ -256,6 +262,15 @@ function isExternalLink(href: string) {
           ) : (
             <p class="latest-articles-empty">No {block.key} published yet.</p>
           )}
+          <footer class="latest-articles-footer">
+            <a
+              class="home-section-link"
+              href={block.archiveHref}
+              data-astro-prefetch
+            >
+              {block.archiveHint} <span aria-hidden="true">→</span>
+            </a>
+          </footer>
         </section>
       ))
     }

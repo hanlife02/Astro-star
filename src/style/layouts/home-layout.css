@@ -616,6 +616,13 @@
     align-self: stretch;
   }
 
+  .home-main:not(:has([data-home-shell-content-page])) {
+    grid-template-columns:
+      var(--main-col-1-size)
+      minmax(0, 1fr)
+      minmax(0, 2fr);
+  }
+
   /* Keep the paper centered and both rails inside the same bounded frame. */
   .home-main:has([data-home-shell-content-page]) {
     grid-template-columns:
@@ -694,8 +701,8 @@
   .home-main:not(:has([data-home-shell-content-page])) {
     grid-template-columns:
       minmax(var(--main-col-1-size), 1fr)
-      minmax(0, 25rem)
-      minmax(0, 35rem)
+      minmax(0, 20rem)
+      minmax(0, 40rem)
       minmax(var(--main-col-1-size), 1fr);
   }
 }
