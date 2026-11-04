@@ -37,6 +37,7 @@ const {
   shellStyle = "",
   shellVariant = "default",
 } = Astro.props as Props;
+const pathname = Astro.url.pathname;
 ---
 
 <div
@@ -54,6 +55,28 @@ const {
         <slot name="signature" />
       </div>
     </div>
+
+    <nav class="desktop-top-nav" aria-label="Main navigation">
+      <ul class="top-nav-links">
+        {
+          foldedNavItems.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                aria-current={pathname === item.href ? "page" : undefined}
+                data-active={
+                  pathname.startsWith(item.href) ? "true" : undefined
+                }
+                data-astro-prefetch
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <slot name="side-nav" />
+    </nav>
 
     <div class="wire-box header-actions" aria-label="Actions area">
       <div class="theme-switcher" role="group" aria-label="Theme switcher">
@@ -115,44 +138,6 @@ const {
   </header>
 
   <main class="home-main" data-home-shell-main>
-    <aside class="wire-box side-nav-area" aria-label="Side navigation area">
-      <div class="side-nav-stack">
-        <details
-          class="signature-collapse"
-          aria-label="Signature navigation toggle"
-          data-home-shell-signature-nav
-        >
-          <summary
-            class="signature-collapse-trigger"
-            aria-label="Toggle signature navigation"
-          >
-            <Icon svg={AlignLeft} />
-          </summary>
-          <nav
-            class="wire-box signature-collapse-panel"
-            aria-label="Signature navigation area"
-          >
-            <ul class="signature-collapse-links">
-              {
-                foldedNavItems.map((item) => (
-                  <li>
-                    <a
-                      href={item.href}
-                      aria-label={item.label}
-                      data-astro-prefetch
-                    >
-                      {item.label}
-                    </a>
-                  </li>
-                ))
-              }
-            </ul>
-          </nav>
-        </details>
-        <slot name="side-nav" />
-      </div>
-    </aside>
-
     <section
       class="wire-box profile-area"
       aria-label="Profile area"
