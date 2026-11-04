@@ -44,7 +44,7 @@
 
 .content-page-body h1 {
   margin: 0 0 1rem;
-  font-size: clamp(2rem, 1.8rem + 1vw, 3.5rem);
+  font-size: var(--type-page-title);
   font-weight: 500;
   line-height: 1.1;
   color: transparent;
@@ -731,7 +731,7 @@ html:lang(zh-CN) .content-page--article .content-page-body {
 
 .content-page--about .content-page-body h1,
 .content-page--links .content-page-body h1 {
-  font-size: clamp(2rem, 1.8rem + 1vw, 3.5rem);
+  font-size: var(--type-page-title);
   font-weight: 500;
   line-height: 1.1;
   color: transparent;

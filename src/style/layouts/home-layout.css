@@ -616,12 +616,31 @@
     align-self: stretch;
   }
 
+  /* Equal outer tracks keep the document centered independently of the rails. */
+  .home-main:has([data-home-shell-content-page]) {
+    grid-template-columns:
+      minmax(8rem, 1fr)
+      minmax(0, var(--reading-page-max))
+      minmax(8rem, 1fr);
+  }
+
+  .home-main:has([data-home-shell-content-page]) .latest-area {
+    justify-content: flex-end;
+  }
+
+  .latest-area > [data-home-shell-content-toc] {
+    max-width: 16rem;
+    margin-left: auto;
+  }
+
   .home-shell--article .home-main {
     overflow: visible;
   }
 
   .side-nav-area {
     display: block;
+    width: var(--main-col-1-size);
+    max-width: 100%;
     position: sticky;
     top: var(--layout-sticky-main-top);
     align-self: start;
@@ -671,10 +690,13 @@
   }
 }
 
-@media (min-width: 150rem) {
-  :root {
-    --font-size-base: clamp(1.0625rem, 1.15vw, 1.4rem);
-    --shell-max: min(93vw, 137.5rem);
+@media (min-width: 80rem) {
+  .home-main:not(:has([data-home-shell-content-page])) {
+    grid-template-columns:
+      minmax(var(--main-col-1-size), 1fr)
+      minmax(0, 25rem)
+      minmax(0, 35rem)
+      minmax(var(--main-col-1-size), 1fr);
   }
 }
 

@@ -34,7 +34,7 @@
 
 .latest-articles-title {
   margin: 0;
-  font-size: clamp(2rem, 1.8rem + 1vw, 4rem);
+  font-size: var(--type-page-title);
   line-height: 1.2;
 }
 
