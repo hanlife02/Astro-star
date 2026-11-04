@@ -16,14 +16,6 @@
   gap: 2rem;
 }
 
-.latest-articles-footer {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 0.5rem;
-  padding-top: 0.75rem;
-  border-top: 1px solid var(--border-soft);
-}
-
 .latest-articles-panel {
   flex: 0 0 auto;
   min-height: 0;
