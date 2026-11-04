@@ -89,7 +89,7 @@
 
 @media (min-width: 48rem) {
   .signature-wrap {
-    --signature-svg-max: min(clamp(6.2rem, 5.5rem + 2vw, 9rem), 100%);
+    --signature-svg-max: min(8.4rem, 100%);
   }
 }
 

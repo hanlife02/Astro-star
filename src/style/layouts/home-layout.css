@@ -3,7 +3,7 @@
   z-index: 1;
   height: auto;
   min-height: 100dvh;
-  width: min(100%, var(--shell-max));
+  width: min(calc(100% - 1.5rem), var(--shell-max));
   margin-inline: auto;
   padding: var(--space);
   display: flex;
@@ -39,10 +39,10 @@
   position: sticky;
   top: var(--layout-sticky-top);
   z-index: 30;
-  padding-top: clamp(0.55rem, 1vw, 0.85rem);
-  padding-right: clamp(0.55rem, 1vw, 0.85rem);
+  padding-top: 0.75rem;
+  padding-right: 0.75rem;
   padding-bottom: 0;
-  padding-left: clamp(0.55rem, 1vw, 0.85rem);
+  padding-left: 0.75rem;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: end;
@@ -54,8 +54,8 @@
 }
 
 .signature-area {
-  width: min(100%, clamp(10.5rem, 34vw, 23.75rem));
-  min-height: clamp(2.75rem, 7vh, 4rem);
+  width: min(100%, 14rem);
+  min-height: 4rem;
   display: flex;
   align-items: flex-end;
   justify-self: start;
@@ -616,7 +616,7 @@
     align-self: stretch;
   }
 
-  /* Equal outer tracks keep the document centered independently of the rails. */
+  /* Keep the paper centered and both rails inside the same bounded frame. */
   .home-main:has([data-home-shell-content-page]) {
     grid-template-columns:
       minmax(8rem, 1fr)
@@ -702,8 +702,8 @@
 
 .floating-action-stack {
   position: fixed;
-  right: clamp(0.9rem, 4vw, 1.35rem);
-  bottom: clamp(0.95rem, 4vw, 1.35rem);
+  right: max(1rem, calc((100vw - var(--shell-max)) / 2 + 1rem));
+  bottom: 1rem;
   z-index: 45;
   display: flex;
   align-items: center;

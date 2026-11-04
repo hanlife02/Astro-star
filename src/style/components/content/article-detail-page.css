@@ -1,9 +1,9 @@
 .content-page--article {
-  --article-title-size: clamp(1.82rem, 1.52rem + 0.9vw, 2.95rem);
+  --article-title-size: 2.25rem;
 }
 
 html:lang(zh-CN) .content-page--article {
-  --article-title-size: clamp(1.56rem, 1.36rem + 0.6vw, 2.28rem);
+  --article-title-size: 2rem;
 }
 
 .article-reading-paper {
