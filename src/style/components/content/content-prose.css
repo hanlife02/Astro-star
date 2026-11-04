@@ -803,6 +803,34 @@ html:lang(zh-CN) .content-page--article .content-page-body {
   padding-left: 1.4rem;
 }
 
+.content-page-body ul {
+  padding-left: 0;
+}
+
+.content-page-body li > ul {
+  padding-left: 1.4rem;
+}
+
+.content-page-body ul > li {
+  position: relative;
+  padding-inline-start: 1em;
+}
+
+.content-page-body ul > li::marker {
+  content: "";
+}
+
+.content-page-body ul > li::before {
+  position: absolute;
+  inset-inline-start: 0.3em;
+  top: calc(0.5lh - 0.2em);
+  width: 0.4em;
+  height: 0.4em;
+  border-radius: 50%;
+  background: var(--content-strong-color);
+  content: "";
+}
+
 .content-page-body li {
   margin-top: 0;
   margin-bottom: 0.28rem;
