@@ -41,12 +41,52 @@
   z-index: 30;
   padding-top: 0.75rem;
   padding-right: 0.75rem;
-  padding-bottom: 0;
+  padding-bottom: 0.75rem;
   padding-left: 0.75rem;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  align-items: end;
+  align-items: center;
   column-gap: clamp(0.3rem, 0.8vw, 0.55rem);
+  background: color-mix(in srgb, var(--paper) 92%, transparent);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+.desktop-top-nav {
+  display: none;
+}
+
+.top-nav-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.top-nav-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--icon-btn-size);
+  padding: 0.5rem 0.75rem;
+  color: var(--text-muted);
+  font-size: var(--type-base);
+  text-decoration: none;
+  text-underline-offset: 0.4em;
+}
+
+.top-nav-links a:hover,
+.top-nav-links a[data-active="true"] {
+  color: var(--line);
+  text-decoration: underline;
+}
+
+.top-nav-links a:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
 }
 
 .wire-box {
@@ -55,9 +95,9 @@
 
 .signature-area {
   width: min(100%, 14rem);
-  min-height: 4rem;
+  min-height: var(--icon-btn-size);
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-self: start;
   padding-bottom: 0;
   margin-bottom: 0;
@@ -69,90 +109,6 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 0.35rem;
-}
-
-.signature-collapse {
-  position: relative;
-  z-index: 7;
-  width: 100%;
-  min-height: var(--menu-trigger-height);
-}
-
-.signature-collapse::before {
-  content: "";
-  position: absolute;
-  top: 100%;
-  left: 0;
-  z-index: 2;
-  width: 100%;
-  height: var(--signature-collapse-panel-hit-height, 0px);
-  pointer-events: auto;
-}
-
-.signature-collapse-trigger {
-  width: var(--menu-trigger-width);
-  height: var(--menu-trigger-height);
-  border: 0;
-  padding: 0;
-  background: transparent;
-  color: var(--line-soft);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  list-style: none;
-  transition: color 0.2s ease;
-}
-
-.signature-collapse-trigger::-webkit-details-marker {
-  display: none;
-}
-
-.signature-collapse-trigger svg {
-  width: var(--menu-icon-size);
-  height: var(--menu-icon-size);
-}
-
-.signature-collapse-panel {
-  display: block;
-  position: absolute;
-  top: 100%;
-  left: 0;
-  z-index: 3;
-  width: 100%;
-  padding: 0.4rem 0;
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transform: translate3d(-0.7rem, 0, 0);
-  transform-origin: top left;
-  clip-path: inset(0 100% 0 0 round 0.2rem);
-  transition:
-    opacity 0.24s ease,
-    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
-    clip-path 0.3s cubic-bezier(0.22, 1, 0.36, 1),
-    visibility 0s linear 0.3s;
-}
-
-.signature-collapse[data-panel-state="open"] .signature-collapse-panel {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-  transform: translate3d(0, 0, 0);
-  clip-path: inset(0 0 0 0 round 0.2rem);
-  transition:
-    opacity 0.24s ease,
-    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
-    clip-path 0.3s cubic-bezier(0.22, 1, 0.36, 1),
-    visibility 0s linear 0s;
-}
-
-.signature-collapse[data-panel-state="closing"] .signature-collapse-panel {
-  opacity: 0;
-  visibility: visible;
-  pointer-events: none;
-  transform: translate3d(-0.55rem, 0, 0);
-  clip-path: inset(0 100% 0 0 round 0.2rem);
 }
 
 .signature-collapse-links {
@@ -311,7 +267,7 @@
 }
 
 .header-actions {
-  grid-column: 3;
+  grid-column: 2;
   min-height: var(--icon-btn-size);
   min-width: 0;
   display: inline-flex;
@@ -380,7 +336,6 @@
     transform: translateY(-0.08rem);
   }
 
-  .signature-collapse-trigger:hover,
   .hamburger:hover {
     color: var(--line);
   }
@@ -393,7 +348,6 @@
   transform: translateY(-0.08rem);
 }
 
-.signature-collapse-trigger:focus-visible,
 .hamburger:focus-visible {
   outline: none;
   color: var(--line);
@@ -435,24 +389,6 @@
   margin-top: calc(var(--header-main-gap) - var(--space));
   min-height: 0;
   align-items: start;
-}
-
-.side-nav-area {
-  display: none;
-  position: relative;
-  z-index: 7;
-  min-height: 0;
-  height: auto;
-  max-height: none;
-  overflow: visible;
-}
-
-.side-nav-stack {
-  height: auto;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.75rem;
 }
 
 .profile-area {
@@ -588,11 +524,32 @@
   }
 
   .home-header {
-    grid-template-columns: auto auto 1fr;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    column-gap: 1rem;
+  }
+
+  .desktop-top-nav {
+    display: block;
+    grid-column: 2;
+    justify-self: end;
+  }
+
+  .top-nav-links {
+    justify-content: flex-end;
   }
 
   .header-actions {
-    align-items: flex-end;
+    grid-column: 3;
+    align-items: center;
+  }
+
+  .header-actions::before {
+    content: "";
+    flex: 0 0 1px;
+    width: 1px;
+    height: 1.5rem;
+    margin-right: 0.5rem;
+    background: var(--border-soft);
   }
 
   .theme-switcher {
@@ -605,9 +562,9 @@
 
   .home-main {
     grid-template-columns:
-      minmax(var(--main-col-1-min), var(--main-col-1-size))
-      minmax(var(--main-col-2-min), var(--main-col-2-fr))
-      minmax(var(--main-col-3-min), var(--main-col-3-fr));
+      minmax(0, 1fr)
+      minmax(0, var(--reading-page-max))
+      minmax(0, 1fr);
   }
 
   .home-main {
@@ -617,16 +574,7 @@
   }
 
   .home-main:has(.home-profile-sequence) {
-    grid-template-columns:
-      minmax(8rem, 1fr)
-      minmax(0, var(--reading-page-max))
-      minmax(8rem, 1fr);
     row-gap: 3rem;
-  }
-
-  .home-main:has(.home-profile-sequence) .side-nav-area {
-    grid-column: 1;
-    grid-row: 1 / span 2;
   }
 
   .home-main:has(.home-profile-sequence) .profile-area {
@@ -648,6 +596,10 @@
       minmax(8rem, 1fr);
   }
 
+  .profile-area {
+    grid-column: 2;
+  }
+
   .home-main:has([data-home-shell-content-page]) .latest-area {
     justify-content: flex-end;
   }
@@ -658,19 +610,6 @@
   }
 
   .home-shell--article .home-main {
-    overflow: visible;
-  }
-
-  .side-nav-area {
-    display: block;
-    width: var(--main-col-1-size);
-    max-width: 100%;
-    position: sticky;
-    top: var(--layout-sticky-main-top);
-    align-self: start;
-    min-height: 0;
-    height: auto;
-    max-height: calc(100dvh - var(--layout-sticky-main-top) - var(--space));
     overflow: visible;
   }
 
@@ -689,7 +628,7 @@
   }
 
   .latest-area {
-    grid-column: auto;
+    grid-column: 3;
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
