@@ -616,11 +616,28 @@
     align-self: stretch;
   }
 
-  .home-main:not(:has([data-home-shell-content-page])) {
+  .home-main:has(.home-profile-sequence) {
     grid-template-columns:
-      var(--main-col-1-size)
-      minmax(0, 1fr)
-      minmax(0, 2fr);
+      minmax(8rem, 1fr)
+      minmax(0, var(--reading-page-max))
+      minmax(8rem, 1fr);
+    row-gap: 3rem;
+  }
+
+  .home-main:has(.home-profile-sequence) .side-nav-area {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+  }
+
+  .home-main:has(.home-profile-sequence) .profile-area {
+    grid-column: 2;
+    grid-row: 1;
+    justify-content: center;
+  }
+
+  .home-main:has(.home-profile-sequence) .latest-area {
+    grid-column: 2;
+    grid-row: 2;
   }
 
   /* Keep the paper centered and both rails inside the same bounded frame. */
@@ -694,16 +711,6 @@
   .latest-area > [data-home-shell-content-toc] {
     position: static;
     top: auto;
-  }
-}
-
-@media (min-width: 80rem) {
-  .home-main:not(:has([data-home-shell-content-page])) {
-    grid-template-columns:
-      minmax(var(--main-col-1-size), 1fr)
-      minmax(0, 20rem)
-      minmax(0, 40rem)
-      minmax(var(--main-col-1-size), 1fr);
   }
 }
 

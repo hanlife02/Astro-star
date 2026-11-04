@@ -1,5 +1,5 @@
 .profile-card {
-  --profile-max-width: min(100%, 20rem);
+  --profile-max-width: min(100%, 28rem);
   --profile-padding: 1rem;
   --profile-gap: 0.75rem;
   --avatar-size: 5rem;
