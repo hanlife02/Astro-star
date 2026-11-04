@@ -22,6 +22,7 @@
 .content-page--article .content-page-body {
   --content-body-font-size: var(--type-content-body);
   --content-body-line-height: 1.78;
+  --content-text-color: color-mix(in srgb, var(--line) 82%, transparent);
 }
 
 :root[data-theme="dark"] .content-page--article .content-page-body {
@@ -92,8 +93,12 @@
 }
 
 .content-page-body :is(strong, b) {
-  color: inherit;
+  color: var(--line);
   font-weight: 600;
+}
+
+.content-page-body :is(a, .content-spoiler) :is(strong, b) {
+  color: inherit;
 }
 
 .content-page-body .content-spoiler {
