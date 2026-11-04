@@ -45,5 +45,4 @@ export const socialLinks: readonly SocialLinkItem[] = [
 
 export const socialDisplay = {
   home: ["github", "mail", "telegram", "instagram"],
-  about: ["mail", "github", "bilibili", "telegram"],
 } as const satisfies Record<string, readonly SocialLinkId[]>;
