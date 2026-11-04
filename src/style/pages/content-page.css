@@ -11,6 +11,8 @@
 
 .content-page {
   width: 100%;
+  max-width: var(--reading-page-max);
+  margin-inline: auto;
   display: block;
   align-self: stretch;
 }

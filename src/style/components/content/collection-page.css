@@ -24,7 +24,7 @@
 
 :is(.listing-header-title, .collection-page-title) {
   margin: 0;
-  font-size: clamp(2.3rem, 2rem + 1.5vw, 4.3rem);
+  font-size: var(--type-page-title);
   font-weight: 400;
   line-height: 1.05;
   color: transparent;

@@ -12,28 +12,16 @@
   --article-paper-shadow: rgba(17, 17, 17, 0.12);
   --radius-sm: 0.5rem;
   --radius-md: 1rem;
-  --font-size-base: clamp(0.9375rem, 1.35vw, 1.8rem);
-  /* Small type tracks the root font size so it keeps scaling on large
-     displays, while max() keeps it from shrinking below a readable floor. */
-  --type-xs: clamp(
-    max(12.5px, calc(var(--font-size-base) * 0.66)),
-    0.62rem + 0.08vw,
-    calc(var(--font-size-base) * 0.8)
-  );
-  --type-sm: clamp(
-    max(14px, calc(var(--font-size-base) * 0.76)),
-    0.72rem + 0.1vw,
-    calc(var(--font-size-base) * 0.92)
-  );
-  --type-base: clamp(
-    max(15.5px, calc(var(--font-size-base) * 0.84)),
-    0.78rem + 0.12vw,
-    calc(var(--font-size-base) * 1.02)
-  );
+  /* Keep rem-based type, controls and spacing stable on desktop displays. */
+  --font-size-base: clamp(0.9375rem, 0.875rem + 0.15vw, 1rem);
+  --type-xs: clamp(0.8125rem, 0.76rem + 0.08vw, 0.875rem);
+  --type-sm: clamp(0.875rem, 0.82rem + 0.1vw, 0.9375rem);
+  --type-base: clamp(0.96875rem, 0.9rem + 0.12vw, 1rem);
   --type-md: clamp(17px, 0.9rem + 0.14vw, 21px);
   --type-lg: clamp(20px, 1.05rem + 0.2vw, 26px);
   --type-xl: clamp(26px, 1.35rem + 0.32vw, 36px);
   --type-2xl: clamp(31px, 1.55rem + 0.42vw, 44px);
+  --type-page-title: clamp(2rem, 1.8rem + 0.5vw, 2.75rem);
   --type-content-body: clamp(17px, 15px + 0.18vw, 20px);
   --type-content-body-zh: clamp(16.8px, 14.9px + 0.18vw, 19.5px);
   --type-content-code: clamp(13.8px, 12.6px + 0.08vw, 15.8px);
@@ -52,7 +40,9 @@
   --type-toc-depth-5: 0.73rem;
   --type-toc-depth-6: 0.7rem;
   --type-toc-mobile-title: 0.96rem;
-  --shell-max: min(92vw, 112.5rem);
+  /* Keep the frame near the screen edges; constrain the reading area separately. */
+  --shell-max: 96vw;
+  --reading-page-max: 48rem;
   --space: clamp(0.1rem, 0.2vw, 1.25rem);
   --header-main-gap: clamp(1.25rem, 1.4vw, 2.75rem);
   --footer-height: clamp(0.5rem, 1vh, 1rem);
@@ -142,7 +132,7 @@ body {
 
 .content-page-body h1 {
   margin: 0 0 1rem;
-  font-size: clamp(2rem, 1.8rem + 1vw, 3.5rem);
+  font-size: var(--type-page-title);
   font-weight: 500;
   line-height: 1.1;
 }
