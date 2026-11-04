@@ -42,7 +42,7 @@
   --type-toc-mobile-title: 0.96rem;
   /* Keep the frame near the screen edges; constrain the reading area separately. */
   --shell-max: 96vw;
-  --reading-page-max: 48rem;
+  --reading-page-max: 56rem;
   --space: clamp(0.1rem, 0.2vw, 1.25rem);
   --header-main-gap: clamp(1.25rem, 1.4vw, 2.75rem);
   --footer-height: clamp(0.5rem, 1vh, 1rem);
