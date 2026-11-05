@@ -7,6 +7,7 @@ import FooterMeta from "../common/FooterMeta.astro";
 import AppPanelIcon from "../ui/icons/AppPanelIcon.astro";
 import type { SocialLinkItem } from "../../types/social";
 import { isCodeTimeConfigured } from "../../utils/codetime";
+import { getSocialLink } from "../../utils/social";
 import "../../style/components/home/profile.css";
 import "../../style/components/home/latest-articles.css";
 import "../../style/components/home/home-page-content.css";
@@ -57,6 +58,8 @@ const encodeCssUrl = (value: string) =>
   );
 const avatarStyle = `--profile-avatar-image: url("${encodeCssUrl(profile.avatarSrc)}")`;
 const codeTimeEnabled = isCodeTimeConfigured(CODETIME_TOKEN);
+const showActivity =
+  codeTimeEnabled || Boolean(getSocialLink("github")?.handle?.trim());
 const CodeTime = codeTimeEnabled
   ? (await import("./CodeTime.astro")).default
   : undefined;
@@ -119,47 +122,36 @@ function isExternalLink(href: string) {
         )
       }
     </span>
-    <h1 class="profile-name home-enter-item">{ownerName}</h1>
-    {
-      profileLinks.length > 0 && (
-        <nav class="profile-links" aria-label="Profile quick links">
-          {profileLinks.map((item) => (
-            <a
-              class="profile-link home-enter-item"
-              href={item.href}
-              target={isExternalLink(item.href) ? "_blank" : undefined}
-              rel={isExternalLink(item.href) ? "noreferrer" : undefined}
-              aria-label={item.name}
-            >
-              <AppPanelIcon name={item.icon} label={item.name} />
-            </a>
-          ))}
-        </nav>
-      )
-    }
-    <p class="profile-one-word home-enter-item">{profile.bio}</p>
-    <a
-      class="home-section-link home-enter-item"
-      href="/about/"
-      data-astro-prefetch
-    >
-      More about me <span aria-hidden="true">→</span>
-    </a>
-    <div class="home-profile-metrics">
-      <div class="home-enter-item home-profile-metric">
-        <GitHeatmap />
-      </div>
+    <div class="profile-copy home-enter-item">
+      <h1 class="profile-name">{ownerName}</h1>
+      {profile.bio.trim() && <p class="profile-one-word">{profile.bio}</p>}
+      {profile.intro.trim() && <p class="profile-bio">{profile.intro}</p>}
+    </div>
+    <div class="profile-connections">
       {
-        CodeTime && (
-          <div
-            class="home-enter-item home-profile-metric"
-            data-codetime-metric
-            data-codetime-state="waiting"
-          >
-            <CodeTime />
-          </div>
+        profileLinks.length > 0 && (
+          <nav class="profile-links" aria-label="Profile quick links">
+            {profileLinks.map((item) => (
+              <a
+                class="profile-link home-enter-item"
+                href={item.href}
+                target={isExternalLink(item.href) ? "_blank" : undefined}
+                rel={isExternalLink(item.href) ? "noreferrer" : undefined}
+                aria-label={item.name}
+              >
+                <AppPanelIcon name={item.icon} label={item.name} />
+              </a>
+            ))}
+          </nav>
         )
       }
+      <a
+        class="home-section-link home-enter-item"
+        href="/about/"
+        data-astro-prefetch
+      >
+        More about me <span aria-hidden="true">→</span>
+      </a>
     </div>
   </section>
   <section
@@ -264,6 +256,29 @@ function isExternalLink(href: string) {
           )}
         </section>
       ))
+    }
+    {
+      showActivity && (
+        <section class="home-activity" aria-labelledby="home-activity-title">
+          <h2 class="home-activity-title" id="home-activity-title">
+            Activity
+          </h2>
+          <div class="home-profile-metrics">
+            <div class="home-profile-metric">
+              <GitHeatmap />
+            </div>
+            {CodeTime && (
+              <div
+                class="home-profile-metric"
+                data-codetime-metric
+                data-codetime-state="waiting"
+              >
+                <CodeTime />
+              </div>
+            )}
+          </div>
+        </section>
+      )
     }
   </section>
   <FooterMeta slot="footer-info" />

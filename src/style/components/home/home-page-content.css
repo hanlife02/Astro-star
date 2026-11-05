@@ -41,3 +41,217 @@
   outline: 2px solid currentColor;
   outline-offset: 4px;
 }
+
+.home-profile-sequence,
+.home-latest-sequence {
+  --home-star-shape: polygon(
+    50% 0%,
+    61% 39%,
+    100% 50%,
+    61% 61%,
+    50% 100%,
+    39% 61%,
+    0% 50%,
+    39% 39%
+  );
+}
+
+.home-profile-sequence {
+  --profile-max-width: min(100%, 42rem);
+  --profile-padding: 2rem 1rem 1rem;
+  --profile-gap: 1.5rem;
+  --name-size: 2.5rem;
+  padding-top: 2.5rem;
+}
+
+.home-profile-sequence .profile-avatar-wrap::before {
+  content: "";
+  position: absolute;
+  width: 8.5rem;
+  height: 3.75rem;
+  border: 1px solid color-mix(in srgb, var(--line) 20%, transparent);
+  border-radius: 50%;
+  transform: rotate(-28deg);
+  pointer-events: none;
+}
+
+.home-profile-sequence .profile-avatar-wrap::after {
+  content: "";
+  position: absolute;
+  top: -0.25rem;
+  right: -0.9rem;
+  width: 0.55rem;
+  height: 0.55rem;
+  background: var(--line);
+  clip-path: var(--home-star-shape);
+  pointer-events: none;
+}
+
+.profile-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.home-profile-sequence .profile-name {
+  font-weight: 500;
+  letter-spacing: -0.035em;
+}
+
+.home-profile-sequence .profile-one-word {
+  font-size: 1.0625rem;
+}
+
+.home-profile-sequence .profile-bio {
+  max-width: 48ch;
+  color: var(--text-muted);
+  font-size: 0.9375rem;
+  line-height: 1.8;
+  text-wrap: pretty;
+}
+
+.profile-connections {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem 1.25rem;
+}
+
+.home-latest-sequence {
+  --latest-year-col: 3.25rem;
+  --latest-group-gap: 1.5rem;
+  --latest-text-line-height: 1.6;
+  gap: 3.5rem;
+  max-width: 46rem;
+  margin-inline: auto;
+  padding-bottom: 3rem;
+}
+
+.home-latest-sequence .latest-articles-panel {
+  padding: 0 1rem;
+  gap: 1rem;
+}
+
+.home-latest-sequence .latest-articles-title {
+  font-size: 1.375rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.home-latest-sequence .latest-articles-title-link .latest-articles-title-text {
+  color: var(--line);
+  -webkit-text-stroke: 0;
+}
+
+.home-latest-sequence .latest-articles-heading::before,
+.home-activity-title::before {
+  content: "";
+  flex: 0 0 0.5rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-right: 0.75rem;
+  background: currentColor;
+  clip-path: var(--home-star-shape);
+  opacity: 0.55;
+}
+
+.home-latest-sequence .latest-articles-year-label {
+  padding-top: 1.15rem;
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+  font-weight: 400;
+  line-height: 1.6;
+  -webkit-text-stroke: 0;
+}
+
+.home-latest-sequence .latest-articles-item {
+  padding-block: 1rem;
+}
+
+.home-latest-sequence .latest-articles-item::before {
+  background: color-mix(in srgb, var(--line) 12%, transparent);
+}
+
+.home-latest-sequence .latest-articles-item::after {
+  border-radius: 0;
+  clip-path: var(--home-star-shape);
+  opacity: 0.6;
+}
+
+.home-latest-sequence .latest-articles-time {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.home-latest-sequence .latest-articles-link {
+  white-space: normal;
+}
+
+.home-latest-sequence .latest-articles-link-text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow-wrap: anywhere;
+}
+
+.home-latest-sequence
+  :is(.latest-articles-link, .latest-articles-title-link):focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+}
+
+.home-activity {
+  padding: 0 1rem;
+}
+
+.home-activity-title {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.home-activity .home-profile-metrics {
+  margin-top: 1.25rem;
+  padding-top: 0;
+  border-top: 0;
+  align-items: flex-start;
+}
+
+.home-activity .home-profile-metric {
+  justify-content: flex-start;
+}
+
+.home-activity .githeatmap-link {
+  max-width: 100%;
+}
+
+.home-activity :is(.githeatmap-cell, .githeatmap-legend-cell) {
+  border-radius: 50%;
+}
+
+@media (max-width: 30rem) {
+  .home-profile-sequence {
+    --name-size: 2.25rem;
+    --profile-padding: 2rem 0 0.5rem;
+  }
+
+  .home-latest-sequence .latest-articles-panel,
+  .home-activity {
+    padding-inline: 0;
+  }
+
+  .home-latest-sequence .latest-articles-group {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 0.25rem;
+  }
+
+  .home-latest-sequence .latest-articles-year-label {
+    padding-top: 0;
+  }
+}
