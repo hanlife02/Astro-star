@@ -14,12 +14,7 @@ interface Props {
   showProgress?: boolean;
 }
 
-const {
-  items,
-  title,
-  emptyText = "The author is too lazy to write a title.",
-  showProgress = false,
-} = Astro.props as Props;
+const { items, title, emptyText, showProgress = false } = Astro.props as Props;
 
 const hasHanCharacters = /[\u3400-\u9fff\uf900-\ufaff]/u;
 const hasLatinCharacters = /[A-Za-z]/;
@@ -80,6 +75,6 @@ const normalizedItems = normalizeTocItems(items);
       </div>
     </>
   ) : (
-    <p class="content-toc-empty">{emptyText}</p>
+    emptyText && <p class="content-toc-empty">{emptyText}</p>
   )
 }

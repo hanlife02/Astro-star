@@ -673,9 +673,10 @@ html:lang(zh-CN) .content-page--article {
   font-weight: 500;
 }
 
-.article-comments-thread .wl-sort {
+.article-comments-thread [data-waline] .wl-sort {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 0.52rem;
   margin: 0;
   padding: 0;
@@ -683,11 +684,15 @@ html:lang(zh-CN) .content-page--article {
 
 .article-comments-thread .wl-sort li {
   position: relative;
+  margin-block: 0;
+  padding-inline-start: 1.3em;
   color: color-mix(in srgb, var(--line) 36%, transparent);
   font-size: var(--comment-meta-font-size);
+  white-space: nowrap;
 }
 
 .article-comments-thread .wl-sort li + li {
+  margin-block-start: 0;
   margin-inline-start: 0;
 }
 
@@ -1144,7 +1149,7 @@ html:lang(zh-CN) .content-page--article {
     padding: 0.46rem 0.28rem;
   }
 
-  .article-comments-thread .wl-sort {
+  .article-comments-thread [data-waline] .wl-sort {
     gap: 0.5rem;
   }
 }
