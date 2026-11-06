@@ -1,9 +1,10 @@
-/* Content stays visible without JavaScript. Only observed, offscreen blocks wait. */
+/* Content stays visible without JavaScript. The initial viewport animates too. */
 @media (prefers-reduced-motion: no-preference) {
   .home-shell [data-scroll-reveal="pending"] {
     opacity: 0;
     translate: 0 16px;
     pointer-events: none;
+    transition: none;
   }
 
   .home-shell [data-scroll-reveal="entered"] {
@@ -18,7 +19,8 @@
 
   [data-scroll-reveal="entered"]
     :is(.archive-activity-timeline-line, .archive-activity-orbit) {
-    animation: scroll-reveal-line 700ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+    animation: scroll-reveal-line 700ms cubic-bezier(0.22, 1, 0.36, 1)
+      var(--scroll-reveal-delay, 0s) backwards;
   }
 
   [data-scroll-reveal="entered"]
@@ -28,7 +30,10 @@
       .archive-activity-timeline-year
     ) {
     animation: scroll-reveal-fade 350ms cubic-bezier(0.22, 1, 0.36, 1)
-      var(--scroll-reveal-delay, 0.7s) backwards;
+      calc(
+        var(--scroll-reveal-delay, 0s) + var(--scroll-reveal-node-delay, 0.7s)
+      )
+      backwards;
   }
 
   .home-activity-title[data-scroll-reveal="entered"] {
@@ -71,5 +76,16 @@
     translate: none;
     animation: none;
     pointer-events: auto;
+  }
+
+  [data-scroll-reveal]
+    :is(
+      .archive-activity-timeline-line,
+      .archive-activity-orbit,
+      .archive-activity-timeline-bucket,
+      .archive-activity-timeline-month,
+      .archive-activity-timeline-year
+    ) {
+    animation: none;
   }
 }
