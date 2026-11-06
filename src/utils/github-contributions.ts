@@ -35,6 +35,7 @@ interface ParsedGitHubContributionDay {
 }
 
 const CACHE_TTL = 1000 * 60 * 60 * 6;
+const FAILURE_CACHE_TTL = 1000 * 60;
 const DAY_MS = 1000 * 60 * 60 * 24;
 const GITHUB_FETCH_TIMEOUT = 8000;
 const GITHUB_USERNAME_PATTERN =
@@ -330,16 +331,22 @@ export async function getGitHubContributionHeatmap(
         fetchContributionYear(normalizedUsername, year),
       ),
     );
-    const fetchedDays = yearResults.flatMap((result) =>
-      result.status === "fulfilled" ? result.value : [],
+    const fetchedDays = yearResults.flatMap((result) => {
+      if (result.status === "rejected") throw result.reason;
+      return result.value;
+    });
+    const contributionsByDate = new Map(
+      fetchedDays.map((day) => [day.date, day]),
     );
-    const heatmap =
-      fetchedDays.length > 0
-        ? createContributionHeatmap(
-            new Map(fetchedDays.map((day) => [day.date, day])),
-            now,
-          )
-        : null;
+    // A missing year or truncated response must not become zero-contribution days.
+    if (
+      skeleton.days.some(
+        (day) => !day.isBlank && !contributionsByDate.has(day.date),
+      )
+    ) {
+      throw new Error("GitHub contributions response is incomplete.");
+    }
+    const heatmap = createContributionHeatmap(contributionsByDate, now);
 
     contributionCache.set(cacheKey, {
       expiresAt: Date.now() + CACHE_TTL,
@@ -348,11 +355,13 @@ export async function getGitHubContributionHeatmap(
 
     return heatmap;
   } catch {
+    // Keep valid data during a transient outage, but retry failures promptly.
+    const heatmap = cachedHeatmap?.heatmap ?? null;
     contributionCache.set(cacheKey, {
-      expiresAt: Date.now() + CACHE_TTL,
-      heatmap: null,
+      expiresAt: Date.now() + FAILURE_CACHE_TTL,
+      heatmap,
     });
 
-    return null;
+    return heatmap;
   }
 }

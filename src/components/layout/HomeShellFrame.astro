@@ -37,6 +37,7 @@ const {
   shellStyle = "",
   shellVariant = "default",
 } = Astro.props as Props;
+const pathname = Astro.url.pathname;
 ---
 
 <div
@@ -49,89 +50,94 @@ const {
   data-home-shell-root
 >
   <header class="home-header">
-    <div class="wire-box signature-area" aria-label="Signature area">
-      <div class="signature-stack">
-        <slot name="signature" />
+    <div class="home-header-inner">
+      <span class="header-star-field" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span>
+      </span>
+      <div class="wire-box signature-area" aria-label="Signature area">
+        <div class="signature-stack">
+          <slot name="signature" />
+        </div>
       </div>
-    </div>
 
-    <div class="wire-box header-actions" aria-label="Actions area">
-      <div class="theme-switcher" role="group" aria-label="Theme switcher">
-        <button
-          type="button"
-          id="theme-toggle"
-          class="theme-btn"
-          aria-label="Theme switcher"
-        >
-          <span data-theme-icon="light" hidden={initialThemeMode !== "light"}
-            ><Icon svg={Sun} /></span
-          >
-          <span data-theme-icon="dark" hidden={initialThemeMode !== "dark"}
-            ><Icon svg={Moon} /></span
-          >
-          <span data-theme-icon="system" hidden={initialThemeMode !== "system"}
-            ><Icon svg={Monitor} /></span
-          >
-        </button>
-      </div>
-      {
-        isAlgoliaSiteSearchConfigured && (
+      <nav class="desktop-top-nav" aria-label="Main navigation">
+        <ul class="top-nav-links">
+          {
+            foldedNavItems.map((item) => (
+              <li>
+                <a
+                  href={item.href}
+                  aria-current={pathname === item.href ? "page" : undefined}
+                  data-active={
+                    pathname.startsWith(item.href) ? "true" : undefined
+                  }
+                  data-astro-prefetch
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+        <slot name="side-nav" />
+      </nav>
+
+      <div class="wire-box header-actions" aria-label="Actions area">
+        <div class="theme-switcher" role="group" aria-label="Theme switcher">
           <button
             type="button"
-            class="search-btn"
-            aria-label="Search"
-            aria-controls="home-shell-search"
-            aria-haspopup="dialog"
-            data-home-shell-search-trigger
+            id="theme-toggle"
+            class="theme-btn"
+            aria-label="Theme switcher"
+            data-icon-tooltip="Theme switcher"
+            data-tooltip-placement="bottom"
+            data-tooltip-align="end"
           >
-            <Icon svg={Search} />
+            <span data-theme-icon="light" hidden={initialThemeMode !== "light"}
+              ><Icon svg={Sun} /></span
+            >
+            <span data-theme-icon="dark" hidden={initialThemeMode !== "dark"}
+              ><Icon svg={Moon} /></span
+            >
+            <span
+              data-theme-icon="system"
+              hidden={initialThemeMode !== "system"}
+              ><Icon svg={Monitor} /></span
+            >
           </button>
-        )
-      }
-      <details class="nav-drawer mobile-nav-drawer" data-home-shell-mobile-nav>
-        <summary class="hamburger" aria-label="Toggle navigation">
-          <Icon svg={AlignLeft} />
-        </summary>
-
-        <nav class="wire-box nav-panel" aria-label="Mobile navigation area">
-          <ul class="signature-collapse-links">
-            {
-              foldedNavItems.map((item) => (
-                <li>
-                  <a
-                    href={item.href}
-                    aria-label={item.label}
-                    data-astro-prefetch
-                  >
-                    {item.label}
-                  </a>
-                </li>
-              ))
-            }
-          </ul>
-        </nav>
-      </details>
-    </div>
-  </header>
-
-  <main class="home-main" data-home-shell-main>
-    <aside class="wire-box side-nav-area" aria-label="Side navigation area">
-      <div class="side-nav-stack">
+        </div>
+        {
+          isAlgoliaSiteSearchConfigured && (
+            <button
+              type="button"
+              class="search-btn"
+              aria-label="Search"
+              data-icon-tooltip="Search"
+              data-tooltip-placement="bottom"
+              data-tooltip-align="end"
+              aria-controls="home-shell-search"
+              aria-haspopup="dialog"
+              data-home-shell-search-trigger
+            >
+              <Icon svg={Search} />
+            </button>
+          )
+        }
         <details
-          class="signature-collapse"
-          aria-label="Signature navigation toggle"
-          data-home-shell-signature-nav
+          class="nav-drawer mobile-nav-drawer"
+          data-home-shell-mobile-nav
         >
           <summary
-            class="signature-collapse-trigger"
-            aria-label="Toggle signature navigation"
+            class="hamburger"
+            aria-label="Toggle navigation"
+            data-icon-tooltip="Navigation"
+            data-tooltip-placement="bottom"
+            data-tooltip-align="end"
           >
             <Icon svg={AlignLeft} />
           </summary>
-          <nav
-            class="wire-box signature-collapse-panel"
-            aria-label="Signature navigation area"
-          >
+
+          <nav class="wire-box nav-panel" aria-label="Mobile navigation area">
             <ul class="signature-collapse-links">
               {
                 foldedNavItems.map((item) => (
@@ -149,10 +155,11 @@ const {
             </ul>
           </nav>
         </details>
-        <slot name="side-nav" />
       </div>
-    </aside>
+    </div>
+  </header>
 
+  <main class="home-main" data-home-shell-main>
     <section
       class="wire-box profile-area"
       aria-label="Profile area"
@@ -224,7 +231,7 @@ const {
         class="footer-rss-btn"
         href="/project/"
         aria-label="View projects"
-        title="Projects"
+        data-icon-tooltip="Projects"
         data-astro-prefetch
       >
         <Icon svg={FolderKanban} />
@@ -233,7 +240,7 @@ const {
         class="footer-rss-btn"
         href="/rss.xml"
         aria-label="Subscribe via RSS"
-        title="RSS Feed"
+        data-icon-tooltip="RSS Feed"
       >
         <RssIcon />
       </a>
@@ -245,7 +252,7 @@ const {
             target="_blank"
             rel="noreferrer"
             aria-label="Visit GitHub profile"
-            title="GitHub"
+            data-icon-tooltip="GitHub"
           >
             <GithubIcon />
           </a>

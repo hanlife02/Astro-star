@@ -1,6 +1,6 @@
 .githeatmap-link {
   --githeatmap-gap: clamp(2px, 0.22vw, 3px);
-  --githeatmap-empty: color-mix(in srgb, var(--line) 8%, transparent);
+  --githeatmap-empty: color-mix(in srgb, var(--line) 14%, transparent);
   --githeatmap-active: var(--line);
   position: relative;
   display: grid;
@@ -88,9 +88,14 @@
 .githeatmap-cell,
 .githeatmap-legend-cell {
   --githeatmap-fill: var(--githeatmap-empty);
+  --githeatmap-scale: 0.28;
   border-radius: 2px;
   background-color: var(--githeatmap-fill);
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--line) 4%, transparent);
+  /* Size survives small screens and monochrome themes better than tone alone.
+     Individual scale also preserves the separate hover sweep transform. */
+  scale: var(--githeatmap-scale);
+  transform-origin: center;
 }
 
 .githeatmap-cell {
@@ -107,38 +112,38 @@
 
 .githeatmap-cell[data-level="1"],
 .githeatmap-legend-cell[data-level="1"] {
+  --githeatmap-scale: 0.52;
   --githeatmap-fill: color-mix(
     in srgb,
-    var(--githeatmap-active) 28%,
+    var(--githeatmap-active) 44%,
     transparent
   );
 }
 
 .githeatmap-cell[data-level="2"],
 .githeatmap-legend-cell[data-level="2"] {
+  --githeatmap-scale: 0.7;
   --githeatmap-fill: color-mix(
     in srgb,
-    var(--githeatmap-active) 46%,
+    var(--githeatmap-active) 68%,
     transparent
   );
 }
 
 .githeatmap-cell[data-level="3"],
 .githeatmap-legend-cell[data-level="3"] {
+  --githeatmap-scale: 0.86;
   --githeatmap-fill: color-mix(
     in srgb,
-    var(--githeatmap-active) 66%,
+    var(--githeatmap-active) 86%,
     transparent
   );
 }
 
 .githeatmap-cell[data-level="4"],
 .githeatmap-legend-cell[data-level="4"] {
-  --githeatmap-fill: color-mix(
-    in srgb,
-    var(--githeatmap-active) 88%,
-    transparent
-  );
+  --githeatmap-scale: 1;
+  --githeatmap-fill: var(--githeatmap-active);
 }
 
 .githeatmap-footer {
@@ -171,11 +176,6 @@
   height: 0.58rem;
 }
 
-.githeatmap-link[data-githeatmap-state="fallback"] .githeatmap-grid,
-.githeatmap-link[data-githeatmap-state="fallback"] .githeatmap-legend-scale {
-  opacity: 0.44;
-}
-
 @keyframes githeatmap-fill-sweep {
   0% {
     background-color: var(--githeatmap-empty);
@@ -198,7 +198,7 @@
 
 @media (hover: hover) {
   .githeatmap-link:hover {
-    opacity: 0.86;
+    opacity: 1;
   }
 
   .githeatmap-link:hover .githeatmap-cell:not([data-blank="true"]) {
@@ -209,7 +209,7 @@
 
 .githeatmap-link:focus-visible {
   outline: none;
-  opacity: 0.86;
+  opacity: 1;
 }
 
 .githeatmap-link:focus-visible .githeatmap-cell:not([data-blank="true"]) {

@@ -8,6 +8,8 @@ import { site } from "../config/site";
 import { getEnabledSocialLinks, getSocialLink } from "../utils/social";
 import katexStylesheetUrl from "katex/dist/katex.min.css?url";
 import "../style/base/route-transitions.css";
+import "../style/base/scroll-reveal.css";
+import "../style/components/ui/icon-hover.css";
 
 interface Props {
   title?: string;
@@ -154,6 +156,7 @@ const biotifFontStyles = `
 
 <html
   lang={documentLang}
+  transition:animate="none"
   data-theme={initialTheme}
   data-theme-mode={initialThemeMode}
 >
@@ -161,6 +164,21 @@ const biotifFontStyles = `
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#ffffff" />
+    <script is:inline data-reload-scroll-reset>
+      (function () {
+        var navigation = performance.getEntriesByType("navigation")[0];
+        if (navigation?.type !== "reload" || location.hash) return;
+
+        history.scrollRestoration = "manual";
+        if (history.state) {
+          history.replaceState(
+            { ...history.state, scrollX: 0, scrollY: 0 },
+            "",
+          );
+        }
+        window.scrollTo({ left: 0, top: 0, behavior: "instant" });
+      })();
+    </script>
     <script is:inline>
       (function () {
         var root = document.documentElement;
@@ -281,7 +299,7 @@ const biotifFontStyles = `
     <meta name="twitter:title" content={socialTitle} />
     <meta name="twitter:description" content={pageDescription} />
     <meta name="twitter:image" content={socialImageUrl} />
-    <ClientRouter fallback="animate" />
+    <ClientRouter fallback="swap" />
     {includeKatexStyles && <link rel="stylesheet" href={katexStylesheetUrl} />}
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link

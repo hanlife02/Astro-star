@@ -18,6 +18,8 @@ const { id, label, iconSvg = "", text = "", className = "" } = Astro.props;
   type="button"
   class:list={["floating-action-button", className]}
   aria-label={label}
+  data-icon-tooltip=""
+  data-tooltip-placement="left"
   hidden
 >
   {

@@ -1,0 +1,86 @@
+:where([data-icon-tooltip], [data-icon-hover]) {
+  position: relative;
+  border-radius: 999px;
+}
+
+[data-icon-tooltip]::after {
+  content: attr(aria-label);
+  position: absolute;
+  bottom: calc(100% + 0.4rem);
+  left: 50%;
+  z-index: 50;
+  width: max-content;
+  max-width: min(18rem, calc(100vw - 2rem));
+  padding: 0.35rem 0.6rem;
+  border: 1px solid var(--border-soft);
+  border-radius: 0.5rem;
+  background: var(--paper);
+  box-shadow: 0 0.25rem 0.75rem color-mix(in srgb, var(--line) 8%, transparent);
+  color: var(--line);
+  font-family: "Biotif", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.4;
+  text-align: center;
+  white-space: normal;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-50%);
+  pointer-events: none;
+  transition:
+    opacity 150ms ease,
+    visibility 150ms ease;
+}
+
+[data-icon-tooltip]:not([data-icon-tooltip=""])::after {
+  content: attr(data-icon-tooltip);
+}
+
+[data-icon-tooltip][data-tooltip-placement="bottom"]::after {
+  top: calc(100% + 0.4rem);
+  bottom: auto;
+}
+
+[data-icon-tooltip][data-tooltip-align="end"]::after {
+  left: auto;
+  right: 0;
+  transform: none;
+}
+
+[data-icon-tooltip][data-tooltip-placement="left"]::after {
+  top: 50%;
+  bottom: auto;
+  left: auto;
+  right: calc(100% + 0.4rem);
+  transform: translateY(-50%);
+}
+
+@media (hover: hover) {
+  :root body :is([data-icon-tooltip], [data-icon-hover]):hover {
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--line) 8%, var(--paper));
+  }
+
+  [data-icon-tooltip]:hover::after {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+:root body :is([data-icon-tooltip], [data-icon-hover]):focus-visible {
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--line) 8%, var(--paper));
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+[data-icon-tooltip]:focus-visible::after {
+  opacity: 1;
+  visibility: visible;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-icon-tooltip]::after {
+    transition: none;
+  }
+}

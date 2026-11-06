@@ -1,9 +1,9 @@
 .content-page--article {
-  --article-title-size: clamp(1.82rem, 1.52rem + 0.9vw, 2.95rem);
+  --article-title-size: 2.25rem;
 }
 
 html:lang(zh-CN) .content-page--article {
-  --article-title-size: clamp(1.56rem, 1.36rem + 0.6vw, 2.28rem);
+  --article-title-size: 2rem;
 }
 
 .article-reading-paper {
@@ -110,6 +110,7 @@ html:lang(zh-CN) .content-page--article {
 }
 
 .content-page-body .article-project-link {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -673,9 +674,10 @@ html:lang(zh-CN) .content-page--article {
   font-weight: 500;
 }
 
-.article-comments-thread .wl-sort {
+.article-comments-thread [data-waline] .wl-sort {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 0.52rem;
   margin: 0;
   padding: 0;
@@ -683,11 +685,15 @@ html:lang(zh-CN) .content-page--article {
 
 .article-comments-thread .wl-sort li {
   position: relative;
+  margin-block: 0;
+  padding-inline-start: 1.3em;
   color: color-mix(in srgb, var(--line) 36%, transparent);
   font-size: var(--comment-meta-font-size);
+  white-space: nowrap;
 }
 
 .article-comments-thread .wl-sort li + li {
+  margin-block-start: 0;
   margin-inline-start: 0;
 }
 
@@ -1144,7 +1150,7 @@ html:lang(zh-CN) .content-page--article {
     padding: 0.46rem 0.28rem;
   }
 
-  .article-comments-thread .wl-sort {
+  .article-comments-thread [data-waline] .wl-sort {
     gap: 0.5rem;
   }
 }
@@ -1284,6 +1290,7 @@ html:lang(zh-CN) .content-page--article {
   height: var(--icon-btn-size);
   padding: 0;
   border: 0;
+  border-radius: 999px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1376,20 +1383,6 @@ html:lang(zh-CN) .content-page--article {
     transform 0.2s ease,
     visibility 0s linear 0.2s;
   visibility: hidden;
-}
-
-.article-action-license-text {
-  margin: 0;
-  display: block;
-  font-size: var(--type-sm);
-  line-height: 1.7;
-  font-family:
-    "Iowan Old Style", "Palatino Linotype", "Songti SC", "Noto Serif SC", serif;
-}
-
-.article-action-license-link {
-  color: inherit;
-  text-decoration: none;
 }
 
 .article-action-reward-grid {

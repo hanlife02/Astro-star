@@ -12,38 +12,26 @@
   --article-paper-shadow: rgba(17, 17, 17, 0.12);
   --radius-sm: 0.5rem;
   --radius-md: 1rem;
-  --font-size-base: clamp(0.9375rem, 1.35vw, 1.8rem);
-  /* Small type tracks the root font size so it keeps scaling on large
-     displays, while max() keeps it from shrinking below a readable floor. */
-  --type-xs: clamp(
-    max(12.5px, calc(var(--font-size-base) * 0.66)),
-    0.62rem + 0.08vw,
-    calc(var(--font-size-base) * 0.8)
-  );
-  --type-sm: clamp(
-    max(14px, calc(var(--font-size-base) * 0.76)),
-    0.72rem + 0.1vw,
-    calc(var(--font-size-base) * 0.92)
-  );
-  --type-base: clamp(
-    max(15.5px, calc(var(--font-size-base) * 0.84)),
-    0.78rem + 0.12vw,
-    calc(var(--font-size-base) * 1.02)
-  );
-  --type-md: clamp(17px, 0.9rem + 0.14vw, 21px);
-  --type-lg: clamp(20px, 1.05rem + 0.2vw, 26px);
-  --type-xl: clamp(26px, 1.35rem + 0.32vw, 36px);
-  --type-2xl: clamp(31px, 1.55rem + 0.42vw, 44px);
-  --type-content-body: clamp(17px, 15px + 0.18vw, 20px);
-  --type-content-body-zh: clamp(16.8px, 14.9px + 0.18vw, 19.5px);
-  --type-content-code: clamp(13.8px, 12.6px + 0.08vw, 15.8px);
-  --type-content-caption: clamp(14px, 13px + 0.08vw, 16.2px);
-  --type-content-h1: var(--type-2xl);
-  --type-content-h2: var(--type-xl);
-  --type-content-h3: 1.38rem;
-  --type-content-h4: 1.2rem;
-  --type-content-h5: 1.06rem;
-  --type-content-h6: 0.98rem;
+  /* Keep rem-based type, controls and spacing stable on desktop displays. */
+  --font-size-base: 100%;
+  --type-xs: 0.8125rem;
+  --type-sm: 0.875rem;
+  --type-base: 1rem;
+  --type-md: 1.125rem;
+  --type-lg: 1.375rem;
+  --type-xl: 1.75rem;
+  --type-2xl: 2.25rem;
+  --type-page-title: 2.5rem;
+  --type-content-body: 1.0625rem;
+  --type-content-body-zh: 1.0625rem;
+  --type-content-code: 0.875rem;
+  --type-content-caption: 0.875rem;
+  --type-content-h1: 1.75rem;
+  --type-content-h2: 1.5rem;
+  --type-content-h3: 1.3125rem;
+  --type-content-h4: 1.1875rem;
+  --type-content-h5: 1.0625rem;
+  --type-content-h6: 1rem;
   --type-toc-title: 1.12rem;
   --type-toc-depth-1: 0.96rem;
   --type-toc-depth-2: 0.88rem;
@@ -52,30 +40,33 @@
   --type-toc-depth-5: 0.73rem;
   --type-toc-depth-6: 0.7rem;
   --type-toc-mobile-title: 0.96rem;
-  --shell-max: min(92vw, 112.5rem);
-  --space: clamp(0.1rem, 0.2vw, 1.25rem);
-  --header-main-gap: clamp(1.25rem, 1.4vw, 2.75rem);
-  --footer-height: clamp(0.5rem, 1vh, 1rem);
+  /* The entire foreground shares one centered frame; only the background fills the viewport. */
+  --shell-max: 88rem;
+  --reading-page-max: 56rem;
+  --space: 0.5rem;
+  --header-main-gap: 2rem;
+  --footer-height: 0.75rem;
   --main-col-1-min: 7.5rem;
-  --main-col-1-size: clamp(7.5rem, 8.5vw, 10.5rem);
+  --main-col-1-size: 10.5rem;
   --main-col-2-min: 7.5rem;
   --main-col-3-min: 7.5rem;
   --main-col-1-fr: 0.5fr;
   --main-col-2-fr: 2.5fr;
   --main-col-3-fr: 3.5fr;
-  --main-col-gap: 0.2rem;
+  --main-col-gap: 1.5rem;
   --nav-flyout-min: clamp(10.5rem, 18vw, 14rem);
-  --menu-trigger-width: clamp(2.4rem, 2.8vw, 3rem);
-  --menu-trigger-height: clamp(2rem, 2.2vw, 2.5rem);
-  --menu-icon-size: clamp(1.3rem, 1.7vw, 2rem);
-  --icon-btn-size: clamp(2.25rem, 3vw, 3.75rem);
-  --icon-size: clamp(1.4rem, 2vw, 2.25rem);
-  --signature-link-size: clamp(1rem, 1.4vw, 1.45rem);
+  /* One text-relative scale for standalone icons and their clickable areas. */
+  --icon-size: 1.375rem;
+  --icon-btn-size: max(44px, 2.75rem);
+  --menu-trigger-width: var(--icon-btn-size);
+  --menu-trigger-height: var(--icon-btn-size);
+  --menu-icon-size: var(--icon-size);
+  --signature-link-size: 1rem;
   --layout-sticky-top: max(
     clamp(0.35rem, 1vw, 0.75rem),
     env(safe-area-inset-top)
   );
-  --layout-sticky-main-top: clamp(4.4rem, 8vw, 6.4rem);
+  --layout-sticky-main-top: 6rem;
 }
 
 :root[data-theme="dark"] {
@@ -142,7 +133,7 @@ body {
 
 .content-page-body h1 {
   margin: 0 0 1rem;
-  font-size: clamp(2rem, 1.8rem + 1vw, 3.5rem);
+  font-size: var(--type-page-title);
   font-weight: 500;
   line-height: 1.1;
 }

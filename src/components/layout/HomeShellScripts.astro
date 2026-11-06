@@ -5,8 +5,9 @@
 <script>
   import { initHomeShellTheme } from "../../scripts/home-shell-theme";
   import { initHomeShellSignature } from "../../scripts/home-shell-signature";
-  import { initHomeShellDesktopSignatureNav } from "../../scripts/home-shell-desktop-signature-nav";
   import { initHomeShellMobileNav } from "../../scripts/home-shell-mobile-nav";
+  import { initHomeShellHeaderScroll } from "../../scripts/home-shell-header-scroll";
+  import { initHomeShellScrollReveal } from "../../scripts/home-shell-scroll-reveal";
   import { initHomeShellContentPageEntrance } from "../../scripts/home-shell-content-page-entrance";
   import { initHomeShellRouteTransitionLock } from "../../scripts/home-shell-route-transition-lock";
   import { initHomeShellSearch } from "../../scripts/home-shell-search";
@@ -21,7 +22,8 @@
     "__homeShellContentTocCleanup",
     "__homeShellMobileTocCleanup",
     "__homeShellMobileNavCleanup",
-    "__homeShellDesktopSignatureNavCleanup",
+    "__homeShellHeaderScrollCleanup",
+    "__homeShellScrollRevealCleanup",
     "__homeShellDocumentProgressCleanup",
     "__homeShellCodeCopyCleanup",
     "__homeShellContentFoldCleanup",
@@ -77,11 +79,9 @@
   const initHomeShell = () => {
     runHomeShellInitializer("theme", initHomeShellTheme);
     runHomeShellInitializer("signature", initHomeShellSignature);
-    runHomeShellInitializer(
-      "desktop-signature-nav",
-      initHomeShellDesktopSignatureNav,
-    );
     runHomeShellInitializer("mobile-nav", initHomeShellMobileNav);
+    runHomeShellInitializer("header-scroll", initHomeShellHeaderScroll);
+    runHomeShellInitializer("scroll-reveal", initHomeShellScrollReveal);
     runHomeShellInitializer(
       "content-page-entrance",
       initHomeShellContentPageEntrance,

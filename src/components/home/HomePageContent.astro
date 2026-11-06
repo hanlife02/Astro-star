@@ -4,9 +4,11 @@ import HomeLayout from "../../layouts/HomeLayout.astro";
 import GitHeatmap from "./githeatmap.astro";
 import Signature from "./signature.astro";
 import FooterMeta from "../common/FooterMeta.astro";
+import ArchiveActivityHeatmap from "../content/ArchiveActivityHeatmap.astro";
 import AppPanelIcon from "../ui/icons/AppPanelIcon.astro";
 import type { SocialLinkItem } from "../../types/social";
 import { isCodeTimeConfigured } from "../../utils/codetime";
+import { getSocialLink } from "../../utils/social";
 import "../../style/components/home/profile.css";
 import "../../style/components/home/latest-articles.css";
 import "../../style/components/home/home-page-content.css";
@@ -35,6 +37,13 @@ interface LatestTimelineGroup {
 }
 
 interface Props {
+  siteStats: { articles: number; words: number };
+  activityEntries: {
+    date: string;
+    dateLabel: string;
+    href: string;
+    title: string;
+  }[];
   profile: ProfileData;
   ownerName: string;
   profileLinks: SocialLinkItem[];
@@ -43,6 +52,8 @@ interface Props {
 }
 
 const {
+  siteStats,
+  activityEntries,
   profile,
   ownerName,
   profileLinks,
@@ -50,6 +61,21 @@ const {
   latestNoteTimelineGroups,
 } = Astro.props as Props;
 const homeDescription = profile.intro.trim() || profile.bio.trim();
+const introSentences = profile.intro
+  .trim()
+  .match(/^(.+?[.!?])(?:\s+|$)([\s\S]*)$/);
+const introLead = introSentences?.[1] ?? profile.intro.trim();
+const introDetail = introSentences?.[2]?.trim() ?? "";
+const introName = ownerName.trim();
+const introNameIndex = introName ? introLead.indexOf(introName) : -1;
+const introLeadParts =
+  introNameIndex >= 0
+    ? [
+        introLead.slice(0, introNameIndex),
+        introName,
+        introLead.slice(introNameIndex + introName.length),
+      ]
+    : [introLead];
 const encodeCssUrl = (value: string) =>
   encodeURI(value).replace(
     /["'()\\]/g,
@@ -57,6 +83,7 @@ const encodeCssUrl = (value: string) =>
   );
 const avatarStyle = `--profile-avatar-image: url("${encodeCssUrl(profile.avatarSrc)}")`;
 const codeTimeEnabled = isCodeTimeConfigured(CODETIME_TOKEN);
+const githubActivityEnabled = Boolean(getSocialLink("github")?.handle?.trim());
 const CodeTime = codeTimeEnabled
   ? (await import("./CodeTime.astro")).default
   : undefined;
@@ -86,72 +113,124 @@ function isExternalLink(href: string) {
     aria-label="Profile section"
     data-home-entrance-enabled="true"
   >
-    <span
-      class="profile-avatar-wrap home-enter-item"
-      data-codetime-status-root={codeTimeEnabled ? "" : undefined}
-    >
+    <div class="profile-identity">
       <span
-        class="profile-avatar"
-        role="img"
-        aria-label={ownerName}
-        style={avatarStyle}
-        data-home-profile-avatar></span>
-      {
-        CodeTime && (
-          <span
-            class="profile-codetime-popover"
-            aria-hidden="true"
-            data-codetime-status-popover
-            hidden
-          >
-            <img
-              class="profile-codetime-status"
-              alt=""
-              width="380"
-              height="116"
-              decoding="async"
-              fetchpriority="low"
-              referrerpolicy="no-referrer"
-              data-codetime-status
-              data-codetime-status-src="/api/codetime-status.svg"
-            />
-          </span>
-        )
-      }
-    </span>
-    <h1 class="profile-name home-enter-item">{ownerName}</h1>
-    {
-      profileLinks.length > 0 && (
-        <nav class="profile-links" aria-label="Profile quick links">
-          {profileLinks.map((item) => (
-            <a
-              class="profile-link home-enter-item"
-              href={item.href}
-              target={isExternalLink(item.href) ? "_blank" : undefined}
-              rel={isExternalLink(item.href) ? "noreferrer" : undefined}
-              aria-label={item.name}
+        class="profile-avatar-wrap home-enter-item"
+        data-codetime-status-root={codeTimeEnabled ? "" : undefined}
+      >
+        <span
+          class="profile-avatar-orbit"
+          data-orbit-side="back"
+          aria-hidden="true"></span>
+        <span
+          class="profile-avatar"
+          role="img"
+          aria-label={ownerName}
+          style={avatarStyle}
+          data-home-profile-avatar></span>
+        <span
+          class="profile-avatar-orbit"
+          data-orbit-side="front"
+          aria-hidden="true"></span>
+        {
+          CodeTime && (
+            <span
+              class="profile-codetime-popover"
+              aria-hidden="true"
+              data-codetime-status-popover
+              hidden
             >
-              <AppPanelIcon name={item.icon} label={item.name} />
-            </a>
-          ))}
-        </nav>
+              <img
+                class="profile-codetime-status"
+                alt=""
+                width="380"
+                height="116"
+                decoding="async"
+                fetchpriority="low"
+                referrerpolicy="no-referrer"
+                data-codetime-status
+                data-codetime-status-src="/api/codetime-status.svg"
+              />
+            </span>
+          )
+        }
+      </span>
+      <div class="profile-copy home-enter-item">
+        {
+          introLead && (
+            <div class="profile-bio">
+              <h1 class="profile-intro-lead">
+                {introLeadParts.map((part, index) =>
+                  index === 1 ? (
+                    <span class="profile-intro-name">{part}</span>
+                  ) : (
+                    part
+                  ),
+                )}
+              </h1>
+              {introDetail && (
+                <Fragment>
+                  {" "}
+                  <span class="profile-intro-detail">{introDetail}</span>
+                </Fragment>
+              )}
+            </div>
+          )
+        }
+      </div>
+    </div>
+    {
+      profile.bio.trim() && (
+        <p class="profile-one-word profile-motto home-enter-item">
+          <em>{profile.bio}</em>
+        </p>
       )
     }
-    <p class="profile-one-word home-enter-item">{profile.bio}</p>
-    <p class="profile-bio home-enter-item">{profile.intro}</p>
-    <div class="home-profile-metrics">
-      <div class="home-enter-item home-profile-metric">
-        <GitHeatmap />
+    <dl
+      class="profile-site-stats home-enter-item"
+      aria-label="Site statistics"
+      data-home-site-stats
+      data-article-paths={JSON.stringify(
+        activityEntries.map((entry) => entry.href),
+      )}
+    >
+      <div class="profile-site-stat">
+        <dt>articles</dt>
+        <dd>{siteStats.articles.toLocaleString("en-US")}</dd>
       </div>
+      <div class="profile-site-stat">
+        <dt>words</dt>
+        <dd>{siteStats.words.toLocaleString("en-US")}</dd>
+      </div>
+      <div class="profile-site-stat">
+        <dt>views</dt>
+        <dd data-home-total-views>—</dd>
+      </div>
+      <div class="profile-site-stat">
+        <dt>likes</dt>
+        <dd data-home-total-likes>—</dd>
+      </div>
+    </dl>
+    <div class="profile-connections">
       {
-        CodeTime && (
-          <div
-            class="home-enter-item home-profile-metric"
-            data-codetime-metric
-            data-codetime-state="waiting"
-          >
-            <CodeTime />
-          </div>
+        profileLinks.length > 0 && (
+          <nav class="profile-links" aria-label="Profile quick links">
+            {profileLinks.map((item) => (
+              <a
+                class="profile-link home-enter-item"
+                href={item.href}
+                target={isExternalLink(item.href) ? "_blank" : undefined}
+                rel={isExternalLink(item.href) ? "noreferrer" : undefined}
+                aria-label={item.name}
+                data-icon-hover
+              >
+                <AppPanelIcon name={item.icon} label={item.name} />
+                <span class="profile-link-label" aria-hidden="true">
+                  {item.name}
+                </span>
+              </a>
+            ))}
+          </nav>
         )
       }
     </div>
@@ -162,6 +241,23 @@ function isExternalLink(href: string) {
     aria-label="Latest content section"
     data-home-entrance-enabled="true"
   >
+    {
+      activityEntries.length > 0 && (
+        <section class="home-activity" aria-labelledby="home-articles-title">
+          <h2 class="home-activity-title" id="home-articles-title">
+            <span class="home-activity-title-text">Article Timeline</span>
+          </h2>
+          <div class="home-profile-metrics">
+            <ArchiveActivityHeatmap
+              entries={activityEntries}
+              label="Blog, Note and Project"
+              months={18}
+              variant="orbit"
+            />
+          </div>
+        </section>
+      )
+    }
     {
       [
         {
@@ -226,6 +322,21 @@ function isExternalLink(href: string) {
                             "latest-articles-item--year-end",
                         ]}
                       >
+                        <svg
+                          class="latest-articles-orbit"
+                          viewBox="0 0 32 100"
+                          preserveAspectRatio="none"
+                          aria-hidden="true"
+                          focusable="false"
+                        >
+                          <path
+                            d="M16 0 C16 24 9 26 9 50 C9 74 16 76 16 100"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="0.75"
+                            vector-effect="non-scaling-stroke"
+                          />
+                        </svg>
                         <div class="latest-articles-item-content">
                           <time
                             class="latest-articles-time"
@@ -258,6 +369,33 @@ function isExternalLink(href: string) {
           )}
         </section>
       ))
+    }
+    {
+      CodeTime && (
+        <div class="home-activity">
+          <div
+            class="home-profile-metric"
+            data-codetime-metric
+            data-codetime-state="waiting"
+          >
+            <CodeTime />
+          </div>
+        </div>
+      )
+    }
+    {
+      githubActivityEnabled && (
+        <section class="home-activity" aria-labelledby="home-github-title">
+          <h2 class="home-activity-title" id="home-github-title">
+            <span class="home-activity-title-text">Github Heatmap</span>
+          </h2>
+          <div class="home-profile-metrics">
+            <div class="home-profile-metric">
+              <GitHeatmap />
+            </div>
+          </div>
+        </section>
+      )
     }
   </section>
   <FooterMeta slot="footer-info" />
