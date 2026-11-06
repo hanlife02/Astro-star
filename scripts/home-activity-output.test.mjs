@@ -77,6 +77,21 @@ test("homepage activity includes Blog, Note and Project posts within its 18-mont
   assert.deepEqual(actualLinks, expectedLinks);
 });
 
+test("Blog and Note archives start with year lists instead of activity timelines", () => {
+  for (const section of ["blog", "note"]) {
+    const page = readPage(section);
+    assert.equal(
+      findAll(page, (node) => hasClass(node, "archive-activity-heatmap"))
+        .length,
+      0,
+    );
+    assert.ok(
+      findAll(page, (node) => hasClass(node, "collection-archive-group"))
+        .length > 0,
+    );
+  }
+});
+
 test("homepage keeps both latest lists limited to four articles", () => {
   const homepage = readPage();
   for (const section of ["blogs", "notes"]) {

@@ -3,11 +3,7 @@ import { getCollection } from "astro:content";
 import SectionArchivePage from "../components/content/SectionArchivePage.astro";
 import { resolveContentDates } from "../utils/content-dates";
 import { resolveContentSlug } from "../utils/content-slug";
-import {
-  formatContentDate,
-  getContentYear,
-  toContentIsoString,
-} from "../utils/content-time-zone";
+import { formatContentDate, getContentYear } from "../utils/content-time-zone";
 import { site } from "../config/site";
 import { resolveContentTitle } from "../utils/content-title";
 import { isPublishedContentEntry } from "../utils/content-visibility";
@@ -125,15 +121,6 @@ const pageLabel =
     : sectionKey === "note"
       ? "All Notes"
       : basePageLabel;
-const activityEntries =
-  sectionKey === "blog" || sectionKey === "note"
-    ? archiveArticles.map((article) => ({
-        date: toContentIsoString(article.createdAt),
-        dateLabel: article.createdLabel,
-        href: article.href,
-        title: article.title,
-      }))
-    : [];
 const taxonomyTags = buildSectionTags(
   sectionKey,
   collectionEntries.map((entry) => ({ id: entry.id, tags: entry.data.tags })),
@@ -143,7 +130,6 @@ const seoDescription = sectionDescriptions[sectionKey];
 ---
 
 <SectionArchivePage
-  activityEntries={activityEntries}
   pageLabel={pageLabel}
   title={seoTitle}
   description={seoDescription}
