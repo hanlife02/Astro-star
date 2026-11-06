@@ -1,0 +1,83 @@
+/* Reveal the new paper from the theme control, like a quiet lunar eclipse. */
+:root[data-theme-transitioning] {
+  /* Astro names the root for route swaps; theme reveals need one page snapshot. */
+  view-transition-name: root !important;
+}
+
+/* Capture each theme with its final colors, without mixed-color hover fades. */
+:root[data-theme-transitioning],
+:root[data-theme-transitioning] *,
+:root[data-theme-transitioning] *::before,
+:root[data-theme-transitioning] *::after {
+  transition: none !important;
+}
+
+:root[data-theme-transitioning]::view-transition,
+:root[data-theme-transitioning]::view-transition-group(*),
+:root[data-theme-transitioning]::view-transition-image-pair(*),
+:root[data-theme-transitioning]::view-transition-old(*),
+:root[data-theme-transitioning]::view-transition-new(*) {
+  pointer-events: none;
+}
+
+:root[data-theme-transitioning]::view-transition-old(root),
+:root[data-theme-transitioning]::view-transition-new(root) {
+  mix-blend-mode: normal;
+}
+
+:root[data-theme-transitioning]::view-transition-old(root) {
+  z-index: 1;
+}
+
+:root[data-theme-transitioning]::view-transition-new(root) {
+  z-index: 2;
+}
+
+.theme-btn[data-theme-changing]::before {
+  position: absolute;
+  top: 0.05rem;
+  right: 0.05rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  background: currentColor;
+  clip-path: polygon(
+    50% 0%,
+    61% 39%,
+    100% 50%,
+    61% 61%,
+    50% 100%,
+    39% 61%,
+    0% 50%,
+    39% 39%
+  );
+  content: "";
+  pointer-events: none;
+  animation: theme-star-glint 650ms ease-out both;
+}
+
+/* Keep hover labels out of the full-page snapshots. */
+.theme-btn[data-theme-changing]::after {
+  visibility: hidden;
+}
+
+@keyframes theme-star-glint {
+  0% {
+    opacity: 0;
+    transform: scale(0.4) rotate(-25deg);
+  }
+  30% {
+    opacity: 0.8;
+    transform: scale(1) rotate(0deg);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.6) rotate(25deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-btn[data-theme-changing]::before {
+    display: none;
+    animation: none;
+  }
+}

@@ -21,10 +21,24 @@ export function initHomeShellTheme() {
   };
   const snowBackground = document.querySelector(".snow-bg");
   const media = window.matchMedia("(prefers-color-scheme: dark)");
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const root = document.documentElement;
+  let activeTransition: ViewTransition | undefined;
+  let revealAnimation: Animation | undefined;
+
+  const cancelTransition = () => {
+    activeTransition?.skipTransition();
+    activeTransition = undefined;
+    revealAnimation?.cancel();
+    revealAnimation = undefined;
+    delete root.dataset.themeTransitioning;
+    if (toggleButton) delete toggleButton.dataset.themeChanging;
+  };
 
   let currentMode: ThemeMode = "system";
   browserWindow.__homeShellThemeCleanup = () => {
     controller.abort();
+    cancelTransition();
   };
 
   const resolveMode = (mode: ThemeMode) =>
@@ -122,10 +136,80 @@ export function initHomeShellTheme() {
     writeCookie(RESOLVED_COOKIE_KEY, resolved);
   };
 
-  toggleButton?.addEventListener(
-    "click",
+  const toggleTheme = async () => {
+    if (activeTransition) return;
+    const mode = nextMode(currentMode);
+    if (
+      reducedMotion.matches ||
+      typeof document.startViewTransition !== "function" ||
+      root.dataset.routeTransitioning === "true" ||
+      root.dataset.theme === resolveMode(mode) ||
+      !toggleButton
+    ) {
+      applyTheme(mode);
+      return;
+    }
+
+    const bounds = toggleButton.getBoundingClientRect();
+    const x = bounds.left + bounds.width / 2;
+    const y = bounds.top + bounds.height / 2;
+    const radius = Math.hypot(
+      Math.max(x, window.innerWidth - x),
+      Math.max(y, window.innerHeight - y),
+    );
+    let transition: ViewTransition | undefined;
+    let applied = false;
+    root.dataset.themeTransitioning = "true";
+    toggleButton.dataset.themeChanging = "true";
+
+    try {
+      transition = document.startViewTransition(() => {
+        if (controller.signal.aborted) return;
+        applyTheme(mode);
+        applied = true;
+      });
+      activeTransition = transition;
+      // A hidden tab or an Astro navigation can skip the snapshot capture.
+      void transition.finished.catch(() => {});
+      await transition.ready;
+      if (controller.signal.aborted || activeTransition !== transition) return;
+
+      revealAnimation = root.animate(
+        {
+          clipPath: [
+            `circle(0px at ${x}px ${y}px)`,
+            `circle(${Math.ceil(radius)}px at ${x}px ${y}px)`,
+          ],
+        },
+        {
+          duration: 650,
+          easing: "cubic-bezier(0.22, 1, 0.36, 1)",
+          pseudoElement: "::view-transition-new(root)",
+          fill: "both",
+        },
+      );
+      await revealAnimation.finished;
+    } catch {
+      // Theme selection must still work when a browser cannot capture snapshots.
+      if (!controller.signal.aborted && !applied) applyTheme(mode);
+    } finally {
+      if (activeTransition === transition) cancelTransition();
+    }
+  };
+
+  toggleButton?.addEventListener("click", () => void toggleTheme(), {
+    signal: controller.signal,
+  });
+  document.addEventListener("astro:before-preparation", cancelTransition, {
+    signal: controller.signal,
+  });
+  window.addEventListener("resize", cancelTransition, {
+    signal: controller.signal,
+  });
+  reducedMotion.addEventListener(
+    "change",
     () => {
-      applyTheme(nextMode(currentMode));
+      if (reducedMotion.matches) cancelTransition();
     },
     { signal: controller.signal },
   );
@@ -134,6 +218,7 @@ export function initHomeShellTheme() {
     "change",
     () => {
       if (currentMode === "system") {
+        cancelTransition();
         applyTheme("system");
       }
     },
