@@ -371,19 +371,6 @@ function isExternalLink(href: string) {
       ))
     }
     {
-      CodeTime && (
-        <div class="home-activity">
-          <div
-            class="home-profile-metric"
-            data-codetime-metric
-            data-codetime-state="waiting"
-          >
-            <CodeTime />
-          </div>
-        </div>
-      )
-    }
-    {
       githubActivityEnabled && (
         <section class="home-activity" aria-labelledby="home-github-title">
           <h2 class="home-activity-title" id="home-github-title">
@@ -395,6 +382,19 @@ function isExternalLink(href: string) {
             </div>
           </div>
         </section>
+      )
+    }
+    {
+      CodeTime && (
+        <div class="home-activity home-activity--codetime">
+          <div
+            class="home-profile-metric"
+            data-codetime-metric
+            data-codetime-state="waiting"
+          >
+            <CodeTime />
+          </div>
+        </div>
       )
     }
   </section>

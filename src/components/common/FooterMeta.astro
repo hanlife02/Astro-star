@@ -1,5 +1,6 @@
 ---
 import { site } from "../../config/site";
+import { version } from "../../../package.json";
 import "../../style/components/home/footer-info.css";
 
 interface Props {
@@ -23,6 +24,7 @@ const beianLinks = [site.site.beian.icp, site.site.beian.moe].filter(
       href={repoHref}
       target="_blank"
       rel="noreferrer"
+      data-icon-tooltip={`v${version}\n${repoHref}`}
     >
       @{copyrightYears}
       {site.site.footer.name}
