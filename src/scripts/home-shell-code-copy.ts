@@ -33,7 +33,6 @@ function setCopyButtonState(button: HTMLButtonElement, state: CodeCopyState) {
   const { label, icon } = CODE_COPY_ICONS[state];
   button.dataset.copyState = state;
   button.setAttribute("aria-label", label);
-  button.title = label;
   button.innerHTML = icon;
 }
 
@@ -81,6 +80,8 @@ export function initHomeShellCodeCopy() {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "content-code-copy";
+    button.dataset.iconTooltip = "";
+    button.dataset.tooltipPlacement = "left";
     setCopyButtonState(button, "idle");
 
     button.addEventListener(

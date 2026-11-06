@@ -136,6 +136,7 @@
 }
 
 .profile-link {
+  position: relative;
   width: var(--icon-btn-size);
   height: var(--icon-btn-size);
   border-radius: 999px;
@@ -144,7 +145,34 @@
   justify-content: center;
   color: var(--line-soft);
   text-decoration: none;
-  transition: color 0.2s ease;
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.profile-link-label {
+  position: absolute;
+  bottom: calc(100% + 0.4rem);
+  left: 50%;
+  z-index: 5;
+  padding: 0.35rem 0.6rem;
+  border: 1px solid var(--border-soft);
+  border-radius: 0.5rem;
+  background: var(--paper);
+  box-shadow: 0 0.25rem 0.75rem color-mix(in srgb, var(--line) 8%, transparent);
+  color: var(--line);
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.4;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, 0.2rem);
+  pointer-events: none;
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease,
+    visibility 0.15s ease;
 }
 
 .profile-link svg {
@@ -181,6 +209,13 @@
 
   .profile-link:hover {
     color: var(--line);
+    background-color: color-mix(in srgb, var(--line) 8%, transparent);
+  }
+
+  .profile-link:hover .profile-link-label {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, 0);
   }
 
   .profile-link:hover svg {
@@ -189,8 +224,16 @@
 }
 
 .profile-link:focus-visible {
-  outline: none;
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
   color: var(--line);
+  background-color: color-mix(in srgb, var(--line) 8%, transparent);
+}
+
+.profile-link:focus-visible .profile-link-label {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
 }
 
 .profile-avatar-wrap:focus-visible {
@@ -205,6 +248,8 @@
 @media (prefers-reduced-motion: reduce) {
   .profile-avatar,
   .profile-codetime-popover,
+  .profile-link,
+  .profile-link-label,
   .profile-link svg {
     transition: none;
   }

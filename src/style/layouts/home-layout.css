@@ -590,7 +590,7 @@
   background: transparent;
   color: var(--line-soft);
   display: inline-flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: center;
   padding-bottom: 0;
   cursor: pointer;

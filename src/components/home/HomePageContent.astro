@@ -138,8 +138,12 @@ function isExternalLink(href: string) {
                 target={isExternalLink(item.href) ? "_blank" : undefined}
                 rel={isExternalLink(item.href) ? "noreferrer" : undefined}
                 aria-label={item.name}
+                data-icon-hover
               >
                 <AppPanelIcon name={item.icon} label={item.name} />
+                <span class="profile-link-label" aria-hidden="true">
+                  {item.name}
+                </span>
               </a>
             ))}
           </nav>

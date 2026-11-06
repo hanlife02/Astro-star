@@ -85,6 +85,9 @@ const pathname = Astro.url.pathname;
           id="theme-toggle"
           class="theme-btn"
           aria-label="Theme switcher"
+          data-icon-tooltip="Theme switcher"
+          data-tooltip-placement="bottom"
+          data-tooltip-align="end"
         >
           <span data-theme-icon="light" hidden={initialThemeMode !== "light"}
             ><Icon svg={Sun} /></span
@@ -103,6 +106,9 @@ const pathname = Astro.url.pathname;
             type="button"
             class="search-btn"
             aria-label="Search"
+            data-icon-tooltip="Search"
+            data-tooltip-placement="bottom"
+            data-tooltip-align="end"
             aria-controls="home-shell-search"
             aria-haspopup="dialog"
             data-home-shell-search-trigger
@@ -112,7 +118,10 @@ const pathname = Astro.url.pathname;
         )
       }
       <details class="nav-drawer mobile-nav-drawer" data-home-shell-mobile-nav>
-        <summary class="hamburger" aria-label="Toggle navigation">
+        <summary class="hamburger" aria-label="Toggle navigation"
+          data-icon-tooltip="Navigation"
+          data-tooltip-placement="bottom"
+          data-tooltip-align="end">
           <Icon svg={AlignLeft} />
         </summary>
 
@@ -209,7 +218,7 @@ const pathname = Astro.url.pathname;
         class="footer-rss-btn"
         href="/project/"
         aria-label="View projects"
-        title="Projects"
+        data-icon-tooltip="Projects"
         data-astro-prefetch
       >
         <Icon svg={FolderKanban} />
@@ -218,7 +227,7 @@ const pathname = Astro.url.pathname;
         class="footer-rss-btn"
         href="/rss.xml"
         aria-label="Subscribe via RSS"
-        title="RSS Feed"
+        data-icon-tooltip="RSS Feed"
       >
         <RssIcon />
       </a>
@@ -230,7 +239,7 @@ const pathname = Astro.url.pathname;
             target="_blank"
             rel="noreferrer"
             aria-label="Visit GitHub profile"
-            title="GitHub"
+            data-icon-tooltip="GitHub"
           >
             <GithubIcon />
           </a>

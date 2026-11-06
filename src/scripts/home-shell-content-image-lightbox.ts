@@ -38,6 +38,9 @@ function createLightbox() {
   closeButton.className = "content-image-lightbox-close";
   closeButton.type = "button";
   closeButton.setAttribute("aria-label", "Close image preview");
+  closeButton.dataset.iconTooltip = "";
+  closeButton.dataset.tooltipPlacement = "bottom";
+  closeButton.dataset.tooltipAlign = "end";
   closeButton.dataset.contentImageLightboxClose = "true";
 
   const closeIcon = document.createElement("span");

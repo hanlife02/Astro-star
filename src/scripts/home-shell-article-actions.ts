@@ -67,7 +67,6 @@ function setLikeUnavailable(
   button.disabled = true;
   button.setAttribute("aria-label", "点赞暂不可用");
   button.setAttribute("aria-pressed", "false");
-  button.title = "点赞暂不可用";
   delete button.dataset.articleLikeReady;
   countElement.textContent = "—";
 }
@@ -102,7 +101,6 @@ function initArticleLike(root: HTMLElement, runId: number) {
 
     if (!available) {
       button.setAttribute("aria-label", "点赞暂不可用");
-      button.title = "点赞暂不可用";
       return;
     }
 
@@ -111,7 +109,6 @@ function initArticleLike(root: HTMLElement, runId: number) {
       "aria-label",
       `${actionLabel}，当前 ${formatLikeCount(count)} 个赞`,
     );
-    button.title = actionLabel;
   };
 
   render();
