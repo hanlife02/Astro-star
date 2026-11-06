@@ -31,6 +31,11 @@
   width: 100%;
 }
 
+.footer-meta-link--copyright::after {
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
 .footer-meta-group {
   display: inline-flex;
   align-items: center;
@@ -76,6 +81,11 @@
 
   .footer-meta-link {
     width: auto;
+  }
+
+  .footer-meta-link--copyright::after {
+    left: 0;
+    transform: none;
   }
 
   .footer-meta-group {
