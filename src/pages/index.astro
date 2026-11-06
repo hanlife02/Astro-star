@@ -7,6 +7,7 @@ import { getSocialLinks } from "../utils/social";
 import { resolveContentDates } from "../utils/content-dates";
 import { resolveContentSlug } from "../utils/content-slug";
 import {
+  formatContentDate,
   getContentMonthDay,
   getContentYear,
   toContentIsoString,
@@ -14,6 +15,7 @@ import {
 import { resolveContentTitle } from "../utils/content-title";
 import { isPublishedContentEntry } from "../utils/content-visibility";
 import { getGitTimestamps } from "../utils/git-timestamps";
+import { countContentWords } from "../utils/content-word-count";
 
 export const prerender = true;
 
@@ -23,6 +25,9 @@ const latestBlogEntries = (await getCollection("blog")).filter(
   isPublishedContentEntry,
 );
 const latestNoteEntries = (await getCollection("note")).filter(
+  isPublishedContentEntry,
+);
+const projectEntries = (await getCollection("project")).filter(
   isPublishedContentEntry,
 );
 
@@ -45,8 +50,9 @@ interface LatestTimelineGroup {
 function buildLatestArticles(
   entries:
     | Awaited<typeof latestBlogEntries>
-    | Awaited<typeof latestNoteEntries>,
-  section: "blog" | "note",
+    | Awaited<typeof latestNoteEntries>
+    | Awaited<typeof projectEntries>,
+  section: "blog" | "note" | "project",
 ) {
   const articles: LatestArticleItem[] = [];
 
@@ -98,14 +104,33 @@ function buildLatestTimelineGroups(latestArticles: LatestArticleItem[]) {
   }, []);
 }
 
-const latestBlogArticles = buildLatestArticles(latestBlogEntries, "blog").slice(
-  0,
-  4,
-);
-const latestNoteArticles = buildLatestArticles(latestNoteEntries, "note").slice(
-  0,
-  4,
-);
+const blogArticles = buildLatestArticles(latestBlogEntries, "blog");
+const noteArticles = buildLatestArticles(latestNoteEntries, "note");
+const projectArticles = buildLatestArticles(projectEntries, "project");
+const activityEntries = [
+  ...blogArticles,
+  ...noteArticles,
+  ...projectArticles,
+].map((article) => ({
+  date: article.pubDateIso,
+  dateLabel: formatContentDate(new Date(article.pubDateIso)),
+  href: article.href,
+  title: article.title,
+}));
+const publishedEntries = [
+  ...latestBlogEntries,
+  ...latestNoteEntries,
+  ...projectEntries,
+];
+const siteStats = {
+  articles: publishedEntries.length,
+  words: publishedEntries.reduce(
+    (total, entry) => total + countContentWords(entry.body ?? ""),
+    0,
+  ),
+};
+const latestBlogArticles = blogArticles.slice(0, 4);
+const latestNoteArticles = noteArticles.slice(0, 4);
 const latestBlogTimelineGroups = buildLatestTimelineGroups(latestBlogArticles);
 const latestNoteTimelineGroups = buildLatestTimelineGroups(latestNoteArticles);
 const profileLinks = getSocialLinks(socialDisplay.home).slice(0, 4);
@@ -117,4 +142,6 @@ const profileLinks = getSocialLinks(socialDisplay.home).slice(0, 4);
   profileLinks={profileLinks}
   latestBlogTimelineGroups={latestBlogTimelineGroups}
   latestNoteTimelineGroups={latestNoteTimelineGroups}
+  activityEntries={activityEntries}
+  siteStats={siteStats}
 />

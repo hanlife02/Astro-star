@@ -62,6 +62,13 @@ const profileStylesSource = await readFile(
   new URL("../src/style/components/home/profile.css", import.meta.url),
   "utf8",
 );
+const homePageStylesSource = await readFile(
+  new URL(
+    "../src/style/components/home/home-page-content.css",
+    import.meta.url,
+  ),
+  "utf8",
+);
 const heatmapSource = await readFile(
   new URL("../src/components/home/githeatmap.astro", import.meta.url),
   "utf8",
@@ -89,6 +96,32 @@ function getConfiguredSignatureSvg(source) {
   return match[1];
 }
 
+test("homepage timeline and GitHub headings share Latest typography and star styling", () => {
+  for (const title of ["Article Timeline", "Github Heatmap"]) {
+    assert.ok(
+      homePageSource.includes(
+        `class="home-activity-title-text">${title}</span>`,
+      ),
+    );
+  }
+  assert.match(
+    homePageStylesSource,
+    /\.home-latest-sequence \.latest-articles-title,\s*\.home-activity-title\s*\{[^}]*font-size: 1\.5rem;/,
+  );
+  assert.match(
+    homePageStylesSource,
+    /\.latest-articles-title-text,\s*\.home-activity-title-text\s*\{[^}]*-webkit-text-stroke: 0\.75px var\(--line\);/,
+  );
+  assert.match(
+    homePageStylesSource,
+    /\.home-activity-title\s*\{[^}]*justify-content: center;/,
+  );
+  assert.match(
+    homePageStylesSource,
+    /\.home-activity \.archive-activity-timeline-dot\s*\{[^}]*clip-path: var\(--home-star-shape\);/,
+  );
+});
+
 test("the homepage directly paints its preloaded avatar without a fallback", () => {
   assert.match(homePageSource, /data-home-avatar-preload/);
   assert.match(homePageSource, /href=\{profile\.avatarSrc\}/);
@@ -114,6 +147,45 @@ test("the homepage entrance is CSS-only", () => {
   assert.equal(entranceScriptExists, false);
   assert.doesNotMatch(pageModulesSource, /name: "home-entrance"/);
   assert.doesNotMatch(pageModulesSource, /name: "profile-avatar"/);
+});
+
+test("the avatar star follows its ring while reduced motion keeps it still", () => {
+  assert.match(
+    homePageSource,
+    /class="profile-avatar-orbit"\s+data-orbit-side="back"\s+aria-hidden="true"/,
+  );
+  assert.match(
+    homePageStylesSource,
+    /offset-path: ellipse\(50% 50% at 50% 50%\)/,
+  );
+  assert.match(
+    homePageStylesSource,
+    /@media \(prefers-reduced-motion: no-preference\)\s*\{\s*\.profile-avatar-orbit::after\s*\{\s*animation: profile-star-orbit 18s linear infinite/,
+  );
+  assert.match(
+    homePageStylesSource,
+    /\.home-profile-sequence \.profile-avatar\s*\{\s*opacity: 0\.85;/,
+  );
+});
+
+test("the avatar occludes the far orbit while the near ring and synchronized star pass in front", () => {
+  assert.equal(
+    (homePageSource.match(/class="profile-avatar-orbit"/g) ?? []).length,
+    2,
+  );
+  assert.match(homePageSource, /data-orbit-side="front"\s+aria-hidden="true"/);
+  assert.match(
+    homePageStylesSource,
+    /\.profile-avatar-orbit\[data-orbit-side="back"\]\s*\{[^}]*z-index: 0;[^}]*clip-path: inset\(-0\.75rem -0\.75rem 50% -0\.75rem\);/,
+  );
+  assert.match(
+    homePageStylesSource,
+    /\.profile-avatar-orbit\[data-orbit-side="front"\]\s*\{[^}]*z-index: 2;[^}]*clip-path: inset\(50% -0\.75rem -0\.75rem -0\.75rem\);/,
+  );
+  assert.match(
+    homePageStylesSource,
+    /\.home-profile-sequence \.profile-avatar-wrap::before\s*\{[^}]*z-index: 1;[^}]*background: var\(--paper\);/,
+  );
 });
 
 test("navigation skips route animations without disabling page entrances", () => {
@@ -196,6 +268,32 @@ test("the homepage heatmap compacts layout metadata by week", () => {
   assert.match(
     heatmapStylesSource,
     /\.githeatmap-week\s*\{[\s\S]*?display:\s*contents;/,
+  );
+});
+
+test("homepage GitHub cells and legend share the star theme without changing contribution levels", () => {
+  assert.match(
+    homePageStylesSource,
+    /\.home-activity :is\(\.githeatmap-cell, \.githeatmap-legend-cell\)\s*\{[^}]*border-radius: 0;[^}]*clip-path: var\(--home-star-shape\);/,
+  );
+  for (const level of [1, 2, 3, 4]) {
+    assert.ok(
+      heatmapStylesSource.includes(`.githeatmap-cell[data-level="${level}"]`),
+    );
+    assert.ok(
+      heatmapStylesSource.includes(
+        `.githeatmap-legend-cell[data-level="${level}"]`,
+      ),
+    );
+  }
+  assert.match(
+    heatmapStylesSource,
+    /\.githeatmap-cell\[data-blank="true"\][\s\S]*?background-color: transparent;/,
+  );
+  assert.match(heatmapStylesSource, /prefers-reduced-motion: reduce/);
+  assert.match(
+    homePageStylesSource,
+    /\.home-activity \.githeatmap-link:focus-visible\s*\{[^}]*outline: 1px solid/,
   );
 });
 

@@ -11,6 +11,17 @@ type HomeShellPageModule = {
 
 const HOME_SHELL_PAGE_MODULES = [
   {
+    name: "site-stats",
+    selector: "[data-home-site-stats]",
+    load: async () => {
+      const module = await import("./home-shell-site-stats");
+      return {
+        initialize: module.initHomeShellSiteStats,
+        cleanup: module.cleanupHomeShellSiteStats,
+      };
+    },
+  },
+  {
     name: "content-toc",
     selector: "[data-home-shell-content-toc]",
     load: async () => {

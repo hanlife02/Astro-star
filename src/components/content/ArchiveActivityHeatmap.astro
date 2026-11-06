@@ -12,6 +12,8 @@ interface ActivityEntry {
 interface Props {
   entries: ActivityEntry[];
   label: string;
+  months?: number;
+  variant?: "axis" | "orbit";
 }
 
 interface ActivityBucket {
@@ -53,7 +55,12 @@ interface ActivityYear {
   x: number;
 }
 
-const { entries, label } = Astro.props as Props;
+const {
+  entries,
+  label,
+  months: monthCount = 12,
+  variant = "axis",
+} = Astro.props as Props;
 
 const monthFormatter = new Intl.DateTimeFormat("en-US", {
   month: "long",
@@ -96,12 +103,33 @@ function getWeekIndex(date: Date) {
 }
 
 function getMonthPosition(index: number) {
-  return 4.5 + (index / 12) * 91;
+  return 4.5 + (index / monthCount) * 91;
 }
 
 function getBucketPosition(monthIndex: number, weekIndex: number) {
-  return 4.5 + ((monthIndex + (weekIndex + 1) / 5) / 12) * 91;
+  return 4.5 + ((monthIndex + (weekIndex + 1) / 5) / monthCount) * 91;
 }
+
+function getOrbitOffset(x: number) {
+  return -Math.sin(((x - 4.5) / 91) * Math.PI * 2) * 8;
+}
+
+function getPositionStyle(x: number) {
+  return (
+    `--archive-activity-x: ${x.toFixed(3)}%;` +
+    (variant === "orbit"
+      ? ` --archive-activity-orbit-y: ${getOrbitOffset(x).toFixed(3)}px;`
+      : "")
+  );
+}
+
+const orbitPath =
+  variant === "orbit"
+    ? Array.from({ length: 65 }, (_, index) => {
+        const x = 4.5 + (index / 64) * 91;
+        return `${index === 0 ? "M" : "L"}${x.toFixed(3)} ${(20 + getOrbitOffset(x)).toFixed(3)}`;
+      }).join(" ")
+    : "";
 
 function appendArticles<TKey>(
   groups: Map<TKey, ActivityTooltipArticle[]>,
@@ -169,7 +197,7 @@ const rangeEnd = lastDate
 const rangeStart = rangeEnd
   ? addMonths(
       new Date(Date.UTC(rangeEnd.getUTCFullYear(), rangeEnd.getUTCMonth(), 1)),
-      -11,
+      1 - monthCount,
     )
   : null;
 const buckets: ActivityBucket[] = [];
@@ -185,7 +213,7 @@ if (rangeStart && rangeEnd) {
     const currentDate = getUtcDate(key);
     const monthIndex = getMonthIndex(currentDate, rangeStart);
 
-    if (monthIndex < 0 || monthIndex > 11) continue;
+    if (monthIndex < 0 || monthIndex >= monthCount) continue;
 
     const weekIndex = getWeekIndex(currentDate);
     const bucketKey = `${monthIndex}-${weekIndex}`;
@@ -272,59 +300,90 @@ if (rangeStart && rangeEnd) {
   buckets.length > 0 && (
     <section
       class="archive-activity-heatmap"
+      data-variant={variant}
       aria-label={`${label} activity timeline heatmap`}
+      data-range-start={rangeStart?.toISOString().slice(0, 10)}
+      data-range-end={rangeEnd?.toISOString().slice(0, 10)}
     >
       <div class="archive-activity-timeline-scroll">
         <div class="archive-activity-timeline">
-          <div class="archive-activity-timeline-leading" aria-hidden="true" />
-          <div class="archive-activity-timeline-line" aria-hidden="true" />
-
-          {buckets.map((bucket) => (
-            <div
-              class="archive-activity-timeline-bucket"
-              data-level={bucket.level}
-              data-tooltip-align={bucket.tooltipAlign}
-              role="group"
-              style={`--archive-activity-x: ${bucket.x.toFixed(3)}%;`}
-              aria-label={bucket.tooltipText}
-              tabindex="0"
+          {variant === "orbit" ? (
+            <svg
+              class="archive-activity-orbit"
+              viewBox="0 0 100 40"
+              preserveAspectRatio="none"
+              aria-hidden="true"
+              focusable="false"
             >
-              <span class="archive-activity-timeline-bar" aria-hidden="true" />
-              <div class="archive-activity-tooltip" role="tooltip">
-                <span class="archive-activity-tooltip-title">
-                  {bucket.title}
-                </span>
-                <ol class="archive-activity-tooltip-list">
-                  {bucket.articles.map((article) => (
-                    <li class="archive-activity-tooltip-item">
-                      {article.href ? (
-                        <a
-                          class="archive-activity-tooltip-link"
-                          href={article.href}
-                        >
-                          <span class="archive-activity-tooltip-date">
-                            {article.dateLabel}
+              <path
+                d={orbitPath}
+                fill="none"
+                stroke="currentColor"
+                stroke-width="0.75"
+                stroke-linecap="round"
+                vector-effect="non-scaling-stroke"
+              />
+            </svg>
+          ) : (
+            <>
+              <div
+                class="archive-activity-timeline-leading"
+                aria-hidden="true"
+              />
+              <div class="archive-activity-timeline-line" aria-hidden="true" />
+            </>
+          )}
+
+          {variant === "axis" &&
+            buckets.map((bucket) => (
+              <div
+                class="archive-activity-timeline-bucket"
+                data-level={bucket.level}
+                data-tooltip-align={bucket.tooltipAlign}
+                role="group"
+                style={`--archive-activity-x: ${bucket.x.toFixed(3)}%;`}
+                aria-label={bucket.tooltipText}
+                tabindex="0"
+              >
+                <span
+                  class="archive-activity-timeline-bar"
+                  aria-hidden="true"
+                />
+                <div class="archive-activity-tooltip" role="tooltip">
+                  <span class="archive-activity-tooltip-title">
+                    {bucket.title}
+                  </span>
+                  <ol class="archive-activity-tooltip-list">
+                    {bucket.articles.map((article) => (
+                      <li class="archive-activity-tooltip-item">
+                        {article.href ? (
+                          <a
+                            class="archive-activity-tooltip-link"
+                            href={article.href}
+                          >
+                            <span class="archive-activity-tooltip-date">
+                              {article.dateLabel}
+                            </span>
+                            <span class="archive-activity-tooltip-text">
+                              {article.title}
+                            </span>
+                          </a>
+                        ) : (
+                          <span class="archive-activity-tooltip-link">
+                            <span class="archive-activity-tooltip-date">
+                              {article.dateLabel}
+                            </span>
+                            <span class="archive-activity-tooltip-text">
+                              {article.title}
+                            </span>
                           </span>
-                          <span class="archive-activity-tooltip-text">
-                            {article.title}
-                          </span>
-                        </a>
-                      ) : (
-                        <span class="archive-activity-tooltip-link">
-                          <span class="archive-activity-tooltip-date">
-                            {article.dateLabel}
-                          </span>
-                          <span class="archive-activity-tooltip-text">
-                            {article.title}
-                          </span>
-                        </span>
-                      )}
-                    </li>
-                  ))}
-                </ol>
+                        )}
+                      </li>
+                    ))}
+                  </ol>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
 
           {months.map((month) => (
             <div
@@ -332,16 +391,18 @@ if (rangeStart && rangeEnd) {
               data-month-index={month.index}
               data-level={month.level}
               data-tooltip-align={month.tooltipAlign}
-              style={`--archive-activity-x: ${month.x.toFixed(3)}%;`}
+              style={getPositionStyle(month.x)}
               aria-label={month.count > 0 ? month.tooltipText : undefined}
               tabindex={month.count > 0 ? "0" : undefined}
             >
               {month.count > 0 && (
                 <>
-                  <span
-                    class="archive-activity-timeline-month-bar"
-                    aria-hidden="true"
-                  />
+                  {variant === "axis" && (
+                    <span
+                      class="archive-activity-timeline-month-bar"
+                      aria-hidden="true"
+                    />
+                  )}
                   <div class="archive-activity-tooltip" role="tooltip">
                     <span class="archive-activity-tooltip-title">
                       {month.title}

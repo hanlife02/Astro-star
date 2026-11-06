@@ -807,6 +807,10 @@
   }
 
   .home-main:has(.home-profile-sequence) {
+    grid-template-columns:
+      minmax(0, 1fr)
+      minmax(0, 68rem)
+      minmax(0, 1fr);
     row-gap: 3rem;
   }
 
