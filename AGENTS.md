@@ -9,3 +9,4 @@
 - 修改任何分支前必须先从远端拉到最新。
 - 模板改动按 `main -> Ethan` 方向合并；不要把 Ethan 的真实配置或内容合回 `main`。
 - 如需在 `Ethan` 改动非 `src/config/` 或 `src/content/` 文件，先把对应共享改动移到 `main`。
+- 每次修复都必须同步递增 `package.json` 的版本号，默认递增补丁版本（patch），并与对应修复一起提交。
