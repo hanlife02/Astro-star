@@ -145,9 +145,6 @@ export function initHomeShellRouteTransitionLock() {
 
   document.addEventListener("astro:before-swap", (event) => {
     const transitionEvent = event as TransitionEventWithViewTransition;
-    transitionEvent.newDocument
-      ?.querySelector("[data-home-initial-entrance]")
-      ?.removeAttribute("data-home-initial-entrance");
     transitionEvent.newDocument?.documentElement.setAttribute(
       "data-route-transitioning",
       "true",

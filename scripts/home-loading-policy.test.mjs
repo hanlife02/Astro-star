@@ -18,6 +18,21 @@ const homeLayoutSource = await readFile(
   new URL("../src/layouts/HomeLayout.astro", import.meta.url),
   "utf8",
 );
+const baseLayoutSource = await readFile(
+  new URL("../src/layouts/BaseLayout.astro", import.meta.url),
+  "utf8",
+);
+const routeTransitionStylesSource = await readFile(
+  new URL("../src/style/base/route-transitions.css", import.meta.url),
+  "utf8",
+);
+const routeTransitionLockSource = await readFile(
+  new URL(
+    "../src/scripts/home-shell-route-transition-lock.ts",
+    import.meta.url,
+  ),
+  "utf8",
+);
 const contentShellSource = await readFile(
   new URL("../src/components/layout/ContentShell.astro", import.meta.url),
   "utf8",
@@ -99,6 +114,19 @@ test("the homepage entrance is CSS-only", () => {
   assert.equal(entranceScriptExists, false);
   assert.doesNotMatch(pageModulesSource, /name: "home-entrance"/);
   assert.doesNotMatch(pageModulesSource, /name: "profile-avatar"/);
+});
+
+test("navigation skips route animations without disabling page entrances", () => {
+  assert.match(baseLayoutSource, /transition:animate="none"/);
+  assert.match(baseLayoutSource, /<ClientRouter fallback="swap"/);
+  assert.match(routeTransitionStylesSource, /animation: none !important/);
+  assert.doesNotMatch(routeTransitionStylesSource, /@keyframes/);
+  assert.doesNotMatch(
+    routeTransitionLockSource,
+    /removeAttribute\("data-home-initial-entrance"\)/,
+  );
+  assert.match(entranceStylesSource, /animation: 300ms home-content-in/);
+  assert.match(homeShellScriptsSource, /initHomeShellContentPageEntrance/);
 });
 
 test("CSS restarts the profile and latest entrance for every document", () => {
