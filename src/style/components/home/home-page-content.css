@@ -450,6 +450,10 @@
   justify-content: flex-start;
 }
 
+.home-activity--codetime .home-profile-metric {
+  justify-content: center;
+}
+
 .home-activity .archive-activity-heatmap {
   --archive-activity-dot-size: 11px;
   width: 100%;
