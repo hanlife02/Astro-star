@@ -932,7 +932,8 @@
   html,
   body {
     height: auto;
-    overflow-x: hidden;
+    /* Avoid a nested body scroller catching swipes during reveal transforms. */
+    overflow-x: clip;
   }
 
   .home-shell {
