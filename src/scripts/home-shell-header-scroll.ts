@@ -16,15 +16,12 @@ export function initHomeShellHeaderScroll() {
   );
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   const revealAtTop = 24;
+  const fadeDistance = 48;
+  const shiftDistance = 6;
   let previousY = Math.max(0, window.scrollY);
   let hiddenDistance = 0;
+  let floating = false;
   let frame = 0;
-  let travel = 1;
-
-  const measure = () => {
-    const top = Number.parseFloat(window.getComputedStyle(header).top) || 0;
-    travel = Math.max(1, header.offsetHeight + top + 12);
-  };
 
   const sync = () => {
     frame = 0;
@@ -37,36 +34,42 @@ export function initHomeShellHeaderScroll() {
       Math.max(0, y - revealAtTop) - Math.max(0, previousY - revealAtTop);
     previousY = y;
 
-    if (
-      y <= revealAtTop ||
+    const keepVisible =
       reducedMotion.matches ||
       mobileMenu?.open ||
-      header.querySelector(":focus-visible")
-    ) {
-      hiddenDistance = 0;
-    } else {
-      hiddenDistance = Math.max(0, Math.min(travel, hiddenDistance + delta));
+      Boolean(header.querySelector(":focus-visible"));
+
+    if (y <= revealAtTop) {
+      floating = false;
+    } else if (delta < 0 || keepVisible) {
+      floating = true;
     }
 
-    const progress = hiddenDistance / travel;
-    header.style.setProperty("--header-shift", `${-hiddenDistance}px`);
+    if (y <= revealAtTop || keepVisible || delta < 0) {
+      hiddenDistance = 0;
+    } else {
+      hiddenDistance = Math.max(
+        0,
+        Math.min(fadeDistance, hiddenDistance + delta),
+      );
+    }
+
+    const progress = hiddenDistance / fadeDistance;
+    header.style.setProperty(
+      "--header-shift",
+      `${-progress * shiftDistance}px`,
+    );
     header.style.setProperty("--header-opacity", `${1 - progress}`);
     header.dataset.scrollHidden = String(progress === 1);
-    header.dataset.floating = String(y > revealAtTop);
+    header.dataset.floating = String(floating);
   };
 
   const schedule = () => {
     if (!frame) frame = window.requestAnimationFrame(sync);
   };
-  const resize = () => {
-    measure();
-    schedule();
-  };
-
-  measure();
   sync();
   window.addEventListener("scroll", schedule, { passive: true, signal });
-  window.addEventListener("resize", resize, { passive: true, signal });
+  window.addEventListener("resize", schedule, { passive: true, signal });
   header.addEventListener("focusin", schedule, { signal });
   mobileMenu?.addEventListener("toggle", schedule, { signal });
   reducedMotion.addEventListener("change", schedule, { signal });

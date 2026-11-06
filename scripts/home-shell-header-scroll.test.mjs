@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { initHomeShellHeaderScroll } from "../src/scripts/home-shell-header-scroll.ts";
 
@@ -83,16 +84,111 @@ test("the header gradually retreats down the page and returns on upward scroll",
   page.scroll(20);
   assert.equal(page.opacity(), 1);
   page.scroll(60);
+  assert.equal(page.header.dataset.floating, "false");
   assert.ok(page.opacity() > 0 && page.opacity() < 1);
   assert.ok(Number.parseFloat(page.styles.get("--header-shift")) < 0);
   page.scroll(200);
   assert.equal(page.opacity(), 0);
   assert.equal(page.header.dataset.scrollHidden, "true");
+  assert.equal(page.header.dataset.floating, "false");
   page.scroll(170);
+  assert.equal(page.header.dataset.floating, "true");
+  assert.equal(page.opacity(), 1);
+  page.scroll(70);
+  assert.equal(page.opacity(), 1);
+  assert.equal(page.header.dataset.floating, "true");
+  page.scroll(110);
   assert.ok(page.opacity() > 0 && page.opacity() < 1);
+  assert.equal(page.header.dataset.floating, "true");
+  page.scroll(240);
+  assert.equal(page.opacity(), 0);
+  assert.equal(page.header.dataset.floating, "true");
+  page.scroll(100);
+  assert.equal(page.opacity(), 1);
+  assert.equal(page.header.dataset.floating, "true");
   page.scroll(0);
   assert.equal(page.opacity(), 1);
   assert.equal(page.header.dataset.floating, "false");
+  page.scroll(60);
+  assert.equal(page.header.dataset.floating, "false");
+  assert.ok(page.opacity() > 0 && page.opacity() < 1);
+});
+
+test("a tiny upward scroll reveals the island fully with at most six pixels of motion", (t) => {
+  const page = setup(t);
+  page.scroll(300);
+  assert.equal(page.opacity(), 0);
+  assert.equal(
+    Number(page.styles.get("--header-shift")?.replace("px", "")),
+    -6,
+  );
+  page.scroll(298);
+  assert.equal(page.opacity(), 1);
+  assert.equal(page.header.dataset.floating, "true");
+  assert.equal(page.header.dataset.scrollHidden, "false");
+  assert.equal(Number.parseFloat(page.styles.get("--header-shift")), 0);
+});
+
+test("non-scroll events do not turn the departing top navigation into an island", (t) => {
+  const page = setup(t);
+  page.scroll(60);
+  page.browser.dispatchEvent(new Event("resize"));
+  page.flush();
+  assert.equal(page.header.dataset.floating, "false");
+  page.scroll(60);
+  assert.equal(page.header.dataset.floating, "false");
+  page.scroll(50);
+  assert.equal(page.header.dataset.floating, "true");
+});
+
+test("the floating orbit capsule reuses navigation inside a stable header shell", async () => {
+  const frame = await readFile(
+    new URL("../src/components/layout/HomeShellFrame.astro", import.meta.url),
+    "utf8",
+  );
+  const styles = await readFile(
+    new URL("../src/style/layouts/home-layout.css", import.meta.url),
+    "utf8",
+  );
+  assert.equal((frame.match(/class="home-header-inner"/g) ?? []).length, 1);
+  assert.match(frame, /class="header-star-field" aria-hidden="true"/);
+  assert.match(
+    frame,
+    /class="header-star-field"[^>]*>\s*(?:<span><\/span>\s*){5}<\/span>/,
+  );
+  assert.match(
+    styles,
+    /\.home-header\[data-floating="true"\] \.home-header-inner\s*\{\s*max-width: 44rem;/,
+  );
+  assert.match(
+    styles,
+    /\.home-header\[data-floating="true"\] \.home-header-inner\s*\{[^}]*width: fit-content;[^}]*grid-template-columns: auto auto auto;/,
+  );
+  assert.match(
+    styles,
+    /\.home-header\[data-floating="true"\] \.desktop-top-nav\s*\{[^}]*border-left: 1px solid var\(--border-soft\);/,
+  );
+  assert.doesNotMatch(styles, /offset-path|header-border-orbit/);
+  assert.match(styles, /@keyframes header-star-drift/);
+  assert.match(styles, /@keyframes header-star-breathe/);
+  assert.match(styles, /\.header-star-field > span:nth-child\(-n \+ 2\)/);
+  assert.equal((styles.match(/--star-drift: \d+s;/g) ?? []).length, 5);
+  assert.match(styles, /prefers-reduced-motion: no-preference/);
+  assert.match(
+    styles,
+    /\.home-header-inner::before\s*\{[^}]*border-radius: 999px;/,
+  );
+  assert.doesNotMatch(
+    styles,
+    /header-note-star|header-orbit-star|border-bottom-left-radius/,
+  );
+  assert.doesNotMatch(styles, /\.top-nav-links a::before/);
+  assert.match(
+    styles,
+    /\.top-nav-links a::after\s*\{[^}]*top: 0\.3rem;[^}]*right: 0\.15rem;[^}]*opacity: 0;/,
+  );
+  assert.match(styles, /\.top-nav-links a:hover::after\s*\{\s*opacity: 1;/);
+  assert.doesNotMatch(styles, /\[data-active="true"\][^{]*::after/);
 });
 
 test("the mobile menu and keyboard navigation keep the header accessible", (t) => {
