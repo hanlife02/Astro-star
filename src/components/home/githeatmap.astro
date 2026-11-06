@@ -14,19 +14,17 @@ const fetchedHeatmap = username
 const heatmap = fetchedHeatmap ?? createGitHubContributionHeatmapSkeleton();
 const profileHref =
   githubSocial?.href ?? `https://github.com/${encodeURIComponent(username)}`;
-const contributionSummary =
-  fetchedHeatmap && heatmap.total > 0
-    ? `${heatmap.total.toLocaleString("en-US")} contributions in the last year`
-    : "GitHub contribution heatmap";
-const compactContributionCount =
-  fetchedHeatmap && heatmap.total > 0
-    ? `${Intl.NumberFormat("en-US", {
-        maximumFractionDigits: 1,
-        notation: "compact",
-      })
-        .format(heatmap.total)
-        .toLowerCase()} contributions`
-    : "contributions";
+const contributionSummary = fetchedHeatmap
+  ? `${heatmap.total.toLocaleString("en-US")} contributions in the last year`
+  : "GitHub activity is temporarily unavailable";
+const compactContributionCount = fetchedHeatmap
+  ? `${Intl.NumberFormat("en-US", {
+      maximumFractionDigits: 1,
+      notation: "compact",
+    })
+      .format(heatmap.total)
+      .toLowerCase()} contributions`
+  : "Activity unavailable · View on GitHub";
 const heatmapStyle = `--githeatmap-week-count: ${heatmap.weekCount};`;
 const legendLevels = [0, 1, 2, 3, 4];
 const heatmapWeeks = Array.from(
@@ -50,46 +48,50 @@ const heatmapWeeks = Array.from(
       aria-label={`View ${username}'s GitHub profile: ${contributionSummary}`}
     >
       <span class="githeatmap-summary">{contributionSummary}</span>
-      <div class="githeatmap-calendar" aria-hidden="true">
-        <div class="githeatmap-months">
-          {heatmap.months.map((month) => (
-            <span
-              class="githeatmap-month"
-              style={`grid-column: ${month.weekIndex + 1};`}
-            >
-              {month.label}
-            </span>
-          ))}
+      {fetchedHeatmap && (
+        <div class="githeatmap-calendar" aria-hidden="true">
+          <div class="githeatmap-months">
+            {heatmap.months.map((month) => (
+              <span
+                class="githeatmap-month"
+                style={`grid-column: ${month.weekIndex + 1};`}
+              >
+                {month.label}
+              </span>
+            ))}
+          </div>
+          <div class="githeatmap-grid">
+            {heatmapWeeks.map((week) => (
+              <span
+                class="githeatmap-week"
+                style={`--githeatmap-hover-delay: ${week.hoverDelay};`}
+              >
+                {week.days.map((day) => (
+                  <span
+                    class="githeatmap-cell"
+                    data-level={day.level}
+                    data-blank={day.isBlank ? "true" : undefined}
+                    title={day.label || undefined}
+                  />
+                ))}
+              </span>
+            ))}
+          </div>
         </div>
-        <div class="githeatmap-grid">
-          {heatmapWeeks.map((week) => (
-            <span
-              class="githeatmap-week"
-              style={`--githeatmap-hover-delay: ${week.hoverDelay};`}
-            >
-              {week.days.map((day) => (
-                <span
-                  class="githeatmap-cell"
-                  data-level={day.level}
-                  data-blank={day.isBlank ? "true" : undefined}
-                  title={day.label || undefined}
-                />
-              ))}
-            </span>
-          ))}
-        </div>
-      </div>
+      )}
       <div class="githeatmap-footer" aria-hidden="true">
         <span class="githeatmap-count">{compactContributionCount}</span>
-        <span class="githeatmap-legend">
-          <span class="githeatmap-legend-label">Less</span>
-          <span class="githeatmap-legend-scale">
-            {legendLevels.map((level) => (
-              <span class="githeatmap-legend-cell" data-level={level} />
-            ))}
+        {fetchedHeatmap && (
+          <span class="githeatmap-legend">
+            <span class="githeatmap-legend-label">Less</span>
+            <span class="githeatmap-legend-scale">
+              {legendLevels.map((level) => (
+                <span class="githeatmap-legend-cell" data-level={level} />
+              ))}
+            </span>
+            <span class="githeatmap-legend-label">More</span>
           </span>
-          <span class="githeatmap-legend-label">More</span>
-        </span>
+        )}
       </div>
     </a>
   )

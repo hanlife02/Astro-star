@@ -176,11 +176,6 @@
   height: 0.58rem;
 }
 
-.githeatmap-link[data-githeatmap-state="fallback"] .githeatmap-grid,
-.githeatmap-link[data-githeatmap-state="fallback"] .githeatmap-legend-scale {
-  opacity: 0.44;
-}
-
 @keyframes githeatmap-fill-sweep {
   0% {
     background-color: var(--githeatmap-empty);
