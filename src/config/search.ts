@@ -13,9 +13,9 @@ export interface AlgoliaSiteSearchConfig {
 }
 
 export const algoliaSiteSearchConfig = {
-  applicationId: "0RTMRFND63",
-  apiKey: "70bc81eadf006b0f9b4bb5df1a2de464",
-  indexName: "hanlife02_com_0rtmrfnd63_articles",
+  applicationId: "",
+  apiKey: "",
+  indexName: "",
   attributes: {
     primaryText: "headline",
     secondaryText: "excerpt",
@@ -26,7 +26,7 @@ export const algoliaSiteSearchConfig = {
   darkMode: false,
 } satisfies AlgoliaSiteSearchConfig;
 
-export const algoliaCrawlerVerification = "4DD129FBB60A97E4";
+export const algoliaCrawlerVerification = "";
 
 export const isAlgoliaSiteSearchConfigured = Boolean(
   algoliaSiteSearchConfig.applicationId &&

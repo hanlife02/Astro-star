@@ -1,46 +1,32 @@
 ---
 title: Links
-description: 友链.
+description: Add friends, collaborators, and useful sites here.
 background: constellation
 ---
 
 import FriendLinks from "../../components/links/FriendLinks.astro";
-import LinkOwnerInfo from "../../components/links/LinkOwnerInfo.astro";
 import FriendFeed from "../../components/links/FriendFeed.astro";
+import LinkOwnerInfo from "../../components/links/LinkOwnerInfo.astro";
 import LostLinks from "../../components/links/LostLinks.astro";
 
-## 友链
-
-顺序随机显示。
+## Friends
 
 <FriendLinks />
 
-<LostLinks title="失联" emptyText="暂无失联友链。" />
+<LostLinks />
 
-## 友文
+## Friends' Latest
 
 <FriendFeed />
 
-## 申请
+## Apply
 
-请按下方格式申请，并在评论区留言。
+Please apply in the format below and leave a comment.
 
 <LinkOwnerInfo />
 
-### 规则
+### Rules
 
-- 申请前，请确保你的网站已经添加了我的友链。如果申请通过后又移除了我的链接，我会移除你的友链，并将站点加入黑名单。
-
-- 如果你的网站长时间无法访问，我可能会移除该友链。网站恢复后可以重新申请。
-
-- 网站不得包含政治敏感、违法违规，或任何违反适用法律的内容。
-
-- 不接受过度广告、恶意软件或恶意脚本。
-
-- 如转载文章，必须注明原文来源。
-
-- 网站必须全站启用 HTTPS。
-
-- 必须使用自己的独立域名。不接受公共子域名或免费域名（例如 github.io、vercel.app、eu.org、js.cool、.tk、.ml、.cf）。
-
-- 不接受商业站点和非个人站点。
+1. Replace these rules with your own friend link policy.
+2. Include your site name, description, URL, and avatar when applying.
+3. Please keep sites reachable over HTTPS.

@@ -1,0 +1,74 @@
+---
+routeSlug: "mdx-rendering-formats"
+title: "MDX Rendering Formats"
+description: "A small preview article for custom inline and block rendering styles."
+createdAt: "2026-06-05"
+type: "Template"
+tags:
+  - blog
+  - MDX
+  - Template
+---
+
+# MDX Rendering Formats
+
+This article previews the special MDX and Markdown formats supported by the template.
+
+## Quote
+
+> A blockquote can highlight a short excerpt, aside, or source note without breaking the rhythm of the article.
+
+## Hover Reveal
+
+Hover to reveal ||this hidden inline note|| while reading.
+
+The syntax is:
+
+```mdx
+||this hidden inline note||
+```
+
+## Muted Strikethrough
+
+Use ~~muted deleted text~~ when an old thought should stay visible but less prominent.
+
+The syntax is:
+
+```mdx
+~~muted deleted text~~
+```
+
+## Fold
+
+:::fold[Click to expand]
+The right-bottom corner belongs to the whole fold area.
+
+When this section opens, the corner moves to the bottom of all visible and folded content.
+:::
+
+The syntax is:
+
+```mdx
+:::fold[Click to expand]
+Hidden content can include paragraphs, lists, and code blocks.
+:::
+```
+
+:::fold[Open by default]{open=true}
+This fold starts open, so the bottom-right corner is already placed at the end of the full content area.
+:::
+
+## Video
+
+Video directives support direct files and common hosted players:
+
+```md
+:video[](/videos/demo.mp4)
+:video[Demo video](/videos/demo.mp4){poster="/figures/demo.webp"}
+:video[YouTube demo](https://youtu.be/VIDEO_ID)
+:video[Bilibili demo](https://www.bilibili.com/video/BV1xx411c7mD?p=3)
+```
+
+The rendered player looks like this:
+
+:video[Flower demo](https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4)

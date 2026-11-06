@@ -3,6 +3,9 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 import { parse } from "parse5";
+import { site } from "../src/config/site.ts";
+import { socialDisplay } from "../src/config/social.ts";
+import { getSocialLinks } from "../src/utils/social.ts";
 import {
   getContentDateKey,
   parseContentLocalDateString,
@@ -107,7 +110,7 @@ test("homepage keeps both latest lists limited to four articles", () => {
   }
 });
 
-test("homepage separates the identity, motto, statistics and four social links", () => {
+test("homepage separates the identity, motto, statistics and configured social links", () => {
   const homepage = readPage();
   const identity = findAll(homepage, (node) =>
     hasClass(node, "profile-identity"),
@@ -148,8 +151,9 @@ test("homepage separates the identity, motto, statistics and four social links",
     "aria-label",
   );
   assert.equal(textContent(highlightedNames[0]), ownerName);
-  assert.ok(
-    textContent(lead).includes(`I'm ${ownerName}.`),
+  assert.equal(
+    `${textContent(lead)} ${textContent(detail)}`.replace(/\s+/g, " ").trim(),
+    site.profile.intro.replace(/\s+/g, " ").trim(),
     "name decoration should preserve the introduction text and spacing",
   );
   assert.equal(
@@ -189,7 +193,10 @@ test("homepage separates the identity, motto, statistics and four social links",
   );
   assert.equal(paths.length, archiveCount);
   const social = findAll(profile, (node) => hasClass(node, "profile-links"))[0];
-  assert.equal(findAll(social, (node) => node.tagName === "a").length, 4);
+  assert.equal(
+    findAll(social, (node) => node.tagName === "a").length,
+    getSocialLinks(socialDisplay.home).slice(0, 4).length,
+  );
   for (const link of findAll(social, (node) => node.tagName === "a")) {
     const labels = findAll(link, (node) =>
       hasClass(node, "profile-link-label"),
