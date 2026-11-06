@@ -1,0 +1,61 @@
+.home-header:has(> .home-header-inner) {
+  min-height: calc(var(--icon-btn-size) + 1.5rem);
+}
+
+/* Keep both header states on the same grid so size and spacing can interpolate. */
+.home-header .home-header-inner {
+  width: 100%;
+  max-width: 100%;
+  transition:
+    max-width 440ms cubic-bezier(0.22, 1, 0.36, 1),
+    padding 440ms cubic-bezier(0.22, 1, 0.36, 1),
+    column-gap 440ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.home-header[data-floating="true"] .home-header-inner {
+  width: 100%;
+  max-width: 44rem;
+}
+
+.home-header .home-header-inner::before,
+.home-header .header-star-field {
+  transition: opacity 360ms ease;
+}
+
+.home-header .signature-area {
+  transition:
+    width 440ms cubic-bezier(0.22, 1, 0.36, 1),
+    padding 440ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.home-header .top-nav-links a {
+  transition:
+    color 180ms ease,
+    padding 440ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (min-width: 56.25rem) {
+  .home-header .home-header-inner,
+  .home-header[data-floating="true"] .home-header-inner {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .home-header .desktop-top-nav {
+    border-left: 1px solid transparent;
+    padding-left: 0;
+    transition:
+      padding 440ms cubic-bezier(0.22, 1, 0.36, 1),
+      border-color 360ms ease;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-header .home-header-inner,
+  .home-header .home-header-inner::before,
+  .home-header .header-star-field,
+  .home-header .signature-area,
+  .home-header .top-nav-links a,
+  .home-header .desktop-top-nav {
+    transition: none;
+  }
+}

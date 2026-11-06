@@ -188,7 +188,10 @@ test("the floating orbit capsule reuses navigation inside a stable header shell"
     /\.top-nav-links a::after\s*\{[^}]*top: 0\.3rem;[^}]*right: 0\.15rem;[^}]*opacity: 0;/,
   );
   assert.match(styles, /\.top-nav-links a:hover::after\s*\{\s*opacity: 1;/);
-  assert.doesNotMatch(styles, /\[data-active="true"\][^{]*::after/);
+  assert.match(
+    styles,
+    /\.top-nav-links a\[data-active="true"\]::after\s*\{\s*opacity: 1;/,
+  );
 });
 
 test("the mobile menu and keyboard navigation keep the header accessible", (t) => {
