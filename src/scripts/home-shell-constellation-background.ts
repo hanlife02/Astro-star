@@ -124,7 +124,7 @@ export function initHomeShellConstellationBackground() {
       y: Math.random() * state.h,
       vx: Math.cos(angle) * vel,
       vy: Math.sin(angle) * vel,
-      r: 0.9 + Math.random() * 1.4,
+      r: 1.8 + Math.random() * 1.6,
       tw: Math.random() * Math.PI * 2,
     };
   };
@@ -213,7 +213,16 @@ export function initHomeShellConstellationBackground() {
       const alpha = 0.22 + tw * 0.35;
       ctx.fillStyle = `rgba(${fg.r}, ${fg.g}, ${fg.b}, ${alpha})`;
       ctx.beginPath();
-      ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+      const inset = r * 0.22;
+      ctx.moveTo(p.x, p.y - r);
+      ctx.lineTo(p.x + inset, p.y - inset);
+      ctx.lineTo(p.x + r, p.y);
+      ctx.lineTo(p.x + inset, p.y + inset);
+      ctx.lineTo(p.x, p.y + r);
+      ctx.lineTo(p.x - inset, p.y + inset);
+      ctx.lineTo(p.x - r, p.y);
+      ctx.lineTo(p.x - inset, p.y - inset);
+      ctx.closePath();
       ctx.fill();
     }
   };
