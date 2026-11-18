@@ -212,6 +212,18 @@ export const friendLinks = [
     href: "https://cmoms.top/",
     avatarSrc: "https://cmoms.top/avatar.webp",
   },
+  {
+    name: "lailai's Home",
+    description: "Student & Developer",
+    href: "https://lailai.one",
+    avatarSrc: "https://lailai.one/img/logo.png",
+  },
+  {
+    name: "RAGNote",
+    description: "Life is code. I will debug it.",
+    href: "https://ragnote.top/",
+    avatarSrc: "https://ragnote.top/Avatar.png",
+  },
 ] satisfies readonly FriendLinkItem[];
 
 export const lostLinks = [
