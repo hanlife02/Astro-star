@@ -20,6 +20,7 @@ const { name, description, href, avatarSrc } = Astro.props as Props;
 
   <img
     class="friend-link-card-bg"
+    referrerpolicy="no-referrer"
     alt=""
     aria-hidden="true"
     loading="lazy"
@@ -36,6 +37,7 @@ const { name, description, href, avatarSrc } = Astro.props as Props;
   >
     <img
       class="friend-link-avatar"
+      referrerpolicy="no-referrer"
       data-friend-link-avatar="true"
       alt=""
       width="56"
@@ -49,6 +51,7 @@ const { name, description, href, avatarSrc } = Astro.props as Props;
     <noscript>
       <img
         class="friend-link-avatar"
+        referrerpolicy="no-referrer"
         src={avatarSrc}
         alt=""
         width="56"
