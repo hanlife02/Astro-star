@@ -20,3 +20,6 @@ overrides:
   # Astro's chain uses 3.0.5. Two copies make hast.Root two distinct types, so
   # rehype-katex stops matching Astro's RehypePlugin and `astro check` fails.
   "@types/hast": 3.0.5
+  # astro2tsx uses emnapi core 1.11.3; its WASM runtime's wildcard peer
+  # otherwise resolves to the incompatible emnapi 2 beta.
+  "@napi-rs/wasm-runtime@1.2.4>@emnapi/runtime": 1.11.3
