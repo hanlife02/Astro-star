@@ -18,6 +18,7 @@ module.exports = {
       name: process.env.PM2_APP_NAME || "Blog",
       script: "server-start.mjs",
       cwd: __dirname,
+      interpreter: process.env.ASTRO_STAR_NODE || process.execPath,
       env: {
         PORT: process.env.PORT || env.PORT || 4321,
         ...env,
