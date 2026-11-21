@@ -33,7 +33,7 @@ jobs:
       - name: Compute source hash
         id: hash
         run: |
-          HASH=${{ hashFiles('src/**', 'scripts/**', 'public/**', 'package.json', 'pnpm-lock.yaml', 'astro.config.mjs', '.github/workflows/deploy.yml', 'ecosystem.config.cjs') }}
+          HASH=${{ hashFiles('src/**', 'scripts/**', 'public/**', 'package.json', 'pnpm-lock.yaml', 'astro.config.mjs', '.github/workflows/deploy.yml', 'ecosystem.config.cjs', 'server-start.mjs') }}
           echo "source_hash=$HASH" >> "$GITHUB_OUTPUT"
 
       - name: Check hash cache
@@ -124,8 +124,10 @@ jobs:
           rsync -a --checksum --delete \
             --exclude='node_modules' \
             --exclude='.env' \
+            --exclude='.env.subscriptions' \
+            --exclude='/.subscriptions/' \
             -e "ssh -i ~/.ssh/deploy_key -p ${{ env.SSH_PORT }}" \
-            dist/ package.json pnpm-lock.yaml ecosystem.config.cjs \
+            dist/ package.json pnpm-lock.yaml ecosystem.config.cjs server-start.mjs \
             ${{ env.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ env.DEPLOY_PATH }}/
 
       - name: Deploy runtime env vars

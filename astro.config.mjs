@@ -14,9 +14,23 @@ import { createSitemapLastmodSerializer } from "./src/utils/sitemap-lastmod.ts";
 import { site } from "./src/config/site.ts";
 import { inlineHomepageStylesIntegration } from "./scripts/inline-homepage-styles.mjs";
 
+const siteUrl = new URL(site.site.url);
+
 // https://astro.build/config
 export default defineConfig({
   site: site.site.url,
+  security: {
+    // Preserve the public origin for subscription forms behind the reverse proxy.
+    allowedDomains: [
+      {
+        hostname: siteUrl.hostname,
+        port: siteUrl.port,
+        protocol: siteUrl.protocol === "https:" ? "https" : "http",
+      },
+      { hostname: "localhost", protocol: "http" },
+      { hostname: "127.0.0.1", protocol: "http" },
+    ],
+  },
   output: "server",
   // Astro 7 changed the default to 'jsx', which strips whitespace between inline
   // elements and collapses e.g. nav links into "AboutBlogNote". Pinned to the

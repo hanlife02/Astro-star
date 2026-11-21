@@ -70,6 +70,41 @@ Top-level routes:
 
 See [Introduction and Deployment of Astro-star](https://hanlife02.com/project/astro-star/).
 
+### Publication notifications
+
+The footer links to `/subscribe/`. The page offers RSS and any enabled push channels. Email and Bark readers confirm through a link. Telegram readers subscribe with `/start` and leave with `/stop`.
+
+Create a private `.env.subscriptions` beside `server-start.mjs` on the server. Set only the channels you offer and use your public site address for `site.site.url` in `src/config/site.ts`.
+
+```dotenv
+# Email. Port 465 uses implicit TLS. Other ports require STARTTLS.
+SUBSCRIPTIONS_SMTP_HOST=smtp.example.com
+SUBSCRIPTIONS_SMTP_PORT=587
+SUBSCRIPTIONS_SMTP_FROM=blog@example.com
+SUBSCRIPTIONS_SMTP_USER=blog@example.com
+SUBSCRIPTIONS_SMTP_PASSWORD=replace-me
+
+# Telegram. Use a dedicated bot and a random secret (openssl rand -hex 32).
+SUBSCRIPTIONS_TELEGRAM_BOT_USERNAME=example_blog_bot
+SUBSCRIPTIONS_TELEGRAM_BOT_TOKEN=replace-me
+SUBSCRIPTIONS_TELEGRAM_WEBHOOK_SECRET=replace-me
+
+# Bark's public api.day.app service
+SUBSCRIPTIONS_BARK=true
+```
+
+After building, start with `pnpm start` or restart the existing PM2 app. For Telegram, register the webhook once using your public HTTPS domain. Export the bot token and webhook secret from the environment file before running this command.
+
+```sh
+curl -fsS "https://api.telegram.org/bot${SUBSCRIPTIONS_TELEGRAM_BOT_TOKEN}/setWebhook" \
+  --data-urlencode 'url=https://example.com/api/subscriptions/telegram' \
+  --data-urlencode "secret_token=${SUBSCRIPTIONS_TELEGRAM_WEBHOOK_SECRET}" \
+  --data-urlencode 'allowed_updates=["message"]' \
+  --data-urlencode 'max_connections=1'
+```
+
+On first startup, the worker records the current blog posts, notes, and projects. Subsequent deployments queue notifications for newly published entries. Edits to existing entries and drafts are skipped. SQLite defaults to `.subscriptions/subscriptions.sqlite`. The bundled deployment preserves that directory and `.env.subscriptions`. To use a different storage location, set `SUBSCRIPTIONS_DB_PATH` to a writable path outside the deploy directory.
+
 ## Build Together
 
 Small contributions are welcome. A clear Issue, a mobile screenshot, a reproducible bug, a more ergonomic component, or a short setup note can all make this theme easier to maintain and reuse.
