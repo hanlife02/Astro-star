@@ -70,12 +70,6 @@
 
 参考文章 [Astro-star 介绍与部署](https://hanlife02.com/project/astro-star/)
 
-### 新内容订阅
-
-页脚的订阅入口指向 `/subscribe/`，提供 RSS 和站长已启用的推送渠道。邮箱和 Bark 需要点击链接确认，Telegram 在机器人中发送 `/start` 订阅、发送 `/stop` 退订。
-
-在服务器上将渠道配置写入 `server-start.mjs` 同目录的私有 `.env.subscriptions`。配置项、Telegram webhook 注册命令和启动方式见 [Publication notifications](./README.md#publication-notifications)。首次启动会记录已有内容，后续部署仅推送新发布的博客、笔记和项目。自带的部署流程会保留配置文件和默认的 SQLite 数据目录。
-
 ## 一起建设
 
 欢迎从小改动开始。一个清晰的 Issue、一张移动端截图、一个可复现的 Bug、一个更顺手的组件，都能让这个主题更像一个可长期维护的社区项目。
