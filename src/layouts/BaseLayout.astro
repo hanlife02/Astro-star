@@ -6,6 +6,7 @@ import biotifRegularUrl from "../assets/fonts/Biotif-Regular.woff2?url";
 import biotifSemiBoldUrl from "../assets/fonts/Biotif-SemiBold.woff2?url";
 import { site } from "../config/site";
 import { getEnabledSocialLinks, getSocialLink } from "../utils/social";
+import { normalizeWalinePagePath } from "../utils/waline-page-path";
 import katexStylesheetUrl from "katex/dist/katex.min.css?url";
 import "../style/base/route-transitions.css";
 import "../style/base/theme-transitions.css";
@@ -55,10 +56,12 @@ const pageName =
   PAGE_NAME_BY_ROUTE_ROOT[routeRoot as keyof typeof PAGE_NAME_BY_ROUTE_ROOT] ??
   (routeRoot ? routeRoot.charAt(0).toUpperCase() + routeRoot.slice(1) : "Home");
 const pageTitle = title ?? `${pageName} - ${site.site.name}`;
-const canonicalHref = new URL(
+const canonical = new URL(
   canonicalUrl?.trim() || Astro.url.pathname,
   site.site.url,
-).toString();
+);
+const canonicalHref = canonical.href;
+const walinePagePath = normalizeWalinePagePath(canonical.pathname);
 const socialTitle = ogTitle ?? pageTitle;
 const socialImageUrl = new URL(
   imageUrl?.trim() || site.site.iconSrc,
@@ -160,6 +163,7 @@ const biotifFontStyles = `
   transition:animate="none"
   data-theme={initialTheme}
   data-theme-mode={initialThemeMode}
+  data-waline-page-path={walinePagePath}
 >
   <head>
     <meta charset="utf-8" />

@@ -16,6 +16,8 @@ import { resolveContentTitle } from "../utils/content-title";
 import { isPublishedContentEntry } from "../utils/content-visibility";
 import { getGitTimestamps } from "../utils/git-timestamps";
 import { countContentWords } from "../utils/content-word-count";
+import { buildSectionTags } from "../utils/content-tags";
+import { normalizeWalinePagePath } from "../utils/waline-page-path";
 
 export const prerender = true;
 
@@ -129,6 +131,38 @@ const siteStats = {
     0,
   ),
 };
+const fixedPagePaths = Object.keys(import.meta.glob("/src/pages/**/*.astro"))
+  .map((file) => file.slice("/src/pages".length, -".astro".length))
+  .filter((path) => !path.includes("["))
+  .map((path) => path.replace(/\/index$/, "/"));
+const entriesBySection = {
+  blog: latestBlogEntries,
+  note: latestNoteEntries,
+  project: projectEntries,
+};
+const contentPagePaths = (["blog", "note", "project"] as const).flatMap(
+  (section) => {
+    const entries = entriesBySection[section];
+    const tags = buildSectionTags(
+      section,
+      entries.map((entry) => ({ id: entry.id, tags: entry.data.tags })),
+    );
+
+    return [
+      `/${section}/`,
+      ...entries.map(
+        (entry) =>
+          `/${section}/${resolveContentSlug(entry.id, entry.data.routeSlug)}/`,
+      ),
+      ...tags.map((tag) => tag.href),
+    ];
+  },
+);
+// Vite excludes the importing file itself from the glob.
+const viewPaths = [
+  "/",
+  ...[...fixedPagePaths, ...contentPagePaths].map(normalizeWalinePagePath),
+];
 const latestBlogArticles = blogArticles.slice(0, 4);
 const latestNoteArticles = noteArticles.slice(0, 4);
 const latestBlogTimelineGroups = buildLatestTimelineGroups(latestBlogArticles);
@@ -144,4 +178,5 @@ const profileLinks = getSocialLinks(socialDisplay.home).slice(0, 4);
   latestNoteTimelineGroups={latestNoteTimelineGroups}
   activityEntries={activityEntries}
   siteStats={siteStats}
+  viewPaths={viewPaths}
 />

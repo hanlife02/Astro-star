@@ -11,17 +11,6 @@ type HomeShellPageModule = {
 
 const HOME_SHELL_PAGE_MODULES = [
   {
-    name: "site-stats",
-    selector: "[data-home-site-stats]",
-    load: async () => {
-      const module = await import("./home-shell-site-stats");
-      return {
-        initialize: module.initHomeShellSiteStats,
-        cleanup: module.cleanupHomeShellSiteStats,
-      };
-    },
-  },
-  {
     name: "content-toc",
     selector: "[data-home-shell-content-toc]",
     load: async () => {
@@ -96,19 +85,18 @@ const HOME_SHELL_PAGE_MODULES = [
   },
   {
     name: "waline",
-    selector:
-      "[data-article-waline], .waline-pageview-count, .waline-comment-count",
+    selector: "[data-article-waline], .waline-comment-count",
     load: async () => {
       const module = await import("./home-shell-waline");
       return {
         initialize: () =>
           Promise.all([
             module.initHomeShellWalineComments(),
-            module.initHomeShellWalinePageviews(),
+            module.initHomeShellWalineCommentCount(),
           ]),
         cleanup: () => {
           module.cleanupHomeShellWalineComments();
-          module.cleanupHomeShellWalinePageviews();
+          module.cleanupHomeShellWalineCommentCount();
         },
       };
     },

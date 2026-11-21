@@ -1,20 +1,17 @@
-import type { WalineAbort, WalineInstance } from "@waline/client";
+import type { WalineInstance } from "@waline/client";
+import { getConfiguredWalineServerURL } from "./home-shell-waline-config";
 
 type HomeShellWalineWindow = Window & {
-  __homeShellWalineConfigPromise?: Promise<string>;
   __homeShellWalineCommentsCleanup?: () => void;
   __homeShellWalineCommentsRunId?: number;
-  __homeShellWalinePageviewCleanup?: () => void;
-  __homeShellWalinePageviewRunId?: number;
+  __homeShellWalineCommentCountCleanup?: () => void;
+  __homeShellWalineCommentCountRunId?: number;
   __homeShellTikzJaxLoadPromise?: Promise<TikzJaxProcessor>;
   __homeShellTikzJaxProcessor?: TikzJaxProcessor;
   __homeShellTikzJaxRenderPromise?: Promise<void>;
 };
 
 let walineClientModule: Promise<typeof import("@waline/client")> | undefined;
-let walinePageviewModule:
-  | Promise<typeof import("@waline/client/pageview")>
-  | undefined;
 let walineCommentModule:
   | Promise<typeof import("@waline/client/comment")>
   | undefined;
@@ -37,11 +34,6 @@ type GitHubAlertKind = "note" | "tip" | "important" | "warning" | "caution";
 function loadWalineClientModule() {
   walineClientModule ??= import("@waline/client");
   return walineClientModule;
-}
-
-function loadWalinePageviewModule() {
-  walinePageviewModule ??= import("@waline/client/pageview");
-  return walinePageviewModule;
 }
 
 function loadWalineCommentModule() {
@@ -431,40 +423,20 @@ export function cleanupHomeShellWalineComments() {
   }
 }
 
-export function cleanupHomeShellWalinePageviews() {
+export function cleanupHomeShellWalineCommentCount() {
   const browserWindow = window as HomeShellWalineWindow;
-  browserWindow.__homeShellWalinePageviewRunId =
-    (browserWindow.__homeShellWalinePageviewRunId ?? 0) + 1;
-  const cleanup = browserWindow.__homeShellWalinePageviewCleanup;
-  browserWindow.__homeShellWalinePageviewCleanup = undefined;
+  browserWindow.__homeShellWalineCommentCountRunId =
+    (browserWindow.__homeShellWalineCommentCountRunId ?? 0) + 1;
+  const cleanup = browserWindow.__homeShellWalineCommentCountCleanup;
+  browserWindow.__homeShellWalineCommentCountCleanup = undefined;
 
   if (!cleanup) return;
 
   try {
     cleanup();
   } catch (error) {
-    console.warn("[Waline] Failed to cleanup previous pageviews.", error);
+    console.warn("[Waline] Failed to cleanup previous comment count.", error);
   }
-}
-
-export function getConfiguredWalineServerURL() {
-  const browserWindow = window as HomeShellWalineWindow;
-
-  if (!browserWindow.__homeShellWalineConfigPromise) {
-    browserWindow.__homeShellWalineConfigPromise = fetch(
-      "/api/waline-config.json",
-      {
-        credentials: "same-origin",
-      },
-    )
-      .then((response) => (response.ok ? response.json() : null))
-      .then((payload: { serverURL?: unknown } | null) =>
-        typeof payload?.serverURL === "string" ? payload.serverURL.trim() : "",
-      )
-      .catch(() => "");
-  }
-
-  return browserWindow.__homeShellWalineConfigPromise;
 }
 
 export async function initHomeShellWalineComments() {
@@ -550,54 +522,20 @@ async function hydrateWalineComments(runId: number) {
   };
 }
 
-export async function initHomeShellWalinePageviews() {
+export async function initHomeShellWalineCommentCount() {
   const browserWindow = window as HomeShellWalineWindow;
-  cleanupHomeShellWalinePageviews();
-  const runId = (browserWindow.__homeShellWalinePageviewRunId ?? 0) + 1;
-  browserWindow.__homeShellWalinePageviewRunId = runId;
+  cleanupHomeShellWalineCommentCount();
+  const runId = browserWindow.__homeShellWalineCommentCountRunId;
+  const element = document.querySelector<HTMLElement>(".waline-comment-count");
+  if (!element) return;
 
-  const pageviewElement = document.querySelector(".waline-pageview-count");
-  const commentElement = document.querySelector(".waline-comment-count");
-  let serverURL =
-    pageviewElement?.getAttribute("data-server-url")?.trim() ||
-    commentElement?.getAttribute("data-server-url")?.trim();
+  const serverURL =
+    element.dataset.serverUrl?.trim() || (await getConfiguredWalineServerURL());
+  if (!serverURL) return;
 
-  if (
-    !(pageviewElement instanceof HTMLElement) &&
-    !(commentElement instanceof HTMLElement)
-  ) {
-    browserWindow.__homeShellWalinePageviewCleanup = undefined;
-    return;
-  }
-
-  if (!serverURL) {
-    serverURL = await getConfiguredWalineServerURL();
-  }
-
-  if (!serverURL) {
-    browserWindow.__homeShellWalinePageviewCleanup = undefined;
-    return;
-  }
-
-  const [{ pageviewCount }, { commentCount }] = await Promise.all([
-    loadWalinePageviewModule(),
-    loadWalineCommentModule(),
-  ]);
-  if (browserWindow.__homeShellWalinePageviewRunId !== runId) return;
-
-  const aborts: WalineAbort[] = [];
-
-  if (pageviewElement instanceof HTMLElement) {
-    aborts.push(pageviewCount({ serverURL, update: true }));
-  }
-
-  if (commentElement instanceof HTMLElement) {
-    aborts.push(commentCount({ serverURL }));
-  }
-
-  browserWindow.__homeShellWalinePageviewCleanup = () => {
-    aborts.forEach((abort) => {
-      abort();
-    });
-  };
+  const { commentCount } = await loadWalineCommentModule();
+  if (browserWindow.__homeShellWalineCommentCountRunId !== runId) return;
+  browserWindow.__homeShellWalineCommentCountCleanup = commentCount({
+    serverURL,
+  });
 }

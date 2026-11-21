@@ -6,6 +6,7 @@ import { parse } from "parse5";
 import { site } from "../src/config/site.ts";
 import { socialDisplay } from "../src/config/social.ts";
 import { getSocialLinks } from "../src/utils/social.ts";
+import { normalizeWalinePagePath } from "../src/utils/waline-page-path.ts";
 import {
   getContentDateKey,
   parseContentLocalDateString,
@@ -31,6 +32,32 @@ function findAll(node, predicate) {
 function readPage(section = "") {
   return parse(readFileSync(join(buildRoot, section, "index.html"), "utf8"));
 }
+
+test("homepage views cover the sitemap and count all missing pages under one path", () => {
+  const homepage = readPage();
+  const [stats] = findAll(
+    homepage,
+    (node) => attribute(node, "data-home-site-stats") !== undefined,
+  );
+  const paths = JSON.parse(attribute(stats, "data-view-paths"));
+  const sitemap = readFileSync(join(buildRoot, "sitemap-0.xml"), "utf8");
+  const expectedPaths = Array.from(
+    sitemap.matchAll(/<loc>([^<]+)<\/loc>/g),
+    ([, url]) => normalizeWalinePagePath(new URL(url).pathname),
+  );
+  assert.ok(expectedPaths.includes("/subscribe/"));
+  assert.deepEqual(paths.slice().sort(), [...expectedPaths, "/404/"].sort());
+
+  const notFound = parse(readFileSync(join(buildRoot, "404.html"), "utf8"));
+  for (const [page, path] of [
+    [homepage, "/"],
+    [readPage("about"), "/about/"],
+    [notFound, "/404/"],
+  ]) {
+    const [html] = findAll(page, (node) => node.tagName === "html");
+    assert.equal(attribute(html, "data-waline-page-path"), path);
+  }
+});
 
 test("homepage activity includes Blog, Note and Project posts within its 18-month range", () => {
   const homepage = readPage();

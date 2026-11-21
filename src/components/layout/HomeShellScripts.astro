@@ -12,6 +12,10 @@
   import { initHomeShellRouteTransitionLock } from "../../scripts/home-shell-route-transition-lock";
   import { initHomeShellSearch } from "../../scripts/home-shell-search";
   import {
+    cleanupHomeShellWalinePageviews,
+    initHomeShellWalinePageviews,
+  } from "../../scripts/home-shell-waline-pageviews";
+  import {
     cleanupHomeShellPageModules,
     initHomeShellPageModules,
   } from "../../scripts/home-shell-page-modules";
@@ -66,6 +70,7 @@
 
   const cleanupHomeShellBeforeSwap = () => {
     runHomeShellCleanup("page-modules", cleanupHomeShellPageModules);
+    runHomeShellCleanup("pageviews", cleanupHomeShellWalinePageviews);
 
     HOME_SHELL_BEFORE_SWAP_CLEANUP_KEYS.forEach((cleanupKey) => {
       const cleanup = browserWindow[cleanupKey];
@@ -92,6 +97,7 @@
       initHomeShellRouteTransitionLock,
     );
     runHomeShellInitializer("search", initHomeShellSearch);
+    runHomeShellInitializer("pageviews", initHomeShellWalinePageviews);
     runHomeShellInitializer("page-modules", initHomeShellPageModules);
   };
 
