@@ -33,7 +33,7 @@ jobs:
       - name: Compute source hash
         id: hash
         run: |
-          HASH=${{ hashFiles('src/**', 'scripts/**', 'public/**', 'package.json', 'pnpm-lock.yaml', 'astro.config.mjs', '.github/workflows/deploy.yml', 'ecosystem.config.cjs', 'server-start.mjs') }}
+          HASH=${{ hashFiles('src/**', 'scripts/**', 'public/**', 'package.json', 'pnpm-lock.yaml', 'pnpm-workspace.yaml', 'astro.config.mjs', '.github/workflows/deploy.yml', 'ecosystem.config.cjs', 'server-start.mjs') }}
           echo "source_hash=$HASH" >> "$GITHUB_OUTPUT"
 
       - name: Check hash cache
@@ -127,7 +127,7 @@ jobs:
             --exclude='.env.subscriptions' \
             --exclude='/.subscriptions/' \
             -e "ssh -i ~/.ssh/deploy_key -p ${{ env.SSH_PORT }}" \
-            dist/ package.json pnpm-lock.yaml ecosystem.config.cjs server-start.mjs \
+            dist/ package.json pnpm-lock.yaml pnpm-workspace.yaml ecosystem.config.cjs server-start.mjs \
             ${{ env.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ env.DEPLOY_PATH }}/
 
       - name: Deploy runtime env vars
@@ -148,7 +148,15 @@ jobs:
         run: |
           ssh -i ~/.ssh/deploy_key -p ${{ env.SSH_PORT }} \
             ${{ env.SSH_USER }}@${{ secrets.SSH_HOST }} \
-            "source ~/.nvm/nvm.sh 2>/dev/null; source ~/.bashrc 2>/dev/null; cd ${{ env.DEPLOY_PATH }} && pnpm install --prod --frozen-lockfile && pm2 stop ${{ env.PM2_APP_NAME }} 2>/dev/null; pm2 delete ${{ env.PM2_APP_NAME }} 2>/dev/null; cd ${{ env.DEPLOY_PATH }} && PM2_APP_NAME=${{ env.PM2_APP_NAME }} PORT=${{ env.APP_PORT }} pm2 start ecosystem.config.cjs && pm2 save"
+            "source ~/.nvm/nvm.sh 2>/dev/null || true
+            source ~/.bashrc 2>/dev/null || true
+            set -e
+            cd ${{ env.DEPLOY_PATH }}
+            pnpm install --prod --frozen-lockfile
+            pm2 delete ${{ env.PM2_APP_NAME }} 2>/dev/null || true
+            PM2_APP_NAME=${{ env.PM2_APP_NAME }} PORT=${{ env.APP_PORT }} pm2 start ecosystem.config.cjs
+            curl --fail --silent --show-error --retry 5 --retry-all-errors --retry-delay 2 --max-time 8 http://localhost:${{ env.APP_PORT }}/subscribe/ > /dev/null
+            pm2 save"
 
       - name: Cleanup SSH
         if: steps.cache.outputs.cache-hit != 'true'
