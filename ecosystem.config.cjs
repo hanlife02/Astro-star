@@ -1,12 +1,7 @@
-const { existsSync, readFileSync } = require("node:fs");
+const { readFileSync } = require("node:fs");
 const { resolve } = require("node:path");
 
 const envFile = resolve(__dirname, ".env");
-const rootServerEntry = "dist/server/entry.mjs";
-const deployedServerEntry = "server/entry.mjs";
-const serverEntry = existsSync(resolve(__dirname, rootServerEntry))
-  ? rootServerEntry
-  : deployedServerEntry;
 const env = {};
 try {
   for (const line of readFileSync(envFile, "utf8").split("\n")) {
@@ -21,7 +16,8 @@ module.exports = {
   apps: [
     {
       name: process.env.PM2_APP_NAME || "Blog",
-      script: serverEntry,
+      script: "server-start.mjs",
+      cwd: __dirname,
       env: {
         PORT: process.env.PORT || env.PORT || 4321,
         ...env,

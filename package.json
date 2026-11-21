@@ -1,7 +1,7 @@
 {
   "name": "Astro-star",
   "type": "module",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "license": "MIT",
   "packageManager": "pnpm@11.15.1",
   "scripts": {
@@ -9,10 +9,11 @@
     "dev": "astro dev",
     "prebuild": "pnpm run generate:signature && tsx scripts/generate-git-timestamps.ts",
     "build": "astro build",
+    "start": "node server-start.mjs",
     "preview": "astro preview",
     "check": "pnpm run check:types && pnpm run format:check && pnpm run build && pnpm run audit:content && pnpm run audit:assets && pnpm run audit:deps",
     "check:types": "astro check",
-    "verify": "pnpm check && pnpm test:contact-links && pnpm test:content-tags && pnpm test:performance-policy && pnpm test:deployment-policy && pnpm test:content-tags-output && pnpm test:fixed-page-metadata-output",
+    "verify": "pnpm check && pnpm test:contact-links && pnpm test:content-tags && pnpm test:performance-policy && pnpm test:deployment-policy && pnpm test:content-tags-output && pnpm test:fixed-page-metadata-output && pnpm test:subscriptions",
     "astro": "astro",
     "algolia:sync": "tsx scripts/sync-algolia-index.ts",
     "generate:signature": "tsx scripts/generate-signature-asset.ts",
@@ -25,6 +26,7 @@
     "test:fixed-page-metadata-output": "node --test scripts/fixed-page-metadata-output.test.mjs",
     "test:performance-policy": "node --import tsx --test scripts/font-loading-policy.test.mjs scripts/theme-loading-policy.test.mjs scripts/theme-transition.test.mjs scripts/home-shell-header-scroll.test.mjs scripts/home-loading-policy.test.mjs scripts/codetime-loading-policy.test.mjs scripts/site-asset-policy.test.mjs scripts/home-prerender-policy.test.mjs scripts/friend-link-loading-policy.test.mjs scripts/content-code-block-policy.test.mjs scripts/content-video-policy.test.mjs scripts/content-video-player.test.mjs scripts/content-video-loading-policy.test.mjs scripts/inline-homepage-styles.test.mjs",
     "test:deployment-policy": "node --test scripts/codetime-deployment-policy.test.mjs scripts/cdn-deployment-policy.test.mjs",
+    "test:subscriptions": "node --import tsx --test scripts/subscriptions.test.ts",
     "migrate:content": "node scripts/migrate-legacy-content.mjs",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
@@ -32,6 +34,7 @@
     "config:apply": "node scripts/config-apply.mjs"
   },
   "devDependencies": {
+    "@types/nodemailer": "^8.0.2",
     "better-sqlite3": "^12.6.2",
     "bson": "^7.2.0",
     "parse5": "7.3.0",
@@ -57,6 +60,7 @@
     "astro-robots-txt": "^1.0.0",
     "katex": "^0.16.47",
     "lucide-static": "^0.562.0",
+    "nodemailer": "^10.6.1",
     "rehype-katex": "^7.0.0",
     "remark-directive": "^4.0.0",
     "remark-math": "^6.0.0",

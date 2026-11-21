@@ -47,5 +47,8 @@ jobs:
       - name: Asset audit
         run: pnpm run audit:assets
 
+      - name: Subscription tests
+        run: pnpm test:subscriptions
+
       - name: Dependency audit
         run: pnpm run audit:deps
