@@ -38,6 +38,7 @@ interface LatestTimelineGroup {
 
 interface Props {
   siteStats: { articles: number; words: number };
+  viewPaths: string[];
   activityEntries: {
     date: string;
     dateLabel: string;
@@ -53,6 +54,7 @@ interface Props {
 
 const {
   siteStats,
+  viewPaths,
   activityEntries,
   profile,
   ownerName,
@@ -190,6 +192,7 @@ function isExternalLink(href: string) {
       class="profile-site-stats home-enter-item"
       aria-label="Site statistics"
       data-home-site-stats
+      data-view-paths={JSON.stringify(viewPaths)}
       data-article-paths={JSON.stringify(
         activityEntries.map((entry) => entry.href),
       )}

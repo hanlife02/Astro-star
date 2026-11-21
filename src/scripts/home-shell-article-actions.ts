@@ -1,4 +1,4 @@
-import { getConfiguredWalineServerURL } from "./home-shell-waline";
+import { getConfiguredWalineServerURL } from "./home-shell-waline-config";
 
 type WalineCounterModule = Pick<
   typeof import("@waline/client"),
