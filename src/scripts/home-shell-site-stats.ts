@@ -1,20 +1,20 @@
 import { getArticleCounter } from "@waline/api";
-import { getWalinePageviewPaths } from "../utils/waline-page-path";
+import {
+  collectWalineSiteStats,
+  type WalineSiteStats,
+  type WalineSiteStatsSnapshot,
+} from "../utils/waline-site-stats";
 import { getConfiguredWalineServerURL } from "./home-shell-waline-config";
-
-type SiteStats = { views: number; likes: number };
-type CachedSiteStats = SiteStats & { savedAt: number };
 
 const CACHE_KEY = "astro-star:home-site-stats";
 const CACHE_MAX_AGE_MS = 5 * 60 * 1000;
-const BATCH_SIZE = 40;
 let activeController: AbortController | undefined;
 
-function readCachedSiteStats(): CachedSiteStats | undefined {
+function readCachedSiteStats(): WalineSiteStatsSnapshot | undefined {
   try {
     const value = JSON.parse(
       window.sessionStorage.getItem(CACHE_KEY) ?? "null",
-    ) as CachedSiteStats | null;
+    ) as WalineSiteStatsSnapshot | null;
     if (
       value &&
       Number.isFinite(value.views) &&
@@ -28,7 +28,7 @@ function readCachedSiteStats(): CachedSiteStats | undefined {
   }
 }
 
-function renderSiteStats(root: HTMLElement, { views, likes }: SiteStats) {
+function renderSiteStats(root: HTMLElement, { views, likes }: WalineSiteStats) {
   const viewsElement = root.querySelector("[data-home-total-views]");
   const likesElement = root.querySelector("[data-home-total-likes]");
   if (viewsElement) viewsElement.textContent = views.toLocaleString("en-US");
@@ -39,39 +39,22 @@ async function fetchSiteStats(
   root: HTMLElement,
   serverURL: string,
   signal: AbortSignal,
-): Promise<SiteStats> {
-  const articlePaths = new Set<string>(
-    JSON.parse(root.dataset.articlePaths ?? "[]"),
-  );
-  const pagePaths: string[] = JSON.parse(root.dataset.viewPaths ?? "[]");
-  const viewPaths = new Set(pagePaths.flatMap(getWalinePageviewPaths));
-  const paths = [...new Set([...viewPaths, ...articlePaths])];
+) {
   const lang = document.documentElement.lang === "zh-CN" ? "zh-CN" : "en";
-  const totals: SiteStats = { views: 0, likes: 0 };
-  const batches: string[][] = [];
-
-  for (let index = 0; index < paths.length; index += BATCH_SIZE) {
-    batches.push(paths.slice(index, index + BATCH_SIZE));
-  }
-  await Promise.all(
-    batches.map(async (batch) => {
-      const counters = await getArticleCounter({
+  return collectWalineSiteStats(
+    {
+      viewPaths: JSON.parse(root.dataset.viewPaths ?? "[]"),
+      articlePaths: JSON.parse(root.dataset.articlePaths ?? "[]"),
+    },
+    (paths) =>
+      getArticleCounter({
         serverURL,
         lang,
-        paths: batch,
+        paths,
         type: ["time", "reaction0"],
         signal,
-      });
-      counters.forEach((counter, offset) => {
-        const path = batch[offset];
-        if (viewPaths.has(path)) totals.views += Math.max(0, counter.time ?? 0);
-        if (articlePaths.has(path)) {
-          totals.likes += Math.max(0, counter.reaction0 ?? 0);
-        }
-      });
-    }),
+      }),
   );
-  return totals;
 }
 
 export function cleanupHomeShellSiteStats() {
@@ -85,7 +68,9 @@ export async function initHomeShellSiteStats() {
   if (!root) return;
 
   const cached = readCachedSiteStats();
-  if (cached) renderSiteStats(root, cached);
+  if (cached && cached.savedAt > Number(root.dataset.statsSavedAt ?? 0)) {
+    renderSiteStats(root, cached);
+  }
 
   const controller = new AbortController();
   activeController = controller;
