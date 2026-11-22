@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 import "./subscriptions-env.mjs";
-import { callTelegram } from "./telegram-api.mjs";
 
 async function register(domain) {
   const input = domain?.includes("://") ? domain : `https://${domain}`;
@@ -26,12 +25,23 @@ async function register(domain) {
     throw new Error("请先配置 Telegram 的两个 Secret 并部署");
 
   url.pathname = "/api/subscriptions/telegram";
-  await callTelegram(token, "setWebhook", {
-    url: url.href,
-    secret_token: secret,
-    allowed_updates: ["message"],
-    max_connections: 1,
-  });
+  const response = await fetch(
+    `https://api.telegram.org/bot${token}/setWebhook`,
+    {
+      method: "POST",
+      body: new URLSearchParams({
+        url: url.href,
+        secret_token: secret,
+        allowed_updates: '["message"]',
+        max_connections: "1",
+      }),
+      redirect: "error",
+      signal: AbortSignal.timeout(15_000),
+    },
+  );
+  const result = await response.json();
+  if (!response.ok || !result.ok)
+    throw new Error(result.description || `HTTP ${response.status}`);
   console.log(`Telegram webhook 已注册：${url.href}`);
 }
 
