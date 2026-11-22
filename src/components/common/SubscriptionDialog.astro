@@ -1,0 +1,185 @@
+---
+import { Bell, PawPrint, X } from "lucide-static";
+import Icon from "../ui/Icon.astro";
+import MailIcon from "../ui/icons/MailIcon.astro";
+import TelegramIcon from "../ui/icons/TelegramIcon.astro";
+---
+
+<subscription-dialog>
+  <button
+    type="button"
+    class="footer-rss-btn"
+    aria-label="Subscribe to new publications"
+    data-icon-tooltip="Subscribe"
+    aria-haspopup="dialog"
+    aria-controls="subscription-dialog"
+  >
+    <Icon svg={Bell} />
+  </button>
+  <dialog id="subscription-dialog" aria-labelledby="subscription-title">
+    <header>
+      <h2 id="subscription-title">Subscribe</h2>
+      <button type="button" data-close aria-label="Close"
+        ><Icon svg={X} /></button
+      >
+    </header>
+    <div class="channels" aria-label="Subscription channels" role="group">
+      <button type="button" data-channel="bark" aria-pressed="false" disabled
+        ><Icon svg={PawPrint} />Bark</button
+      >
+      <a data-telegram aria-disabled="true" target="_blank" rel="noreferrer"
+        ><TelegramIcon aria-hidden="true" />Telegram</a
+      >
+      <button type="button" data-channel="email" aria-pressed="false" disabled
+        ><MailIcon aria-hidden="true" />Email</button
+      >
+    </div>
+    {
+      (["bark", "email"] as const).map((channel) => (
+        <form data-channel-form={channel} method="post" hidden>
+          <label for={`subscription-${channel}`}>
+            {channel === "bark" ? "Bark device key" : "Email address"}
+          </label>
+          <input
+            id={`subscription-${channel}`}
+            name="destination"
+            type={channel === "bark" ? "password" : "email"}
+            autocomplete={channel === "bark" ? "off" : "email"}
+            aria-describedby={
+              channel === "bark" ? "subscription-bark-help" : undefined
+            }
+            minlength={channel === "bark" ? 10 : undefined}
+            maxlength={channel === "bark" ? 128 : 254}
+            required
+          />
+          {channel === "bark" && (
+            <small id="subscription-bark-help">
+              Use the device key from your api.day.app push URL.
+            </small>
+          )}
+          <button type="submit">Send confirmation link</button>
+        </form>
+      ))
+    }
+    <p role="status" aria-live="polite"></p>
+    <button type="button" data-manage hidden></button>
+  </dialog>
+</subscription-dialog>
+
+<script>
+  import "../../scripts/subscription-dialog";
+</script>
+
+<style>
+  subscription-dialog {
+    display: inline-flex;
+  }
+  dialog {
+    margin: auto;
+    width: min(21rem, calc(100% - 2rem));
+    max-height: calc(100dvh - 2rem);
+    padding: 1.25rem;
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    background: var(--paper);
+    color: var(--line);
+    box-shadow: 0 1rem 3rem rgb(0 0 0 / 18%);
+    font-size: var(--type-sm);
+    text-align: start;
+  }
+  dialog::backdrop {
+    background: rgb(0 0 0 / 32%);
+  }
+  dialog [hidden] {
+    display: none;
+  }
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  h2 {
+    margin: 0;
+    font-size: var(--type-lg);
+  }
+  dialog :is(button, a, input) {
+    font: inherit;
+    color: inherit;
+  }
+  dialog button,
+  .channels a {
+    cursor: pointer;
+    background: transparent;
+  }
+  [data-close] {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    padding: 0;
+    border: 0;
+  }
+  [data-close] :global(svg) {
+    width: 1.1rem;
+    height: 1.1rem;
+  }
+  .channels {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    margin-top: 0.8rem;
+  }
+  .channels > * {
+    display: grid;
+    justify-items: center;
+    gap: 0.35rem;
+    padding: 0.7rem 0.25rem;
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+  }
+  .channels :global(svg) {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+  .channels [aria-pressed="true"] {
+    border-color: currentColor;
+  }
+  dialog :is(:disabled, [aria-disabled="true"]) {
+    opacity: 0.45;
+    cursor: default;
+  }
+  form {
+    display: grid;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+  input,
+  [type="submit"],
+  [data-manage] {
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-sm);
+    padding: 0.6rem 0.75rem;
+  }
+  input {
+    min-width: 0;
+    background: var(--paper);
+  }
+  small,
+  [role="status"] {
+    color: var(--text-muted);
+  }
+  [role="status"] {
+    margin: 1rem 0 0;
+  }
+  [role="status"]:empty {
+    margin: 0;
+  }
+  [data-manage] {
+    margin-top: 0.8rem;
+  }
+  dialog :is(a, button, input):focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+</style>

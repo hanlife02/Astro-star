@@ -45,7 +45,7 @@ test("homepage views cover the sitemap and count all missing pages under one pat
     sitemap.matchAll(/<loc>([^<]+)<\/loc>/g),
     ([, url]) => normalizeWalinePagePath(new URL(url).pathname),
   );
-  assert.ok(expectedPaths.includes("/subscribe/"));
+  assert.ok(!expectedPaths.includes("/subscribe/"));
   assert.deepEqual(paths.slice().sort(), [...expectedPaths, "/404/"].sort());
 
   const notFound = parse(readFileSync(join(buildRoot, "404.html"), "utf8"));
@@ -56,6 +56,34 @@ test("homepage views cover the sitemap and count all missing pages under one pat
   ]) {
     const [html] = findAll(page, (node) => node.tagName === "html");
     assert.equal(attribute(html, "data-waline-page-path"), path);
+  }
+});
+
+test("the footer opens a subscription dialog on home and content pages", () => {
+  for (const page of [readPage(), readPage("about")]) {
+    const [trigger] = findAll(
+      page,
+      (node) => attribute(node, "aria-controls") === "subscription-dialog",
+    );
+    assert.equal(trigger.tagName, "button");
+    const [dialog] = findAll(
+      page,
+      (node) =>
+        node.tagName === "dialog" &&
+        attribute(node, "id") === "subscription-dialog",
+    );
+    assert.deepEqual(
+      findAll(
+        dialog,
+        (node) => attribute(node, "data-channel") !== undefined,
+      ).map((node) => attribute(node, "data-channel")),
+      ["bark", "email"],
+    );
+    assert.equal(
+      findAll(dialog, (node) => attribute(node, "data-telegram") !== undefined)
+        .length,
+      1,
+    );
   }
 });
 
