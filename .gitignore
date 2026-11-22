@@ -18,6 +18,7 @@ pnpm-debug.log*
 .env
 .env.production
 .env.subscriptions
+.env.subscriptions.json
 .subscriptions/
 
 # macOS-specific files

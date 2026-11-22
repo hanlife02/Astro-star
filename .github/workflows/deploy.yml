@@ -37,6 +37,8 @@ jobs:
           echo "source_hash=$HASH" >> "$GITHUB_OUTPUT"
 
       - name: Check hash cache
+        # Manual deployments also apply updates to repository secrets and variables.
+        if: github.event_name != 'workflow_dispatch'
         id: cache
         uses: actions/cache@v5
         with:
@@ -125,6 +127,7 @@ jobs:
             --exclude='node_modules' \
             --exclude='.env' \
             --exclude='.env.subscriptions' \
+            --exclude='.env.subscriptions.json' \
             --exclude='/.subscriptions/' \
             -e "ssh -i ~/.ssh/deploy_key -p ${{ env.SSH_PORT }}" \
             dist/ package.json pnpm-lock.yaml pnpm-workspace.yaml .nvmrc ecosystem.config.cjs server-start.mjs \
@@ -142,6 +145,37 @@ jobs:
             ssh -i ~/.ssh/deploy_key -p ${{ env.SSH_PORT }} \
               ${{ env.SSH_USER }}@${{ secrets.SSH_HOST }} \
               "cat > ${{ env.DEPLOY_PATH }}/.env"
+
+      - name: Deploy subscription settings
+        if: steps.cache.outputs.cache-hit != 'true'
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SUBSCRIPTIONS_BARK: ${{ vars.SUBSCRIPTIONS_BARK }}
+          SUBSCRIPTIONS_DB_PATH: ${{ vars.SUBSCRIPTIONS_DB_PATH }}
+          SUBSCRIPTIONS_SMTP_HOST: ${{ vars.SUBSCRIPTIONS_SMTP_HOST }}
+          SUBSCRIPTIONS_SMTP_PORT: ${{ vars.SUBSCRIPTIONS_SMTP_PORT }}
+          SUBSCRIPTIONS_SMTP_FROM: ${{ vars.SUBSCRIPTIONS_SMTP_FROM }}
+          SUBSCRIPTIONS_SMTP_USER: ${{ secrets.SUBSCRIPTIONS_SMTP_USER }}
+          SUBSCRIPTIONS_SMTP_PASSWORD: ${{ secrets.SUBSCRIPTIONS_SMTP_PASSWORD }}
+          SUBSCRIPTIONS_TELEGRAM_BOT_USERNAME: ${{ vars.SUBSCRIPTIONS_TELEGRAM_BOT_USERNAME }}
+          SUBSCRIPTIONS_TELEGRAM_BOT_TOKEN: ${{ secrets.SUBSCRIPTIONS_TELEGRAM_BOT_TOKEN }}
+          SUBSCRIPTIONS_TELEGRAM_WEBHOOK_SECRET: ${{ secrets.SUBSCRIPTIONS_TELEGRAM_WEBHOOK_SECRET }}
+        run: |
+          set -o pipefail
+          node -e '
+            const settings = Object.fromEntries(
+              Object.entries(process.env).filter(([key, value]) => key.startsWith("SUBSCRIPTIONS_") && value !== "")
+            );
+            process.stdout.write(JSON.stringify(settings));
+          ' | ssh -i ~/.ssh/deploy_key -p "$SSH_PORT" "$SSH_USER@$SSH_HOST" "
+            set -e
+            umask 077
+            cd $DEPLOY_PATH
+            tmp=\$(mktemp .env.subscriptions.json.XXXXXX)
+            trap 'rm -f -- \"\$tmp\"' EXIT
+            cat > \"\$tmp\"
+            python3 -m json.tool \"\$tmp\" > /dev/null
+            mv -f -- \"\$tmp\" .env.subscriptions.json"
 
       - name: Install & restart on server
         if: steps.cache.outputs.cache-hit != 'true'
