@@ -18,6 +18,7 @@ import { getGitTimestamps } from "../utils/git-timestamps";
 import { countContentWords } from "../utils/content-word-count";
 import { buildSectionTags } from "../utils/content-tags";
 import { normalizeWalinePagePath } from "../utils/waline-page-path";
+import { loadHomeSiteStatsSnapshot } from "../server/home-site-stats";
 
 export const prerender = true;
 
@@ -163,6 +164,13 @@ const viewPaths = [
   "/",
   ...[...fixedPagePaths, ...contentPagePaths].map(normalizeWalinePagePath),
 ];
+const walinePaths = {
+  viewPaths,
+  articlePaths: activityEntries.map((entry) => entry.href),
+};
+const walineStats = import.meta.env.PROD
+  ? await loadHomeSiteStatsSnapshot(site.site.url, walinePaths)
+  : undefined;
 const latestBlogArticles = blogArticles.slice(0, 4);
 const latestNoteArticles = noteArticles.slice(0, 4);
 const latestBlogTimelineGroups = buildLatestTimelineGroups(latestBlogArticles);
@@ -178,5 +186,6 @@ const profileLinks = getSocialLinks(socialDisplay.home).slice(0, 4);
   latestNoteTimelineGroups={latestNoteTimelineGroups}
   activityEntries={activityEntries}
   siteStats={siteStats}
-  viewPaths={viewPaths}
+  walinePaths={walinePaths}
+  walineStats={walineStats}
 />
