@@ -60,6 +60,15 @@ test("confirmation links expire and reissuing a link replaces the pending token"
     15 * minute,
   )!;
   assert.notEqual(replacement.token, initial.token);
+  assert.equal(store.getSubscription(initial.token, 15 * minute), undefined);
+  assert.equal(
+    store.getSubscription(replacement.token, 15 * minute)?.confirmed_at,
+    null,
+  );
+  assert.equal(
+    store.getSubscription(replacement.token, (24 * 60 + 15) * minute),
+    undefined,
+  );
   assert.equal(
     store.confirmSubscription(initial.token, 15 * minute + 1),
     false,

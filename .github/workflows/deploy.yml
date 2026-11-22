@@ -33,7 +33,7 @@ jobs:
       - name: Compute source hash
         id: hash
         run: |
-          HASH=${{ hashFiles('src/**', 'scripts/**', 'public/**', 'package.json', 'pnpm-lock.yaml', 'pnpm-workspace.yaml', '.nvmrc', 'astro.config.mjs', '.github/workflows/deploy.yml', 'ecosystem.config.cjs', 'server-start.mjs') }}
+          HASH=${{ hashFiles('src/**', 'scripts/**', 'public/**', 'package.json', 'pnpm-lock.yaml', 'pnpm-workspace.yaml', '.nvmrc', 'astro.config.mjs', '.github/workflows/deploy.yml', 'ecosystem.config.cjs', 'server-start.mjs', 'subscriptions-env.mjs', 'register-telegram-webhook.mjs') }}
           echo "source_hash=$HASH" >> "$GITHUB_OUTPUT"
 
       - name: Check hash cache
@@ -130,7 +130,7 @@ jobs:
             --exclude='.env.subscriptions.json' \
             --exclude='/.subscriptions/' \
             -e "ssh -i ~/.ssh/deploy_key -p ${{ env.SSH_PORT }}" \
-            dist/ package.json pnpm-lock.yaml pnpm-workspace.yaml .nvmrc ecosystem.config.cjs server-start.mjs \
+            dist/ package.json pnpm-lock.yaml pnpm-workspace.yaml .nvmrc ecosystem.config.cjs server-start.mjs subscriptions-env.mjs register-telegram-webhook.mjs \
             ${{ env.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ env.DEPLOY_PATH }}/
 
       - name: Deploy runtime env vars
@@ -194,7 +194,7 @@ jobs:
             CI=true npm exec --yes --package=\"\$pnpm_package\" -- pnpm install --prod --frozen-lockfile
             \"\$pm2_bin\" delete ${{ env.PM2_APP_NAME }} 2>/dev/null || true
             ASTRO_STAR_NODE=\"\$(command -v node)\" PM2_APP_NAME=${{ env.PM2_APP_NAME }} PORT=${{ env.APP_PORT }} \"\$pm2_bin\" start ecosystem.config.cjs
-            curl --fail --silent --show-error --retry 5 --retry-all-errors --retry-delay 2 --max-time 8 http://localhost:${{ env.APP_PORT }}/subscribe/ > /dev/null
+            curl --fail --silent --show-error --retry 5 --retry-all-errors --retry-delay 2 --max-time 8 http://localhost:${{ env.APP_PORT }}/api/subscriptions/preferences > /dev/null
             \"\$pm2_bin\" save"
 
       - name: Cleanup SSH

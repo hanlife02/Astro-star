@@ -12,8 +12,8 @@ interface Message {
 }
 
 export function subscriptionLink(token: string) {
-  const link = new URL("/subscribe/", site.site.url);
-  link.searchParams.set("token", token);
+  const link = new URL("/", site.site.url);
+  link.hash = `subscribe=${token}`;
   return link.href;
 }
 
