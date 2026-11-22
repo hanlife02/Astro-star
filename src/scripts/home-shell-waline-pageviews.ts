@@ -1,9 +1,7 @@
 import { getPageview, updatePageview } from "@waline/api";
 import { getWalinePageviewPaths } from "../utils/waline-page-path";
-import {
-  getConfiguredWalineServerURL,
-  normalizeWalineServerURL,
-} from "./home-shell-waline-config";
+import { normalizeWalineServerURL } from "../utils/waline-url";
+import { getConfiguredWalineServerURL } from "./home-shell-waline-config";
 
 let activeController: AbortController | undefined;
 

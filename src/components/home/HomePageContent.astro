@@ -9,6 +9,10 @@ import AppPanelIcon from "../ui/icons/AppPanelIcon.astro";
 import type { SocialLinkItem } from "../../types/social";
 import { isCodeTimeConfigured } from "../../utils/codetime";
 import { getSocialLink } from "../../utils/social";
+import type {
+  WalineSiteStatsPaths,
+  WalineSiteStatsSnapshot,
+} from "../../utils/waline-site-stats";
 import "../../style/components/home/profile.css";
 import "../../style/components/home/latest-articles.css";
 import "../../style/components/home/home-page-content.css";
@@ -38,7 +42,8 @@ interface LatestTimelineGroup {
 
 interface Props {
   siteStats: { articles: number; words: number };
-  viewPaths: string[];
+  walinePaths: WalineSiteStatsPaths;
+  walineStats?: WalineSiteStatsSnapshot;
   activityEntries: {
     date: string;
     dateLabel: string;
@@ -54,7 +59,8 @@ interface Props {
 
 const {
   siteStats,
-  viewPaths,
+  walinePaths,
+  walineStats,
   activityEntries,
   profile,
   ownerName,
@@ -192,10 +198,9 @@ function isExternalLink(href: string) {
       class="profile-site-stats home-enter-item"
       aria-label="Site statistics"
       data-home-site-stats
-      data-view-paths={JSON.stringify(viewPaths)}
-      data-article-paths={JSON.stringify(
-        activityEntries.map((entry) => entry.href),
-      )}
+      data-view-paths={JSON.stringify(walinePaths.viewPaths)}
+      data-article-paths={JSON.stringify(walinePaths.articlePaths)}
+      data-stats-saved-at={walineStats?.savedAt}
     >
       <div class="profile-site-stat">
         <dt>articles</dt>
@@ -207,11 +212,15 @@ function isExternalLink(href: string) {
       </div>
       <div class="profile-site-stat">
         <dt>views</dt>
-        <dd data-home-total-views>—</dd>
+        <dd data-home-total-views>
+          {walineStats?.views.toLocaleString("en-US") ?? "—"}
+        </dd>
       </div>
       <div class="profile-site-stat">
         <dt>likes</dt>
-        <dd data-home-total-likes>—</dd>
+        <dd data-home-total-likes>
+          {walineStats?.likes.toLocaleString("en-US") ?? "—"}
+        </dd>
       </div>
     </dl>
     <div class="profile-connections">

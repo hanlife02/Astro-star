@@ -1,9 +1,6 @@
-let configuredServerURL: Promise<string> | undefined;
+import { normalizeWalineServerURL } from "../utils/waline-url";
 
-export function normalizeWalineServerURL(serverURL: string) {
-  const url = serverURL.trim();
-  return url && !/^(?:https?:)?\/\//i.test(url) ? `https://${url}` : url;
-}
+let configuredServerURL: Promise<string> | undefined;
 
 export function getConfiguredWalineServerURL() {
   configuredServerURL ??= fetch("/api/waline-config.json", {
