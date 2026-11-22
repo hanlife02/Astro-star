@@ -18,13 +18,18 @@ export interface PublishedPost {
   url: string;
 }
 
-interface Delivery {
+interface QueuedDelivery {
   id: number;
   token: string;
   attempts: number;
-  title: string;
-  url: string;
 }
+
+const queues = {
+  publication: "deliveries",
+  receipt: "subscription_receipts",
+} as const;
+export type Delivery = QueuedDelivery &
+  ({ kind: "publication"; title: string; url: string } | { kind: "receipt" });
 
 const minute = 60_000;
 const confirmationLifetime = 24 * 60 * minute;
@@ -64,6 +69,12 @@ export function openSubscriptionStore(path: string) {
     );
     CREATE INDEX IF NOT EXISTS deliveries_due ON deliveries (due_at);
     CREATE INDEX IF NOT EXISTS deliveries_subscriber ON deliveries (token);
+    CREATE TABLE IF NOT EXISTS subscription_receipts (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      token TEXT NOT NULL UNIQUE REFERENCES subscriptions (token) ON DELETE CASCADE,
+      due_at INTEGER NOT NULL,
+      attempts INTEGER NOT NULL DEFAULT 0
+    );
   `);
 
   function transaction<T>(run: () => T): T {
@@ -85,6 +96,37 @@ export function openSubscriptionStore(path: string) {
         "SELECT * FROM subscriptions WHERE token = ? AND (confirmed_at IS NOT NULL OR requested_at > ?)",
       )
       .get(token, now - confirmationLifetime) as Subscription | undefined;
+  }
+
+  function claim(
+    kind: Delivery["kind"],
+    channels: Channel[],
+    now: number,
+    token: string | null = null,
+  ) {
+    const queue = queues[kind];
+    return db
+      .prepare(
+        `
+      UPDATE ${queue} SET due_at = ?
+      WHERE id = (
+        SELECT ${queue}.id FROM ${queue} JOIN subscriptions USING (token)
+        WHERE due_at <= ? AND channel IN (SELECT value FROM json_each(?))
+        AND (? IS NULL OR token = ?)
+        ORDER BY due_at, ${queue}.id LIMIT 1
+      )
+      RETURNING id, token, attempts, '${kind}' AS kind${kind === "publication" ? ", title, url" : ""}
+    `,
+      )
+      .get(now + 5 * minute, now, JSON.stringify(channels), token, token) as
+      | Delivery
+      | undefined;
+  }
+
+  function completeDelivery(delivery: Delivery) {
+    db.prepare(`DELETE FROM ${queues[delivery.kind]} WHERE id = ?`).run(
+      delivery.id,
+    );
   }
 
   return {
@@ -127,16 +169,21 @@ export function openSubscriptionStore(path: string) {
     },
     confirmSubscription(token: string, now = Date.now()) {
       if (!isToken(token)) return false;
-      return (
-        db
+      return transaction(() => {
+        const updated = db
           .prepare(
             `
-        UPDATE subscriptions SET confirmed_at = ?
-        WHERE token = ? AND confirmed_at IS NULL AND requested_at > ?
-      `,
+          UPDATE subscriptions SET confirmed_at = ?
+          WHERE token = ? AND channel IN ('email', 'bark') AND confirmed_at IS NULL AND requested_at > ?
+        `,
           )
-          .run(now, token, now - confirmationLifetime).changes === 1
-      );
+          .run(now, token, now - confirmationLifetime);
+        if (!updated.changes) return false;
+        db.prepare(
+          "INSERT INTO subscription_receipts (token, due_at) VALUES (?, ?)",
+        ).run(token, now);
+        return true;
+      });
     },
     unsubscribe(token: string) {
       if (!isToken(token)) return false;
@@ -197,33 +244,22 @@ export function openSubscriptionStore(path: string) {
       });
     },
     claimDelivery(channels: Channel[], now = Date.now()) {
-      return db
-        .prepare(
-          `
-        UPDATE deliveries SET due_at = ?
-        WHERE id = (
-          SELECT deliveries.id FROM deliveries JOIN subscriptions USING (token)
-          WHERE due_at <= ? AND channel IN (SELECT value FROM json_each(?))
-          ORDER BY due_at, deliveries.id LIMIT 1
-        )
-        RETURNING id, token, attempts, title, url
-      `,
-        )
-        .get(now + 5 * minute, now, JSON.stringify(channels)) as
-        | Delivery
-        | undefined;
+      return (
+        claim("receipt", channels, now) ?? claim("publication", channels, now)
+      );
     },
-    completeDelivery(id: number) {
-      db.prepare("DELETE FROM deliveries WHERE id = ?").run(id);
+    claimReceipt(token: string, now = Date.now()) {
+      return claim("receipt", ["email", "bark"], now, token);
     },
+    completeDelivery,
     retryDelivery(delivery: Delivery, now = Date.now()) {
       const attempts = delivery.attempts + 1;
       if (attempts >= 5) {
-        db.prepare("DELETE FROM deliveries WHERE id = ?").run(delivery.id);
+        completeDelivery(delivery);
         return false;
       }
       db.prepare(
-        "UPDATE deliveries SET attempts = ?, due_at = ? WHERE id = ?",
+        `UPDATE ${queues[delivery.kind]} SET attempts = ?, due_at = ? WHERE id = ?`,
       ).run(attempts, now + 2 ** attempts * minute, delivery.id);
       return true;
     },

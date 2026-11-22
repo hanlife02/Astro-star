@@ -3,7 +3,7 @@ import { site } from "../../config/site";
 import { resolveContentSlug } from "../../utils/content-slug";
 import { resolveContentTitle } from "../../utils/content-title";
 import { isPublishedContentEntry } from "../../utils/content-visibility";
-import { sendSubscriptionMessage, subscriptionLink } from "./notifications";
+import { deliverQueuedMessage } from "./notifications";
 import { getSubscriptionSettings, type Channel } from "./settings";
 import { getSubscriptionStore, type PublishedPost } from "./store";
 
@@ -41,31 +41,6 @@ export async function deliverPublications() {
   for (let index = 0; index < 25; index++) {
     const delivery = store.claimDelivery(channels);
     if (!delivery) break;
-    const subscriber = store.getSubscription(delivery.token);
-    if (!subscriber) continue;
-
-    try {
-      await sendSubscriptionMessage(
-        settings,
-        subscriber.channel,
-        subscriber.destination,
-        {
-          title: delivery.title.slice(0, 200),
-          body: `New publication on ${site.site.name}`,
-          url: delivery.url,
-          manageUrl:
-            subscriber.channel === "telegram"
-              ? undefined
-              : subscriptionLink(subscriber.token),
-        },
-      );
-    } catch {
-      const willRetry = store.retryDelivery(delivery);
-      console.warn(
-        `Subscription delivery failed (${subscriber.channel}, job ${delivery.id})${willRetry ? ", will retry" : ", retry limit reached"}.`,
-      );
-      continue;
-    }
-    store.completeDelivery(delivery.id);
+    await deliverQueuedMessage(settings, store, delivery);
   }
 }
