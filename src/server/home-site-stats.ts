@@ -7,7 +7,7 @@ import {
 } from "../utils/waline-site-stats";
 import { normalizeWalineServerURL } from "../utils/waline-url";
 
-const REQUEST_TIMEOUT_MS = 4_000;
+const REQUEST_TIMEOUT_MS = 15_000;
 
 export async function loadHomeSiteStatsSnapshot(
   siteURL: string,
@@ -16,11 +16,11 @@ export async function loadHomeSiteStatsSnapshot(
   const serverURL = normalizeWalineServerURL(getWalineServerURL());
   if (!serverURL) return;
 
+  const signal = AbortSignal.timeout(REQUEST_TIMEOUT_MS);
   try {
     const origin = new URL(siteURL).origin;
     const endpoint = new URL(serverURL, origin);
     endpoint.pathname = `${endpoint.pathname.replace(/\/+$/, "")}/api/article`;
-    const signal = AbortSignal.timeout(REQUEST_TIMEOUT_MS);
     const stats = await collectWalineSiteStats(paths, async (batch) => {
       const url = new URL(endpoint);
       url.search = new URLSearchParams({
@@ -35,19 +35,25 @@ export async function loadHomeSiteStatsSnapshot(
       if (!response.ok) {
         throw new Error(`Waline returned HTTP ${response.status}.`);
       }
-      const payload = (await response.json()) as {
+      const payload = (await response.json().catch(() => null)) as {
         errno?: number;
         data?: GetArticleCounterResponse;
-      };
-      if (payload.errno || !Array.isArray(payload.data)) {
+      } | null;
+      if (!payload || payload.errno || !Array.isArray(payload.data)) {
         throw new Error("Waline returned an invalid counter response.");
       }
       return payload.data;
     });
     return { ...stats, savedAt: Date.now() };
-  } catch {
+  } catch (error) {
+    const reason = signal.aborted
+      ? `Waline did not respond within ${REQUEST_TIMEOUT_MS / 1000}s.`
+      : error instanceof Error
+        ? error.message
+        : "Unknown error.";
     console.warn(
       "[SiteStats] Could not load the homepage counters during build.",
+      reason,
     );
   }
 }
