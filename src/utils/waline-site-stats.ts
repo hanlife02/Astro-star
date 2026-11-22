@@ -1,7 +1,11 @@
 import type { GetArticleCounterResponse } from "@waline/api";
 import { getWalinePageviewPaths } from "./waline-page-path";
 
-export type WalineSiteStats = { views: number; likes: number };
+export type WalineSiteStats = {
+  views: number;
+  likes: number;
+  homeViews: number;
+};
 export type WalineSiteStatsSnapshot = WalineSiteStats & { savedAt: number };
 export type WalineSiteStatsPaths = {
   viewPaths: string[];
@@ -17,7 +21,7 @@ export async function collectWalineSiteStats(
   const articlePaths = new Set(paths.articlePaths);
   const viewPaths = new Set(paths.viewPaths.flatMap(getWalinePageviewPaths));
   const allPaths = [...new Set([...viewPaths, ...articlePaths])];
-  const totals: WalineSiteStats = { views: 0, likes: 0 };
+  const totals: WalineSiteStats = { views: 0, likes: 0, homeViews: 0 };
   const batches: string[][] = [];
 
   for (let index = 0; index < allPaths.length; index += BATCH_SIZE) {
@@ -34,7 +38,11 @@ export async function collectWalineSiteStats(
       }
       counters.forEach((counter, offset) => {
         const path = batch[offset];
-        if (viewPaths.has(path)) totals.views += Math.max(0, counter.time ?? 0);
+        if (viewPaths.has(path)) {
+          const views = Math.max(0, counter.time ?? 0);
+          totals.views += views;
+          if (path === "/") totals.homeViews = views;
+        }
         if (articlePaths.has(path)) {
           totals.likes += Math.max(0, counter.reaction0 ?? 0);
         }
