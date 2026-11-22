@@ -33,7 +33,7 @@ jobs:
       - name: Compute source hash
         id: hash
         run: |
-          HASH=${{ hashFiles('src/**', 'scripts/**', 'public/**', 'package.json', 'pnpm-lock.yaml', 'pnpm-workspace.yaml', '.nvmrc', 'astro.config.mjs', '.github/workflows/deploy.yml', 'ecosystem.config.cjs', 'server-start.mjs', 'subscriptions-env.mjs', 'register-telegram-webhook.mjs', 'telegram-api.mjs') }}
+          HASH=${{ hashFiles('src/**', 'scripts/**', 'public/**', 'package.json', 'pnpm-lock.yaml', 'pnpm-workspace.yaml', '.nvmrc', 'astro.config.mjs', '.github/workflows/deploy.yml', 'ecosystem.config.cjs', 'server-start.mjs', 'subscriptions-env.mjs', 'register-telegram-webhook.mjs') }}
           echo "source_hash=$HASH" >> "$GITHUB_OUTPUT"
 
       - name: Check hash cache
@@ -130,7 +130,7 @@ jobs:
             --exclude='.env.subscriptions.json' \
             --exclude='/.subscriptions/' \
             -e "ssh -i ~/.ssh/deploy_key -p ${{ env.SSH_PORT }}" \
-            dist/ package.json pnpm-lock.yaml pnpm-workspace.yaml .nvmrc ecosystem.config.cjs server-start.mjs subscriptions-env.mjs register-telegram-webhook.mjs telegram-api.mjs \
+            dist/ package.json pnpm-lock.yaml pnpm-workspace.yaml .nvmrc ecosystem.config.cjs server-start.mjs subscriptions-env.mjs register-telegram-webhook.mjs \
             ${{ env.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ env.DEPLOY_PATH }}/
 
       - name: Deploy runtime env vars
@@ -158,7 +158,6 @@ jobs:
           SUBSCRIPTIONS_SMTP_USER: ${{ vars.SUBSCRIPTIONS_SMTP_USER || secrets.SUBSCRIPTIONS_SMTP_USER }}
           SUBSCRIPTIONS_SMTP_PASSWORD: ${{ secrets.SUBSCRIPTIONS_SMTP_PASSWORD }}
           SUBSCRIPTIONS_TELEGRAM_BOT_USERNAME: ${{ vars.SUBSCRIPTIONS_TELEGRAM_BOT_USERNAME }}
-          SUBSCRIPTIONS_TELEGRAM_PROXY_URL: ${{ vars.SUBSCRIPTIONS_TELEGRAM_PROXY_URL }}
           SUBSCRIPTIONS_TELEGRAM_BOT_TOKEN: ${{ secrets.SUBSCRIPTIONS_TELEGRAM_BOT_TOKEN }}
           SUBSCRIPTIONS_TELEGRAM_WEBHOOK_SECRET: ${{ secrets.SUBSCRIPTIONS_TELEGRAM_WEBHOOK_SECRET }}
         run: |

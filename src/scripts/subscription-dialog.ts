@@ -97,6 +97,7 @@ class SubscriptionDialog extends HTMLElement {
     }
 
     function openLink() {
+      if (location.pathname !== "/") return;
       const hash = location.hash;
       if (hash !== "#subscribe" && !hash.startsWith("#subscribe=")) return;
       const linkToken =
