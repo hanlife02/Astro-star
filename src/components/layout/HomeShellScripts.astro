@@ -12,6 +12,10 @@
   import { initHomeShellRouteTransitionLock } from "../../scripts/home-shell-route-transition-lock";
   import { initHomeShellSearch } from "../../scripts/home-shell-search";
   import {
+    cleanupHomeShellSiteStats,
+    initHomeShellSiteStats,
+  } from "../../scripts/home-shell-site-stats";
+  import {
     cleanupHomeShellWalinePageviews,
     initHomeShellWalinePageviews,
   } from "../../scripts/home-shell-waline-pageviews";
@@ -71,6 +75,7 @@
   const cleanupHomeShellBeforeSwap = () => {
     runHomeShellCleanup("page-modules", cleanupHomeShellPageModules);
     runHomeShellCleanup("pageviews", cleanupHomeShellWalinePageviews);
+    runHomeShellCleanup("site-stats", cleanupHomeShellSiteStats);
 
     HOME_SHELL_BEFORE_SWAP_CLEANUP_KEYS.forEach((cleanupKey) => {
       const cleanup = browserWindow[cleanupKey];
@@ -102,8 +107,12 @@
   };
 
   if (!browserWindow.__homeShellPageLoadBound) {
+    const initSiteStats = () =>
+      runHomeShellInitializer("site-stats", initHomeShellSiteStats);
+    document.addEventListener("astro:after-swap", initSiteStats);
     document.addEventListener("astro:page-load", initHomeShell);
     document.addEventListener("astro:before-swap", cleanupHomeShellBeforeSwap);
     browserWindow.__homeShellPageLoadBound = true;
+    initSiteStats();
   }
 </script>
