@@ -26,26 +26,31 @@ export async function initHomeShellWalinePageviews() {
   if (!serverURL) return;
 
   // The visit occurred even if Astro swaps out the page before the write finishes.
-  await updatePageview({ serverURL, lang, path }).catch((error) => {
-    console.warn("[Waline] Failed to record a pageview.", error);
-  });
+  const counters = await updatePageview({ serverURL, lang, path }).catch(
+    (error) => {
+      console.warn("[Waline] Failed to record a pageview.", error);
+    },
+  );
+  const confirmedViews = counters?.[0]?.time;
 
-  if (signal.aborted || !pageviewElement) return;
+  if (signal.aborted || !pageviewElement) return confirmedViews;
   try {
-    const counters = await getPageview({
+    const pageviews = await getPageview({
       serverURL,
       lang,
       paths: getWalinePageviewPaths(path),
       signal,
     });
     if (!signal.aborted) {
-      const views = counters.reduce(
+      const [current, ...legacy] = pageviews;
+      const views = legacy.reduce(
         (total, counter) => total + Math.max(0, counter.time ?? 0),
-        0,
+        Math.max(0, current?.time ?? 0, confirmedViews ?? 0),
       );
       pageviewElement.textContent = String(views);
     }
   } catch (error) {
     if (!signal.aborted) throw error;
   }
+  return confirmedViews;
 }

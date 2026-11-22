@@ -200,7 +200,9 @@ function isExternalLink(href: string) {
       data-home-site-stats
       data-view-paths={JSON.stringify(walinePaths.viewPaths)}
       data-article-paths={JSON.stringify(walinePaths.articlePaths)}
-      data-stats-saved-at={walineStats?.savedAt}
+      data-stats-snapshot={walineStats
+        ? JSON.stringify(walineStats)
+        : undefined}
     >
       <div class="profile-site-stat">
         <dt>articles</dt>
