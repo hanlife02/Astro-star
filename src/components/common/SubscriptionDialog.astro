@@ -1,5 +1,5 @@
 ---
-import { Bell, X } from "lucide-static";
+import { X } from "lucide-static";
 import Icon from "../ui/Icon.astro";
 import BarkIcon from "../ui/icons/BarkIcon.astro";
 import MailIcon from "../ui/icons/MailIcon.astro";
@@ -7,16 +7,6 @@ import TelegramIcon from "../ui/icons/TelegramIcon.astro";
 ---
 
 <subscription-dialog>
-  <button
-    type="button"
-    class="footer-rss-btn"
-    aria-label="Subscribe to new publications"
-    data-icon-tooltip="Subscribe"
-    aria-haspopup="dialog"
-    aria-controls="subscription-dialog"
-  >
-    <Icon svg={Bell} />
-  </button>
   <dialog id="subscription-dialog" aria-labelledby="subscription-title">
     <header>
       <h2 id="subscription-title">Subscribe</h2>
@@ -76,7 +66,7 @@ import TelegramIcon from "../ui/icons/TelegramIcon.astro";
 
 <style>
   subscription-dialog {
-    display: inline-flex;
+    display: contents;
   }
   dialog {
     margin: auto;
@@ -147,34 +137,42 @@ import TelegramIcon from "../ui/icons/TelegramIcon.astro";
     width: 3rem;
     height: 3rem;
     border-radius: 50%;
-    background: color-mix(in srgb, var(--line) 9%, var(--paper));
+    background-color: var(--channel-bg, transparent);
+    transform: scale(var(--channel-scale, 1));
+    transform-origin: center bottom;
+    transition:
+      background-color 0.18s ease,
+      transform 0.18s ease;
   }
   .channels :global(svg) {
     width: 1.625rem;
     height: 1.625rem;
   }
   @media (hover: hover) {
-    .channels :is(button:enabled, a[href]):hover .channel-icon {
-      box-shadow: inset 0 0 0 1px currentColor;
+    .channels > :is(button:enabled, a[href]):hover {
+      --channel-bg: var(--icon-hover-bg);
+      --channel-scale: 1.12;
     }
-  }
-  .channels [aria-pressed="true"] .channel-icon {
-    background: var(--line);
-    color: var(--paper);
   }
   .channels > :focus-visible {
+    --channel-bg: var(--icon-hover-bg);
+    --channel-scale: 1.12;
     outline: none;
+    text-decoration: underline;
+    text-underline-offset: 0.22em;
   }
-  .channels > :focus-visible .channel-icon {
-    outline: 2px solid var(--line);
-    outline-offset: 3px;
+  .channels [aria-pressed="true"] .channel-icon {
+    background-color: color-mix(in srgb, var(--line) 16%, var(--paper));
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .channel-icon {
+      transition: none;
+      transform: none;
+    }
   }
   @media (forced-colors: active) {
-    .channel-icon {
-      border: 1px solid ButtonText;
-    }
-    .channels [aria-pressed="true"] .channel-icon {
-      border: 3px double Highlight;
+    .channels [aria-pressed="true"] {
+      font-weight: bold;
     }
   }
   dialog :is(:disabled, [aria-disabled="true"]) {

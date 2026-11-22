@@ -58,6 +58,7 @@
   /* One text-relative scale for standalone icons and their clickable areas. */
   --icon-size: 1.375rem;
   --icon-btn-size: max(44px, 2.75rem);
+  --icon-hover-bg: color-mix(in srgb, var(--line) 8%, var(--paper));
   --menu-trigger-width: var(--icon-btn-size);
   --menu-trigger-height: var(--icon-btn-size);
   --menu-icon-size: var(--icon-size);
