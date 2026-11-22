@@ -1,6 +1,7 @@
 import type { APIRoute } from "astro";
 import { site } from "../../../config/site";
 import {
+  deliverQueuedMessage,
   sendSubscriptionMessage,
   subscriptionLink,
 } from "../../../server/subscriptions/notifications";
@@ -46,12 +47,24 @@ export const POST: APIRoute = async ({ request }) => {
       if (!store.unsubscribe(token)) return reply({ message: invalid }, 410);
       return reply({ message: "You’re unsubscribed." });
     }
-    if (
-      action === "confirm" &&
-      subscription.confirmed_at == null &&
-      !store.confirmSubscription(token)
-    ) {
-      return reply({ message: invalid }, 410);
+    if (action === "confirm" && subscription.confirmed_at == null) {
+      if (store.confirmSubscription(token)) {
+        const receipt = store.claimReceipt(token);
+        if (receipt) {
+          // The durable queue also covers a restart while the provider is responding.
+          void deliverQueuedMessage(
+            getSubscriptionSettings(),
+            store,
+            receipt,
+          ).catch(() =>
+            console.warn(
+              "Could not finish processing the subscription receipt.",
+            ),
+          );
+        }
+      } else if (store.getSubscription(token)?.confirmed_at == null) {
+        return reply({ message: invalid }, 410);
+      }
     }
     if (subscription.confirmed_at != null || action === "confirm") {
       return reply({
