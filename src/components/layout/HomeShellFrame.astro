@@ -8,6 +8,7 @@ import { isAlgoliaSiteSearchConfigured } from "../../config/search";
 import {
   AlignLeft,
   ArrowUp,
+  Bell,
   FolderKanban,
   Monitor,
   Moon,
@@ -245,7 +246,16 @@ const pathname = Astro.url.pathname;
       >
         <RssIcon />
       </a>
-      <SubscriptionDialog />
+      <button
+        type="button"
+        class="footer-rss-btn"
+        aria-label="Subscribe to new publications"
+        data-icon-tooltip="Subscribe"
+        aria-haspopup="dialog"
+        aria-controls="subscription-dialog"
+      >
+        <Icon svg={Bell} />
+      </button>
       {
         githubHref && (
           <a
@@ -263,4 +273,5 @@ const pathname = Astro.url.pathname;
       <slot name="footer-icons" />
     </nav>
   </footer>
+  <SubscriptionDialog />
 </div>

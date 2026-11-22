@@ -6,7 +6,11 @@ class SubscriptionDialog extends HTMLElement {
 
   connectedCallback() {
     const dialog = this.querySelector("dialog")!;
-    const trigger = this.querySelector<HTMLButtonElement>("[aria-haspopup]")!;
+    const trigger = this.closest(
+      "[data-home-shell-root]",
+    )!.querySelector<HTMLButtonElement>(
+      `button[aria-controls="${dialog.id}"]`,
+    )!;
     const channels = dialog.querySelector<HTMLElement>(".channels")!;
     const buttons = channels.querySelectorAll<HTMLButtonElement>("button");
     const telegram = channels.querySelector("a")!;

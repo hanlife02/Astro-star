@@ -61,8 +61,9 @@ test("homepage views cover the sitemap and count all missing pages under one pat
 
 test("the footer opens a subscription dialog on home and content pages", () => {
   for (const page of [readPage(), readPage("about")]) {
+    const [footer] = findAll(page, (node) => hasClass(node, "home-footer"));
     const [trigger] = findAll(
-      page,
+      footer,
       (node) => attribute(node, "aria-controls") === "subscription-dialog",
     );
     assert.equal(trigger.tagName, "button");
@@ -71,6 +72,12 @@ test("the footer opens a subscription dialog on home and content pages", () => {
       (node) =>
         node.tagName === "dialog" &&
         attribute(node, "id") === "subscription-dialog",
+    );
+    assert.ok(dialog);
+    assert.equal(
+      findAll(footer, (node) => node === dialog).length,
+      0,
+      "the open dialog must not inherit the offscreen footer's disabled pointer events",
     );
     assert.deepEqual(
       findAll(

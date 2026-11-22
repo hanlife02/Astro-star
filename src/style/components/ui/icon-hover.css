@@ -58,7 +58,7 @@
 @media (hover: hover) {
   :root body :is([data-icon-tooltip], [data-icon-hover]):hover {
     border-radius: 999px;
-    background: color-mix(in srgb, var(--line) 8%, var(--paper));
+    background: var(--icon-hover-bg);
   }
 
   [data-icon-tooltip]:hover::after {
@@ -69,7 +69,7 @@
 
 :root body :is([data-icon-tooltip], [data-icon-hover]):focus-visible {
   border-radius: 999px;
-  background: color-mix(in srgb, var(--line) 8%, var(--paper));
+  background: var(--icon-hover-bg);
   outline: 2px solid currentColor;
   outline-offset: 2px;
 }
