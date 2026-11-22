@@ -102,17 +102,25 @@
       initHomeShellRouteTransitionLock,
     );
     runHomeShellInitializer("search", initHomeShellSearch);
-    runHomeShellInitializer("pageviews", initHomeShellWalinePageviews);
     runHomeShellInitializer("page-modules", initHomeShellPageModules);
   };
 
   if (!browserWindow.__homeShellPageLoadBound) {
-    const initSiteStats = () =>
-      runHomeShellInitializer("site-stats", initHomeShellSiteStats);
-    document.addEventListener("astro:after-swap", initSiteStats);
+    let countedBody: HTMLElement | undefined;
+    const initPageCounters = () => {
+      const body = document.body;
+      if (countedBody === body) return;
+      countedBody = body;
+      const pageview = initHomeShellWalinePageviews();
+      runHomeShellInitializer("pageviews", () => pageview);
+      runHomeShellInitializer("site-stats", () =>
+        initHomeShellSiteStats(pageview),
+      );
+    };
+    document.addEventListener("astro:after-swap", initPageCounters);
     document.addEventListener("astro:page-load", initHomeShell);
     document.addEventListener("astro:before-swap", cleanupHomeShellBeforeSwap);
     browserWindow.__homeShellPageLoadBound = true;
-    initSiteStats();
+    initPageCounters();
   }
 </script>
