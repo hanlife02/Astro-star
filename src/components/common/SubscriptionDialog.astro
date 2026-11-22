@@ -1,5 +1,5 @@
 ---
-import { Bell, X } from "lucide-static";
+import { X } from "lucide-static";
 import Icon from "../ui/Icon.astro";
 import BarkIcon from "../ui/icons/BarkIcon.astro";
 import MailIcon from "../ui/icons/MailIcon.astro";
@@ -7,16 +7,6 @@ import TelegramIcon from "../ui/icons/TelegramIcon.astro";
 ---
 
 <subscription-dialog>
-  <button
-    type="button"
-    class="footer-rss-btn"
-    aria-label="Subscribe to new publications"
-    data-icon-tooltip="Subscribe"
-    aria-haspopup="dialog"
-    aria-controls="subscription-dialog"
-  >
-    <Icon svg={Bell} />
-  </button>
   <dialog id="subscription-dialog" aria-labelledby="subscription-title">
     <header>
       <h2 id="subscription-title">Subscribe</h2>
@@ -76,7 +66,7 @@ import TelegramIcon from "../ui/icons/TelegramIcon.astro";
 
 <style>
   subscription-dialog {
-    display: inline-flex;
+    display: contents;
   }
   dialog {
     margin: auto;
