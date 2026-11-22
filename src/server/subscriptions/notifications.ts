@@ -1,5 +1,4 @@
 import nodemailer from "nodemailer";
-import { callTelegram } from "../../../telegram-api.mjs";
 import { site } from "../../config/site";
 import { getSubscriptionSettings, type Channel } from "./settings";
 
@@ -64,12 +63,15 @@ export async function sendSubscriptionMessage(
   }
 
   if (channel === "telegram" && settings.telegram) {
-    await callTelegram(settings.telegram.token, "sendMessage", {
-      chat_id: destination,
-      text: `${[title, body, url].filter(Boolean).join("\n\n")}\n\nSend /stop to unsubscribe.`,
-      link_preview_options: { is_disabled: true },
-    });
-    return;
+    const response = await postJson(
+      `https://api.telegram.org/bot${settings.telegram.token}/sendMessage`,
+      {
+        chat_id: destination,
+        text: `${[title, body, url].filter(Boolean).join("\n\n")}\n\nSend /stop to unsubscribe.`,
+        link_preview_options: { is_disabled: true },
+      },
+    );
+    if (response.ok === true) return;
   }
 
   throw new Error("Subscription provider did not accept the message");
