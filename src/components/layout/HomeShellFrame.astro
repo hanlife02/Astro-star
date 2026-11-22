@@ -1,13 +1,13 @@
 ﻿---
 import Icon from "../../components/ui/Icon.astro";
 import GithubIcon from "../../components/ui/icons/GithubIcon.astro";
+import SubscriptionDialog from "../common/SubscriptionDialog.astro";
 import RssIcon from "../../components/ui/icons/RssIcon.astro";
 import FloatingActionButton from "../../components/ui/FloatingActionButton.astro";
 import { isAlgoliaSiteSearchConfigured } from "../../config/search";
 import {
   AlignLeft,
   ArrowUp,
-  Bell,
   FolderKanban,
   Monitor,
   Moon,
@@ -245,14 +245,7 @@ const pathname = Astro.url.pathname;
       >
         <RssIcon />
       </a>
-      <a
-        class="footer-rss-btn"
-        href="/subscribe/"
-        aria-label="Subscribe to new publications"
-        data-icon-tooltip="Subscribe"
-      >
-        <Icon svg={Bell} />
-      </a>
+      <SubscriptionDialog />
       {
         githubHref && (
           <a

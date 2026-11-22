@@ -78,11 +78,13 @@ export function openSubscriptionStore(path: string) {
     }
   }
 
-  function getSubscription(token: string) {
+  function getSubscription(token: string, now = Date.now()) {
     if (!isToken(token)) return undefined;
     return db
-      .prepare("SELECT * FROM subscriptions WHERE token = ?")
-      .get(token) as Subscription | undefined;
+      .prepare(
+        "SELECT * FROM subscriptions WHERE token = ? AND (confirmed_at IS NOT NULL OR requested_at > ?)",
+      )
+      .get(token, now - confirmationLifetime) as Subscription | undefined;
   }
 
   return {
