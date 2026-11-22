@@ -1,6 +1,7 @@
 ---
-import { Bell, PawPrint, X } from "lucide-static";
+import { Bell, X } from "lucide-static";
 import Icon from "../ui/Icon.astro";
+import BarkIcon from "../ui/icons/BarkIcon.astro";
 import MailIcon from "../ui/icons/MailIcon.astro";
 import TelegramIcon from "../ui/icons/TelegramIcon.astro";
 ---
@@ -24,15 +25,18 @@ import TelegramIcon from "../ui/icons/TelegramIcon.astro";
       >
     </header>
     <div class="channels" aria-label="Subscription channels" role="group">
-      <button type="button" data-channel="bark" aria-pressed="false" disabled
-        ><Icon svg={PawPrint} />Bark</button
-      >
-      <a data-telegram aria-disabled="true" target="_blank" rel="noreferrer"
-        ><TelegramIcon aria-hidden="true" />Telegram</a
-      >
-      <button type="button" data-channel="email" aria-pressed="false" disabled
-        ><MailIcon aria-hidden="true" />Email</button
-      >
+      <button type="button" data-channel="bark" aria-pressed="false" disabled>
+        <span class="channel-icon" aria-hidden="true"><BarkIcon /></span>
+        Bark
+      </button>
+      <a data-telegram aria-disabled="true" target="_blank" rel="noreferrer">
+        <span class="channel-icon" aria-hidden="true"><TelegramIcon /></span>
+        Telegram
+      </a>
+      <button type="button" data-channel="email" aria-pressed="false" disabled>
+        <span class="channel-icon" aria-hidden="true"><MailIcon /></span>
+        Email
+      </button>
     </div>
     {
       (["bark", "email"] as const).map((channel) => (
@@ -132,18 +136,46 @@ import TelegramIcon from "../ui/icons/TelegramIcon.astro";
   .channels > * {
     display: grid;
     justify-items: center;
-    gap: 0.35rem;
-    padding: 0.7rem 0.25rem;
-    border: 1px solid var(--border-soft);
-    border-radius: var(--radius-sm);
+    gap: 0.45rem;
+    padding: 0.25rem;
+    border: 0;
     text-decoration: none;
   }
-  .channels :global(svg) {
-    width: 1.5rem;
-    height: 1.5rem;
+  .channel-icon {
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--line) 9%, var(--paper));
   }
-  .channels [aria-pressed="true"] {
-    border-color: currentColor;
+  .channels :global(svg) {
+    width: 1.625rem;
+    height: 1.625rem;
+  }
+  @media (hover: hover) {
+    .channels :is(button:enabled, a[href]):hover .channel-icon {
+      box-shadow: inset 0 0 0 1px currentColor;
+    }
+  }
+  .channels [aria-pressed="true"] .channel-icon {
+    background: var(--line);
+    color: var(--paper);
+  }
+  .channels > :focus-visible {
+    outline: none;
+  }
+  .channels > :focus-visible .channel-icon {
+    outline: 2px solid var(--line);
+    outline-offset: 3px;
+  }
+  @media (forced-colors: active) {
+    .channel-icon {
+      border: 1px solid ButtonText;
+    }
+    .channels [aria-pressed="true"] .channel-icon {
+      border: 3px double Highlight;
+    }
   }
   dialog :is(:disabled, [aria-disabled="true"]) {
     opacity: 0.45;
