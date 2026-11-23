@@ -18,6 +18,22 @@ export function subscriptionLink(token: string) {
   return link.href;
 }
 
+function subscriptionReceipt(channel: Channel, url: string): Message {
+  if (channel === "bark") {
+    return {
+      title: "Successfully Subscribed",
+      body: `Thank you for subscribing to ${site.site.name}. Bark will notify you immediately when new articles are published. If you no longer wish to receive new notifications, you can unsubscribe by clicking on the link below.`,
+      url,
+    };
+  }
+  return {
+    title: `You’re subscribed to ${site.site.name}`,
+    body: "You’ll receive new publications at this email address. To stop them, open the link below and choose Unsubscribe.",
+    url,
+    manageUrl: url,
+  };
+}
+
 export async function deliverQueuedMessage(
   settings: Settings,
   store: ReturnType<typeof openSubscriptionStore>,
@@ -28,15 +44,7 @@ export async function deliverQueuedMessage(
   const manageUrl = subscriptionLink(subscriber.token);
   const message: Message =
     delivery.kind === "receipt"
-      ? {
-          title: `You’re subscribed to ${site.site.name}`,
-          body:
-            subscriber.channel === "bark"
-              ? "You’ll receive new publication notifications here. To stop them, tap this notification and choose Unsubscribe."
-              : "You’ll receive new publications at this email address. To stop them, open the link below and choose Unsubscribe.",
-          url: manageUrl,
-          manageUrl,
-        }
+      ? subscriptionReceipt(subscriber.channel, manageUrl)
       : {
           title: delivery.title.slice(0, 200),
           body: `New publication on ${site.site.name}`,
@@ -99,6 +107,8 @@ export async function sendSubscriptionMessage(
   if (channel === "bark" && settings.bark) {
     const response = await postJson("https://api.day.app/push", {
       device_key: destination,
+      icon: new URL(site.site.iconSrc.trim() || "/site-icon.svg", site.site.url)
+        .href,
       title,
       body: [body, manageUrl && `Unsubscribe: ${manageUrl}`]
         .filter(Boolean)
