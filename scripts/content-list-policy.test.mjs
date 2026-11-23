@@ -14,6 +14,10 @@ test("prose unordered lists use decorative four-point stars aligned to the first
   assert.ok(marker);
   assert.match(
     styles,
+    /\.content-page-body ul > li\s*\{[^}]*list-style: none;/,
+  );
+  assert.match(
+    styles,
     /\.content-page-body ul > li\s*\{[^}]*padding-inline-start: 1\.3em;/,
   );
   assert.match(marker, /content: "";/);

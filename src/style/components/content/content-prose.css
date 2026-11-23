@@ -759,10 +759,7 @@ html:lang(zh-CN) .content-page--article .content-page-body {
 .content-page-body ul > li {
   position: relative;
   padding-inline-start: 1.3em;
-}
-
-.content-page-body ul > li::marker {
-  content: "";
+  list-style: none;
 }
 
 .content-page-body ul > li::before {
