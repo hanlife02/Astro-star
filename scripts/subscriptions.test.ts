@@ -5,6 +5,7 @@ import { join } from "node:path";
 import test from "node:test";
 import nodemailer from "nodemailer";
 import type Mail from "nodemailer/lib/mailer";
+import { site } from "../src/config/site";
 import { POST } from "../src/pages/api/subscriptions/preferences";
 import { openSubscriptionStore } from "../src/server/subscriptions/store";
 
@@ -76,6 +77,7 @@ test("Bark and Email each get one success notice with a working unsubscribe link
   t.after(() => providerReply.resolve());
   const pushes: {
     device_key: string;
+    icon: string;
     title: string;
     body: string;
     url: string;
@@ -134,13 +136,20 @@ test("Bark and Email each get one success notice with a working unsubscribe link
       assert.deepEqual(emails[1].headers, { "List-Unsubscribe": `<${link}>` });
     } else {
       assert.equal(pushes.length, 2);
+      assert.equal(pushes[0].title, "Confirm Subscription");
+      const icon = new URL(
+        site.site.iconSrc.trim() || "/site-icon.svg",
+        site.site.url,
+      ).href;
+      for (const push of pushes) assert.equal(push.icon, icon);
       assert.equal(pushes[1].device_key, destination);
-      assert.match(pushes[1].title, /subscribed/);
-      assert.match(
+      assert.equal(pushes[1].title, "Successfully Subscribed");
+      assert.equal(
         pushes[1].body,
-        /tap this notification and choose Unsubscribe/,
+        `Thank you for subscribing to ${site.site.name}. Bark will notify you immediately when new articles are published. If you no longer wish to receive new notifications, you can unsubscribe by clicking on the link below.`,
       );
       assert.equal(pushes[1].url, link);
+      assert.equal(JSON.stringify(pushes[1]).split(link).length - 1, 1);
     }
     assert.equal(
       (await (await post("manage", { token })).json()).next,
