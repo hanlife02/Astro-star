@@ -108,18 +108,48 @@ export const POST: APIRoute = async ({ request }) => {
           (_, domain: string) => `@${domain.toLowerCase()}`,
         )
       : destination;
-  const pending = getSubscriptionStore().requestConfirmation(action, address);
+  const store = getSubscriptionStore();
+  const target =
+    action === "email" ? "This email address" : "This Bark device key";
+  if (form.get("intent") === "unsubscribe") {
+    const link = store.requestUnsubscribeLink(action, address);
+    if (link.status === "inactive")
+      return reply({ message: `${target} has no active subscription.` });
+    const inbox = action === "email" ? "your email" : "Bark";
+    if (link.status === "limited")
+      return reply({
+        message: `Use the subscription link already in ${inbox}, or request another later.`,
+      });
+    const url = subscriptionLink(link.token);
+    try {
+      await sendSubscriptionMessage(settings, action, address, {
+        title: "Unsubscribe",
+        body: `Open the link below to unsubscribe from ${site.site.name}.`,
+        url,
+        manageUrl: action === "email" ? url : undefined,
+      });
+    } catch {
+      return reply(
+        {
+          message: `We couldn’t send the link. You can also use a previous subscription link in ${inbox}.`,
+        },
+        503,
+      );
+    }
+    return reply({ message: `Check ${inbox} for your unsubscribe link.` });
+  }
+
+  const pending = store.requestConfirmation(action, address);
+  if (pending?.confirmed)
+    return reply({
+      message: `${target} is already subscribed.`,
+      next: "request-unsubscribe",
+    });
   if (pending) {
     try {
       await sendSubscriptionMessage(settings, action, address, {
-        title: pending.confirmed
-          ? `Manage your ${site.site.name} subscription`
-          : action === "bark"
-            ? "Confirm Subscription"
-            : `Confirm your ${site.site.name} subscription`,
-        body: pending.confirmed
-          ? "Open the link to manage your subscription."
-          : "Open the link and confirm within 24 hours to receive new publication notifications.",
+        title: "Confirm Subscription",
+        body: `Open the link below within 24 hours to confirm your subscription to ${site.site.name} and receive notifications when new articles are published.`,
         url: subscriptionLink(pending.token),
       });
     } catch {
