@@ -2,7 +2,7 @@
 routeSlug: astro-star
 title: Astro-star 介绍与部署
 createdAt: "2026-06-14 23:05:26"
-updatedAt: "2026-07-29 17:44:40"
+updatedAt: "2026-11-22 17:43:12"
 type: Project
 description: 介绍 Astro-star 博客主题的内容与部署
 tags:
@@ -92,6 +92,14 @@ Hover to reveal ||this hidden inline note|| while reading.
 ### Hover 样式
 
 我设计了很多 Hover 的样式，为了让页面更有交互感，更加生动，减少生硬。你可以打开网站自行探索。
+
+## 新文章订阅
+
+点击页脚的 **Subscribe** 会在当前页面打开弹窗。选择 Bark、Telegram 或 Email 图标，就能订阅博客、笔记和项目更新。首次启用时，站点会把已有内容记下来，从下一篇新发布的内容开始推送。站长可以按需开启三个渠道，具体见[订阅通知配置](#订阅通知配置)。
+
+- **Bark** 在弹窗里填写自己的设备令牌，也就是 Bark App 里 `https://api.day.app/设备令牌` 的最后一段。手机收到推送后，打开链接并点击确认。
+- **Email** 在弹窗里填写收件邮箱，再打开确认邮件中的链接并点击确认。邮件和 Bark 的确认链接都在 24 小时内有效，之后收到的新文章通知里也有退订链接。
+- **Telegram** 会打开站点机器人的私聊。读者点「开始」即可订阅，以后在同一私聊发送 `/stop` 就能退订。
 
 # 部署
 
@@ -259,6 +267,49 @@ ALGOLIA_ADMIN_API_KEY=xxxxxxxxxxxxxxxx
 GitHub Actions 每次运行都会自动提供 `${{ github.token }}`，它不需要手动创建，也不会显示在仓库 Secrets 列表中。普通 fork 的同仓库检出和服务器部署会直接使用这个自动 token。若希望自动部署后的仓库卡片使用认证请求，应额外创建独立的只读 PAT，保存为 `GH_TOKEN`；部署工作流会以同名变量写入服务器 `.env`。
 
 只有工作流需要向其他仓库发起操作，或者把提交推送到受保护分支时，才需要手动创建 `ACTIONS_PAT`。本项目上游维护场景需要将 `Astro-star` 与 `Astro-star-docs` 加入 token 的仓库范围，并授予目标操作所需的 `Contents: Read and write` 与 `Actions: Read and write` 权限。`ACTIONS_PAT` 只供 Actions 使用，不会写入服务器 `.env`。技术上可以把同一个 PAT 同时填入两个 Secret，但这会把仓库写权限长期暴露在服务器上，因此不应合并。
+
+#### 订阅通知配置
+
+使用 GitHub Actions 部署时，在**自己仓库**的 **Settings → Secrets and variables → Actions** 里填写。只填想启用的渠道即可。
+
+在 **Variables** 页签点 **New repository variable**，每行建一项。
+
+| Variable                              | 什么时候填         | 填什么                                                                                                                                |
+| ------------------------------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `SUBSCRIPTIONS_BARK`                  | 开启 Bark          | 填小写 `true` 即可。每位读者的设备令牌由读者自己填写。                                                                                |
+| `SUBSCRIPTIONS_SMTP_HOST`             | 开启 Email         | 邮件服务商提供的 SMTP 主机名，例如 `smtp.example.com`。                                                                               |
+| `SUBSCRIPTIONS_SMTP_PORT`             | 邮件服务商有指定时 | 默认 `587`，使用 STARTTLS。服务商要求连接时即使用 TLS 则填 `465`。                                                                    |
+| `SUBSCRIPTIONS_SMTP_FROM`             | 开启 Email         | 读者收到邮件时看到的发件人。可填 `notify@example.com`，也可带显示名，如 `Ethan 的博客 <notify@example.com>`。地址须经邮件服务商授权。 |
+| `SUBSCRIPTIONS_SMTP_USER`             | SMTP 要求登录时    | SMTP 登录账号，通常是完整邮箱地址。如果之前已存为同名 Secret，可以继续使用，部署时优先读取 Variable。                                 |
+| `SUBSCRIPTIONS_TELEGRAM_BOT_USERNAME` | 开启 Telegram      | 在 Telegram 找 `@BotFather`，用 `/newbot` 创建机器人。这里填它的用户名，如 `example_blog_bot`，省略开头的 `@`。                       |
+| `SUBSCRIPTIONS_DB_PATH`               | 自定义存储位置时   | SQLite 文件路径。留空时使用部署目录下的 `.subscriptions/subscriptions.sqlite`。自定义时选部署目录外、应用可写的持久路径。             |
+
+在 **Secrets** 页签点 **New repository secret**，分别保存下面的凭证。
+
+| Secret                                  | 什么时候填      | 填什么                                                                                                                                     |
+| --------------------------------------- | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `SUBSCRIPTIONS_SMTP_PASSWORD`           | SMTP 要求登录时 | 邮件服务商签发的 SMTP 密码、授权码或应用专用密码，与上面的 SMTP 登录账号配套使用。允许免登录投递的服务可将账号和密码都留空。               |
+| `SUBSCRIPTIONS_TELEGRAM_BOT_TOKEN`      | 开启 Telegram   | `@BotFather` 创建机器人时给你的 token，站点用它以机器人的身份发消息。                                                                      |
+| `SUBSCRIPTIONS_TELEGRAM_WEBHOOK_SECRET` | 开启 Telegram   | 自己在终端运行 `openssl rand -hex 32`，把输出保存为这个 Secret。站点用它校验 Telegram 发来的回调。保存一次即可，后面的注册命令会自动读取。 |
+
+只改仓库设置也需要部署一次才会生效。打开 **Actions → Build & Deploy → Run workflow**，本仓库选 `Ethan`，自己的 fork 选 `main`。部署成功后，配置保存在服务器部署目录的 `.env.subscriptions.json`，文件权限为 `0600`。如果采用前面的手动部署方式，在服务器项目根目录的 `.env.subscriptions` 里按 `名称=值` 逐行填写同一组配置，保存后重启对应的 PM2 应用。
+
+**读者的订阅数据存在哪里？** 服务器 SQLite 的 `subscriptions` 表用 `channel` 区分渠道，`destination` 字段以明文保存投递所需的 Bark 设备令牌、收件邮箱或 Telegram 私聊 ID。按默认部署路径，数据库在 `~/Astro-star/.subscriptions/subscriptions.sqlite`，自动部署会保留这个目录。新建数据库文件的权限是 `0600`，能读取数据库或其备份的人也能看到这些值。
+
+##### 注册 Telegram webhook
+
+读者点击 Telegram 入口会打开 `https://t.me/机器人用户名?start=subscribe`。点击「开始」后，Telegram 会把 `/start subscribe` 和私聊 ID 发回站点，站点据此登记订阅。为了收到这条回调，站长需要先向 Telegram 注册网站的 HTTPS 地址。
+
+先确认 `src/config/site.ts` 中的 `site.site.url` 已填正式域名。若整站已经反向代理到 Astro，直接复用现有 HTTPS 入口即可。若同一域名下还运行其他应用，请让展示新页脚的页面、`/api/subscriptions/preferences` 和 `/api/subscriptions/telegram` 都由同一套 Astro 部署提供。对外提供服务的是博客域名，1Panel 管理界面和 Astro 的监听端口都可以保持在内网。
+
+部署成功后，SSH 登录服务器，在部署目录里执行注册脚本。把参数换成自己的博客域名即可，脚本会读取部署时保存的凭证。
+
+```shell
+cd ~/Astro-star
+./register-telegram-webhook.mjs https://example.com
+```
+
+注册成功后，从页脚打开机器人并点「开始」，收到机器人的订阅确认回复，就说明回调已经打通。如果将来更换 webhook secret，先更新仓库 Secret 并重新部署，再运行一次注册命令，让 Telegram 和站点使用同一个新值。
 
 #### 配置
 
