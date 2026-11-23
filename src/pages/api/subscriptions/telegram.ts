@@ -1,5 +1,6 @@
 import type { APIRoute } from "astro";
 import { site } from "../../../config/site";
+import { subscriptionLink } from "../../../server/subscriptions/notifications";
 import { readSubscriptionBody } from "../../../server/subscriptions/request";
 import {
   getSubscriptionSettings,
@@ -51,7 +52,25 @@ export const POST: APIRoute = async ({ request }) => {
     return new Response(null, { status: 204, headers });
   }
   const subscribe = command !== "/stop";
-  getSubscriptionStore().updateTelegramSubscription(String(chat.id), subscribe);
+  const result = getSubscriptionStore().updateTelegramSubscription(
+    String(chat.id),
+    subscribe,
+  );
+  if (result?.alreadySubscribed) {
+    return Response.json(
+      {
+        method: "sendMessage",
+        chat_id: chat.id,
+        text: `This Telegram account is already subscribed to ${site.site.name}.`,
+        reply_markup: {
+          inline_keyboard: [
+            [{ text: "Unsubscribe", url: subscriptionLink(result.token) }],
+          ],
+        },
+      },
+      { headers },
+    );
+  }
   return Response.json(
     {
       method: "sendMessage",

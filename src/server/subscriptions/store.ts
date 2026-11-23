@@ -32,6 +32,7 @@ export type Delivery = QueuedDelivery &
   ({ kind: "publication"; title: string; url: string } | { kind: "receipt" });
 
 const minute = 60_000;
+const linkCooldown = 15 * minute;
 const confirmationLifetime = 24 * 60 * minute;
 const isToken = (token: string) => /^[a-zA-Z0-9_-]{43}$/.test(token);
 const newToken = () => randomBytes(32).toString("base64url");
@@ -55,6 +56,10 @@ export function openSubscriptionStore(path: string) {
       UNIQUE (channel, destination)
     );
     CREATE TABLE IF NOT EXISTS opt_in_requests (requested_at INTEGER NOT NULL);
+    CREATE TABLE IF NOT EXISTS unsubscribe_link_requests (
+      token TEXT PRIMARY KEY REFERENCES subscriptions (token) ON DELETE CASCADE,
+      requested_at INTEGER NOT NULL
+    );
     CREATE TABLE IF NOT EXISTS publication_baseline (id INTEGER PRIMARY KEY CHECK (id = 1));
     CREATE TABLE IF NOT EXISTS publications (id TEXT PRIMARY KEY);
     CREATE TABLE IF NOT EXISTS deliveries (
@@ -98,6 +103,26 @@ export function openSubscriptionStore(path: string) {
       .get(token, now - confirmationLifetime) as Subscription | undefined;
   }
 
+  function findSubscription(channel: Channel, destination: string) {
+    return db
+      .prepare(
+        "SELECT * FROM subscriptions WHERE channel = ? AND destination = ?",
+      )
+      .get(channel, destination) as Subscription | undefined;
+  }
+
+  function reserveLinkRequest(now: number) {
+    db.prepare("DELETE FROM opt_in_requests WHERE requested_at <= ?").run(
+      now - 60 * minute,
+    );
+    const count = db
+      .prepare("SELECT count(*) AS total FROM opt_in_requests")
+      .get()!;
+    if (Number(count.total) >= 50) return false;
+    db.prepare("INSERT INTO opt_in_requests VALUES (?)").run(now);
+    return true;
+  }
+
   function claim(
     kind: Delivery["kind"],
     channels: Channel[],
@@ -138,23 +163,13 @@ export function openSubscriptionStore(path: string) {
       now = Date.now(),
     ) {
       return transaction(() => {
-        const existing = db
-          .prepare(
-            "SELECT * FROM subscriptions WHERE channel = ? AND destination = ?",
-          )
-          .get(channel, destination) as Subscription | undefined;
-        if (existing && now - existing.requested_at < 15 * minute) return;
+        const existing = findSubscription(channel, destination);
+        if (existing?.confirmed_at != null)
+          return { token: existing.token, confirmed: true };
+        if (existing && now - existing.requested_at < linkCooldown) return;
+        if (!reserveLinkRequest(now)) return;
 
-        db.prepare("DELETE FROM opt_in_requests WHERE requested_at <= ?").run(
-          now - 60 * minute,
-        );
-        const count = db
-          .prepare("SELECT count(*) AS total FROM opt_in_requests")
-          .get()!.total as number;
-        if (count >= 50) return;
-
-        const confirmed = existing?.confirmed_at != null;
-        const token = confirmed ? existing.token : newToken();
+        const token = newToken();
         db.prepare(
           `
           INSERT INTO subscriptions (token, channel, destination, requested_at)
@@ -163,8 +178,29 @@ export function openSubscriptionStore(path: string) {
           SET token = excluded.token, requested_at = excluded.requested_at
         `,
         ).run(token, channel, destination, now);
-        db.prepare("INSERT INTO opt_in_requests VALUES (?)").run(now);
-        return { token, confirmed };
+        return { token, confirmed: false };
+      });
+    },
+    requestUnsubscribeLink(
+      channel: "email" | "bark",
+      destination: string,
+      now = Date.now(),
+    ) {
+      return transaction(() => {
+        const existing = findSubscription(channel, destination);
+        if (existing?.confirmed_at == null)
+          return { status: "inactive" } as const;
+        const recent = db
+          .prepare(
+            "SELECT 1 FROM unsubscribe_link_requests WHERE token = ? AND requested_at > ?",
+          )
+          .get(existing.token, now - linkCooldown);
+        if (recent || !reserveLinkRequest(now))
+          return { status: "limited" } as const;
+        db.prepare(
+          "INSERT OR REPLACE INTO unsubscribe_link_requests (token, requested_at) VALUES (?, ?)",
+        ).run(existing.token, now);
+        return { status: "ready", token: existing.token } as const;
       });
     },
     confirmSubscription(token: string, now = Date.now()) {
@@ -201,17 +237,20 @@ export function openSubscriptionStore(path: string) {
       now = Date.now(),
     ) {
       if (subscribe) {
-        db.prepare(
-          `
-          INSERT OR IGNORE INTO subscriptions (token, channel, destination, requested_at, confirmed_at)
-          VALUES (?, 'telegram', ?, ?, ?)
-        `,
-        ).run(newToken(), destination, now, now);
-      } else {
-        db.prepare(
-          "DELETE FROM subscriptions WHERE channel = 'telegram' AND destination = ?",
-        ).run(destination);
+        return transaction(() => {
+          const existing = findSubscription("telegram", destination);
+          if (existing)
+            return { alreadySubscribed: true, token: existing.token } as const;
+          db.prepare(
+            `INSERT INTO subscriptions (token, channel, destination, requested_at, confirmed_at)
+             VALUES (?, 'telegram', ?, ?, ?)`,
+          ).run(newToken(), destination, now, now);
+          return { alreadySubscribed: false } as const;
+        });
       }
+      db.prepare(
+        "DELETE FROM subscriptions WHERE channel = 'telegram' AND destination = ?",
+      ).run(destination);
     },
     recordPublications(posts: PublishedPost[], now = Date.now()) {
       transaction(() => {
