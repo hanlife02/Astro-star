@@ -19,18 +19,15 @@ export function subscriptionLink(token: string) {
 }
 
 function subscriptionReceipt(channel: Channel, url: string): Message {
-  if (channel === "bark") {
-    return {
-      title: "Successfully Subscribed",
-      body: `Thank you for subscribing to ${site.site.name}. Bark will notify you immediately when new articles are published. If you no longer wish to receive new notifications, you can unsubscribe by clicking on the link below.`,
-      url,
-    };
-  }
+  const publicationNotice =
+    channel === "bark"
+      ? "Bark will notify you immediately when new articles are published."
+      : "We’ll email you as soon as new articles are published.";
   return {
-    title: `You’re subscribed to ${site.site.name}`,
-    body: "You’ll receive new publications at this email address. To stop them, open the link below and choose Unsubscribe.",
+    title: "Successfully Subscribed",
+    body: `Thank you for subscribing to ${site.site.name}. ${publicationNotice} If you no longer wish to receive new notifications, you can unsubscribe by clicking on the link below.`,
     url,
-    manageUrl: url,
+    manageUrl: channel === "email" ? url : undefined,
   };
 }
 

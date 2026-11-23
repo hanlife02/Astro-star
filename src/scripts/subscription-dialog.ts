@@ -1,5 +1,8 @@
 const endpoint = "/api/subscriptions/preferences";
-type ManageAction = "confirm" | "unsubscribe";
+interface SubscriptionResult {
+  message: string;
+  next?: "confirm" | "unsubscribe" | "request-unsubscribe";
+}
 
 class SubscriptionDialog extends HTMLElement {
   private cleanup?: () => void;
@@ -20,10 +23,11 @@ class SubscriptionDialog extends HTMLElement {
     const listeners = new AbortController();
     const events = { signal: listeners.signal };
     let pending: AbortController | undefined;
-    let token = "";
-    let next: ManageAction | undefined;
+    let nextRequest: URLSearchParams | undefined;
 
     function resetForms() {
+      nextRequest = undefined;
+      manage.hidden = true;
       for (const form of forms) {
         form.hidden = true;
         form.reset();
@@ -58,32 +62,43 @@ class SubscriptionDialog extends HTMLElement {
       }
     }
 
-    async function manageSubscription(action: ManageAction | "manage") {
-      manage.disabled = true;
-      const result = await request(new URLSearchParams({ action, token }));
-      if (result) {
-        status.textContent = result.message;
-        next = result.next;
-        manage.hidden = !next;
+    function showResult(result: SubscriptionResult, fields: URLSearchParams) {
+      status.textContent = result.message;
+      nextRequest = undefined;
+      if (result.next === "request-unsubscribe") {
+        nextRequest = new URLSearchParams(fields);
+        nextRequest.set("intent", "unsubscribe");
+        manage.textContent = "Send unsubscribe link";
+      } else if (result.next) {
+        nextRequest = new URLSearchParams({
+          action: result.next,
+          token: fields.get("token")!,
+        });
         manage.textContent =
-          next === "confirm" ? "Confirm subscription" : "Unsubscribe";
+          result.next === "confirm" ? "Confirm subscription" : "Unsubscribe";
       }
+      manage.hidden = !nextRequest;
+    }
+
+    async function manageSubscription(fields: URLSearchParams) {
+      manage.disabled = true;
+      const result = await request(fields);
+      if (result) showResult(result, fields);
       manage.disabled = false;
     }
 
-    async function open(linkToken = "") {
-      token = linkToken;
-      next = undefined;
+    async function open(token = "") {
       resetForms();
       channels.hidden = Boolean(token);
-      manage.hidden = true;
       for (const button of buttons) button.disabled = true;
       telegram.removeAttribute("href");
       telegram.setAttribute("aria-disabled", "true");
       status.textContent = "Loading…";
       if (!dialog.open) dialog.showModal();
       if (token) {
-        await manageSubscription("manage");
+        await manageSubscription(
+          new URLSearchParams({ action: "manage", token }),
+        );
         return;
       }
       const settings = await request();
@@ -138,14 +153,13 @@ class SubscriptionDialog extends HTMLElement {
       () => {
         pending?.abort();
         resetForms();
-        token = "";
       },
       events,
     );
     manage.addEventListener(
       "click",
       () => {
-        if (next) void manageSubscription(next);
+        if (nextRequest) void manageSubscription(nextRequest);
       },
       events,
     );
@@ -176,15 +190,14 @@ class SubscriptionDialog extends HTMLElement {
           if (submit.disabled) return;
           submit.disabled = true;
           status.textContent = "Sending…";
-          const result = await request(
-            new URLSearchParams({
-              action: form.dataset.channelForm!,
-              destination: form.querySelector("input")!.value,
-            }),
-          );
+          const fields = new URLSearchParams({
+            action: form.dataset.channelForm!,
+            destination: form.querySelector("input")!.value,
+          });
+          const result = await request(fields);
           if (result) {
             resetForms();
-            status.textContent = result.message;
+            showResult(result, fields);
           }
           submit.disabled = false;
         },
