@@ -114,12 +114,10 @@ export const POST: APIRoute = async ({ request }) => {
       await sendSubscriptionMessage(settings, action, address, {
         title: pending.confirmed
           ? `Manage your ${site.site.name} subscription`
-          : action === "bark"
-            ? "Confirm Subscription"
-            : `Confirm your ${site.site.name} subscription`,
+          : "Confirm Subscription",
         body: pending.confirmed
           ? "Open the link to manage your subscription."
-          : "Open the link and confirm within 24 hours to receive new publication notifications.",
+          : `Open the link below within 24 hours to confirm your subscription to ${site.site.name} and receive notifications when new articles are published.`,
         url: subscriptionLink(pending.token),
       });
     } catch {
