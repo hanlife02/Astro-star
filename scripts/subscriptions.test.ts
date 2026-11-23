@@ -112,6 +112,7 @@ test("Bark and Email each get one success notice with a working unsubscribe link
       channel === "email"
         ? String(emails[0].text).split("\n\n").at(-1)!
         : pushes[0].url;
+    const confirmation = `Open the link below within 24 hours to confirm your subscription to ${site.site.name} and receive notifications when new articles are published.`;
     const token = new URLSearchParams(new URL(link).hash.slice(1)).get(
       "subscribe",
     )!;
@@ -127,16 +128,19 @@ test("Bark and Email each get one success notice with a working unsubscribe link
       assert.equal((await response.json()).next, "unsubscribe");
     if (channel === "email") {
       assert.equal(emails.length, 2);
+      assert.equal(emails[0].subject, "Confirm Subscription");
+      assert.equal(emails[0].text, `${confirmation}\n\n${link}`);
       assert.deepEqual(emails[1].to, { name: "", address: destination });
-      assert.match(String(emails[1].subject), /subscribed/);
-      const body = String(emails[1].text);
-      assert.match(body, /choose Unsubscribe/);
-      assert.ok(body.endsWith(link));
-      assert.equal(body.split(link).length, 2);
+      assert.equal(emails[1].subject, "Successfully Subscribed");
+      assert.equal(
+        emails[1].text,
+        `Thank you for subscribing to ${site.site.name}. We’ll email you as soon as new articles are published. If you no longer wish to receive new notifications, you can unsubscribe by clicking on the link below.\n\nUnsubscribe: ${link}`,
+      );
       assert.deepEqual(emails[1].headers, { "List-Unsubscribe": `<${link}>` });
     } else {
       assert.equal(pushes.length, 2);
       assert.equal(pushes[0].title, "Confirm Subscription");
+      assert.equal(pushes[0].body, confirmation);
       const icon = new URL(
         site.site.iconSrc.trim() || "/site-icon.svg",
         site.site.url,
