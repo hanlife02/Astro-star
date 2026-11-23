@@ -52,7 +52,7 @@ test("about and links render dates, counters, and word counts in their headers",
     );
     assert.match(
       getText(metadataLines[1]).replace(/\s+/g, " ").trim(),
-      /^Views — \/ Comments — \/ Words [\d,]+$/,
+      /^Words [\d,]+ \/ Comments — \/ Views —$/,
     );
 
     for (const className of ["waline-pageview-count", "waline-comment-count"]) {

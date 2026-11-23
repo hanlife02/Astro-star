@@ -41,14 +41,10 @@ const {
     <span class="article-content-meta-value">{updatedLabel}</span>
   </p>
   <p class="article-content-meta-line">
-    <span class="article-content-meta-label">Views</span>{" "}
-    <span
-      class="article-content-meta-value waline-pageview-count"
-      data-path={routePath}
-      data-server-url={walineServerURL}
+    <span class="article-content-meta-label">Words</span>{" "}
+    <span class="article-content-meta-value"
+      >{wordCount.toLocaleString("en-US")}</span
     >
-      —
-    </span>
     <span class="article-content-meta-separator">/</span>
     <span class="article-content-meta-label">Comments</span>{" "}
     <span
@@ -59,10 +55,14 @@ const {
       —
     </span>
     <span class="article-content-meta-separator">/</span>
-    <span class="article-content-meta-label">Words</span>{" "}
-    <span class="article-content-meta-value"
-      >{wordCount.toLocaleString("en-US")}</span
+    <span class="article-content-meta-label">Views</span>{" "}
+    <span
+      class="article-content-meta-value waline-pageview-count"
+      data-path={routePath}
+      data-server-url={walineServerURL}
     >
+      —
+    </span>
   </p>
   {
     tags.length > 0 && (
