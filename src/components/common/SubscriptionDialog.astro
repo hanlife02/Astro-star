@@ -9,7 +9,7 @@ import TelegramIcon from "../ui/icons/TelegramIcon.astro";
 <subscription-dialog>
   <dialog id="subscription-dialog" aria-labelledby="subscription-title">
     <header>
-      <h2 id="subscription-title">Subscribe</h2>
+      <h2 id="subscription-title" tabindex="-1" autofocus>Subscribe</h2>
       <button type="button" data-close aria-label="Close"
         ><Icon svg={X} /></button
       >
@@ -96,6 +96,9 @@ import TelegramIcon from "../ui/icons/TelegramIcon.astro";
     margin: 0;
     font-size: var(--type-lg);
   }
+  h2:focus {
+    outline: none;
+  }
   dialog :is(button, a, input) {
     font: inherit;
     color: inherit;
@@ -112,6 +115,7 @@ import TelegramIcon from "../ui/icons/TelegramIcon.astro";
     height: 2.75rem;
     padding: 0;
     border: 0;
+    border-radius: 50%;
   }
   [data-close] :global(svg) {
     width: 1.1rem;
