@@ -93,7 +93,7 @@ class SubscriptionDialog extends HTMLElement {
       for (const button of buttons) button.disabled = true;
       telegram.removeAttribute("href");
       telegram.setAttribute("aria-disabled", "true");
-      status.textContent = "Loading…";
+      status.textContent = "";
       if (!dialog.open) dialog.showModal();
       if (token) {
         await manageSubscription(
